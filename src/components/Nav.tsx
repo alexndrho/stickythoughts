@@ -119,96 +119,18 @@ export default function Nav() {
               </Group>
 
               <Box display={{ base: "block", sm: "none" }}>
-                <Menu>
-                  <Menu.Target>
-                    <ActionIcon aria-label="toggle menu" variant="default">
-                      <IconMenu size="1em" />
-                    </ActionIcon>
-                  </Menu.Target>
-
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      component={Link}
-                      href="/sign-in"
-                      leftSection={<IconLogin size="1em" />}
-                    >
-                      Sign in
-                    </Menu.Item>
-
-                    <Menu.Divider />
-
-                    {navLinks.map((link) => (
-                      <Menu.Item
-                        key={link.label}
-                        component={Link}
-                        href={link.href}
-                        leftSection={<link.icon size="1em" />}
-                      >
-                        {link.label}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Dropdown>
-                </Menu>
+                <MobileMenu />
               </Box>
 
               <Divider orientation="vertical" />
             </Group>
 
             {session ? (
-              <Menu>
-                <Menu.Target>
-                  <Avatar
-                    component={UnstyledButton}
-                    src={session.user?.image}
-                  />
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  {session.user && (
-                    <Menu.Item
-                      component={Link}
-                      href={`/user/${session.user.username}`}
-                      leftSection={<IconUser size="1em" />}
-                    >
-                      Profile
-                    </Menu.Item>
-                  )}
-
-                  <Menu.Item
-                    component={Link}
-                    href="/settings"
-                    leftSection={<IconSettings size="1em" />}
-                  >
-                    Settings
-                  </Menu.Item>
-
-                  <Menu.Item
-                    leftSection={<IconMoon size="1em" />}
-                    className="darkHidden"
-                    onClick={() => setColorScheme("dark")}
-                  >
-                    Dark mode
-                  </Menu.Item>
-
-                  <Menu.Item
-                    leftSection={<IconSun size="1em" />}
-                    className="lightHidden"
-                    onClick={() => setColorScheme("light")}
-                  >
-                    Light mode
-                  </Menu.Item>
-
-                  <Menu.Divider />
-
-                  <Menu.Item
-                    color="red"
-                    leftSection={<IconLogout size="1em" />}
-                    onClick={signOut}
-                  >
-                    Sign out
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              <UserMenu
+                session={session}
+                signOut={signOut}
+                setColorScheme={setColorScheme}
+              />
             ) : (
               <>
                 <Box display={{ base: "none", sm: "block" }}>
@@ -217,38 +139,141 @@ export default function Nav() {
                   </Button>
                 </Box>
 
-                <Tooltip
-                  label="Dark mode"
-                  position="bottom"
-                  className="darkHidden"
-                >
-                  <ActionIcon
-                    aria-label="Toggle color scheme"
-                    variant="default"
-                    onClick={() => setColorScheme("dark")}
-                  >
-                    <IconMoon size="1em" />
-                  </ActionIcon>
-                </Tooltip>
-
-                <Tooltip
-                  label="Light mode"
-                  position="bottom"
-                  className="lightHidden"
-                >
-                  <ActionIcon
-                    aria-label="Toggle color scheme"
-                    variant="default"
-                    onClick={() => setColorScheme("light")}
-                  >
-                    <IconSun size="1em" />
-                  </ActionIcon>
-                </Tooltip>
+                <ToggleTheme setColorScheme={setColorScheme} />
               </>
             )}
           </Group>
         </Group>
       </Container>
     </Box>
+  );
+}
+
+function MobileMenu() {
+  return (
+    <Menu>
+      <Menu.Target>
+        <ActionIcon aria-label="toggle menu" variant="default">
+          <IconMenu size="1em" />
+        </ActionIcon>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item
+          component={Link}
+          href="/sign-in"
+          leftSection={<IconLogin size="1em" />}
+        >
+          Sign in
+        </Menu.Item>
+
+        <Menu.Divider />
+
+        {navLinks.map((link) => (
+          <Menu.Item
+            key={link.label}
+            component={Link}
+            href={link.href}
+            leftSection={<link.icon size="1em" />}
+          >
+            {link.label}
+          </Menu.Item>
+        ))}
+      </Menu.Dropdown>
+    </Menu>
+  );
+}
+
+function UserMenu({
+  session,
+  signOut,
+  setColorScheme,
+}: {
+  session: NonNullable<ReturnType<typeof authClient.useSession>["data"]>;
+  signOut: () => void;
+  setColorScheme: (value: "light" | "dark") => void;
+}) {
+  return (
+    <Menu>
+      <Menu.Target>
+        <Avatar component={UnstyledButton} src={session.user?.image} />
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        {session.user && (
+          <Menu.Item
+            component={Link}
+            href={`/user/${session.user.username}`}
+            leftSection={<IconUser size="1em" />}
+          >
+            Profile
+          </Menu.Item>
+        )}
+
+        <Menu.Item
+          component={Link}
+          href="/settings"
+          leftSection={<IconSettings size="1em" />}
+        >
+          Settings
+        </Menu.Item>
+
+        <Menu.Item
+          leftSection={<IconMoon size="1em" />}
+          className="darkHidden"
+          onClick={() => setColorScheme("dark")}
+        >
+          Dark mode
+        </Menu.Item>
+
+        <Menu.Item
+          leftSection={<IconSun size="1em" />}
+          className="lightHidden"
+          onClick={() => setColorScheme("light")}
+        >
+          Light mode
+        </Menu.Item>
+
+        <Menu.Divider />
+
+        <Menu.Item
+          color="red"
+          leftSection={<IconLogout size="1em" />}
+          onClick={signOut}
+        >
+          Sign out
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+}
+
+function ToggleTheme({
+  setColorScheme,
+}: {
+  setColorScheme: (value: "light" | "dark") => void;
+}) {
+  return (
+    <>
+      <Tooltip label="Dark mode" position="bottom" className="darkHidden">
+        <ActionIcon
+          aria-label="Toggle color scheme"
+          variant="default"
+          onClick={() => setColorScheme("dark")}
+        >
+          <IconMoon size="1em" />
+        </ActionIcon>
+      </Tooltip>
+
+      <Tooltip label="Light mode" position="bottom" className="lightHidden">
+        <ActionIcon
+          aria-label="Toggle color scheme"
+          variant="default"
+          onClick={() => setColorScheme("light")}
+        >
+          <IconSun size="1em" />
+        </ActionIcon>
+      </Tooltip>
+    </>
   );
 }
