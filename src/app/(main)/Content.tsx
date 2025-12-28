@@ -23,8 +23,8 @@ import {
   thoughtCountOptions,
   thoughtInfiniteOptions,
   thoughtSearchInfiniteOptions,
-} from "@/app/(core)/options";
-import Thoughts from "@/app/(core)/Thoughts";
+} from "@/app/(main)/options";
+import Thoughts from "@/app/(main)/Thoughts";
 import SendThoughtModal from "./SendThoughtModal";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import classes from "./home.module.css";

@@ -11,7 +11,7 @@ import {
   threadInfiniteOptions,
   threadCommentsInfiniteOptions,
   threadOptions,
-} from "@/app/(core)/threads/options";
+} from "@/app/(main)/(core)/threads/options";
 import type { ThreadType, ThreadCommentType } from "@/types/thread";
 
 export const setLikeThreadQueryData = ({

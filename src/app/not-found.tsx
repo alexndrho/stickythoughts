@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Layout from "@/app/(site)/layout";
+import Layout from "./(main)/layout";
 import NotFoundContent from "@/components/NotFoundContent";
 
 export const metadata: Metadata = {

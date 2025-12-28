@@ -11,7 +11,7 @@ import TextEditor from "@/components/TextEditor";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { submitThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";
-import { setCreateThreadCommentQueryData } from "@/app/(core)/threads/set-query-data";
+import { setCreateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 
 export interface CommentEditorProps {
   threadId: string;

@@ -9,13 +9,13 @@ import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { likeThread, unlikeThread } from "@/services/thread";
-import { threadInfiniteOptions } from "@/app/(core)/threads/options";
+import { threadInfiniteOptions } from "@/app/(main)/(core)/threads/options";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import ThreadItem from "./ThreadItem";
 import SearchSpotlight from "./SearchSpotlight";
 import { ThreadsSkeleton } from "./ThreadsSkeleton";
-import { setLikeThreadQueryData } from "@/app/(core)/threads/set-query-data";
+import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import classes from "./threads.module.css";
 
 export default function Content() {

@@ -29,12 +29,12 @@ import { type authClient } from "@/lib/auth-client";
 import {
   userNotificationCountOptions,
   userNotificationsInfiniteOptions,
-} from "@/app/(core)/user/options";
+} from "@/app/(main)/(core)/user/options";
 import {
   setDeleteNotificationQueryData,
   setMarkReadNotificationQueryData,
   setUserNotificationOpenedQueryData,
-} from "@/app/(core)/user/set-query-data";
+} from "@/app/(main)/(core)/user/set-query-data";
 import { stripHtmlTags } from "@/utils/text";
 import {
   deleteUserNotification,

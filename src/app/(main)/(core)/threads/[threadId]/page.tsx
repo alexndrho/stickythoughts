@@ -5,7 +5,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import Content from "./Content";
 import { getQueryClient } from "@/lib/get-query-client";
-import { threadOptions } from "@/app/(core)/threads/options";
+import { threadOptions } from "@/app/(main)/(core)/threads/options";
 import { getThread } from "@/services/thread";
 
 export async function generateMetadata({

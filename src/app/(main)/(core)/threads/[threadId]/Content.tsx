@@ -24,16 +24,16 @@ import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { threadOptions } from "../options";
-import { setLikeThreadQueryData } from "@/app/(core)/threads/set-query-data";
+import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import { useDateNow } from "@/hooks/use-date-now";
 import { likeThread, unlikeThread } from "@/services/thread";
 import ThreadEditor from "./ThreadEditor";
 import CommentEditor, { type CommentSectionRef } from "./CommentEditor";
 import Comments from "./Comments";
 import DeleteThreadModal from "./DeleteThreadModal";
-import LikeButton from "@/app/(core)/threads/LikeButton";
-import CommentButton from "@/app/(core)/threads/CommentButton";
-import ShareButton from "@/app/(core)/threads/ShareButton";
+import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
+import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
+import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import classes from "./thread.module.css";
 

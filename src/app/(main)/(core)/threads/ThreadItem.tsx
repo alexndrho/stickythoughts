@@ -12,9 +12,9 @@ import Link from "next/link";
 import { formatDistance } from "date-fns";
 
 import { stripHtmlTags } from "@/utils/text";
-import LikeButton from "@/app/(core)/threads/LikeButton";
-import CommentButton from "@/app/(core)/threads/CommentButton";
-import ShareButton from "@/app/(core)/threads/ShareButton";
+import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
+import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
+import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
 import type { ThreadType } from "@/types/thread";
 import classes from "./threads.module.css";
 

@@ -19,7 +19,7 @@ import { getQueryClient } from "@/lib/get-query-client";
 import {
   threadInfiniteOptions,
   threadBaseOptions,
-} from "@/app/(core)/threads/options";
+} from "@/app/(main)/(core)/threads/options";
 import ServerError from "@/utils/error/ServerError";
 
 export interface UploadProfilePictureModalProps {

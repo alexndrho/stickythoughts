@@ -17,14 +17,14 @@ import { getQueryClient } from "@/lib/get-query-client";
 import {
   searchBaseOptions,
   threadInfiniteOptions,
-} from "@/app/(core)/threads/options";
+} from "@/app/(main)/(core)/threads/options";
 import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/form";
 import { submitThread } from "@/services/thread";
 import { useEffect } from "react";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/TextEditor";
 import ServerError from "@/utils/error/ServerError";
-import { userThreadsInfiniteOptions } from "@/app/(core)/user/options";
+import { userThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 
 export default function Content() {
   const router = useRouter();
