@@ -18,11 +18,15 @@
   color: var(--mantine-color-text);
 }
 
-.action-overide[data-selected="true"] {
+.search-btn__label {
+  flex: 1;
+}
+
+.spotlight__action-overide[data-selected="true"] {
   color: var(--mantine-color-default-color);
   background-color: #0000;
 }
 
-.action-overide[data-selected="true"]:hover {
+.spotlight__action-overide[data-selected="true"]:hover {
   background-color: var(--mantine-color-default);
 }

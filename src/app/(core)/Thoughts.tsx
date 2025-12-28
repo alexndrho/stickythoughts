@@ -2,7 +2,7 @@ import { Box } from "@mantine/core";
 
 import type { Thought as ThoughtType } from "@/generated/prisma/client";
 import Thought from "./Thought";
-import classes from "./thoughts.module.css";
+import classes from "./home.module.css";
 
 export interface ThoughtsProps {
   thoughts: ThoughtType[];

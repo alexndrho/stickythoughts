@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 import { formatDistance } from "date-fns";
 import {
   ActionIcon,
@@ -22,11 +24,10 @@ import { setUpdateThreadCommentQueryData } from "@/app/(core)/threads/set-query-
 import TextEditor from "@/components/TextEditor";
 import LikeButton from "@/app/(core)/threads/LikeButton";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
-import type { ThreadCommentType } from "@/types/thread";
-import { useMutation } from "@tanstack/react-query";
 import { updateThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";
-import Link from "next/link";
+import type { ThreadCommentType } from "@/types/thread";
+import classes from "./thread.module.css";
 
 export interface CommentItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
@@ -117,11 +118,7 @@ export default function CommentItem({
                 <ActionIcon
                   variant="transparent"
                   size="lg"
-                  styles={{
-                    root: {
-                      color: "var(--mantine-color-text)",
-                    },
-                  }}
+                  className={classes["comment-item__more-action-btn"]}
                 >
                   <IconDots size="1.25em" />
                 </ActionIcon>

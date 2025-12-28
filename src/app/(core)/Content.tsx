@@ -10,7 +10,6 @@ import {
   Input,
   Kbd,
   Loader,
-  rem,
   Skeleton,
   Text,
   Title,
@@ -28,6 +27,7 @@ import {
 import Thoughts from "@/app/(core)/Thoughts";
 import SendThoughtModal from "./SendThoughtModal";
 import InfiniteScroll from "@/components/InfiniteScroll";
+import classes from "./home.module.css";
 
 export default function Content() {
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
@@ -79,7 +79,7 @@ export default function Content() {
       notifications.update({
         id: "refetch-thoughts",
         loading: false,
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        icon: <IconCheck className={classes["color-swatch__icon"]} />,
         title: "Thoughts updated",
         message: "New thoughts have been fetched",
         autoClose: 4000,
@@ -90,7 +90,7 @@ export default function Content() {
         id: "refetch-thoughts",
         loading: false,
         color: "red",
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        icon: <IconX size="1em" />,
         title: "Failed to reload thoughts",
         message: "Please try again later",
         autoClose: 4000,

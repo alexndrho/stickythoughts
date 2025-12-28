@@ -8,14 +8,15 @@ import { Box, Button, Flex, Pill } from "@mantine/core";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
+import { likeThread, unlikeThread } from "@/services/thread";
 import { threadInfiniteOptions } from "@/app/(core)/threads/options";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import ThreadItem from "./ThreadItem";
 import SearchSpotlight from "./SearchSpotlight";
 import { ThreadsSkeleton } from "./ThreadsSkeleton";
-import { likeThread, unlikeThread } from "@/services/thread";
 import { setLikeThreadQueryData } from "@/app/(core)/threads/set-query-data";
+import classes from "./threads.module.css";
 
 export default function Content() {
   const { data: session } = authClient.useSession();
@@ -76,8 +77,11 @@ export default function Content() {
           leftSection={<IconSearch size="1em" />}
           rightSection={<Pill>Ctrl + K</Pill>}
           onClick={spotlight.open}
-          styles={{
-            label: { flex: 1 },
+          // styles={{
+          //   label: { flex: 1 },
+          // }}
+          classNames={{
+            label: classes["search-btn__label"],
           }}
           aria-label="Open search"
         >

@@ -83,7 +83,7 @@ function ActionUser({
         result.name ? `${result.name} (${result.username})` : result.username
       }
       onClick={() => router.push(`/user/${result.username}`)}
-      className={classes["action-overide"]}
+      className={classes["spotlight__action-overide"]}
     />
   );
 }
@@ -101,7 +101,7 @@ function ActionThread({
       leftSection={<IconMessage />}
       label={result.title}
       onClick={() => router.push(`/threads/${result.id}`)}
-      className={classes["action-overide"]}
+      className={classes["spotlight__action-overide"]}
     />
   );
 }

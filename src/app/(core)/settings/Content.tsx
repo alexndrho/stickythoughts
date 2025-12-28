@@ -242,16 +242,7 @@ export default function Content() {
               gap="md"
             >
               <Box>
-                <Text
-                  size="lg"
-                  fw="bold"
-                  truncate
-                  style={{
-                    lineHeight: item.description
-                      ? "var(--mantine-line-height-xs)"
-                      : undefined,
-                  }}
-                >
+                <Text size="lg" fw="bold" truncate>
                   {item.label}
                 </Text>
 
@@ -262,14 +253,7 @@ export default function Content() {
                 )}
 
                 <Skeleton w="auto" miw={150} visible={item.loading}>
-                  <Text
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.25rem",
-                      wordBreak: "break-word",
-                    }}
-                  >
+                  <Text className={classes["account-item__text-value"]}>
                     {item.value || "No value set"}
                   </Text>
                 </Skeleton>

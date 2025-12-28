@@ -1,0 +1,15 @@
+.thread__more-action-btn {
+  color: var(--mantine-color-text);
+}
+
+.thread__more-action-btn:hover {
+  color: var(--mantine-color-hover);
+}
+
+.comment-item__more-action-btn {
+  color: var(--mantine-color-text);
+}
+
+.comment-item__more-action-btn:hover {
+  color: var(--mantine-color-hover);
+}

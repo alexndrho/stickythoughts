@@ -3,7 +3,7 @@ import { Box, Text, Tooltip } from "@mantine/core";
 import { getFormattedDate } from "@/utils/date";
 import { getColorFallback } from "@/utils/color";
 import { filterText } from "@/utils/text";
-import classes from "./thoughts.module.css";
+import classes from "./home.module.css";
 
 export interface NoteProps {
   message: string;

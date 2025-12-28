@@ -16,3 +16,8 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
+.color-swatch__icon {
+  width: rem(18px);
+  height: rem(18px);
+}
