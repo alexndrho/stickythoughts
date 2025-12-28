@@ -4,7 +4,7 @@ import { Anchor, Box, Group, Paper, Text, Typography } from "@mantine/core";
 
 import LikeButton from "../../threads/LikeButton";
 import { type UserThreadCommentType } from "@/types/thread";
-import classes from "@/styles/user-comment-item.module.css";
+import classes from "./user.module.css";
 
 export interface UserCommentItemProps {
   comment: UserThreadCommentType;

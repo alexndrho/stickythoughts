@@ -36,7 +36,7 @@ import { removeProfilePicture } from "@/services/user";
 import { useTimer } from "@/hooks/use-timer";
 import { userProfileOptions } from "./options";
 import UpdateBioModal from "./UpdateBioModal";
-import classes from "@/styles/settings.module.css";
+import classes from "./settings.module.css";
 
 export default function Content() {
   const router = useRouter();

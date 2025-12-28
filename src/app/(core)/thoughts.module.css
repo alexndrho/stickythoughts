@@ -1,3 +1,10 @@
+.thoughts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 16.5rem);
+  justify-content: center;
+  grid-gap: 1rem;
+}
+
 .thought {
   aspect-ratio: 9 / 10;
   padding: 0.75em;

@@ -12,11 +12,11 @@ import Link from "next/link";
 import { formatDistance } from "date-fns";
 
 import { stripHtmlTags } from "@/utils/text";
-import classes from "@/styles/thread-item.module.css";
 import LikeButton from "@/app/(core)/threads/LikeButton";
 import CommentButton from "@/app/(core)/threads/CommentButton";
 import ShareButton from "@/app/(core)/threads/ShareButton";
 import type { ThreadType } from "@/types/thread";
+import classes from "./threads.module.css";
 
 export interface ThreadItemProps {
   post: ThreadType;

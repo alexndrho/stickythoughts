@@ -7,11 +7,11 @@ import { Spotlight } from "@mantine/spotlight";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { searchSegments, type SearchSegmentType } from "@/types/search";
-import styles from "@/styles/search-spotlight.module.css";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { searchOptions } from "./options";
 import type { SearchUserType, SearchThreadType } from "@/types/search";
+import classes from "./threads.module.css";
 
 export default function SearchSpotlight() {
   const router = useRouter();
@@ -83,7 +83,7 @@ function ActionUser({
         result.name ? `${result.name} (${result.username})` : result.username
       }
       onClick={() => router.push(`/user/${result.username}`)}
-      className={styles["action-overide"]}
+      className={classes["action-overide"]}
     />
   );
 }
@@ -101,7 +101,7 @@ function ActionThread({
       leftSection={<IconMessage />}
       label={result.title}
       onClick={() => router.push(`/threads/${result.id}`)}
-      className={styles["action-overide"]}
+      className={classes["action-overide"]}
     />
   );
 }
