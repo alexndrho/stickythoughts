@@ -38,6 +38,7 @@ export async function PUT(
       where: {
         id: commentId,
         threadId,
+        authorId: session.user.id,
       },
       data: {
         body,
@@ -110,6 +111,7 @@ export async function DELETE(
       where: {
         id: commentId,
         threadId,
+        authorId: session.user.id,
       },
       select: {
         authorId: true,
