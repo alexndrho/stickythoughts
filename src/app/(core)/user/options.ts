@@ -4,6 +4,8 @@ import {
   getUser,
   getUserComments,
   getUserLikedThreads,
+  getUserNewNotificationCount,
+  getUserNotifications,
   getUserThreads,
 } from "@/services/user";
 
@@ -17,6 +19,22 @@ export const userUsernameOptions = (username: string) => {
     queryFn: () => getUser(username),
   });
 };
+
+export const userNotificationsInfiniteOptions = infiniteQueryOptions({
+  queryKey: [...userOptions.queryKey, "notifications"],
+  initialPageParam: undefined,
+  queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
+    getUserNotifications(pageParam),
+  getNextPageParam: (notifications) => {
+    if (notifications.length === 0) return undefined;
+    return notifications[notifications.length - 1].updatedAt;
+  },
+});
+
+export const userNotificationCountOptions = queryOptions({
+  queryKey: [...userOptions.queryKey, "notification-count"],
+  queryFn: getUserNewNotificationCount,
+});
 
 export const userThreadsInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({

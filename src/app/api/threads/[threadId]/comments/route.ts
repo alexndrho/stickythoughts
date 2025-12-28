@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { NotificationType } from "@/generated/prisma/enums";
 import { createThreadCommentServerInput } from "@/lib/validations/form";
 import { THREAD_POST_COMMENT_PER_PAGE } from "@/config/thread";
 import { formatThreadComments } from "@/utils/thread";
@@ -51,6 +52,11 @@ export async function POST(
         body,
       },
       include: {
+        thread: {
+          select: {
+            authorId: true,
+          },
+        },
         author: {
           select: {
             id: true,
@@ -86,6 +92,21 @@ export async function POST(
         count: _count.likes,
       },
     } satisfies ThreadCommentType;
+
+    if (comment.thread.authorId !== comment.authorId) {
+      await prisma.notification.create({
+        data: {
+          user: { connect: { id: comment.thread.authorId } },
+          type: NotificationType.THREAD_COMMENT,
+          actors: {
+            create: {
+              userId: comment.authorId,
+            },
+          },
+          comment: { connect: { id: comment.id } },
+        },
+      });
+    }
 
     return NextResponse.json(formattedPost, { status: 201 });
   } catch (error) {

@@ -28,12 +28,14 @@ import {
   IconLogin,
   IconUser,
   IconMessage,
+  IconBell,
 } from "@tabler/icons-react";
 import { useThrottledCallback } from "@mantine/hooks";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtInfiniteOptions, thoughtOptions } from "@/app/(core)/options";
+import UserNotification from "./UserNotification";
 import classes from "@/styles/nav.module.css";
 
 const navLinks = [
@@ -126,11 +128,19 @@ export default function Nav() {
             </Group>
 
             {session ? (
-              <UserMenu
-                session={session}
-                signOut={signOut}
-                setColorScheme={setColorScheme}
-              />
+              <>
+                <UserNotification session={session}>
+                  <ActionIcon aria-label="Notifications" variant="default">
+                    <IconBell size="1em" />
+                  </ActionIcon>
+                </UserNotification>
+
+                <UserMenu
+                  session={session}
+                  signOut={signOut}
+                  setColorScheme={setColorScheme}
+                />
+              </>
             ) : (
               <>
                 <Box display={{ base: "none", sm: "block" }}>

@@ -1,9 +1,10 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { Prisma } from "@/generated/prisma/client";
+import { NotificationType, Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
 import type IError from "@/types/error";
 
 export async function POST(
@@ -31,7 +32,7 @@ export async function POST(
 
     const { threadId, commentId } = await params;
 
-    await prisma.threadCommentLike.create({
+    const commentLike = await prisma.threadCommentLike.create({
       data: {
         user: {
           connect: {
@@ -45,7 +46,57 @@ export async function POST(
           },
         },
       },
+      select: {
+        userId: true,
+        comment: {
+          select: {
+            authorId: true,
+            notifications: {
+              take: 1,
+              where: {
+                type: NotificationType.THREAD_COMMENT_LIKE,
+                updatedAt: {
+                  gte: new Date(Date.now() - NOTIFICATION_UPDATE_INTERVAL_MS),
+                },
+              },
+              select: { id: true },
+              orderBy: {
+                updatedAt: "desc",
+              },
+            },
+            _count: {
+              select: {
+                likes: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (commentLike.comment.authorId !== commentLike.userId) {
+      if (commentLike.comment.notifications.length > 0) {
+        await prisma.notification.update({
+          where: { id: commentLike.comment.notifications[0].id },
+          data: {
+            isRead: false,
+            isCountDecremented: false,
+            actors: {
+              create: { userId: commentLike.userId },
+            },
+          },
+        });
+      } else {
+        await prisma.notification.create({
+          data: {
+            user: { connect: { id: commentLike.comment.authorId } },
+            type: NotificationType.THREAD_COMMENT_LIKE,
+            actors: { create: { userId: commentLike.userId } },
+            comment: { connect: { id: commentId } },
+          },
+        });
+      }
+    }
 
     return NextResponse.json(
       {
@@ -106,7 +157,7 @@ export async function DELETE(
 
     const { threadId, commentId } = await params;
 
-    await prisma.threadCommentLike.delete({
+    const deletedLike = await prisma.threadCommentLike.delete({
       where: {
         userId_commentId: {
           userId: session.user.id,
@@ -118,7 +169,63 @@ export async function DELETE(
           },
         },
       },
+      select: {
+        userId: true,
+        comment: {
+          select: {
+            authorId: true,
+            thread: {
+              select: {
+                authorId: true,
+              },
+            },
+            notifications: {
+              where: {
+                type: NotificationType.THREAD_COMMENT_LIKE,
+                actors: {
+                  some: {
+                    userId: session.user.id,
+                  },
+                },
+              },
+              select: {
+                id: true,
+                _count: {
+                  select: {
+                    actors: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (deletedLike.comment.authorId !== deletedLike.userId) {
+      const notificationsToDelete = deletedLike.comment.notifications
+        .filter((n) => n._count.actors <= 1)
+        .map((n) => n.id);
+      const notificationsToUpdate = deletedLike.comment.notifications
+        .filter((n) => n._count.actors > 1)
+        .map((n) => n.id);
+
+      // Delete notifications with only 1 actor
+      if (notificationsToDelete.length > 0) {
+        await prisma.notification.deleteMany({
+          where: { id: { in: notificationsToDelete } },
+        });
+      }
+      // Remove the actor from notifications with multiple actors
+      if (notificationsToUpdate.length > 0) {
+        await prisma.notificationActor.deleteMany({
+          where: {
+            notificationId: { in: notificationsToUpdate },
+            userId: deletedLike.userId,
+          },
+        });
+      }
+    }
 
     return NextResponse.json(
       {

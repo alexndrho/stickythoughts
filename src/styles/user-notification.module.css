@@ -1,0 +1,40 @@
+.notification {
+  width: rem(500px) !important;
+}
+
+.notification__link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.notification__item {
+  padding: calc(var(--mantine-spacing-xs) / 1.5) var(--mantine-spacing-sm) !important;
+}
+
+.notification__item:hover {
+  background-color: var(--mantine-color-default-hover);
+  cursor: pointer;
+}
+
+.notification__item--unread {
+  background-color: var(--mantine-primary-color-light);
+}
+
+.notification__item--unread:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+.notification__actor-link {
+  color: var(--mantine-color-text);
+}
+
+.notification__more {
+  color: var(--mantine-color-text);
+}
+
+.notification__more:hover {
+  color: var(--mantine-color-text);
+}

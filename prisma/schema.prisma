@@ -35,6 +35,9 @@ model User {
   threadComments     ThreadComment[]
   threadCommentLikes ThreadCommentLike[]
 
+  notifications      Notification[]      @relation("UserNotification")
+  actedNotifications NotificationActor[]
+
   @@unique([email])
   @@unique([username])
   @@map("user")
@@ -94,6 +97,8 @@ model Thread {
   likes    ThreadLike[]
   comments ThreadComment[]
 
+  notifications Notification[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -122,6 +127,8 @@ model ThreadComment {
   thread   Thread              @relation(fields: [threadId], references: [id], onDelete: Cascade)
   likes    ThreadCommentLike[]
 
+  notifications Notification[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -138,4 +145,44 @@ model ThreadCommentLike {
   createdAt DateTime @default(now())
 
   @@unique([userId, commentId])
+}
+
+enum NotificationType {
+  THREAD_LIKE
+  THREAD_COMMENT
+  THREAD_COMMENT_LIKE
+}
+
+model Notification {
+  id                 String           @id @default(uuid())
+  userId             String
+  type               NotificationType
+  isRead             Boolean          @default(false)
+  isCountDecremented Boolean          @default(false)
+
+  actors    NotificationActor[]
+  threadId  String?
+  commentId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User           @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
+  thread  Thread?        @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  comment ThreadComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt(sort: Desc)])
+}
+
+model NotificationActor {
+  id             String   @id @default(uuid())
+  notificationId String
+  userId         String
+  createdAt      DateTime @default(now())
+
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, userId])
+  @@index([notificationId, createdAt(sort: Desc)])
 }

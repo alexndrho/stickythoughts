@@ -24,3 +24,60 @@ export type UserProfileSettings = Prisma.UserGetPayload<{
     updatedAt: true;
   };
 }>;
+
+export type BaseUserNotificationType = Prisma.NotificationGetPayload<{
+  select: {
+    id: true;
+    type: true;
+    isRead: true;
+    updatedAt: true;
+    thread: {
+      select: {
+        id: true;
+        title: true;
+      };
+    };
+    comment: {
+      select: {
+        id: true;
+        body: true;
+        thread: {
+          select: {
+            id: true;
+          };
+        };
+      };
+    };
+    actors: {
+      take: 1;
+      select: {
+        user: {
+          select: {
+            image: true;
+            name: true;
+            username: true;
+          };
+        };
+      };
+    };
+    _count: {
+      select: {
+        actors: true;
+      };
+    };
+  };
+}>;
+
+export type UserNotificationType = Pick<
+  BaseUserNotificationType,
+  "id" | "type" | "isRead"
+> & {
+  actorImage: string | null;
+  actorName: string;
+  actorUsername: string;
+  otherActorCount: number;
+  threadId: string | undefined;
+  commentId: string | undefined;
+  body: string;
+  updatedAt: string;
+};

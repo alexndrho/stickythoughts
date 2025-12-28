@@ -1,10 +1,12 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { Prisma } from "@/generated/prisma/client";
-import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import IError from "@/types/error";
+import { prisma } from "@/lib/db";
+import { Prisma } from "@/generated/prisma/client";
+import { NotificationType } from "@/generated/prisma/client";
+import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
+import type IError from "@/types/error";
 
 export async function POST(
   request: Request,
@@ -31,7 +33,7 @@ export async function POST(
 
     const { threadId } = await params;
 
-    await prisma.threadLike.create({
+    const threadLike = await prisma.threadLike.create({
       data: {
         user: {
           connect: {
@@ -44,7 +46,60 @@ export async function POST(
           },
         },
       },
+      select: {
+        userId: true,
+        thread: {
+          select: {
+            authorId: true,
+            notifications: {
+              take: 1,
+              where: {
+                type: NotificationType.THREAD_LIKE,
+                updatedAt: {
+                  gte: new Date(Date.now() - NOTIFICATION_UPDATE_INTERVAL_MS),
+                },
+              },
+              select: { id: true },
+              orderBy: {
+                updatedAt: "desc",
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (threadLike.thread.authorId !== threadLike.userId) {
+      if (threadLike.thread.notifications.length > 0) {
+        await prisma.notification.update({
+          where: {
+            id: threadLike.thread.notifications[0].id,
+          },
+          data: {
+            isRead: false,
+            isCountDecremented: false,
+            actors: {
+              create: {
+                userId: threadLike.userId,
+              },
+            },
+          },
+        });
+      } else {
+        await prisma.notification.create({
+          data: {
+            user: { connect: { id: threadLike.thread.authorId } },
+            type: NotificationType.THREAD_LIKE,
+            thread: { connect: { id: threadId } },
+            actors: {
+              create: {
+                userId: threadLike.userId,
+              },
+            },
+          },
+        });
+      }
+    }
 
     return NextResponse.json(
       {
@@ -104,14 +159,69 @@ export async function DELETE(
 
     const { threadId } = await params;
 
-    await prisma.threadLike.delete({
+    const deletedThreadLike = await prisma.threadLike.delete({
       where: {
         userId_threadId: {
           userId: session.user.id,
           threadId,
         },
       },
+      select: {
+        userId: true,
+        thread: {
+          select: {
+            authorId: true,
+            notifications: {
+              where: {
+                type: NotificationType.THREAD_LIKE,
+                actors: {
+                  some: {
+                    userId: session.user.id,
+                  },
+                },
+              },
+              select: {
+                id: true,
+                _count: {
+                  select: {
+                    actors: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (deletedThreadLike.thread.authorId !== deletedThreadLike.userId) {
+      const notificationsToDelete = deletedThreadLike.thread.notifications
+        .filter((notification) => notification._count.actors <= 1)
+        .map((notification) => notification.id);
+      const notificationsToUpdate = deletedThreadLike.thread.notifications
+        .filter((notification) => notification._count.actors > 1)
+        .map((notification) => notification.id);
+
+      // Delete notifications with only 1 actor
+      if (notificationsToDelete.length > 0) {
+        await prisma.notification.deleteMany({
+          where: {
+            id: {
+              in: notificationsToDelete,
+            },
+          },
+        });
+      }
+      // Remove the actor from notifications with multiple actors
+      if (notificationsToUpdate.length > 0) {
+        await prisma.notificationActor.deleteMany({
+          where: {
+            notificationId: { in: notificationsToUpdate },
+            userId: deletedThreadLike.userId,
+          },
+        });
+      }
+    }
 
     return NextResponse.json(
       {

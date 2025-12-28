@@ -106,10 +106,28 @@ export async function DELETE(
 
     const { threadId, commentId } = await params;
 
-    await prisma.threadComment.delete({
+    const deletedComment = await prisma.threadComment.delete({
       where: {
         id: commentId,
         threadId,
+      },
+      select: {
+        authorId: true,
+        thread: {
+          select: {
+            authorId: true,
+          },
+        },
+      },
+    });
+
+    // Delete notifications for both the comment author and the thread author
+    await prisma.notification.deleteMany({
+      where: {
+        userId: {
+          in: [deletedComment.authorId, deletedComment.thread.authorId],
+        },
+        commentId,
       },
     });
 

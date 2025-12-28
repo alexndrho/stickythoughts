@@ -1,6 +1,10 @@
 import { toServerError } from "@/utils/error/ServerError";
 import { apiUrl } from "@/utils/text";
-import type { UserProfileSettings, UserPublicProfile } from "@/types/user";
+import type {
+  UserNotificationType,
+  UserProfileSettings,
+  UserPublicProfile,
+} from "@/types/user";
 import type { ThreadType, UserThreadCommentType } from "@/types/thread";
 
 export const getUser = async (
@@ -84,8 +88,99 @@ export const removeProfilePicture = async (): Promise<{ message: string }> => {
   return data;
 };
 
-// profile
+export const getUserNotifications = async (
+  lastUpdatedAt?: string,
+): Promise<UserNotificationType[]> => {
+  const searchParams = new URLSearchParams();
 
+  if (lastUpdatedAt) {
+    searchParams.append("lastUpdatedAt", lastUpdatedAt);
+  }
+
+  const res = await fetch(
+    apiUrl(`/api/user/notifications?${searchParams.toString()}`),
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User notifications fetch error", data.issues);
+  }
+
+  return data;
+};
+
+export const userNotificationOpened = async (): Promise<{
+  message: string;
+}> => {
+  const res = await fetch(apiUrl(`/api/user/notifications/new-count`), {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ opened: true }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User notification opened error", data.issues);
+  }
+
+  return data;
+};
+
+export const getUserNewNotificationCount = async (): Promise<number> => {
+  const res = await fetch(apiUrl("/api/user/notifications/new-count"));
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User new notification count fetch error", data.issues);
+  }
+
+  return data.count;
+};
+
+export const userNotificationMarkRead = async ({
+  id,
+  isRead,
+}: {
+  id: string;
+  isRead: boolean;
+}): Promise<{ message: string }> => {
+  const res = await fetch(apiUrl(`/api/user/notifications/${id}`), {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ isRead }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User notification mark read error", data.issues);
+  }
+
+  return data;
+};
+
+export const deleteUserNotification = async (id: string) => {
+  const res = await fetch(apiUrl(`/api/user/notifications/${id}`), {
+    method: "DELETE",
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User notification delete error", data.issues);
+  }
+
+  return data;
+};
+
+// profile
 export const getUserThreads = async ({
   username,
   lastId,

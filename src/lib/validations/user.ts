@@ -15,3 +15,11 @@ export const updateUserBioInput = z.object({
         ),
     ),
 });
+
+export const userNotificationOpenedInput = z.object({
+  opened: z.boolean("Opened is required"),
+});
+
+export const userNotificationMarkReadInput = z.object({
+  isRead: z.boolean("isRead is required"),
+});
