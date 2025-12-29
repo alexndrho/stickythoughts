@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { Box, Button, Flex, Pill } from "@mantine/core";
+import { Button, Pill } from "@mantine/core";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -67,23 +67,18 @@ export default function Content() {
   };
 
   return (
-    <Box my="md" w="100%">
-      <Flex w="100%" mb="md" gap="md">
+    <div className={classes.container}>
+      <div className={classes["actions-bar"]}>
         <Button
-          flex={1}
           variant="default"
-          justify="space-between"
-          c="var(--mantine-color-dimmed)"
           leftSection={<IconSearch size="1em" />}
           rightSection={<Pill>Ctrl + K</Pill>}
           onClick={spotlight.open}
-          // styles={{
-          //   label: { flex: 1 },
-          // }}
-          classNames={{
-            label: classes["search-btn__label"],
-          }}
           aria-label="Open search"
+          classNames={{
+            root: classes["actions-bar__search-btn"],
+            label: classes["actions-bar__search-btn__label"],
+          }}
         >
           Search...
         </Button>
@@ -94,14 +89,14 @@ export default function Content() {
         >
           Submit a thread
         </Button>
-      </Flex>
+      </div>
 
       <InfiniteScroll
         onLoadMore={fetchNextPostsPage}
         hasNext={hasNextPostsPage}
         loading={isFetchingPosts}
       >
-        <Flex direction="column" gap="md">
+        <div className={classes.threads}>
           {postsData?.pages
             .reduce((acc, page) => acc.concat(page))
             .map((post) => (
@@ -109,7 +104,7 @@ export default function Content() {
             ))}
 
           {isFetchingPosts && <ThreadsSkeleton />}
-        </Flex>
+        </div>
       </InfiniteScroll>
 
       <SearchSpotlight />
@@ -120,6 +115,6 @@ export default function Content() {
           onClose={signInWarningModalHandler.close}
         />
       )}
-    </Box>
+    </div>
   );
 }

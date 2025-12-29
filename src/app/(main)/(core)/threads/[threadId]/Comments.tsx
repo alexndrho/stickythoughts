@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { Center, Flex, Loader } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 
 import { type authClient } from "@/lib/auth-client";
 import { threadCommentsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
@@ -16,6 +16,7 @@ import {
 } from "@/app/(main)/(core)/threads/set-query-data";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import CommentItem from "./CommentItem";
+import classes from "./thread.module.css";
 
 export interface CommentsProps {
   threadId: string;
@@ -131,7 +132,7 @@ export default function Comments({
       hasNext={hasNextCommentsPage}
       loading={isFetchingComments || isRefetchingComments}
     >
-      <Flex mt="lg" direction="column" gap="lg">
+      <div className={classes.comments}>
         {commentsData?.pages
           .reduce((acc, page) => acc.concat(page))
           .map((comment) => (
@@ -151,7 +152,7 @@ export default function Comments({
             <Loader />
           </Center>
         )}
-      </Flex>
+      </div>
     </InfiniteScroll>
   );
 }

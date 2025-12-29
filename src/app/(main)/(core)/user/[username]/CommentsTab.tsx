@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { Flex, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 
 import { type authClient } from "@/lib/auth-client";
 import { userCommentsInfiniteOptions } from "../options";
@@ -10,6 +10,7 @@ import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
 import UserCommentItem from "./UserCommentItem";
+import classes from "./user.module.css";
 
 export interface CommentsTabProps {
   username: string;
@@ -86,13 +87,13 @@ export default function CommentsTab({
   };
 
   return (
-    <Tabs.Panel value="comments" py="md">
+    <Tabs.Panel value="comments" className={classes["tab-content"]}>
       <InfiniteScroll
         onLoadMore={fetchNextCommentsPage}
         hasNext={hasNextCommentsPage}
         loading={isCommentsFetching}
       >
-        <Flex direction="column" gap="md">
+        <div className={classes["tab-content-container"]}>
           {comments?.pages.map((page) =>
             page.map((comment) => (
               <UserCommentItem
@@ -104,7 +105,7 @@ export default function CommentsTab({
           )}
 
           {isCommentsFetching && <ThreadsSkeleton />}
-        </Flex>
+        </div>
       </InfiniteScroll>
     </Tabs.Panel>
   );

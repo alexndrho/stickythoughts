@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Button, Flex, Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import classes from "./user.module.css";
 
 export interface EmptyThreadPromptProps {
   isCurrentUser: boolean;
@@ -11,25 +12,27 @@ export default function EmptyThreadPrompt({
 }: EmptyThreadPromptProps) {
   if (isCurrentUser) {
     return (
-      <Flex direction="column" align="center">
-        <Text ta="center">
+      <div className={classes["empty-thread-prompt"]}>
+        <Text className={classes["empty-thread-prompt__description"]}>
           You haven&apos;t created any threads yet. Create your first thread to
           get started!
         </Text>
 
         <Button
           component={Link}
-          mt="md"
           href="/threads/submit"
           leftSection={<IconPlus size="1em" />}
+          className={classes["empty-thread-prompt__create-button"]}
         >
           Create Thread
         </Button>
-      </Flex>
+      </div>
     );
   }
 
   return (
-    <Text ta="center">This user hasn&apos;t created any threads yet.</Text>
+    <Text className={classes["empty-thread-prompt__description"]}>
+      This user hasn&apos;t created any threads yet.
+    </Text>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { Flex, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 
 import type { authClient } from "@/lib/auth-client";
 import ThreadItem from "../../threads/ThreadItem";
@@ -11,6 +11,7 @@ import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-da
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
 import EmptyThreadPrompt from "./EmptyThreadPrompt";
 import InfiniteScroll from "@/components/InfiniteScroll";
+import classes from "./user.module.css";
 
 interface ThreadsTabProps {
   username: string;
@@ -65,7 +66,7 @@ export default function Threads({
   };
 
   return (
-    <Tabs.Panel value="threads" py="md">
+    <Tabs.Panel value="threads" className={classes["tab-content"]}>
       <InfiniteScroll
         onLoadMore={() => {
           fetchNextThreadsPage();
@@ -73,7 +74,7 @@ export default function Threads({
         hasNext={hasNextThreadsPage}
         loading={isThreadsFetching}
       >
-        <Flex direction="column" gap="md">
+        <div className={classes["tab-content-container"]}>
           {threads?.pages[0].length !== 0 ? (
             threads?.pages.map((page) =>
               page.map((thread) => (
@@ -87,7 +88,7 @@ export default function Threads({
           )}
 
           {isThreadsFetching && <ThreadsSkeleton />}
-        </Flex>
+        </div>
       </InfiniteScroll>
     </Tabs.Panel>
   );

@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { type Editor } from "@tiptap/react";
-import { Button, Flex } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 
@@ -74,19 +74,17 @@ const CommentEditor = forwardRef<CommentSectionRef, CommentEditorProps>(
       <form
         onSubmit={form.onSubmit((values) => commentMutation.mutate(values))}
       >
-        <Flex direction="column">
-          <TextEditor editor={editor} error={form.errors.body} />
+        <TextEditor editor={editor} error={form.errors.body} />
 
-          <Flex mt="md" justify="end">
-            <Button
-              type="submit"
-              disabled={!form.isDirty()}
-              loading={commentMutation.isPending}
-            >
-              Comment
-            </Button>
-          </Flex>
-        </Flex>
+        <Group mt="md" justify="end">
+          <Button
+            type="submit"
+            disabled={!form.isDirty()}
+            loading={commentMutation.isPending}
+          >
+            Comment
+          </Button>
+        </Group>
       </form>
     );
   },

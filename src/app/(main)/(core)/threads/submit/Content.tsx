@@ -25,6 +25,7 @@ import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/TextEditor";
 import ServerError from "@/utils/error/ServerError";
 import { userThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
+import classes from "./thread-submit.module.css";
 
 export default function Content() {
   const router = useRouter();
@@ -106,16 +107,20 @@ export default function Content() {
   });
 
   return (
-    <Container mx="auto" py="xl" px={0} size="sm">
-      <Title mb="lg">Create post</Title>
+    <Container size="sm" className={classes.container}>
+      <Title className={classes.title}>Create post</Title>
 
       <form onSubmit={form.onSubmit((value) => mutation.mutate(value))}>
-        <TextInput label="Title" {...form.getInputProps("title")} />
+        <TextInput
+          label="Title"
+          {...form.getInputProps("title")}
+          className={classes["title-text-input"]}
+        />
 
         <TextEditor editor={editor} error={form.errors.body} />
 
         {form.errors.root && (
-          <Text mt="xs" size="xs" c="red.8">
+          <Text size="xs" className={classes["root-error-messsage"]}>
             {form.errors.root}
           </Text>
         )}

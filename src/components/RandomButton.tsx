@@ -39,15 +39,13 @@ export default function RandomButton({ onClick }: RandomButtonProps) {
   }, 750);
 
   return (
-    <span>
-      {/* Use a span to prevent tooltip jittering. */}
-      <UnstyledButton
-        ref={randomColorButtonRef}
-        className={classes["random-button"]}
-        onClick={handleRandomColor}
-      >
-        <IconDiceFilled className={classes["dice-icon"]} />
-      </UnstyledButton>
-    </span>
+    <UnstyledButton
+      ref={randomColorButtonRef}
+      className={classes["random-button"]}
+      onClick={handleRandomColor}
+      aria-label="Random Button"
+    >
+      <IconDiceFilled className={classes["dice-icon"]} />
+    </UnstyledButton>
   );
 }

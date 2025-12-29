@@ -7,6 +7,7 @@ import { useForm } from "@mantine/form";
 import { AuthContainer } from "../AuthContainer";
 import { authClient } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
+import classes from "./forgot-password.module.css";
 
 export interface StepTwoProps {
   email: string | null;
@@ -72,7 +73,7 @@ export default function StepTwo({
   return (
     <Center>
       <AuthContainer>
-        <Title order={2} size="h2" mb="md" ta="center">
+        <Title order={2} className={classes["paper-title"]}>
           Enter the verification code
         </Title>
 

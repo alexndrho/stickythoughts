@@ -9,7 +9,6 @@ import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import {
   Anchor,
-  Box,
   Button,
   Divider,
   PasswordInput,
@@ -18,10 +17,10 @@ import {
   Title,
 } from "@mantine/core";
 import { IconBrandGoogleFilled, IconX } from "@tabler/icons-react";
-import classes from "../captcha.module.css";
 
 import { authClient } from "@/lib/auth-client";
 import { AuthContainer } from "../AuthContainer";
+import classes from "../auth.module.css";
 
 export default function Content() {
   const router = useRouter();
@@ -98,41 +97,37 @@ export default function Content() {
 
   return (
     <>
-      <Box mb={30}>
-        <Title mb="xs" ta="center">
-          Sign up
-        </Title>
+      <Title className={classes.title}>Sign up</Title>
 
-        <Text size="sm" c="dimmed" ta="center">
-          Already have an account?{" "}
-          <Anchor component={Link} href="/sign-in">
-            Sign in
-          </Anchor>
-        </Text>
-      </Box>
+      <Text size="sm" className={classes.subtitle}>
+        Already have an account?{" "}
+        <Anchor component={Link} href="/sign-in" inherit>
+          Sign in
+        </Anchor>
+      </Text>
 
       <AuthContainer>
         <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
           <TextInput
-            mt="md"
             label="Email"
             description="This will not be shown publicly"
             withAsterisk
             {...form.getInputProps("email")}
+            className={classes["text-input"]}
           />
 
           <TextInput
-            mt="md"
             label="Username"
             withAsterisk
             {...form.getInputProps("username")}
+            className={classes["text-input"]}
           />
 
           <PasswordInput
-            mt="md"
             label="Password"
             withAsterisk
             {...form.getInputProps("password")}
+            className={classes["text-input"]}
           />
 
           <Turnstile
@@ -150,14 +145,14 @@ export default function Content() {
           />
 
           {(form.errors.root || form.errors.turnstileToken) && (
-            <Text mt="xs" size="xs" c="red.8">
+            <Text size="xs" className={classes["root-error-messsage"]}>
               {form.errors.root || form.errors.turnstileToken}
             </Text>
           )}
 
           <Button
             fullWidth
-            mt="lg"
+            mt="md"
             type="submit"
             loading={mutation.isPending}
             disabled={form.values.turnstileToken === ""}

@@ -1,4 +1,37 @@
-.nav {
+.nav-container {
+  padding-top: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-md);
   background-color: var(--mantine-color-body);
   border-bottom: rem(1) solid var(--mantine-color-default-border);
+}
+
+.nav {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desktop-nav-links {
+  display: none;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    display: flex;
+  }
+}
+
+.mobile-menu {
+  display: block;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}
+
+.desktop-unauthenticated-links {
+  display: none;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    display: block;
+  }
 }

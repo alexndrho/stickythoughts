@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatDistance } from "date-fns";
-import { Anchor, Box, Group, Paper, Text, Typography } from "@mantine/core";
+import { Anchor, Paper, Text, Typography } from "@mantine/core";
 
 import LikeButton from "../../threads/LikeButton";
 import { type UserThreadCommentType } from "@/types/thread";
@@ -28,38 +28,38 @@ export default function UserCommentItem({
   return (
     <Paper
       component="article"
-      pos="relative"
-      shadow="xs"
       withBorder
-      className={classes.comment}
+      className={classes["user-comment-item"]}
     >
       <Link
         href={`/threads/${comment.threadId}`}
-        className={classes["comment__main-link"]}
+        className={classes["user-comment-item__main-link"]}
         aria-label={`View thread titled ${comment.thread.title}`}
       />
 
-      <Box p="md">
+      <div className={classes["user-comment-item__content"]}>
         <Text>
           Replied to{" "}
           <Anchor
             component={Link}
-            pos="relative"
-            fw="bold"
+            inherit
             href={`/threads/${comment.threadId}`}
-            className={classes.comment__link}
+            className={classes["user-comment-item__link"]}
           >
             {comment.thread.title}
           </Anchor>
         </Text>
 
-        <Text mb="md" fz="sm" truncate>
+        <Text
+          size="sm"
+          truncate
+          className={classes["user-comment-item__description"]}
+        >
           <Anchor
             component={Link}
-            pos="relative"
-            fw="bold"
+            inherit
             href={`/user/${comment.author.username}`}
-            className={classes.comment__link}
+            className={classes["user-comment-item__link"]}
           >
             {comment.author.name || comment.author.username}
           </Anchor>{" "}
@@ -73,22 +73,21 @@ export default function UserCommentItem({
           <div dangerouslySetInnerHTML={{ __html: comment.body }} />
         </Typography>
 
-        <Group pos="relative" mt="md" justify="md">
-          <LikeButton
-            size="compact-sm"
-            count={comment.likes.count}
-            liked={comment.likes.liked}
-            onLike={() => {
-              onLike({
-                threadId: comment.threadId,
-                commentId: comment.id,
-                username: comment.author.username,
-                like: !comment.likes.liked,
-              });
-            }}
-          />
-        </Group>
-      </Box>
+        <LikeButton
+          size="compact-sm"
+          count={comment.likes.count}
+          liked={comment.likes.liked}
+          className={classes["user-comment-item__like-btn"]}
+          onLike={() => {
+            onLike({
+              threadId: comment.threadId,
+              commentId: comment.id,
+              username: comment.author.username,
+              like: !comment.likes.liked,
+            });
+          }}
+        />
+      </div>
     </Paper>
   );
 }

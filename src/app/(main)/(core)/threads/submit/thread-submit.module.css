@@ -1,0 +1,21 @@
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: var(--mantine-spacing-xl);
+  padding-bottom: var(--mantine-spacing-xl);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.title-text-input {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.root-error-messsage {
+  margin-top: var(--mantine-spacing-xs);
+  color: var(--mantine-color-error);
+}

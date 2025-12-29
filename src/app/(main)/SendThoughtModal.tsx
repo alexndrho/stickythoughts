@@ -25,6 +25,7 @@ import {
   THOUGHT_MAX_MESSAGE_LENGTH,
   THOUGHT_COLORS,
 } from "@/config/thought";
+import classes from "./home.module.css";
 
 export interface SendThoughtModalProps {
   open: boolean;
@@ -105,32 +106,32 @@ export default function SendThoughtModal({
     <Modal opened={open} onClose={onClose} title="Share a thought" centered>
       <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
         <TextInput
-          mb="md"
           label="Author:"
           withAsterisk
           maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
           disabled={mutation.isPending}
           {...form.getInputProps("author")}
+          className={classes["send-thought-modal__text-input"]}
         />
 
         <Textarea
-          label={"Message:"}
+          label="Message:"
           withAsterisk
           rows={5}
           maxLength={THOUGHT_MAX_MESSAGE_LENGTH}
           disabled={mutation.isPending}
           {...form.getInputProps("message")}
+          className={classes["send-thought-modal__text-input"]}
         />
 
         <Text
-          mb="sm"
           size="sm"
-          ta="right"
           c={
             form.values.message.length >= THOUGHT_MAX_MESSAGE_LENGTH
               ? "red"
-              : ""
+              : undefined
           }
+          className={classes["send-thought-modal__message-length-indicator"]}
         >{`${form.values.message.length}/${THOUGHT_MAX_MESSAGE_LENGTH}`}</Text>
 
         <Group justify="center">

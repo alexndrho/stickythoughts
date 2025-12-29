@@ -83,76 +83,74 @@ export default function Nav() {
   };
 
   return (
-    <Box component="header" py="md" className={classes.nav}>
-      <Container size="lg">
-        <Group h="100%" justify="space-between">
-          <Text
-            component={Link}
-            href="/"
-            fz="xl"
-            fw={700}
-            onClick={(e) => {
-              if (pathname === "/") {
-                e.preventDefault();
-                handleRefetch();
-              }
-            }}
-          >
-            Sticky
-            <Text span c="blue" inherit>
-              Thoughts
-            </Text>
+    <Box component="header" className={classes["nav-container"]}>
+      <Container size="lg" className={classes.nav}>
+        <Text
+          component={Link}
+          href="/"
+          fz="xl"
+          fw={700}
+          onClick={(e) => {
+            if (pathname === "/") {
+              e.preventDefault();
+              handleRefetch();
+            }
+          }}
+        >
+          Sticky
+          <Text span c="blue" inherit>
+            Thoughts
           </Text>
+        </Text>
 
-          <Group>
-            <Group component="nav">
-              <Group display={{ base: "none", sm: "flex" }}>
-                {navLinks.map((link) => (
-                  <Button
-                    key={link.label}
-                    component={Link}
-                    href={link.href}
-                    variant="subtle"
-                    size="compact-sm"
-                  >
-                    {link.label}
-                  </Button>
-                ))}
-              </Group>
-
-              <Box display={{ base: "block", sm: "none" }}>
-                <MobileMenu />
-              </Box>
-
-              <Divider orientation="vertical" />
+        <Group>
+          <Group component="nav">
+            <Group className={classes["desktop-nav-links"]}>
+              {navLinks.map((link) => (
+                <Button
+                  key={link.label}
+                  component={Link}
+                  href={link.href}
+                  variant="subtle"
+                  size="compact-sm"
+                >
+                  {link.label}
+                </Button>
+              ))}
             </Group>
 
-            {session ? (
-              <>
-                <UserNotification session={session}>
-                  <ActionIcon aria-label="Notifications" variant="default">
-                    <IconBell size="1em" />
-                  </ActionIcon>
-                </UserNotification>
-
-                <UserMenu
-                  session={session}
-                  signOut={signOut}
-                  setColorScheme={setColorScheme}
-                />
-              </>
-            ) : (
-              <>
-                <Box display={{ base: "none", sm: "block" }}>
-                  <Button component={Link} href="/sign-in" size="compact-sm">
-                    Sign in
-                  </Button>
-                </Box>
-
-                <ToggleTheme setColorScheme={setColorScheme} />
-              </>
-            )}
+            <div className={classes["mobile-menu"]}>
+              <MobileMenu />
+            </div>
           </Group>
+
+          <Divider orientation="vertical" />
+
+          {session ? (
+            <>
+              <UserNotification session={session}>
+                <ActionIcon aria-label="Notifications" variant="default">
+                  <IconBell size="1em" />
+                </ActionIcon>
+              </UserNotification>
+
+              <UserMenu
+                session={session}
+                signOut={signOut}
+                setColorScheme={setColorScheme}
+              />
+            </>
+          ) : (
+            <>
+              <div className={classes["desktop-unauthenticated-links"]}>
+                <Button component={Link} href="/sign-in" size="compact-sm">
+                  Sign in
+                </Button>
+              </div>
+
+              <ToggleTheme setColorScheme={setColorScheme} />
+            </>
+          )}
         </Group>
       </Container>
     </Box>

@@ -3,9 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
-  Box,
   Button,
-  Flex,
   Group,
   Input,
   Kbd,
@@ -117,7 +115,7 @@ export default function Content() {
   }, []);
 
   return (
-    <Box py="md">
+    <div className={classes.container}>
       <InfiniteScroll
         onLoadMore={() => {
           if (searchBarValue.length > 0) {
@@ -136,47 +134,43 @@ export default function Content() {
           </Group>
         }
       >
-        <Flex direction="column" justify="center" align="center">
-          <Title mb="md" ta="center">
+        <div className={classes.header}>
+          <Title className={classes.title}>
             A place where you can freely express yourself
           </Title>
 
-          <Skeleton w="auto" h="auto" visible={!thoughtsCountIsFetched}>
-            <Group gap={5}>
-              <IconMessage />
+          <Skeleton
+            visible={!thoughtsCountIsFetched}
+            className={classes["skeleton-wrapper-description"]}
+          >
+            <IconMessage className={classes["description-icon"]} />
 
-              <Text fz="md" fw="bold">
-                {thoughtsCountData?.toLocaleString()}{" "}
-                <Text span c="blue" inherit>
-                  thoughts
-                </Text>{" "}
-                submitted
-              </Text>
-            </Group>
+            <Text size="md" className={classes.description}>
+              {thoughtsCountData?.toLocaleString()}{" "}
+              <Text c="blue" span inherit>
+                thoughts
+              </Text>{" "}
+              submitted
+            </Text>
           </Skeleton>
-        </Flex>
+        </div>
 
-        <Flex my="lg" gap="md">
+        <div className={classes["actions-bar"]}>
           <Input
             ref={searchRef}
             leftSection={<IconSearch size="1rem" />}
             rightSection={<Kbd>t</Kbd>}
             placeholder="Search for an author"
             onChange={(e) => setSearchBarValue(e.currentTarget.value)}
-            styles={() => ({
-              wrapper: {
-                flex: 1,
-              },
-              rightSection: { pointerEvents: "none" },
-            })}
+            className={classes["actions-bar__search-bar"]}
           />
 
-          <Tooltip label={`Press (s) to stick`} position="bottom">
+          <Tooltip label="Press (s) to stick" position="bottom">
             <Button rightSection={<IconMessage size="1em" />} onClick={open}>
               Stick a thought
             </Button>
           </Tooltip>
-        </Flex>
+        </div>
 
         {searchBarValue.length > 0
           ? searchData && (
@@ -197,6 +191,6 @@ export default function Content() {
       </InfiniteScroll>
 
       <SendThoughtModal open={messageOpen} onClose={close} />
-    </Box>
+    </div>
   );
 }

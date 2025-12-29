@@ -10,7 +10,6 @@ import {
   Group,
   Modal,
   Text,
-  UnstyledButton,
 } from "@mantine/core";
 
 import { authClient } from "@/lib/auth-client";
@@ -21,6 +20,7 @@ import {
   threadBaseOptions,
 } from "@/app/(main)/(core)/threads/options";
 import ServerError from "@/utils/error/ServerError";
+import classes from "./settings.module.css";
 
 export interface UploadProfilePictureModalProps {
   opened: boolean;
@@ -100,17 +100,17 @@ export default function UploadProfilePictureModal({
     >
       <Flex justify="center">
         <Avatar
-          component={UnstyledButton}
-          m="lg"
-          w={200}
-          h={200}
           src={previewUrl || undefined}
+          className={classes["upload-profile-picture-modal__avatar"]}
         />
       </Flex>
 
       {error && (
         <Group mt="md">
-          <Text c="red.8" size="sm">
+          <Text
+            size="sm"
+            className={classes["upload-profile-picture-modal__error-message"]}
+          >
             {error}
           </Text>
         </Group>

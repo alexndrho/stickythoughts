@@ -10,7 +10,6 @@ import {
   Box,
   Button,
   Divider,
-  Flex,
   Menu,
   Skeleton,
   Text,
@@ -213,65 +212,61 @@ export default function Content() {
   ];
 
   return (
-    <Box my="xl" w="100%">
-      <Title order={1} size="h2" mb="xs">
+    <Box className={classes.container}>
+      <Title order={1} size="h2" className={classes.title}>
         Account
       </Title>
 
       <Divider mb="lg" />
 
-      <Flex
-        direction={{ base: "column-reverse", sm: "row" }}
-        justify="space-between"
-        align={{ base: "center", sm: "start" }}
-        gap="xl"
-      >
-        <Flex
-          flex={{ base: 0, sm: 1 }}
-          direction="column"
-          w={{ base: "100%", sm: "auto" }}
-          maw={{ base: "none", sm: 720 }}
-          gap="lg"
-        >
+      <div className={classes.content}>
+        <div className={classes["user-info"]}>
           {accountItems.map((item, index) => (
-            <Flex
-              key={index}
-              w="100%"
-              justify="space-between"
-              align="end"
-              gap="md"
-            >
-              <Box>
-                <Text size="lg" fw="bold" truncate>
+            <div key={index} className={classes["user-info__account-item"]}>
+              <div>
+                <Text
+                  size="lg"
+                  truncate
+                  className={classes["account-item__label"]}
+                >
                   {item.label}
                 </Text>
 
                 {item.description && (
-                  <Text size="sm" c="dimmed">
+                  <Text
+                    size="sm"
+                    className={classes["account-item__description"]}
+                  >
                     {item.description}
                   </Text>
                 )}
 
-                <Skeleton w="auto" miw={150} visible={item.loading}>
-                  <Text className={classes["account-item__text-value"]}>
+                <Skeleton
+                  visible={item.loading}
+                  className={classes["account-item__skeleton-wrapper-value"]}
+                >
+                  <Text className={classes["account-item__value"]}>
                     {item.value || "No value set"}
                   </Text>
                 </Skeleton>
-              </Box>
+              </div>
 
               <Skeleton w="auto" visible={item.loading}>
-                <Flex w={125} justify="end" gap="sm">
+                <div className={classes["account-item__right-section"]}>
                   {item.rightSection}
-                </Flex>
+                </div>
               </Skeleton>
-            </Flex>
+            </div>
           ))}
-        </Flex>
+        </div>
 
         <div className={classes["profile-picture-container"]}>
-          <Avatar src={session?.user?.image} w={200} h={200} />
+          <Avatar
+            src={session?.user?.image}
+            className={classes["profile-picture"]}
+          />
 
-          <Menu withArrow>
+          <Menu>
             <Menu.Target>
               <Button
                 variant="default"
@@ -303,7 +298,7 @@ export default function Content() {
             </Menu.Dropdown>
           </Menu>
         </div>
-      </Flex>
+      </div>
 
       <UploadProfilePictureModal
         opened={uploadProfilePictureModalOpened}

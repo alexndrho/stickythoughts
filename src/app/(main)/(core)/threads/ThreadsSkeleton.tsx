@@ -1,13 +1,18 @@
-import { Flex, Skeleton } from "@mantine/core";
+import { Skeleton } from "@mantine/core";
 
 import { THREAD_POSTS_PER_PAGE } from "@/config/thread";
+import classes from "./threads.module.css";
 
 export function ThreadsSkeleton() {
   return (
-    <Flex direction="column" gap="md">
+    <div className={classes["thread-skeletons"]}>
       {Array.from({ length: THREAD_POSTS_PER_PAGE }, (_, i) => (
-        <Skeleton key={i} height={200} visible={true} />
+        <Skeleton
+          key={i}
+          visible={true}
+          className={classes["thread-skeleton"]}
+        />
       ))}
-    </Flex>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ import { Box, Container, Flex } from "@mantine/core";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ScrollUpButton from "@/components/ScrollUpButton";
+import classes from "./layout.module.css";
 
 export default function CoreLayout({
   children,
@@ -10,17 +11,17 @@ export default function CoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex mih="100dvh" h="100%" direction="column">
+    <div className={classes.container}>
       <Nav />
 
-      <Box flex={1}>
-        <Container component="main" size="lg" h="100%">
+      <div className={classes["main-container"]}>
+        <Container component="main" size="lg" className={classes.main}>
           {children}
         </Container>
-      </Box>
+      </div>
 
       <ScrollUpButton />
       <Footer />
-    </Flex>
+    </div>
   );
 }

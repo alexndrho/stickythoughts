@@ -18,7 +18,6 @@ export default function TextEditor({ editor, error }: TextEditorProps) {
   return (
     <div>
       <RichTextEditor
-        mt="md"
         editor={editor}
         classNames={{
           content: !editor.isEditable

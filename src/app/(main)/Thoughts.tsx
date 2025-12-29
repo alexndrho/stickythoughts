@@ -1,5 +1,3 @@
-import { Box } from "@mantine/core";
-
 import type { Thought as ThoughtType } from "@/generated/prisma/client";
 import Thought from "./Thought";
 import classes from "./home.module.css";
@@ -10,7 +8,7 @@ export interface ThoughtsProps {
 
 export default function Thoughts({ thoughts }: ThoughtsProps) {
   return (
-    <Box className={classes.thoughts}>
+    <div className={classes.thoughts}>
       {thoughts.map((thought) => (
         <Thought
           key={thought.id}
@@ -20,6 +18,6 @@ export default function Thoughts({ thoughts }: ThoughtsProps) {
           createdAt={thought.createdAt}
         />
       ))}
-    </Box>
+    </div>
   );
 }

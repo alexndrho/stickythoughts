@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
-import { Avatar, Box, Flex, Tabs, Text, Title } from "@mantine/core";
+import { Avatar, Tabs, Text, Title } from "@mantine/core";
 import {
   IconHeartFilled,
   IconMessage,
@@ -17,6 +17,7 @@ import CommentsTab from "./CommentsTab";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { userUsernameOptions } from "../options";
+import classes from "./user.module.css";
 
 export interface ContentProps {
   username: string;
@@ -48,23 +49,21 @@ export default function Content({ username }: ContentProps) {
 
   return (
     <>
-      <Flex py="xl" align="center">
+      <div className={classes.header}>
         <Avatar size="xl" src={user.image} />
 
-        <Box ml="md">
-          <Title size="h2" fw="bold">
-            {user.name || user.username}
-          </Title>
+        <div className={classes.header__info}>
+          <Title size="h2">{user.name || user.username}</Title>
 
           <Text size="lg">@{user.username}</Text>
 
           {user.bio && (
-            <Text size="sm" c="dimmed">
+            <Text size="sm" className={classes.header__bio}>
               {user.bio}
             </Text>
           )}
-        </Box>
-      </Flex>
+        </div>
+      </div>
 
       <Tabs variant="outline" value={currentTab} onChange={setTab}>
         <Tabs.List>

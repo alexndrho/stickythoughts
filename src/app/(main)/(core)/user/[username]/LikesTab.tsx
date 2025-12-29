@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
@@ -10,6 +10,7 @@ import ThreadItem from "../../threads/ThreadItem";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
 import { likeThread, unlikeThread } from "@/services/thread";
 import InfiniteScroll from "@/components/InfiniteScroll";
+import classes from "./user.module.css";
 
 export interface LikesTabProps {
   username: string;
@@ -64,7 +65,7 @@ export default function LikesTab({
   };
 
   return (
-    <Tabs.Panel value="likes" py="md">
+    <Tabs.Panel value="likes" className={classes["tab-content"]}>
       <InfiniteScroll
         onLoadMore={() => {
           fetchNextLikedThreadsPage();
@@ -72,7 +73,7 @@ export default function LikesTab({
         hasNext={hasNextLikedThreadsPage}
         loading={isLikedThreadsFetching}
       >
-        <Flex direction="column" gap="md">
+        <div className={classes["tab-content-container"]}>
           {likedThreads?.pages.map((page) =>
             page.map((thread) => (
               <ThreadItem key={thread.id} post={thread} onLike={handleLike} />
@@ -80,7 +81,7 @@ export default function LikesTab({
           )}
 
           {isLikedThreadsFetching && <ThreadsSkeleton />}
-        </Flex>
+        </div>
       </InfiniteScroll>
     </Tabs.Panel>
   );

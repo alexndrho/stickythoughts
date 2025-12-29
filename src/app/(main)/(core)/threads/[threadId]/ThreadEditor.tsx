@@ -1,19 +1,20 @@
-import { Button, Flex, Text } from "@mantine/core";
-
+import { useEffect } from "react";
 import type { Prisma } from "@/generated/prisma/client";
 import TextEditor from "@/components/TextEditor";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
+import { Button, Flex, Text } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
+
 import { updateThread } from "@/services/thread";
 import { getQueryClient } from "@/lib/get-query-client";
+import ServerError from "@/utils/error/ServerError";
 import {
   threadInfiniteOptions,
   threadOptions,
 } from "@/app/(main)/(core)/threads/options";
 import type { ThreadType } from "@/types/thread";
-import ServerError from "@/utils/error/ServerError";
-import { useEffect } from "react";
+import classes from "./thread.module.css";
 
 export interface ForumEditorProps {
   id: string;
@@ -96,7 +97,10 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       <TextEditor editor={editor} error={updateForm.errors.body} />
 
       {updateForm.errors.root && (
-        <Text mt="xs" size="xs" c="red.8">
+        <Text
+          size="xs"
+          className={classes["thread-editor-root-error-messsage"]}
+        >
           {updateForm.errors.root}
         </Text>
       )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, Flex, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from "@mantine/core";
 
 export interface SignInWarningModalProps {
   opened: boolean;
@@ -17,7 +17,7 @@ export default function SignInWarningModal({
         an account.
       </Text>
 
-      <Flex justify="end" gap="md">
+      <Group justify="end">
         <Button variant="default" onClick={onClose}>
           Cancel
         </Button>
@@ -25,7 +25,7 @@ export default function SignInWarningModal({
         <Button component={Link} href="/sign-in" onClick={onClose}>
           Sign in
         </Button>
-      </Flex>
+      </Group>
     </Modal>
   );
 }

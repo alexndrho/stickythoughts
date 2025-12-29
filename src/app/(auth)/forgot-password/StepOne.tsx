@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { Anchor, Box, Button, Center, Group, TextInput } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Button,
+  Center,
+  Group,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { isEmail, useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { IconArrowLeft } from "@tabler/icons-react";
 
 import { AuthContainer } from "../AuthContainer";
 import { authClient } from "@/lib/auth-client";
+import classes from "./forgot-password.module.css";
 
 export interface StepOneProps {
   setEmail: (email: string) => void;
@@ -53,6 +62,10 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
             sendOTPMutation.mutate(values),
           )}
         >
+          <Title order={2} className={classes["paper-title"]}>
+            Enter your email
+          </Title>
+
           <TextInput
             label="Your email"
             placeholder="me@example.com"

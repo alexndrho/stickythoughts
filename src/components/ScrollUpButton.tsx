@@ -3,6 +3,7 @@
 import { Affix, Button, Transition } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import { IconArrowBigUpFilled } from "@tabler/icons-react";
+import classes from "../styles/scroll-up-button.module.css";
 
 export default function ScrollUpButton() {
   const [scroll, scrollTo] = useWindowScroll();
@@ -13,10 +14,9 @@ export default function ScrollUpButton() {
         {(transitionStyles) => (
           <Button
             aria-label="Scroll to top"
-            w="3.5rem"
-            h="3.5rem"
             style={{ ...transitionStyles }}
             onClick={() => scrollTo({ y: 0 })}
+            className={classes.button}
           >
             <IconArrowBigUpFilled />
           </Button>

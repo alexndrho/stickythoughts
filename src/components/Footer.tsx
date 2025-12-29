@@ -6,7 +6,6 @@ import {
   Box,
   Container,
   Divider,
-  Flex,
   Group,
   Text,
   Title,
@@ -17,70 +16,68 @@ import classes from "@/styles/footer.module.css";
 
 export default function Footer() {
   return (
-    <Box component="footer" py="md" className={classes.footer}>
-      <Container size="lg">
-        <Flex
-          direction={{ base: "column", lg: "row" }}
-          justify="space-between"
-          gap="md"
-        >
-          <Box>
-            <Title order={2} size="h3">
-              Sticky
-              <Text span c="blue" inherit>
-                Thoughts
-              </Text>
-            </Title>
+    <Box component="footer" className={classes["footer-container"]}>
+      <Container size="lg" className={classes["footer"]}>
+        <section>
+          <Title order={2} size="h3">
+            Sticky
+            <Text span c="blue" inherit>
+              Thoughts
+            </Text>
+          </Title>
 
-            <Group gap={5}>
-              <IconCopyright size="1.25em" />
+          <Group gap={5}>
+            <IconCopyright size="1.25em" />
 
-              <Text span fz="sm">
-                2023{" "}
-                <Anchor component={Link} href="/">
-                  StickyThoughts
-                </Anchor>
-                . All rights reserved.
-              </Text>
-            </Group>
-
-            <Group gap={5}>
-              <Anchor component={Link} href="/terms-and-conditions" fz="sm">
-                Terms and Conditions
+            <Text span size="sm">
+              2023{" "}
+              <Anchor component={Link} href="/" inherit>
+                StickyThoughts
               </Anchor>
+              . All rights reserved.
+            </Text>
+          </Group>
 
-              <Divider orientation="vertical" />
-
-              <Anchor component={Link} href="/privacy-policy" fz="sm">
-                Privacy Policy
-              </Anchor>
-
-              <Divider orientation="vertical" />
-
-              <Anchor component={Link} href="/disclaimer" fz="sm">
-                Disclaimer
-              </Anchor>
-            </Group>
-          </Box>
-
-          <Flex direction="column">
-            <Title order={2} size="h4">
-              Contact
-            </Title>
-
-            <Anchor href="mailto:ho.alexander.g@gmail.com">
-              ho.alexander.g@gmail.com
+          <Group gap={5}>
+            <Anchor component={Link} href="/terms-and-conditions" size="sm">
+              Terms and Conditions
             </Anchor>
 
-            <Anchor
-              href="https://alexanderho.dev"
-              target="_blank"
-              rel="noopener"
-            >
-              alexanderho.dev
+            <Divider orientation="vertical" />
+
+            <Anchor component={Link} href="/privacy-policy" size="sm">
+              Privacy Policy
             </Anchor>
-          </Flex>
-        </Flex>
+
+            <Divider orientation="vertical" />
+
+            <Anchor component={Link} href="/disclaimer" size="sm">
+              Disclaimer
+            </Anchor>
+          </Group>
+        </section>
+
+        <section>
+          <Title order={2} size="h4">
+            Contact
+          </Title>
+
+          <Anchor
+            href="mailto:ho.alexander.g@gmail.com"
+            className={classes.link}
+          >
+            ho.alexander.g@gmail.com
+          </Anchor>
+
+          <Anchor
+            href="https://alexanderho.dev"
+            target="_blank"
+            rel="noopener"
+            className={classes.link}
+          >
+            alexanderho.dev
+          </Anchor>
+        </section>
       </Container>
     </Box>
   );

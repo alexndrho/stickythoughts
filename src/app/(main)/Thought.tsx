@@ -26,7 +26,11 @@ export default function Thought({
         className={classes.thought}
       >
         <Text lineClamp={9}>{filterText(message)}</Text>
-        <Text ta="right" lineClamp={1}>{`-${filterText(author)}`}</Text>
+
+        <Text
+          lineClamp={1}
+          className={classes["thought__author"]}
+        >{`-${filterText(author)}`}</Text>
       </Box>
     </Tooltip>
   );

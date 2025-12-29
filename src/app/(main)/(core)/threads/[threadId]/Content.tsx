@@ -9,10 +9,8 @@ import {
   ActionIcon,
   Anchor,
   Avatar,
-  Box,
   Button,
   Center,
-  Flex,
   Group,
   Menu,
   Text,
@@ -84,41 +82,33 @@ export default function Content({ id }: ContentProps) {
   };
 
   return (
-    <Box my="xl" w="100%">
-      <Flex mb="xs" justify="space-between">
-        <Flex align="center">
+    <div className={classes.container}>
+      <div className={classes.header}>
+        <div className={classes.header__info}>
           <Avatar
             component={Link}
             href={`/user/${thread.author.username}`}
             src={thread.author.image}
-            mr="xs"
           />
 
           <div>
             <Anchor
               component={Link}
               href={`/user/${thread.author.username}`}
-              c="inherit"
-              fw="bold"
-              inherit
+              className={classes["header__author-name"]}
             >
               {thread.author.name || thread.author.username}
             </Anchor>
 
-            <Text fz="xs" c="dimmed">
+            <Text size="xs" className={classes["header__created-at"]}>
               {formatDistance(new Date(thread.createdAt), dateNow, {
                 addSuffix: true,
               })}
 
-              {thread.updatedAt !== thread.createdAt && (
-                <Text span inherit>
-                  {" "}
-                  (edited)
-                </Text>
-              )}
+              {thread.updatedAt !== thread.createdAt && <span> (edited)</span>}
             </Text>
           </div>
-        </Flex>
+        </div>
 
         {session?.user.id === thread.authorId && (
           <Menu>
@@ -126,7 +116,7 @@ export default function Content({ id }: ContentProps) {
               <ActionIcon
                 variant="transparent"
                 size="lg"
-                className={classes["thread__more-action-btn"]}
+                className={classes["header__more-action-btn"]}
               >
                 <IconDots size="1.25em" />
               </ActionIcon>
@@ -152,11 +142,11 @@ export default function Content({ id }: ContentProps) {
             </Menu.Dropdown>
           </Menu>
         )}
-      </Flex>
+      </div>
 
       {isEditable ? (
         <>
-          <Title>{thread.title}</Title>
+          <Title className={classes["edit-title"]}>{thread.title}</Title>
 
           <ThreadEditor
             id={id}
@@ -191,7 +181,7 @@ export default function Content({ id }: ContentProps) {
         />
       </Group>
 
-      <Box component="section">
+      <section>
         {session ? (
           <CommentEditor
             ref={commentSectionRef}
@@ -218,7 +208,7 @@ export default function Content({ id }: ContentProps) {
           dateNow={dateNow}
           onOpenSignInWarningModal={signInWarningModalHandlers.open}
         />
-      </Box>
+      </section>
 
       {thread.authorId === session?.user.id && (
         <DeleteThreadModal
@@ -236,6 +226,6 @@ export default function Content({ id }: ContentProps) {
           onClose={signInWarningModalHandlers.close}
         />
       )}
-    </Box>
+    </div>
   );
 }

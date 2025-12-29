@@ -8,9 +8,7 @@ import {
   ActionIcon,
   Anchor,
   Avatar,
-  Box,
   Button,
-  Flex,
   Group,
   Menu,
   Text,
@@ -67,8 +65,8 @@ export default function CommentItem({
   const [isEditable, setIsEditable] = useState(false);
 
   return (
-    <Box>
-      <Flex gap="md" align="center">
+    <div>
+      <div className={classes["comment-item__header"]}>
         <Avatar
           component={Link}
           src={comment.author.image}
@@ -77,81 +75,74 @@ export default function CommentItem({
         />
 
         <div>
-          <Flex>
-            <Text fw="bold" truncate>
-              <Anchor
-                component={Link}
-                href={`/user/${comment.author.username}`}
-                c="inherit"
-                inherit
+          <div className={classes["comment-item__author-container"]}>
+            <Anchor
+              component={Link}
+              truncate
+              href={`/user/${comment.author.username}`}
+              className={classes["comment-item__author-name"]}
+            >
+              {comment.author.name || comment.author.username}
+            </Anchor>
+
+            {isThreadOwner && (
+              <Text
+                size="xs"
+                className={classes["comment-item__author-op-badge"]}
               >
-                {comment.author.name || comment.author.username}
-              </Anchor>
+                OP
+              </Text>
+            )}
+          </div>
 
-              {isThreadOwner && (
-                <Text c="blue" fz="xs" fw="bold" span>
-                  {" "}
-                  OP
-                </Text>
-              )}
-            </Text>
-          </Flex>
-
-          <Text fz="xs" c="dimmed">
+          <Text size="xs" className={classes["comment-item__created-at"]}>
             {formatDistance(new Date(comment.createdAt), dateNow, {
               addSuffix: true,
             })}
 
-            {comment.updatedAt !== comment.createdAt && (
-              <Text span inherit>
-                {" "}
-                (edited)
-              </Text>
-            )}
+            {comment.updatedAt !== comment.createdAt && <span> (edited)</span>}
           </Text>
         </div>
 
         {session?.user.id === comment.author.id && (
-          <Box ml="auto">
-            <Menu>
-              <Menu.Target>
-                <ActionIcon
-                  variant="transparent"
-                  size="lg"
-                  className={classes["comment-item__more-action-btn"]}
-                >
-                  <IconDots size="1.25em" />
-                </ActionIcon>
-              </Menu.Target>
+          <Menu>
+            <Menu.Target>
+              <ActionIcon
+                variant="transparent"
+                size="lg"
+                className={classes["comment-item__more-action-btn"]}
+              >
+                <IconDots size="1.25em" />
+              </ActionIcon>
+            </Menu.Target>
 
-              <Menu.Dropdown>
-                <Menu.Item
-                  leftSection={<IconEdit size="1em" />}
-                  onClick={() => setIsEditable(true)}
-                >
-                  Edit
-                </Menu.Item>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconEdit size="1em" />}
+                onClick={() => setIsEditable(true)}
+              >
+                Edit
+              </Menu.Item>
 
-                <Menu.Item
-                  color="red"
-                  leftSection={<IconTrash size="1em" />}
-                  onClick={() =>
-                    onDelete({
-                      threadId: comment.threadId,
-                      commentId: comment.id,
-                      username: comment.author.username,
-                    })
-                  }
-                >
-                  Delete
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Box>
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size="1em" />}
+                onClick={() =>
+                  onDelete({
+                    threadId: comment.threadId,
+                    commentId: comment.id,
+                    username: comment.author.username,
+                  })
+                }
+              >
+                Delete
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         )}
-      </Flex>
+      </div>
 
-      <Box mt="sm" pl={54}>
+      <div className={classes["comment-item__content"]}>
         {isEditable ? (
           <Editor comment={comment} onClose={() => setIsEditable(false)} />
         ) : (
@@ -161,10 +152,10 @@ export default function CommentItem({
             </TypographyStylesProvider>
 
             <LikeButton
-              mt="md"
               liked={comment.likes.liked}
               count={comment.likes.count}
               size="compact-sm"
+              className={classes["comment-item__like-btn"]}
               onLike={() =>
                 onLike({
                   threadId: comment.threadId,
@@ -176,8 +167,8 @@ export default function CommentItem({
             />
           </>
         )}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }
 

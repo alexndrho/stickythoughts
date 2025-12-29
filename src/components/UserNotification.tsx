@@ -9,7 +9,6 @@ import {
   ActionIcon,
   Anchor,
   Avatar,
-  Box,
   Center,
   Flex,
   Indicator,
@@ -111,7 +110,7 @@ export default function UserNotification({
             hasNext={hasNextNotificationsPage}
             loading={isFetchingNotifications}
           >
-            <Text fz="h4" fw="bold">
+            <Text fz="h4" className={classes.notification__title}>
               Notifications
             </Text>
 
@@ -205,17 +204,11 @@ function NotificationItem({
           : "#";
 
   return (
-    <Flex
+    <div
       key={notification.id}
-      pos="relative"
-      w="full"
-      justify="space-between"
-      gap="sm"
-      bdrs="sm"
-      className={`${classes.notification__item} ${
-        !notification.isRead ? classes["notification__item--unread"] : ""
+      className={`${classes["notification-item"]} ${
+        !notification.isRead ? classes["notification-item--unread"] : ""
       }`}
-      p="sm"
     >
       <Link
         aria-label="View Thread"
@@ -224,58 +217,59 @@ function NotificationItem({
           setClosed();
           markReadMutation.mutate(true);
         }}
-        className={classes.notification__link}
+        className={classes["notification-item__link"]}
       />
 
-      <Flex gap="sm">
-        <Avatar
-          component={Link}
-          pos="relative"
-          src={notification.actorImage}
-          href={`/user/${notification.actorUsername}`}
-          onClick={() => setClosed()}
-        />
+      <div className={classes["notification-item__content"]}>
+        <Flex gap="sm">
+          <Avatar
+            component={Link}
+            src={notification.actorImage}
+            href={`/user/${notification.actorUsername}`}
+            className={classes["notification-item__avatar"]}
+            onClick={() => setClosed()}
+          />
 
-        <Box>
-          <Text fz="sm" lineClamp={3}>
-            {formatNotificationBody({ notification, setClosed })}
-          </Text>
-          <Text fz="xs">
-            {formatDistanceToNow(new Date(notification.updatedAt))}
-          </Text>
-        </Box>
-      </Flex>
+          <div>
+            <Text size="sm" lineClamp={3}>
+              {formatNotificationBody({ notification, setClosed })}
+            </Text>
+            <Text size="xs">
+              {formatDistanceToNow(new Date(notification.updatedAt))}
+            </Text>
+          </div>
+        </Flex>
 
-      <Menu>
-        <Menu.Target>
-          <ActionIcon
-            variant="transparent"
-            pos="relative"
-            className={classes.notification__more}
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <IconDots size="1em" />
-          </ActionIcon>
-        </Menu.Target>
+        <Menu>
+          <Menu.Target>
+            <ActionIcon
+              variant="transparent"
+              onPointerDown={(e) => e.stopPropagation()}
+              className={classes["notification-item__more"]}
+            >
+              <IconDots size="1em" />
+            </ActionIcon>
+          </Menu.Target>
 
-        <Menu.Dropdown onPointerDown={(e) => e.stopPropagation()}>
-          <Menu.Item
-            leftSection={<IconMessageDots size="1em" />}
-            onClick={() => markReadMutation.mutate(!notification.isRead)}
-          >
-            {notification.isRead ? "Mark as Unread" : "Mark as Read"}
-          </Menu.Item>
+          <Menu.Dropdown onPointerDown={(e) => e.stopPropagation()}>
+            <Menu.Item
+              leftSection={<IconMessageDots size="1em" />}
+              onClick={() => markReadMutation.mutate(!notification.isRead)}
+            >
+              {notification.isRead ? "Mark as Unread" : "Mark as Read"}
+            </Menu.Item>
 
-          <Menu.Item
-            color="red"
-            leftSection={<IconTrash size="1em" />}
-            onClick={() => deleteMutation.mutate()}
-          >
-            Delete
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
-    </Flex>
+            <Menu.Item
+              color="red"
+              leftSection={<IconTrash size="1em" />}
+              onClick={() => deleteMutation.mutate()}
+            >
+              Delete
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+    </div>
   );
 }
 
@@ -289,11 +283,10 @@ function formatNotificationBody({
   const actor = (
     <Anchor
       component={Link}
-      pos="relative"
-      fw="bold"
+      inherit
       href={`/user/${notification.actorUsername}`}
       onClick={() => setClosed()}
-      className={classes["notification__actor-link"]}
+      className={classes["notification-item__actor-link"]}
     >
       {notification.actorName || notification.actorUsername}
     </Anchor>
@@ -303,7 +296,11 @@ function formatNotificationBody({
     notification.otherActorCount && notification.otherActorCount > 0 ? (
       <>
         {" and "}
-        <Text span fw="bold" inherit>
+        <Text
+          span
+          inherit
+          className={classes["notification-item__other-actor"]}
+        >
           {notification.otherActorCount} other
           {notification.otherActorCount > 1 ? "s" : ""}
         </Text>

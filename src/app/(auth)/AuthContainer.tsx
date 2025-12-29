@@ -1,8 +1,10 @@
 import { Paper } from "@mantine/core";
 
+import classes from "./auth.module.css";
+
 export function AuthContainer({ children }: { children?: React.ReactNode }) {
   return (
-    <Paper w="100%" maw={420} p={30} shadow="md" radius="md" withBorder>
+    <Paper className={classes["paper-container"]} withBorder>
       {children}
     </Paper>
   );

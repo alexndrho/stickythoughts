@@ -1,4 +1,21 @@
-.footer {
+.footer-container {
+  padding-top: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-md);
   background-color: var(--mantine-color-body);
-  border-top: rem(1) solid var(--mantine-color-default-border);
+  border-top: rem(1px) solid var(--mantine-color-default-border);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    flex-direction: row;
+  }
+}
+
+.link {
+  display: block;
 }

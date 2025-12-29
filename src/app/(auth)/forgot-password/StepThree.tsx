@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { AuthContainer } from "../AuthContainer";
 import { authClient } from "@/lib/auth-client";
+import classes from "./forgot-password.module.css";
 
 interface StepThreeProps {
   email: string | null;
@@ -68,7 +69,7 @@ export default function StepThree({
   return (
     <Center>
       <AuthContainer>
-        <Title order={2} size="h2" mb="md" ta="center">
+        <Title order={2} className={classes["paper-title"]}>
           Enter your new password
         </Title>
 
