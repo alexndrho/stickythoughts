@@ -36,6 +36,7 @@ import { useTimer } from "@/hooks/use-timer";
 import { userProfileOptions } from "./options";
 import UpdateBioModal from "./UpdateBioModal";
 import classes from "./settings.module.css";
+import UpdatePasswordModal from "./UpdatePasswordModal";
 
 export default function Content() {
   const router = useRouter();
@@ -87,6 +88,11 @@ export default function Content() {
   const [
     updateBioModalOpened,
     { open: openUpdateBioModal, close: closeUpdateBioModal },
+  ] = useDisclosure(false);
+
+  const [
+    updatePasswordModalOpened,
+    { open: openUpdatePasswordModal, close: closeUpdatePasswordModal },
   ] = useDisclosure(false);
 
   const handleRemoveProfilePicture = async () => {
@@ -219,7 +225,7 @@ export default function Content() {
 
       <Divider mb="lg" />
 
-      <div className={classes.content}>
+      <div className={`${classes.content} ${classes["main-content"]}`}>
         <div className={classes["user-info"]}>
           {accountItems.map((item, index) => (
             <div key={index} className={classes["user-info__account-item"]}>
@@ -300,6 +306,16 @@ export default function Content() {
         </div>
       </div>
 
+      <Title order={2} className={classes.title}>
+        Password and Authentication
+      </Title>
+
+      <Divider mb="lg" />
+
+      <div className={classes.content}>
+        <Button onClick={openUpdatePasswordModal}>Change Password</Button>
+      </div>
+
       <UploadProfilePictureModal
         opened={uploadProfilePictureModalOpened}
         onClose={closeUploadProfilePictureModal}
@@ -328,6 +344,11 @@ export default function Content() {
         defaultValue={userProfile?.bio ?? undefined}
         opened={updateBioModalOpened}
         onClose={closeUpdateBioModal}
+      />
+
+      <UpdatePasswordModal
+        opened={updatePasswordModalOpened}
+        onClose={closeUpdatePasswordModal}
       />
     </Box>
   );

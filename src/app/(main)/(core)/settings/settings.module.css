@@ -9,6 +9,14 @@
 }
 
 .content {
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.content:last-child {
+  margin-bottom: 0;
+}
+
+.main-content {
   display: flex;
   flex-direction: column-reverse;
   justify-content: space-between;
