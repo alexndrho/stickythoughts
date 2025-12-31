@@ -1,4 +1,4 @@
-import { Box, Container, Flex } from "@mantine/core";
+import { Container } from "@mantine/core";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
