@@ -13,12 +13,12 @@ export async function GET(req: NextRequest) {
   try {
     const thoughts = await prisma.thought.findMany({
       take: THOUGHTS_PER_PAGE,
-      skip: lastId ? 1 : 0,
-      cursor: lastId
-        ? {
-            id: lastId,
-          }
-        : undefined,
+      ...(lastId && {
+        skip: 1,
+        cursor: {
+          id: lastId,
+        },
+      }),
       where: searchTerm
         ? {
             author: {

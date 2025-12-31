@@ -146,6 +146,13 @@ export async function GET(
     const { threadId } = await params;
 
     const comments = await prisma.threadComment.findMany({
+      take: THREAD_COMMENTS_PER_PAGE,
+      ...(lastId && {
+        skip: 1,
+        cursor: {
+          id: lastId,
+        },
+      }),
       where: {
         threadId,
       },
@@ -174,13 +181,6 @@ export async function GET(
           },
         },
       },
-      take: THREAD_COMMENTS_PER_PAGE,
-      ...(lastId && {
-        cursor: {
-          id: lastId,
-        },
-        skip: 1,
-      }),
       orderBy: {
         createdAt: "desc",
       },

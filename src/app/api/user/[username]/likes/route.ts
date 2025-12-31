@@ -23,12 +23,12 @@ export async function GET(
 
     const threads = await prisma.thread.findMany({
       take: THREADS_PER_PAGE,
-      skip: lastId ? 1 : 0,
-      cursor: lastId
-        ? {
-            id: lastId,
-          }
-        : undefined,
+      ...(lastId && {
+        skip: 1,
+        cursor: {
+          id: lastId,
+        },
+      }),
       where: {
         likes: {
           some: {
