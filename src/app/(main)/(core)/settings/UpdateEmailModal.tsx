@@ -94,8 +94,9 @@ export default function UpdateEmailModal({
         <Group align="end">
           <TextInput
             flex={1}
-            label="Email:"
+            label="Email"
             placeholder={defaultValue || "Enter your email"}
+            withAsterisk
             {...form.getInputProps("email")}
           />
 

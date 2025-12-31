@@ -68,7 +68,7 @@ export default function UpdatePasswordModal({
         <PasswordInput
           label="Current Password"
           type="password"
-          required
+          withAsterisk
           {...form.getInputProps("currentPassword")}
         />
 
@@ -76,7 +76,7 @@ export default function UpdatePasswordModal({
           mt="md"
           label="New Password"
           type="password"
-          required
+          withAsterisk
           {...form.getInputProps("newPassword")}
         />
 
@@ -84,7 +84,7 @@ export default function UpdatePasswordModal({
           mt="md"
           label="Confirm New Password"
           type="password"
-          required
+          withAsterisk
           {...form.getInputProps("confirmNewPassword")}
         />
 

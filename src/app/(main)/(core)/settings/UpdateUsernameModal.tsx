@@ -55,8 +55,9 @@ export default function UpdateUsernameModal({
         <Group align="end">
           <TextInput
             flex={1}
-            label="Username:"
+            label="Username"
             placeholder={defaultValue || "Enter your username"}
+            withAsterisk
             {...form.getInputProps("username")}
           />
 

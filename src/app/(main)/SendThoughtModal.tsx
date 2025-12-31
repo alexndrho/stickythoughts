@@ -106,7 +106,7 @@ export default function SendThoughtModal({
     <Modal opened={open} onClose={onClose} title="Share a thought" centered>
       <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
         <TextInput
-          label="Author:"
+          label="Author"
           withAsterisk
           maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
           disabled={mutation.isPending}
@@ -115,7 +115,7 @@ export default function SendThoughtModal({
         />
 
         <Textarea
-          label="Message:"
+          label="Message"
           withAsterisk
           rows={5}
           maxLength={THOUGHT_MAX_MESSAGE_LENGTH}

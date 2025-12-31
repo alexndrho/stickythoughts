@@ -64,7 +64,7 @@ export default function UpdateBioModal({
     <Modal title="Update Bio" opened={opened} onClose={onClose} centered>
       <form onSubmit={form.onSubmit((values) => mutation.mutate(values.bio))}>
         <Textarea
-          label="Bio:"
+          label="Bio"
           placeholder="Enter your bio"
           rows={3}
           maxLength={USER_BIO_MAX_LENGTH}

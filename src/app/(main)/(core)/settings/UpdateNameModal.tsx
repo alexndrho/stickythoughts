@@ -55,7 +55,7 @@ export default function UpdateNameModal({
         <Group align="end">
           <TextInput
             flex={1}
-            label="Name:"
+            label="Name"
             placeholder={defaultValue || "Enter your name"}
             {...form.getInputProps("name")}
           />

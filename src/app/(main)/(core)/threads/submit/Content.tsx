@@ -113,6 +113,7 @@ export default function Content() {
       <form onSubmit={form.onSubmit((value) => mutation.mutate(value))}>
         <TextInput
           label="Title"
+          withAsterisk
           {...form.getInputProps("title")}
           className={classes["title-text-input"]}
         />
