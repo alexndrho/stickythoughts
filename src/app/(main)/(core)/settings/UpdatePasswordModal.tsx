@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { matchesField, useForm } from "@mantine/form";
+import { isNotEmpty, matchesField, useForm } from "@mantine/form";
 import { Button, Group, Modal, PasswordInput } from "@mantine/core";
 
 import { authClient } from "@/lib/auth-client";
@@ -20,6 +20,7 @@ export default function UpdatePasswordModal({
       confirmNewPassword: "",
     },
     validate: {
+      currentPassword: isNotEmpty("Current Password is required"),
       confirmNewPassword: matchesField(
         "newPassword",
         "New Password does not match",
