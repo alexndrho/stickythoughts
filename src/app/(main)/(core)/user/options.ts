@@ -8,10 +8,7 @@ import {
   getUserNotifications,
   getUserThreads,
 } from "@/services/user";
-import {
-  THREAD_POST_COMMENT_PER_PAGE,
-  THREAD_POSTS_PER_PAGE,
-} from "@/config/thread";
+import { THREAD_COMMENTS_PER_PAGE, THREADS_PER_PAGE } from "@/config/thread";
 import { NOTIFICATION_PER_PAGE } from "@/config/user";
 
 export const userOptions = queryOptions({
@@ -51,7 +48,7 @@ export const userThreadsInfiniteOptions = (username: string) => {
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREAD_POSTS_PER_PAGE) return undefined;
+      if (posts.length < THREADS_PER_PAGE) return undefined;
 
       return posts[posts.length - 1].id;
     },
@@ -68,7 +65,7 @@ export const userCommentsInfiniteOptions = (username: string) => {
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREAD_POST_COMMENT_PER_PAGE) return undefined;
+      if (posts.length < THREAD_COMMENTS_PER_PAGE) return undefined;
       return posts[posts.length - 1].id;
     },
   });
@@ -84,7 +81,7 @@ export const userLikedThreadsInfiniteOptions = (username: string) => {
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREAD_POSTS_PER_PAGE) return undefined;
+      if (posts.length < THREADS_PER_PAGE) return undefined;
 
       return posts[posts.length - 1].id;
     },

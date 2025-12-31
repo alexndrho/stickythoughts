@@ -1,2 +1,2 @@
-export const THREAD_POSTS_PER_PAGE = 10;
-export const THREAD_POST_COMMENT_PER_PAGE = 10;
+export const THREADS_PER_PAGE = 10;
+export const THREAD_COMMENTS_PER_PAGE = 10;

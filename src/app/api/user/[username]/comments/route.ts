@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { formatUserThreadComments } from "@/utils/thread";
-import { THREAD_POSTS_PER_PAGE } from "@/config/thread";
+import { THREADS_PER_PAGE } from "@/config/thread";
 import type IError from "@/types/error";
 
 export async function GET(
@@ -22,7 +22,7 @@ export async function GET(
     });
 
     const comments = await prisma.threadComment.findMany({
-      take: THREAD_POSTS_PER_PAGE,
+      take: THREADS_PER_PAGE,
       skip: lastId ? 1 : 0,
       cursor: lastId
         ? {

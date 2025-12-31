@@ -3,10 +3,7 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { getThreadComments, getThread, getThreads } from "@/services/thread";
 import type { SearchSegmentType } from "@/types/search";
 import { getSearchResults } from "@/services/search";
-import {
-  THREAD_POST_COMMENT_PER_PAGE,
-  THREAD_POSTS_PER_PAGE,
-} from "@/config/thread";
+import { THREAD_COMMENTS_PER_PAGE, THREADS_PER_PAGE } from "@/config/thread";
 
 // thread
 export const threadBaseOptions = queryOptions({
@@ -26,7 +23,7 @@ export const threadInfiniteOptions = infiniteQueryOptions({
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getThreads({ lastId: pageParam }),
   getNextPageParam: (posts) => {
-    if (posts.length < THREAD_POSTS_PER_PAGE) return undefined;
+    if (posts.length < THREADS_PER_PAGE) return undefined;
 
     return posts[posts.length - 1].id;
   },
@@ -40,7 +37,7 @@ export const threadCommentsInfiniteOptions = (threadId: string) => {
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getThreadComments({ id: threadId, lastId: pageParam }),
     getNextPageParam: (comments) => {
-      if (comments.length < THREAD_POST_COMMENT_PER_PAGE) return undefined;
+      if (comments.length < THREAD_COMMENTS_PER_PAGE) return undefined;
 
       return comments[comments.length - 1].id;
     },

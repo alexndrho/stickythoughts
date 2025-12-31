@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { NotificationType } from "@/generated/prisma/enums";
 import { createThreadCommentServerInput } from "@/lib/validations/form";
-import { THREAD_POST_COMMENT_PER_PAGE } from "@/config/thread";
+import { THREAD_COMMENTS_PER_PAGE } from "@/config/thread";
 import { formatThreadComments } from "@/utils/thread";
 import type { ThreadCommentType } from "@/types/thread";
 import type IError from "@/types/error";
@@ -174,7 +174,7 @@ export async function GET(
           },
         },
       },
-      take: THREAD_POST_COMMENT_PER_PAGE,
+      take: THREAD_COMMENTS_PER_PAGE,
       ...(lastId && {
         cursor: {
           id: lastId,

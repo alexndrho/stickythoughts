@@ -5,7 +5,7 @@ import { ZodError } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { THREAD_POSTS_PER_PAGE } from "@/config/thread";
+import { THREADS_PER_PAGE } from "@/config/thread";
 import { createThreadServerInput } from "@/lib/validations/form";
 import { formatThreads } from "@/utils/thread";
 import type IError from "@/types/error";
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
     });
 
     const Threads = await prisma.thread.findMany({
-      take: THREAD_POSTS_PER_PAGE,
+      take: THREADS_PER_PAGE,
       skip: lastId ? 1 : 0,
       cursor: lastId
         ? {
