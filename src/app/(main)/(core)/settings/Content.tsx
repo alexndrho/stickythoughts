@@ -24,19 +24,20 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import UploadProfilePictureModal from "./UploadProfilePictureModal";
-import UpdateNameModal from "./UpdateNameModal";
-import UpdateEmailModal from "./UpdateEmailModal";
-import UpdateUsernameModal from "./UpdateUsernameModal";
-
 import { authClient } from "@/lib/auth-client";
 import { secondsToMinutesExtended } from "@/utils/date";
 import { removeProfilePicture } from "@/services/user";
 import { useTimer } from "@/hooks/use-timer";
 import { userProfileOptions } from "./options";
+import UploadProfilePictureModal from "./UploadProfilePictureModal";
+import UpdateNameModal from "./UpdateNameModal";
+import UpdateEmailModal from "./UpdateEmailModal";
+import UpdateUsernameModal from "./UpdateUsernameModal";
 import UpdateBioModal from "./UpdateBioModal";
-import classes from "./settings.module.css";
 import UpdatePasswordModal from "./UpdatePasswordModal";
+import EnableTwoFactorModal from "./EnableTwoFactorModal";
+import DisableTwoFactorModal from "./DisableTwoFactorModal";
+import classes from "./settings.module.css";
 
 export default function Content() {
   const router = useRouter();
@@ -93,6 +94,16 @@ export default function Content() {
   const [
     updatePasswordModalOpened,
     { open: openUpdatePasswordModal, close: closeUpdatePasswordModal },
+  ] = useDisclosure(false);
+
+  const [
+    enableTwoFactorModalOpened,
+    { open: openEnableTwoFactorModal, close: closeEnableTwoFactorModal },
+  ] = useDisclosure(false);
+
+  const [
+    disableTwoFactorModalOpened,
+    { open: openDisableTwoFactorModal, close: closeDisableTwoFactorModal },
   ] = useDisclosure(false);
 
   const handleRemoveProfilePicture = async () => {
@@ -314,6 +325,37 @@ export default function Content() {
 
       <div className={classes.content}>
         <Button onClick={openUpdatePasswordModal}>Change Password</Button>
+
+        <Text
+          mt="md"
+          size="lg"
+          truncate
+          className={classes["account-item__label"]}
+        >
+          Two-Factor Authentication
+        </Text>
+
+        <Text size="md" className={classes["account-item__description"]}>
+          Add an extra layer of security to your account by requiring a second
+          form of authentication when logging in.
+        </Text>
+
+        <Skeleton
+          mt="xs"
+          w="auto"
+          display="inline-block"
+          visible={isSessionPending}
+        >
+          {!session?.user.twoFactorEnabled ? (
+            <Button onClick={openEnableTwoFactorModal}>
+              Enable Two-Factor Authentication
+            </Button>
+          ) : (
+            <Button color="red" onClick={openDisableTwoFactorModal}>
+              Disable Two-Factor Authentication
+            </Button>
+          )}
+        </Skeleton>
       </div>
 
       <UploadProfilePictureModal
@@ -349,6 +391,16 @@ export default function Content() {
       <UpdatePasswordModal
         opened={updatePasswordModalOpened}
         onClose={closeUpdatePasswordModal}
+      />
+
+      <EnableTwoFactorModal
+        opened={enableTwoFactorModalOpened}
+        onClose={closeEnableTwoFactorModal}
+      />
+
+      <DisableTwoFactorModal
+        opened={disableTwoFactorModalOpened}
+        onClose={closeDisableTwoFactorModal}
       />
     </Box>
   );

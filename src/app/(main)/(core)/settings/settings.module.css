@@ -103,3 +103,49 @@
 .upload-profile-picture-modal__error-message {
   color: var(--mantine-color-error);
 }
+
+.qr-code-container {
+  position: relative;
+  display: inline-block;
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-white);
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-code {
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+}
+
+.enable-two-factor-modal__steps {
+  display: none;
+}
+
+.enable-two-factor-modal__content {
+  padding: 0;
+}
+
+.enable-two-factor-modal__title {
+  font-weight: bold;
+}
+
+.enable-two-factor-modal__qr-code-step__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.enable-two-factor-modal__qr-code-step__row__image {
+  flex: 1;
+}
+
+.enable-two-factor-modal__qr-code-step__row__content {
+  flex: 2;
+}

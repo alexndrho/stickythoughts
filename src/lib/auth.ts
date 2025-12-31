@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { captcha, emailOTP, username } from "better-auth/plugins";
+import { captcha, emailOTP, twoFactor, username } from "better-auth/plugins";
 import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
@@ -94,6 +94,7 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    twoFactor(),
     username({
       usernameValidator: (username) => {
         if (
