@@ -30,7 +30,7 @@ export default function Footer() {
             <IconCopyright size="1.25em" />
 
             <Text span size="sm">
-              2023{" "}
+              2026{" "}
               <Anchor component={Link} href="/" inherit>
                 StickyThoughts
               </Anchor>
