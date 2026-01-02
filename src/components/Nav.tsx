@@ -29,6 +29,7 @@ import {
   IconUser,
   IconMessage,
   IconBell,
+  IconTools,
 } from "@tabler/icons-react";
 import { useThrottledCallback } from "@mantine/hooks";
 
@@ -209,13 +210,29 @@ function UserMenu({
 
       <Menu.Dropdown>
         {session.user && (
-          <Menu.Item
-            component={Link}
-            href={`/user/${session.user.username}`}
-            leftSection={<IconUser size="1em" />}
-          >
-            Profile
-          </Menu.Item>
+          <>
+            {session.user.role === "admin" && (
+              <>
+                <Menu.Item
+                  component={Link}
+                  href="/dashboard"
+                  leftSection={<IconTools size="1em" />}
+                >
+                  Dashboard
+                </Menu.Item>
+
+                <Menu.Divider />
+              </>
+            )}
+
+            <Menu.Item
+              component={Link}
+              href={`/user/${session.user.username}`}
+              leftSection={<IconUser size="1em" />}
+            >
+              Profile
+            </Menu.Item>
+          </>
         )}
 
         <Menu.Item

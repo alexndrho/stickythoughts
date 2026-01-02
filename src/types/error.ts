@@ -1,6 +1,6 @@
 export type systemCode = "unknown-error" | "not-found";
 
-export type authCode = "auth/unauthorized";
+export type authCode = "auth/unauthorized" | "auth/forbidden";
 
 export type validationCode =
   | "validation/unique-constraint"

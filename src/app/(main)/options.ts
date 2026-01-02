@@ -15,9 +15,16 @@ export const thoughtCountOptions = queryOptions({
   },
 });
 
+export const thoughtPageOptions = (page: number) => {
+  return queryOptions({
+    queryKey: [...thoughtOptions.queryKey, page],
+    queryFn: () => getThoughts({ page }),
+  });
+};
+
 // infinite query options
 export const thoughtInfiniteOptions = infiniteQueryOptions({
-  queryKey: ["infiniteThoughts"],
+  queryKey: [...thoughtCountOptions.queryKey, "infiniteThoughts"],
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getThoughts({ lastId: pageParam }),

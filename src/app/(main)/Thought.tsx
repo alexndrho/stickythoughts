@@ -1,7 +1,6 @@
 import { Box, Text, Tooltip } from "@mantine/core";
 
 import { getFormattedDate } from "@/utils/date";
-import { getColorFallback } from "@/utils/color";
 import { filterText } from "@/utils/text";
 import classes from "./home.module.css";
 
@@ -20,11 +19,7 @@ export default function Thought({
 }: NoteProps) {
   return (
     <Tooltip label={getFormattedDate(createdAt)}>
-      <Box
-        role="article"
-        bg={`${getColorFallback(color)}.6`}
-        className={classes.thought}
-      >
+      <Box role="article" bg={`${color}.6`} className={classes.thought}>
         <Text lineClamp={9}>{filterText(message)}</Text>
 
         <Text

@@ -3,6 +3,7 @@
 import {
   createTheme,
   Menu,
+  NavLink,
   Tooltip,
   TypographyStylesProvider,
 } from "@mantine/core";
@@ -26,6 +27,11 @@ export const theme = createTheme({
           overflowWrap: "break-word",
         },
       }),
+    }),
+    NavLink: NavLink.extend({
+      defaultProps: {
+        bdrs: "sm",
+      },
     }),
   },
 });

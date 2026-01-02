@@ -98,6 +98,9 @@ export async function PUT(
   { params }: { params: Promise<{ threadId: string }> },
 ) {
   try {
+    const { threadId } = await params;
+    const { body } = updateThreadServerInput.parse(await request.json());
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -110,10 +113,6 @@ export async function PUT(
         { status: 401 },
       );
     }
-
-    const { threadId } = await params;
-
-    const { body } = updateThreadServerInput.parse(await request.json());
 
     const updatedThread = await prisma.thread.update({
       where: {
@@ -172,10 +171,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  requst: Request,
+  request: Request,
   { params }: { params: Promise<{ threadId: string }> },
 ) {
   try {
+    const { threadId } = await params;
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -189,12 +190,19 @@ export async function DELETE(
       );
     }
 
-    const { threadId } = await params;
+    const hasPermission = await auth.api.userHasPermission({
+      body: {
+        userId: session.user.id,
+        permission: {
+          thread: ["moderate"],
+        },
+      },
+    });
 
     await prisma.thread.delete({
       where: {
         id: threadId,
-        authorId: session.user.id,
+        ...(hasPermission.success ? {} : { authorId: session.user.id }),
       },
     });
 

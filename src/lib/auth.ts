@@ -2,10 +2,17 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { captcha, emailOTP, twoFactor, username } from "better-auth/plugins";
+import {
+  admin as adminPlugin,
+  captcha,
+  emailOTP,
+  twoFactor,
+  username,
+} from "better-auth/plugins";
 import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
+import { ac, admin } from "./permissions";
 import { resend } from "./email";
 import EmailOTPTemplate from "@/components/emails/EmailOTPTemplate";
 import EmailLinkTemplate from "@/components/emails/EmailLinkTemplate";
@@ -94,6 +101,12 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    adminPlugin({
+      ac,
+      roles: {
+        admin,
+      },
+    }),
     twoFactor(),
     username({
       usernameValidator: (username) => {

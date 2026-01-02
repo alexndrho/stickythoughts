@@ -1,4 +1,5 @@
 .nav-container {
+  height: rem(70px);
   padding-top: var(--mantine-spacing-md);
   padding-bottom: var(--mantine-spacing-md);
   background-color: var(--mantine-color-body);

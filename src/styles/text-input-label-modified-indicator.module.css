@@ -1,0 +1,4 @@
+.modified-label {
+  color: var(--mantine-color-dimmed);
+  font-style: italic;
+}

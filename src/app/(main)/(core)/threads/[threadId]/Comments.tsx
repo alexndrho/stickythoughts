@@ -2,6 +2,8 @@
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Center, Loader } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconTrash } from "@tabler/icons-react";
 
 import { type authClient } from "@/lib/auth-client";
 import { threadCommentsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
@@ -61,6 +63,12 @@ export default function Comments({
       setDeleteThreadCommentQueryData({
         threadId: data.threadId,
         commentId: data.commentId,
+      });
+
+      notifications.show({
+        title: "Comment deleted",
+        message: "The comment has been successfully deleted.",
+        icon: <IconTrash size="1em" />,
       });
     },
   });

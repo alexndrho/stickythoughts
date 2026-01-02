@@ -64,6 +64,9 @@ export default function CommentItem({
 }: CommentItemProps) {
   const [isEditable, setIsEditable] = useState(false);
 
+  const isAuthor = session?.user.id === comment.author.id;
+  const hasPermission = session?.user.role === "admin";
+
   return (
     <div>
       <div className={classes["comment-item__header"]}>
@@ -104,7 +107,7 @@ export default function CommentItem({
           </Text>
         </div>
 
-        {session?.user.id === comment.author.id && (
+        {(isAuthor || hasPermission) && (
           <Menu>
             <Menu.Target>
               <ActionIcon
@@ -117,12 +120,14 @@ export default function CommentItem({
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item
-                leftSection={<IconEdit size="1em" />}
-                onClick={() => setIsEditable(true)}
-              >
-                Edit
-              </Menu.Item>
+              {isAuthor && (
+                <Menu.Item
+                  leftSection={<IconEdit size="1em" />}
+                  onClick={() => setIsEditable(true)}
+                >
+                  Edit
+                </Menu.Item>
+              )}
 
               <Menu.Item
                 color="red"

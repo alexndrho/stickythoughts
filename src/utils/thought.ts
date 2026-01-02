@@ -1,4 +1,5 @@
 import type { Thought } from "@/generated/prisma/client";
+import { getColorFallback } from "./color";
 
 // Override date type to string
 export type ThoughtFromServer = Omit<Thought, "createdAt" | "updatedAt"> & {
@@ -8,9 +9,10 @@ export type ThoughtFromServer = Omit<Thought, "createdAt" | "updatedAt"> & {
 
 // Date data from the server HTTP response body is parsed as JSON,
 // so date fields are strings and need to be converted to Date objects
-export const convertThoughtDates = (thought: ThoughtFromServer): Thought => {
+export const parseThoughtFromServer = (thought: ThoughtFromServer): Thought => {
   return {
     ...thought,
+    color: getColorFallback(thought.color),
     createdAt: new Date(thought.createdAt),
   } satisfies Thought;
 };

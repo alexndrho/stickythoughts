@@ -1,0 +1,16 @@
+.table__td-user-container {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.table__td-email-container {
+  display: flex;
+  align-items: center;
+  gap: rem(5px);
+}
+
+.table__td-email-verified-icon {
+  font-size: var(--mantine-font-size-md);
+  color: var(--mantine-color-green-filled);
+}

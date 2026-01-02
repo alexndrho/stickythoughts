@@ -87,6 +87,8 @@ export async function DELETE(
   { params }: { params: Promise<{ threadId: string; commentId: string }> },
 ) {
   try {
+    const { threadId, commentId } = await params;
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -105,13 +107,20 @@ export async function DELETE(
       );
     }
 
-    const { threadId, commentId } = await params;
+    const hasPermission = await auth.api.userHasPermission({
+      body: {
+        userId: session.user.id,
+        permission: {
+          threadComment: ["moderate"],
+        },
+      },
+    });
 
     const deletedComment = await prisma.threadComment.delete({
       where: {
         id: commentId,
         threadId,
-        authorId: session.user.id,
+        ...(hasPermission.success ? {} : { authorId: session.user.id }),
       },
       select: {
         authorId: true,

@@ -1,13 +1,15 @@
 import type { Prisma, Thought } from "@/generated/prisma/client";
-import { convertThoughtDates, ThoughtFromServer } from "@/utils/thought";
+import { parseThoughtFromServer, ThoughtFromServer } from "@/utils/thought";
 import { toServerError } from "@/utils/error/ServerError";
 import { apiUrl } from "@/utils/text";
 
 const getThoughts = async ({
   lastId,
+  page,
   searchTerm,
 }: {
   lastId?: string;
+  page?: number;
   searchTerm?: string;
 }): Promise<Thought[]> => {
   const params = new URLSearchParams();
@@ -15,7 +17,9 @@ const getThoughts = async ({
   if (lastId) {
     params.append("lastId", lastId);
   }
-
+  if (page) {
+    params.append("page", page.toString());
+  }
   if (searchTerm) {
     params.append("searchTerm", searchTerm);
   }
@@ -30,7 +34,7 @@ const getThoughts = async ({
     throw toServerError("Failed to get thoughts", data.issues);
   }
 
-  return data.map(convertThoughtDates);
+  return data.map(parseThoughtFromServer);
 };
 
 const submitThought = async (

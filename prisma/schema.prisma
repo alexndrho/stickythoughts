@@ -18,16 +18,22 @@ model Thought {
 }
 
 model User {
-  id                 String              @id
-  name               String
-  email              String
-  emailVerified      Boolean
-  image              String?
-  createdAt          DateTime
-  updatedAt          DateTime
-  username           String
-  displayUsername    String?
-  bio                String?
+  id              String   @id
+  name            String
+  email           String
+  emailVerified   Boolean
+  image           String?
+  createdAt       DateTime
+  updatedAt       DateTime
+  username        String
+  displayUsername String?
+  bio             String?
+
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
   sessions           Session[]
   accounts           Account[]
   threads            Thread[]
@@ -56,6 +62,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@index([userId])

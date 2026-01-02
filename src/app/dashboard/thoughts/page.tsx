@@ -1,0 +1,100 @@
+"use client";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ActionIcon,
+  ColorSwatch,
+  Pagination,
+  Table,
+  Text,
+  Title,
+  Tooltip,
+} from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
+
+import { type Thought } from "@/generated/prisma/client";
+import { thoughtCountOptions, thoughtPageOptions } from "@/app/(main)/options";
+import { THOUGHTS_PER_PAGE } from "@/config/thought";
+import dashboardClasses from "../dashboard.module.css";
+import DeleteThoughtModal from "./DeleteThoughtModal";
+
+export default function ThoughtsPage() {
+  const [page, setPage] = useState(1);
+
+  const { data } = useQuery(thoughtPageOptions(page));
+
+  const { data: count } = useQuery(thoughtCountOptions);
+
+  const [deletingThought, setDeletingThought] = useState<Thought | null>(null);
+
+  const handleOpenDeleteModal = (thought: Thought) => {
+    setDeletingThought(thought);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeletingThought(null);
+  };
+
+  return (
+    <div className={dashboardClasses.container}>
+      <Title className={dashboardClasses.title}>Thoughts</Title>
+
+      <div className={dashboardClasses["table-container"]}>
+        <Table.ScrollContainer minWidth="100%" maxHeight="100%">
+          <Table highlightOnHover withColumnBorders withRowBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Author</Table.Th>
+                <Table.Th>Message</Table.Th>
+                <Table.Th>Color</Table.Th>
+                <Table.Th />
+              </Table.Tr>
+            </Table.Thead>
+
+            <Table.Tbody>
+              {data?.map((thought) => (
+                <Table.Tr key={thought.id}>
+                  <Table.Td>{thought.author}</Table.Td>
+
+                  <Table.Td>
+                    <Text>{thought.message}</Text>
+                  </Table.Td>
+
+                  <Table.Td>
+                    <Tooltip label={thought.color}>
+                      <ColorSwatch color={thought.color} />
+                    </Tooltip>
+                  </Table.Td>
+
+                  <Table.Td>
+                    <ActionIcon
+                      aria-label="Delete Thought"
+                      color="red"
+                      onClick={() => handleOpenDeleteModal(thought)}
+                    >
+                      <IconTrash size="1em" />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      </div>
+
+      <Pagination
+        mt="md"
+        value={page}
+        onChange={setPage}
+        total={Math.ceil((count || 0) / THOUGHTS_PER_PAGE)}
+      />
+
+      <DeleteThoughtModal
+        thought={deletingThought}
+        opened={!!deletingThought}
+        onClose={handleCloseDeleteModal}
+      />
+    </div>
+  );
+}

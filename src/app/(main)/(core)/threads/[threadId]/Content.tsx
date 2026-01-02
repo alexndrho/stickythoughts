@@ -54,6 +54,9 @@ export default function Content({ id }: ContentProps) {
 
   const dateNow = useDateNow();
 
+  const isAuthor = session?.user.id === thread.authorId;
+  const hasPermission = session?.user.role === "admin";
+
   // Like
   const handleLikeMutation = useMutation({
     mutationFn: () => {
@@ -110,7 +113,7 @@ export default function Content({ id }: ContentProps) {
           </div>
         </div>
 
-        {session?.user.id === thread.authorId && (
+        {(isAuthor || hasPermission) && (
           <Menu>
             <Menu.Target>
               <ActionIcon
@@ -123,22 +126,22 @@ export default function Content({ id }: ContentProps) {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <>
+              {isAuthor && (
                 <Menu.Item
                   leftSection={<IconEdit size="1em" />}
                   onClick={() => setIsEditable(true)}
                 >
                   Edit
                 </Menu.Item>
+              )}
 
-                <Menu.Item
-                  color="red"
-                  leftSection={<IconTrash size="1em" />}
-                  onClick={deleteModalHandlers.open}
-                >
-                  Delete
-                </Menu.Item>
-              </>
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size="1em" />}
+                onClick={deleteModalHandlers.open}
+              >
+                Delete
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         )}
@@ -210,7 +213,7 @@ export default function Content({ id }: ContentProps) {
         />
       </section>
 
-      {thread.authorId === session?.user.id && (
+      {(isAuthor || hasPermission) && (
         <DeleteThreadModal
           id={thread.id}
           title={thread.title}
