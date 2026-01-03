@@ -38,6 +38,7 @@ import UpdatePasswordModal from "./UpdatePasswordModal";
 import EnableTwoFactorModal from "./EnableTwoFactorModal";
 import DisableTwoFactorModal from "./DisableTwoFactorModal";
 import classes from "./settings.module.css";
+import accountClasses from "./account.module.css";
 
 export default function Content() {
   const router = useRouter();
@@ -236,15 +237,18 @@ export default function Content() {
 
       <Divider mb="lg" />
 
-      <div className={`${classes.content} ${classes["main-content"]}`}>
-        <div className={classes["user-info"]}>
+      <div className={`${classes.content} ${accountClasses["main-content"]}`}>
+        <div className={accountClasses["user-info"]}>
           {accountItems.map((item, index) => (
-            <div key={index} className={classes["user-info__account-item"]}>
+            <div
+              key={index}
+              className={accountClasses["user-info__account-item"]}
+            >
               <div>
                 <Text
                   size="lg"
                   truncate
-                  className={classes["account-item__label"]}
+                  className={accountClasses["account-item__label"]}
                 >
                   {item.label}
                 </Text>
@@ -252,7 +256,7 @@ export default function Content() {
                 {item.description && (
                   <Text
                     size="sm"
-                    className={classes["account-item__description"]}
+                    className={accountClasses["account-item__description"]}
                   >
                     {item.description}
                   </Text>
@@ -260,16 +264,18 @@ export default function Content() {
 
                 <Skeleton
                   visible={item.loading}
-                  className={classes["account-item__skeleton-wrapper-value"]}
+                  className={
+                    accountClasses["account-item__skeleton-wrapper-value"]
+                  }
                 >
-                  <Text className={classes["account-item__value"]}>
+                  <Text className={accountClasses["account-item__value"]}>
                     {item.value || "No value set"}
                   </Text>
                 </Skeleton>
               </div>
 
               <Skeleton w="auto" visible={item.loading}>
-                <div className={classes["account-item__right-section"]}>
+                <div className={accountClasses["account-item__right-section"]}>
                   {item.rightSection}
                 </div>
               </Skeleton>
@@ -277,17 +283,19 @@ export default function Content() {
           ))}
         </div>
 
-        <div className={classes["profile-picture-container"]}>
+        <div className={accountClasses["profile-picture-container"]}>
           <Avatar
             src={session?.user?.image}
-            className={classes["profile-picture"]}
+            className={accountClasses["profile-picture"]}
           />
 
           <Menu>
             <Menu.Target>
               <Button
                 variant="default"
-                className={classes["profile-picture-container__edit-button"]}
+                className={
+                  accountClasses["profile-picture-container__edit-button"]
+                }
                 size="compact-md"
                 leftSection={<IconEdit size="1em" />}
               >
@@ -317,25 +325,25 @@ export default function Content() {
         </div>
       </div>
 
-      <Title order={2} className={classes.title}>
+      <Title order={2} className={accountClasses.title}>
         Password and Authentication
       </Title>
 
       <Divider mb="lg" />
 
-      <div className={classes.content}>
+      <div className={accountClasses.content}>
         <Button onClick={openUpdatePasswordModal}>Change Password</Button>
 
         <Text
           mt="md"
           size="lg"
           truncate
-          className={classes["account-item__label"]}
+          className={accountClasses["account-item__label"]}
         >
           Two-Factor Authentication
         </Text>
 
-        <Text size="md" className={classes["account-item__description"]}>
+        <Text size="md" className={accountClasses["account-item__description"]}>
           Add an extra layer of security to your account by requiring a second
           form of authentication when logging in.
         </Text>

@@ -1,0 +1,26 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $mantine-breakpoint-md) {
+    flex-direction: row;
+  }
+}
+
+.sidebar {
+  padding-top: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-md);
+
+  @media (min-width: $mantine-breakpoint-md) {
+    flex: 1;
+    padding-right: var(--mantine-spacing-md);
+  }
+}
+
+.content {
+  @media (min-width: $mantine-breakpoint-md) {
+    flex: 4;
+  }
+}

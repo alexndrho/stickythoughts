@@ -1,0 +1,29 @@
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.session-item {
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.session-item__current-device-label {
+  color: var(--mantine-color-green-text);
+  font-style: italic;
+}
+
+.session-item__label {
+  font-weight: bold;
+}
+
+.session-item__revoke {
+  color: var(--mantine-color-text);
+}
+.session-item__revoke:hover {
+  color: var(--mantine-color-text);
+}

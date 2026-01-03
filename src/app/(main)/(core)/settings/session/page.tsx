@@ -1,14 +1,13 @@
 import { type Metadata } from "next";
-
 import Content from "./Content";
 
 export const metadata: Metadata = {
-  title: "Account Settings",
+  title: "Session Settings",
   alternates: {
-    canonical: `/settings`,
+    canonical: `/settings/session`,
   },
 };
 
-export default function SettingsPage() {
+export default function SessionPage() {
   return <Content />;
 }
