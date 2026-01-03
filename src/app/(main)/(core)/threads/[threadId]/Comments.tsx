@@ -1,24 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Center, Loader } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons-react";
 
 import { type authClient } from "@/lib/auth-client";
 import { threadCommentsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
-import {
-  deleteThreadComment,
-  likeThreadComment,
-  unlikeThreadComment,
-} from "@/services/thread";
-import {
-  setDeleteThreadCommentQueryData,
-  setLikeThreadCommentQueryData,
-} from "@/app/(main)/(core)/threads/set-query-data";
+import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
+import { setLikeThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import CommentItem from "./CommentItem";
+import { type ThreadCommentType } from "@/types/thread";
 import classes from "./thread.module.css";
+import DeleteCommentModal from "./DeleteCommentModal";
 
 export interface CommentsProps {
   threadId: string;
@@ -44,34 +38,8 @@ export default function Comments({
     hasNextPage: hasNextCommentsPage,
   } = useInfiniteQuery(threadCommentsInfiniteOptions(threadId));
 
-  const deleteMutation = useMutation({
-    mutationFn: async ({
-      threadId,
-      commentId,
-    }: {
-      threadId: string;
-      commentId: string;
-    }) => {
-      await deleteThreadComment({
-        threadId,
-        commentId,
-      });
-
-      return { threadId, commentId };
-    },
-    onSuccess: (data) => {
-      setDeleteThreadCommentQueryData({
-        threadId: data.threadId,
-        commentId: data.commentId,
-      });
-
-      notifications.show({
-        title: "Comment deleted",
-        message: "The comment has been successfully deleted.",
-        icon: <IconTrash size="1em" />,
-      });
-    },
-  });
+  const [deletingComment, setDeletingComment] =
+    useState<ThreadCommentType | null>(null);
 
   const commentLikeMutation = useMutation({
     mutationFn: async ({
@@ -134,6 +102,14 @@ export default function Comments({
     });
   };
 
+  const handleDeleteCommentModalOpen = (comment: ThreadCommentType) => {
+    setDeletingComment(comment);
+  };
+
+  const handleDeleteCommentModalClose = () => {
+    setDeletingComment(null);
+  };
+
   return (
     <InfiniteScroll
       onLoadMore={fetchNextCommentsPage}
@@ -151,7 +127,7 @@ export default function Comments({
               dateNow={dateNow}
               isThreadOwner={threadAuthor === comment.author.id}
               onLike={handleLike}
-              onDelete={deleteMutation.mutate}
+              onDelete={() => handleDeleteCommentModalOpen(comment)}
             />
           ))}
 
@@ -161,6 +137,13 @@ export default function Comments({
           </Center>
         )}
       </div>
+
+      <DeleteCommentModal
+        threadId={threadId}
+        comment={deletingComment}
+        opened={!!deletingComment}
+        onClose={handleDeleteCommentModalClose}
+      />
     </InfiniteScroll>
   );
 }
