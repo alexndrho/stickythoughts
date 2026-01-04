@@ -121,7 +121,7 @@ export default function Nav() {
             </Group>
 
             <div className={classes["mobile-menu"]}>
-              <MobileMenu />
+              <MobileMenu isAuthenticated={!!session} />
             </div>
           </Group>
 
@@ -158,7 +158,11 @@ export default function Nav() {
   );
 }
 
-function MobileMenu() {
+function MobileMenu({
+  isAuthenticated = false,
+}: {
+  isAuthenticated?: boolean;
+}) {
   return (
     <Menu>
       <Menu.Target>
@@ -168,15 +172,19 @@ function MobileMenu() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item
-          component={Link}
-          href="/sign-in"
-          leftSection={<IconLogin size="1em" />}
-        >
-          Sign in
-        </Menu.Item>
+        {!isAuthenticated && (
+          <>
+            <Menu.Item
+              component={Link}
+              href="/sign-in"
+              leftSection={<IconLogin size="1em" />}
+            >
+              Sign in
+            </Menu.Item>
 
-        <Menu.Divider />
+            <Menu.Divider />
+          </>
+        )}
 
         {navLinks.map((link) => (
           <Menu.Item
