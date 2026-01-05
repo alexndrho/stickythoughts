@@ -23,7 +23,7 @@ export default function AdminShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <AppShell
@@ -57,6 +57,9 @@ export default function AdminShell({
             label={link.label}
             leftSection={link.icon}
             active={pathname === link.href}
+            onClick={() => {
+              close();
+            }}
           />
         ))}
 
