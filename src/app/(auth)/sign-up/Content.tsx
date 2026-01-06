@@ -16,7 +16,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconBrandGoogleFilled, IconX } from "@tabler/icons-react";
+import {
+  IconAt,
+  IconBrandGoogleFilled,
+  IconLock,
+  IconMail,
+  IconX,
+} from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { AuthContainer } from "../AuthContainer";
@@ -112,6 +118,7 @@ export default function Content() {
             label="Email"
             description="This will not be shown publicly"
             withAsterisk
+            leftSection={<IconMail size="1em" />}
             {...form.getInputProps("email")}
             className={classes["text-input"]}
           />
@@ -119,6 +126,7 @@ export default function Content() {
           <TextInput
             label="Username"
             withAsterisk
+            leftSection={<IconAt size="1em" />}
             {...form.getInputProps("username")}
             className={classes["text-input"]}
           />
@@ -126,6 +134,7 @@ export default function Content() {
           <PasswordInput
             label="Password"
             withAsterisk
+            leftSection={<IconLock size="1em" />}
             {...form.getInputProps("password")}
             className={classes["text-input"]}
           />

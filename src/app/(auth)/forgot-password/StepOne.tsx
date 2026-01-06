@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { isEmail, useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconMail } from "@tabler/icons-react";
 
 import { AuthContainer } from "../AuthContainer";
 import { authClient } from "@/lib/auth-client";
@@ -70,6 +70,7 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
             label="Your email"
             placeholder="me@example.com"
             withAsterisk
+            leftSection={<IconMail size="1em" />}
             {...sendOTPForm.getInputProps("email")}
           />
 

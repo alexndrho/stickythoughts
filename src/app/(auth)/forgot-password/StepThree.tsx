@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Button, Center, Group, PasswordInput, Title } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
+import { IconLock } from "@tabler/icons-react";
 
 import { AuthContainer } from "../AuthContainer";
 import { authClient } from "@/lib/auth-client";
@@ -82,6 +83,7 @@ export default function StepThree({
             label="Your new password"
             placeholder="Enter your new password"
             withAsterisk
+            leftSection={<IconLock size="1em" />}
             {...newPasswordForm.getInputProps("newPassword")}
           />
 

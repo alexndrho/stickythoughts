@@ -19,7 +19,12 @@ import {
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconBrandGoogleFilled, IconX } from "@tabler/icons-react";
+import {
+  IconAt,
+  IconBrandGoogleFilled,
+  IconLock,
+  IconX,
+} from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
@@ -176,6 +181,7 @@ function SignInForm({
         <TextInput
           label="Email or Username"
           withAsterisk
+          leftSection={<IconAt size="1em" />}
           {...form.getInputProps("emailOrUsername")}
           className={classes["text-input"]}
         />
@@ -183,6 +189,7 @@ function SignInForm({
         <PasswordInput
           label="Password"
           withAsterisk
+          leftSection={<IconLock size="1em" />}
           {...form.getInputProps("password")}
           className={classes["text-input"]}
         />
