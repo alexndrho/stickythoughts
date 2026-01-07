@@ -9,7 +9,14 @@ export type validationCode =
 
 export type threadCode = "thread/title-already-exists";
 
-export type errorCode = systemCode | authCode | validationCode | threadCode;
+export type captchaCode = "captcha/validation-failed";
+
+export type errorCode =
+  | systemCode
+  | authCode
+  | validationCode
+  | threadCode
+  | captchaCode;
 
 export default interface IError {
   issues: {

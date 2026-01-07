@@ -141,7 +141,9 @@ export default function Content() {
 
           <Turnstile
             ref={turnstileRef}
-            siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY!}
+            siteKey={
+              process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_AUTH_KEY!
+            }
             className={classes.captcha}
             onSuccess={(token) => form.setFieldValue("turnstileToken", token)}
             onExpire={() => turnstileRef.current?.reset()}

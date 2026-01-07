@@ -56,6 +56,15 @@
   text-align: right;
 }
 
+.send-thought-modal__captcha {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.send-thought-modal__root-error-messsage {
+  margin-top: var(--mantine-spacing-xs);
+  color: var(--mantine-color-error);
+}
+
 .thoughts {
   display: grid;
   grid-template-columns: repeat(auto-fit, 16.5rem);

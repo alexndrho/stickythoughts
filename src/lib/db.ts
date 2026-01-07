@@ -3,8 +3,6 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-import { createThoughtInput } from "./validations/thought";
-
 function createPrisma() {
   const base =
     process.env.NODE_ENV === "production"
@@ -17,16 +15,7 @@ function createPrisma() {
           }),
         });
 
-  return base.$extends(withAccelerate()).$extends({
-    query: {
-      thought: {
-        create: ({ args, query }) => {
-          args.data = createThoughtInput.parse(args.data);
-          return query(args);
-        },
-      },
-    },
-  });
+  return base.$extends(withAccelerate());
 }
 
 const globalForPrisma = globalThis as unknown as {
