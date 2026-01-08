@@ -14,6 +14,7 @@ import {
   Skeleton,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconCheck,
@@ -175,13 +176,19 @@ export default function Content() {
       ),
       rightSection: (
         <>
-          <Button
-            variant="default"
-            size="compact-md"
-            onClick={openUpdateEmailModal}
+          <Tooltip
+            label="You need to verify your email before you can change it"
+            disabled={session?.user.emailVerified}
           >
-            Edit
-          </Button>
+            <Button
+              variant="default"
+              size="compact-md"
+              disabled={!session?.user.emailVerified}
+              onClick={openUpdateEmailModal}
+            >
+              Edit
+            </Button>
+          </Tooltip>
 
           {!session?.user.emailVerified && (
             <Button
@@ -377,12 +384,14 @@ export default function Content() {
         onClose={closeUpdateNameModal}
       />
 
-      <UpdateEmailModal
-        defaultValue={session?.user?.email}
-        opened={updateEmailModalOpened}
-        onClose={closeUpdateEmailModal}
-        session={session}
-      />
+      {session?.user.emailVerified && (
+        <UpdateEmailModal
+          defaultValue={session?.user?.email}
+          opened={updateEmailModalOpened}
+          onClose={closeUpdateEmailModal}
+          session={session}
+        />
+      )}
 
       <UpdateUsernameModal
         defaultValue={session?.user?.username ?? undefined}
