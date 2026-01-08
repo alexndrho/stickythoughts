@@ -74,15 +74,24 @@ export const uploadProfilePicture = async (
   return data;
 };
 
-export const removeProfilePicture = async (
-  cookie?: string,
-): Promise<{ message: string }> => {
-  const res = await fetch(apiUrl("/api/user/profile-picture"), {
-    method: "DELETE",
-    headers: {
-      ...(cookie ? { cookie } : {}),
+export const removeProfilePicture = async ({
+  userId,
+  cookie,
+}: { userId?: string; cookie?: string } = {}): Promise<{ message: string }> => {
+  const searchParams = new URLSearchParams();
+  if (userId) {
+    searchParams.append("userId", userId);
+  }
+
+  const res = await fetch(
+    apiUrl(`/api/user/profile-picture?${searchParams.toString()}`),
+    {
+      method: "DELETE",
+      headers: {
+        ...(cookie ? { cookie } : {}),
+      },
     },
-  });
+  );
 
   const data = await res.json();
 

@@ -155,7 +155,7 @@ export const auth = betterAuth({
             const headerList = await headers();
             const cookie = headerList.get("cookie");
 
-            await removeProfilePicture(cookie ?? undefined);
+            await removeProfilePicture({ cookie: cookie ?? undefined });
           }
 
           await prisma.$transaction([

@@ -23,6 +23,7 @@ import {
   IconHammer,
   IconHammerOff,
   IconId,
+  IconPhoto,
   IconRosetteDiscountCheckFilled,
 } from "@tabler/icons-react";
 
@@ -30,6 +31,7 @@ import { authClient } from "@/lib/auth-client";
 import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
 import { adminUsersPageOptions } from "./options";
 import EditUserModal from "./EditUserModal";
+import DeleteUserProfilePictureModal from "./DeleteUserProfilePictureModal";
 import RevokeUserSessions from "./RevokeUserSessions";
 import BanUserModal from "./BanUserModal";
 import UnbanUserModal from "./UnbanUserModal";
@@ -41,6 +43,8 @@ export default function AdminPage() {
   const [page, setPage] = useState(1);
 
   const [editingUser, setEditingUser] = useState<UserWithRole | null>(null);
+  const [deletingUserProfilePicture, setDeletingUserProfilePicture] =
+    useState<UserWithRole | null>(null);
   const [banningUser, setBanningUser] = useState<UserWithRole | null>(null);
   const [revokingSessionsUser, setRevokingSessionsUser] =
     useState<UserWithRole | null>(null);
@@ -54,6 +58,14 @@ export default function AdminPage() {
 
   const handleCloseEditUserModal = () => {
     setEditingUser(null);
+  };
+
+  const handleOpenDeleteUserProfilePictureModal = (user: UserWithRole) => {
+    setDeletingUserProfilePicture(user);
+  };
+
+  const handleCloseDeleteUserProfilePictureModal = () => {
+    setDeletingUserProfilePicture(null);
   };
 
   const handleOpenBanUserModal = (user: UserWithRole) => {
@@ -199,6 +211,17 @@ export default function AdminPage() {
                           <Menu.Divider />
 
                           <Menu.Item
+                            leftSection={<IconPhoto size="1em" />}
+                            color="red"
+                            disabled={!user.image}
+                            onClick={() =>
+                              handleOpenDeleteUserProfilePictureModal(user)
+                            }
+                          >
+                            Delete Profile Picture
+                          </Menu.Item>
+
+                          <Menu.Item
                             color="red"
                             leftSection={<IconClock size="1em" />}
                             onClick={() => setRevokingSessionsUser(user)}
@@ -246,6 +269,12 @@ export default function AdminPage() {
         opened={!!editingUser}
         hasPermissionToUpdate={hasPermissionToUpdateUsers}
         onClose={handleCloseEditUserModal}
+      />
+
+      <DeleteUserProfilePictureModal
+        user={deletingUserProfilePicture}
+        opened={!!deletingUserProfilePicture}
+        onClose={handleCloseDeleteUserProfilePictureModal}
       />
 
       <RevokeUserSessions

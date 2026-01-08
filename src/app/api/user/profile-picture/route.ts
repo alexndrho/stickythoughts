@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
 import { Prisma } from "@/generated/prisma/client";
@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import IError from "@/types/error";
 import { deleteFile, isUrlStorage, uploadFile } from "@/lib/storage";
 import { extractKeyFromUrl } from "@/utils/text";
+import { prisma } from "@/lib/db";
 
 export async function PUT(req: Request) {
   const session = await auth.api.getSession({
@@ -167,71 +168,50 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    return NextResponse.json(
-      {
-        issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-      } satisfies IError,
-      { status: 401 },
-    );
-  }
-
-  if (!session.user.image) {
-    return NextResponse.json(
-      {
-        issues: [
-          { code: "validation/invalid-input", message: "No image to delete" },
-        ],
-      } satisfies IError,
-      { status: 400 },
-    );
-  }
-
-  const imageKey = isUrlStorage(session.user.image)
-    ? extractKeyFromUrl(session.user.image)
-    : null;
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const userId = searchParams.get("userId");
 
   try {
-    // Update database first
-    await auth.api.updateUser({
+    const session = await auth.api.getSession({
       headers: await headers(),
-      body: {
-        image: null,
-      },
     });
 
-    // Delete from storage after successful database update
-    if (imageKey) {
-      try {
-        await deleteFile({
-          params: {
-            Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
-            Key: imageKey,
-          },
-        });
-      } catch (deleteError) {
-        // Log but don't fail the request if file deletion fails
-        console.error(
-          "Failed to delete profile picture from storage:",
-          deleteError,
-        );
-      }
+    if (!session) {
+      return NextResponse.json(
+        {
+          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
+        } satisfies IError,
+        { status: 401 },
+      );
     }
 
-    return NextResponse.json(
-      {
-        image: null,
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2015") {
+    let userImage: string | null | undefined = null;
+
+    if (userId) {
+      // moderator deleting another user's profile picture
+      const hasPermission = await auth.api.userHasPermission({
+        body: {
+          userId: session.user.id,
+          permission: { user: ["delete"] },
+        },
+      });
+
+      if (!hasPermission.success) {
+        return NextResponse.json(
+          {
+            issues: [{ code: "auth/forbidden", message: "Forbidden" }],
+          } satisfies IError,
+          { status: 403 },
+        );
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { image: true },
+      });
+
+      if (!user) {
         return NextResponse.json(
           {
             issues: [{ code: "not-found", message: "User not found" }],
@@ -239,11 +219,93 @@ export async function DELETE() {
           { status: 404 },
         );
       }
-    } else if (error instanceof Error) {
-      console.error("Error message:", error.stack);
+
+      userImage = user.image;
+    } else {
+      userImage = session.user.image;
     }
 
-    console.error("Error deleting profile picture:", error);
+    if (!userImage) {
+      return NextResponse.json(
+        {
+          issues: [
+            { code: "validation/invalid-input", message: "No image to delete" },
+          ],
+        } satisfies IError,
+        { status: 400 },
+      );
+    }
+
+    const imageKey = isUrlStorage(userImage)
+      ? extractKeyFromUrl(userImage)
+      : null;
+
+    try {
+      // Update database first
+      if (userId) {
+        // Moderator path: update the target user's image
+        await prisma.user.update({
+          where: { id: userId },
+          data: { image: null },
+        });
+      } else {
+        // Self path: update the session user's image through auth API
+        await auth.api.updateUser({
+          headers: await headers(),
+          body: {
+            image: null,
+          },
+        });
+      }
+
+      // Delete from storage after successful database update
+      if (imageKey) {
+        try {
+          await deleteFile({
+            params: {
+              Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+              Key: imageKey,
+            },
+          });
+        } catch (deleteError) {
+          // Log but don't fail the request if file deletion fails
+          console.error(
+            "Failed to delete profile picture from storage:",
+            deleteError,
+          );
+        }
+      }
+
+      return NextResponse.json(
+        {
+          image: null,
+        },
+        { status: 200 },
+      );
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2015") {
+          return NextResponse.json(
+            {
+              issues: [{ code: "not-found", message: "User not found" }],
+            } satisfies IError,
+            { status: 404 },
+          );
+        }
+      } else if (error instanceof Error) {
+        console.error("Error message:", error.stack);
+      }
+
+      console.error("Error deleting profile picture:", error);
+      return NextResponse.json(
+        {
+          issues: [{ code: "unknown-error", message: "An error occurred" }],
+        } satisfies IError,
+        { status: 500 },
+      );
+    }
+  } catch (error) {
+    console.error("Error processing delete request:", error);
     return NextResponse.json(
       {
         issues: [{ code: "unknown-error", message: "An error occurred" }],
