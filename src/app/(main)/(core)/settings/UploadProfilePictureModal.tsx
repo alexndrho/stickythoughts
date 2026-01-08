@@ -20,7 +20,7 @@ import {
   threadBaseOptions,
 } from "@/app/(main)/(core)/threads/options";
 import ServerError from "@/utils/error/ServerError";
-import classes from "./settings.module.css";
+import classes from "./account.module.css";
 
 export interface UploadProfilePictureModalProps {
   opened: boolean;
