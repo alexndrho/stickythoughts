@@ -5,7 +5,7 @@ import { Tabs } from "@mantine/core";
 
 import type { authClient } from "@/lib/auth-client";
 import ThreadItem from "../../threads/ThreadItem";
-import { userThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
+import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { likeThread, unlikeThread } from "@/services/thread";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
@@ -32,7 +32,7 @@ export default function Threads({
     fetchNextPage: fetchNextThreadsPage,
     hasNextPage: hasNextThreadsPage,
   } = useInfiniteQuery({
-    ...userThreadsInfiniteOptions(username),
+    ...userUsernameThreadsInfiniteOptions(username),
     enabled: isActive,
   });
 

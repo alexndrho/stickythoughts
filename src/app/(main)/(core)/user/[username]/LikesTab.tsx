@@ -4,7 +4,7 @@ import { Tabs } from "@mantine/core";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
-import { userLikedThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
+import { userUsernameLikedThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import ThreadItem from "../../threads/ThreadItem";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
@@ -31,7 +31,7 @@ export default function LikesTab({
     fetchNextPage: fetchNextLikedThreadsPage,
     hasNextPage: hasNextLikedThreadsPage,
   } = useInfiniteQuery({
-    ...userLikedThreadsInfiniteOptions(username),
+    ...userUsernameLikedThreadsInfiniteOptions(username),
     enabled: isActive,
   });
 

@@ -5,7 +5,7 @@ import { Button, Group, Modal, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { type Thought } from "@/generated/prisma/client";
-import { thoughtOptions } from "@/app/(main)/options";
+import { thoughtsOptions } from "@/app/(main)/options";
 import { deleteThought } from "@/services/moderate/thought";
 
 export interface DeleteThoughtModalProps {
@@ -26,7 +26,7 @@ export default function DeleteThoughtModal({
 
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
-        queryKey: thoughtOptions.queryKey,
+        queryKey: thoughtsOptions.queryKey,
       });
     },
   });

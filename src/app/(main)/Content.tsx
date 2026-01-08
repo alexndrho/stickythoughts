@@ -19,8 +19,8 @@ import { IconCheck, IconMessage, IconSearch, IconX } from "@tabler/icons-react";
 
 import {
   thoughtCountOptions,
-  thoughtInfiniteOptions,
-  thoughtSearchInfiniteOptions,
+  thoughtsInfiniteOptions,
+  thoughtsSearchInfiniteOptions,
 } from "@/app/(main)/options";
 import Thoughts from "@/app/(main)/Thoughts";
 import SendThoughtModal from "./SendThoughtModal";
@@ -40,7 +40,7 @@ export default function Content() {
     isFetching: isThoughtsFetching,
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
-  } = useInfiniteQuery(thoughtInfiniteOptions);
+  } = useInfiniteQuery(thoughtsInfiniteOptions);
 
   const {
     data: searchData,
@@ -49,7 +49,7 @@ export default function Content() {
     isFetching: isSearchFetching,
     isRefetching: isSearchRefetching,
     isRefetchError: isSearchRefetchError,
-  } = useInfiniteQuery(thoughtSearchInfiniteOptions(searchBarValue));
+  } = useInfiniteQuery(thoughtsSearchInfiniteOptions(searchBarValue));
 
   const focusSearchBar = () => {
     searchRef.current?.focus();

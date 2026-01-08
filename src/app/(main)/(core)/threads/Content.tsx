@@ -9,7 +9,7 @@ import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { likeThread, unlikeThread } from "@/services/thread";
-import { threadInfiniteOptions } from "@/app/(main)/(core)/threads/options";
+import { threadsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import ThreadItem from "./ThreadItem";
@@ -30,7 +30,7 @@ export default function Content() {
     isFetching: isFetchingPosts,
     fetchNextPage: fetchNextPostsPage,
     hasNextPage: hasNextPostsPage,
-  } = useInfiniteQuery(threadInfiniteOptions);
+  } = useInfiniteQuery(threadsInfiniteOptions);
 
   const handleClickSubmitPost = () => {
     if (!session) {

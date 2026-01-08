@@ -1,6 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 
-export type UserPublicProfile = Prisma.UserGetPayload<{
+export type UserPublicAccount = Prisma.UserGetPayload<{
   select: {
     id: true;
     displayUsername: true;
@@ -11,7 +11,7 @@ export type UserPublicProfile = Prisma.UserGetPayload<{
   };
 }>;
 
-export type UserProfileSettings = Prisma.UserGetPayload<{
+export type UserAccountSettings = Prisma.UserGetPayload<{
   omit: {
     id: true;
     name: true;

@@ -10,7 +10,7 @@ import { updateThread } from "@/services/thread";
 import { getQueryClient } from "@/lib/get-query-client";
 import ServerError from "@/utils/error/ServerError";
 import {
-  threadInfiniteOptions,
+  threadsInfiniteOptions,
   threadOptions,
 } from "@/app/(main)/(core)/threads/options";
 import type { ThreadType } from "@/types/thread";
@@ -78,7 +78,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: threadInfiniteOptions.queryKey,
+        queryKey: threadsInfiniteOptions.queryKey,
       });
     },
     onError: (error) => {

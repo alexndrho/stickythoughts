@@ -4,7 +4,7 @@ import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Tabs } from "@mantine/core";
 
 import { type authClient } from "@/lib/auth-client";
-import { userCommentsInfiniteOptions } from "../options";
+import { userUsernameCommentsInfiniteOptions } from "../options";
 import { setLikeThreadCommentQueryData } from "../../threads/set-query-data";
 import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
 import InfiniteScroll from "@/components/InfiniteScroll";
@@ -31,7 +31,7 @@ export default function CommentsTab({
     fetchNextPage: fetchNextCommentsPage,
     hasNextPage: hasNextCommentsPage,
   } = useInfiniteQuery({
-    ...userCommentsInfiniteOptions(username),
+    ...userUsernameCommentsInfiniteOptions(username),
     enabled: isActive,
   });
 

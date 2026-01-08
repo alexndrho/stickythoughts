@@ -17,8 +17,8 @@ export const threadOptions = (id: string) => {
   });
 };
 
-export const threadInfiniteOptions = infiniteQueryOptions({
-  queryKey: ["infiniteThread"],
+export const threadsInfiniteOptions = infiniteQueryOptions({
+  queryKey: [...threadBaseOptions.queryKey, "infiniteThread"],
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getThreads({ lastId: pageParam }),
@@ -32,7 +32,7 @@ export const threadInfiniteOptions = infiniteQueryOptions({
 // thread comments
 export const threadCommentsInfiniteOptions = (threadId: string) => {
   return infiniteQueryOptions({
-    queryKey: [...threadBaseOptions.queryKey, threadId, "comments"],
+    queryKey: [...threadOptions(threadId).queryKey, "infiniteComments"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getThreadComments({ id: threadId, lastId: pageParam }),

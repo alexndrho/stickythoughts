@@ -2,13 +2,13 @@ import { type InfiniteData } from "@tanstack/react-query";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import {
-  userThreadsInfiniteOptions,
+  userUsernameThreadsInfiniteOptions,
   userOptions,
-  userLikedThreadsInfiniteOptions,
-  userCommentsInfiniteOptions,
+  userUsernameLikedThreadsInfiniteOptions,
+  userUsernameCommentsInfiniteOptions,
 } from "../user/options";
 import {
-  threadInfiniteOptions,
+  threadsInfiniteOptions,
   threadCommentsInfiniteOptions,
   threadOptions,
 } from "@/app/(main)/(core)/threads/options";
@@ -43,7 +43,7 @@ export const setLikeThreadQueryData = ({
   );
 
   queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-    threadInfiniteOptions.queryKey,
+    threadsInfiniteOptions.queryKey,
     (oldData) => {
       if (!oldData) return oldData;
       return {
@@ -68,7 +68,7 @@ export const setLikeThreadQueryData = ({
 
   if (username) {
     queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-      userThreadsInfiniteOptions(username).queryKey,
+      userUsernameThreadsInfiniteOptions(username).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -92,7 +92,7 @@ export const setLikeThreadQueryData = ({
     );
 
     queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-      userLikedThreadsInfiniteOptions(username).queryKey,
+      userUsernameLikedThreadsInfiniteOptions(username).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -116,12 +116,12 @@ export const setLikeThreadQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userThreadsInfiniteOptions(username).queryKey,
+      queryKey: userUsernameThreadsInfiniteOptions(username).queryKey,
       refetchType: "none",
     });
 
     queryClient.invalidateQueries({
-      queryKey: userLikedThreadsInfiniteOptions(username).queryKey,
+      queryKey: userUsernameLikedThreadsInfiniteOptions(username).queryKey,
       refetchType: "none",
     });
   } else {
@@ -136,7 +136,7 @@ export const setLikeThreadQueryData = ({
   });
 
   queryClient.invalidateQueries({
-    queryKey: threadInfiniteOptions.queryKey,
+    queryKey: threadsInfiniteOptions.queryKey,
     refetchType: "none",
   });
 };
@@ -182,7 +182,7 @@ export const setCreateThreadCommentQueryData = ({
   );
 
   queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-    threadInfiniteOptions.queryKey,
+    threadsInfiniteOptions.queryKey,
     (oldData) => {
       if (!oldData) return oldData;
       return {
@@ -215,7 +215,7 @@ export const setCreateThreadCommentQueryData = ({
   });
 
   queryClient.invalidateQueries({
-    queryKey: threadInfiniteOptions.queryKey,
+    queryKey: threadsInfiniteOptions.queryKey,
     refetchType: "none",
   });
 
@@ -333,7 +333,7 @@ export const setLikeThreadCommentQueryData = ({
   );
 
   queryClient.setQueryData<InfiniteData<ThreadCommentType[]>>(
-    userCommentsInfiniteOptions(username).queryKey,
+    userUsernameCommentsInfiniteOptions(username).queryKey,
     (oldData) => {
       if (!oldData) return oldData;
 
@@ -365,7 +365,7 @@ export const setLikeThreadCommentQueryData = ({
   });
 
   queryClient.invalidateQueries({
-    queryKey: userCommentsInfiniteOptions(username).queryKey,
+    queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
     refetchType: "none",
   });
 };

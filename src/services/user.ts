@@ -2,15 +2,15 @@ import { toServerError } from "@/utils/error/ServerError";
 import { apiUrl } from "@/utils/text";
 import type {
   UserNotificationType,
-  UserProfileSettings,
-  UserPublicProfile,
+  UserAccountSettings,
+  UserPublicAccount,
 } from "@/types/user";
 import type { ThreadType, UserThreadCommentType } from "@/types/thread";
 
 export const getUser = async (
   username: string,
   cookie?: string,
-): Promise<UserPublicProfile> => {
+): Promise<UserPublicAccount> => {
   const res = await fetch(apiUrl(`/api/user/${username}`), {
     headers: {
       ...(cookie ? { cookie } : {}),
@@ -26,8 +26,8 @@ export const getUser = async (
   return data;
 };
 
-export const getUserProfileSettings =
-  async (): Promise<UserProfileSettings> => {
+export const getUserAccountSettings =
+  async (): Promise<UserAccountSettings> => {
     const res = await fetch(apiUrl("/api/user/settings"));
 
     const data = await res.json();

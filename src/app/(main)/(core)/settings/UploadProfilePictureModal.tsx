@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { uploadProfilePicture } from "@/services/user";
 import { getQueryClient } from "@/lib/get-query-client";
 import {
-  threadInfiniteOptions,
+  threadsInfiniteOptions,
   threadBaseOptions,
 } from "@/app/(main)/(core)/threads/options";
 import ServerError from "@/utils/error/ServerError";
@@ -68,7 +68,7 @@ export default function UploadProfilePictureModal({
       });
 
       queryClient.invalidateQueries({
-        queryKey: threadInfiniteOptions.queryKey,
+        queryKey: threadsInfiniteOptions.queryKey,
       });
     },
     onError: (err) => {

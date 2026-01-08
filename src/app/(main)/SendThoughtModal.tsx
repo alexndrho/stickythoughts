@@ -19,7 +19,7 @@ import { notifications } from "@mantine/notifications";
 import RandomButton from "@/components/RandomButton";
 import CheckColorSwatch from "@/components/CheckColorSwatch";
 import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtInfiniteOptions, thoughtOptions } from "@/app/(main)/options";
+import { thoughtsInfiniteOptions, thoughtsOptions } from "@/app/(main)/options";
 import { submitThought } from "@/services/thought";
 import { createThoughtInput } from "@/lib/validations/thought";
 import {
@@ -114,11 +114,11 @@ export default function SendThoughtModal({
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: thoughtInfiniteOptions.queryKey,
+        queryKey: thoughtsInfiniteOptions.queryKey,
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: thoughtOptions.queryKey,
+        queryKey: thoughtsOptions.queryKey,
       });
 
       notifications.show({

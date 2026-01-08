@@ -29,7 +29,7 @@ import { authClient } from "@/lib/auth-client";
 import { secondsToMinutesExtended } from "@/utils/date";
 import { removeProfilePicture } from "@/services/user";
 import { useTimer } from "@/hooks/use-timer";
-import { userProfileOptions } from "./options";
+import { userAccountOptions } from "./options";
 import UploadProfilePictureModal from "./UploadProfilePictureModal";
 import UpdateNameModal from "./UpdateNameModal";
 import UpdateEmailModal from "./UpdateEmailModal";
@@ -51,7 +51,7 @@ export default function Content() {
   } = authClient.useSession();
 
   const { data: userProfile, isLoading: isUserProfileLoading } =
-    useQuery(userProfileOptions);
+    useQuery(userAccountOptions);
 
   useEffect(() => {
     if (!isSessionPending && !session) {

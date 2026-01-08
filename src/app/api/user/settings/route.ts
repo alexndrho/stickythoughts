@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import IError from "@/types/error";
-import type { UserProfileSettings } from "@/types/user";
+import type { UserAccountSettings } from "@/types/user";
 
 export async function GET() {
   const session = await auth.api.getSession({
@@ -21,7 +21,7 @@ export async function GET() {
   }
 
   try {
-    const userSettings: UserProfileSettings | null =
+    const userSettings: UserAccountSettings | null =
       await prisma.user.findUnique({
         where: {
           id: session.user.id,

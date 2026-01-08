@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
-import type { UserPublicProfile } from "@/types/user";
+import type { UserPublicAccount } from "@/types/user";
 import IError from "@/types/error";
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
   try {
     const { username } = await params;
 
-    const user: UserPublicProfile | null = await prisma.user.findUnique({
+    const user: UserPublicAccount | null = await prisma.user.findUnique({
       where: {
         username,
       },

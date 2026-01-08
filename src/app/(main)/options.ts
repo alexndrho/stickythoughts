@@ -4,12 +4,12 @@ import { getThoughts, getThoughtsCount } from "@/services/thought";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
 
 // query options
-export const thoughtOptions = queryOptions({
+export const thoughtsOptions = queryOptions({
   queryKey: ["thoughts"],
 });
 
 export const thoughtCountOptions = queryOptions({
-  queryKey: [...thoughtOptions.queryKey, "count"],
+  queryKey: [...thoughtsOptions.queryKey, "count"],
   queryFn: async () => {
     return await getThoughtsCount();
   },
@@ -17,14 +17,14 @@ export const thoughtCountOptions = queryOptions({
 
 export const thoughtPageOptions = (page: number) => {
   return queryOptions({
-    queryKey: [...thoughtOptions.queryKey, page],
+    queryKey: [...thoughtsOptions.queryKey, page],
     queryFn: () => getThoughts({ page }),
   });
 };
 
 // infinite query options
-export const thoughtInfiniteOptions = infiniteQueryOptions({
-  queryKey: [...thoughtCountOptions.queryKey, "infiniteThoughts"],
+export const thoughtsInfiniteOptions = infiniteQueryOptions({
+  queryKey: [...thoughtsOptions.queryKey, "infiniteThoughts"],
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getThoughts({ lastId: pageParam }),
@@ -35,14 +35,9 @@ export const thoughtInfiniteOptions = infiniteQueryOptions({
   },
 });
 
-export const thoughtSearchInfiniteOptions = (search: string) => {
+export const thoughtsSearchInfiniteOptions = (search: string) => {
   return infiniteQueryOptions({
-    queryKey: [
-      ...thoughtInfiniteOptions.queryKey,
-      "thoughts",
-      "search",
-      search,
-    ],
+    queryKey: [...thoughtsInfiniteOptions.queryKey, "infiniteSearch", search],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!search) return [];

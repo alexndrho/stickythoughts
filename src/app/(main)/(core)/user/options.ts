@@ -22,8 +22,12 @@ export const userUsernameOptions = (username: string) => {
   });
 };
 
-export const userNotificationsInfiniteOptions = infiniteQueryOptions({
+export const userNotificationsOptions = queryOptions({
   queryKey: [...userOptions.queryKey, "notifications"],
+});
+
+export const userNotificationsInfiniteOptions = infiniteQueryOptions({
+  queryKey: [...userNotificationsOptions.queryKey, "infiniteNotifications"],
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getUserNotifications(pageParam),
@@ -34,13 +38,13 @@ export const userNotificationsInfiniteOptions = infiniteQueryOptions({
 });
 
 export const userNotificationCountOptions = queryOptions({
-  queryKey: [...userOptions.queryKey, "notification-count"],
+  queryKey: [...userNotificationsOptions.queryKey, "count"],
   queryFn: getUserNewNotificationCount,
 });
 
-export const userThreadsInfiniteOptions = (username: string) => {
+export const userUsernameThreadsInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userOptions.queryKey, username, "threads"],
+    queryKey: [...userUsernameOptions(username).queryKey, "infiniteThreads"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserThreads({
@@ -55,9 +59,9 @@ export const userThreadsInfiniteOptions = (username: string) => {
   });
 };
 
-export const userCommentsInfiniteOptions = (username: string) => {
+export const userUsernameCommentsInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userOptions.queryKey, username, "comments"],
+    queryKey: [...userUsernameOptions(username).queryKey, "infiniteComments"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserComments({
@@ -71,9 +75,9 @@ export const userCommentsInfiniteOptions = (username: string) => {
   });
 };
 
-export const userLikedThreadsInfiniteOptions = (username: string) => {
+export const userUsernameLikedThreadsInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userOptions.queryKey, username, "likes"],
+    queryKey: [...userUsernameOptions(username).queryKey, "infiniteLikes"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserLikedThreads({

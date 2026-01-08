@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Modal, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import { threadInfiniteOptions } from "@/app/(main)/(core)/threads/options";
+import { threadsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
 import { deleteThread } from "@/services/thread";
 
 export interface DeleteThreadModalProps {
@@ -26,7 +26,7 @@ export default function DeleteThreadModal({
       if (onDelete) onDelete();
 
       getQueryClient().invalidateQueries({
-        queryKey: threadInfiniteOptions.queryKey,
+        queryKey: threadsInfiniteOptions.queryKey,
       });
 
       onClose();
