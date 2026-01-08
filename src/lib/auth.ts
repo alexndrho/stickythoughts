@@ -18,6 +18,7 @@ import EmailOTPTemplate from "@/components/emails/EmailOTPTemplate";
 import EmailLinkTemplate from "@/components/emails/EmailLinkTemplate";
 import { profanity } from "./profanity";
 import reservedUsernames from "@/config/reserved-usernames.json";
+import { after } from "next/server";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -28,24 +29,28 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
-      await resend.emails.send({
-        from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
-        to: user.email,
-        subject: "Verify your email address",
-        react: EmailLinkTemplate({ url, type: "email-verification" }),
-      });
+      after(
+        resend.emails.send({
+          from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+          to: user.email,
+          subject: "Verify your email address",
+          react: EmailLinkTemplate({ url, type: "email-verification" }),
+        }),
+      );
     },
   },
   user: {
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ user, url }) => {
-        await resend.emails.send({
-          from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
-          to: user.email,
-          subject: "Approve your email change",
-          react: EmailLinkTemplate({ url, type: "email-change" }),
-        });
+        after(
+          resend.emails.send({
+            from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+            to: user.email,
+            subject: "Approve your email change",
+            react: EmailLinkTemplate({ url, type: "email-change" }),
+          }),
+        );
       },
     },
   },
@@ -137,12 +142,14 @@ export const auth = betterAuth({
     }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
-        await resend.emails.send({
-          from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
-          to: email,
-          subject: `${otp} is your StickyThoughts verification code`,
-          react: EmailOTPTemplate({ otp, type }),
-        });
+        after(
+          resend.emails.send({
+            from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+            to: email,
+            subject: `${otp} is your StickyThoughts verification code`,
+            react: EmailOTPTemplate({ otp, type }),
+          }),
+        );
       },
     }),
   ],
