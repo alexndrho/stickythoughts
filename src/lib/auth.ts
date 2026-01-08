@@ -1,9 +1,12 @@
+import { headers } from "next/headers";
+import { after } from "next/server";
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
   admin as adminPlugin,
+  anonymous,
   captcha,
   emailOTP,
   twoFactor,
@@ -14,11 +17,11 @@ import { generateUsername } from "unique-username-generator";
 import { prisma } from "./db";
 import { ac, admin } from "./permissions";
 import { resend } from "./email";
+import { removeProfilePicture } from "@/services/user";
 import EmailOTPTemplate from "@/components/emails/EmailOTPTemplate";
 import EmailLinkTemplate from "@/components/emails/EmailLinkTemplate";
 import { profanity } from "./profanity";
 import reservedUsernames from "@/config/reserved-usernames.json";
-import { after } from "next/server";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -73,7 +76,9 @@ export const auth = betterAuth({
             let existingUser = null;
 
             for (let attempt = 0; attempt < maxAttempts; attempt++) {
-              generatedUsername = generateUsername();
+              const randomDigits = Math.floor(1000 + Math.random() * 9000);
+              generatedUsername = `${generateUsername()}${randomDigits}`;
+
               existingUser = await ctx?.context.adapter.findOne({
                 model: "user",
                 where: [
@@ -139,6 +144,54 @@ export const auth = betterAuth({
     captcha({
       provider: "cloudflare-turnstile",
       secretKey: process.env.CLOUDFLARE_TURNSTILE_SECRET_AUTH_KEY!,
+    }),
+    anonymous({
+      onLinkAccount: async ({ anonymousUser, newUser }) => {
+        try {
+          const oldUserId = anonymousUser.user.id;
+          const newUserId = newUser.user.id;
+
+          if (anonymousUser.user.image) {
+            const headerList = await headers();
+            const cookie = headerList.get("cookie");
+
+            await removeProfilePicture(cookie ?? undefined);
+          }
+
+          await prisma.$transaction([
+            prisma.thread.updateMany({
+              where: { authorId: oldUserId },
+              data: { authorId: newUserId },
+            }),
+            prisma.threadLike.updateMany({
+              where: { userId: oldUserId },
+              data: { userId: newUserId },
+            }),
+            prisma.threadComment.updateMany({
+              where: { authorId: oldUserId },
+              data: { authorId: newUserId },
+            }),
+            prisma.threadCommentLike.updateMany({
+              where: { userId: oldUserId },
+              data: { userId: newUserId },
+            }),
+            prisma.notification.updateMany({
+              where: { userId: oldUserId },
+              data: { userId: newUserId },
+            }),
+            prisma.notificationActor.updateMany({
+              where: { userId: oldUserId },
+              data: { userId: newUserId },
+            }),
+          ]);
+        } catch (error) {
+          console.error("Error linking anonymous account:", error);
+
+          throw new APIError("INTERNAL_SERVER_ERROR", {
+            message: "Failed to link anonymous account. Please try again.",
+          });
+        }
+      },
     }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {

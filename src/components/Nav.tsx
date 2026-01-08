@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   ActionIcon,
+  Anchor,
   Avatar,
-  Box,
   Button,
   Container,
   Divider,
@@ -30,6 +30,7 @@ import {
   IconMessage,
   IconBell,
   IconTools,
+  IconLink,
 } from "@tabler/icons-react";
 import { useThrottledCallback } from "@mantine/hooks";
 
@@ -84,77 +85,99 @@ export default function Nav() {
   };
 
   return (
-    <Box component="header" className={classes["nav-container"]}>
-      <Container size="lg" className={classes.nav}>
-        <Text
-          component={Link}
-          href="/"
-          fz="xl"
-          fw={700}
-          onClick={(e) => {
-            if (pathname === "/") {
-              e.preventDefault();
-              handleRefetch();
-            }
-          }}
-        >
-          Sticky
-          <Text span c="blue" inherit>
-            Thoughts
+    <header>
+      <div className={classes["nav-container"]}>
+        <Container size="lg" className={classes.nav}>
+          <Text
+            component={Link}
+            href="/"
+            fz="xl"
+            fw={700}
+            onClick={(e) => {
+              if (pathname === "/") {
+                e.preventDefault();
+                handleRefetch();
+              }
+            }}
+          >
+            Sticky
+            <Text span c="blue" inherit>
+              Thoughts
+            </Text>
           </Text>
-        </Text>
 
-        <Group>
-          <Group component="nav">
-            <Group className={classes["desktop-nav-links"]}>
-              {navLinks.map((link) => (
-                <Button
-                  key={link.label}
-                  component={Link}
-                  href={link.href}
-                  variant="subtle"
-                  size="compact-sm"
-                >
-                  {link.label}
-                </Button>
-              ))}
+          <Group>
+            <Group component="nav">
+              <Group className={classes["desktop-nav-links"]}>
+                {navLinks.map((link) => (
+                  <Button
+                    key={link.label}
+                    component={Link}
+                    href={link.href}
+                    variant="subtle"
+                    size="compact-sm"
+                  >
+                    {link.label}
+                  </Button>
+                ))}
+              </Group>
+
+              <div className={classes["mobile-menu"]}>
+                <MobileMenu isAuthenticated={!!session} />
+              </div>
             </Group>
 
-            <div className={classes["mobile-menu"]}>
-              <MobileMenu isAuthenticated={!!session} />
-            </div>
+            <Divider orientation="vertical" />
+
+            {session ? (
+              <>
+                <UserNotification session={session}>
+                  <ActionIcon aria-label="Notifications" variant="default">
+                    <IconBell size="1em" />
+                  </ActionIcon>
+                </UserNotification>
+
+                <UserMenu
+                  session={session}
+                  signOut={signOut}
+                  setColorScheme={setColorScheme}
+                />
+              </>
+            ) : (
+              <>
+                <div className={classes["desktop-unauthenticated-links"]}>
+                  <Button component={Link} href="/sign-in" size="compact-sm">
+                    Sign in
+                  </Button>
+                </div>
+
+                <ToggleTheme setColorScheme={setColorScheme} />
+              </>
+            )}
           </Group>
+        </Container>
+      </div>
 
-          <Divider orientation="vertical" />
+      {session?.user.isAnonymous && (
+        <div className={classes["anonymous-bar-container"]}>
+          <Container size="lg" className={classes["anonymous-bar"]}>
+            <Text size="sm" className={classes["anonymous-bar__text"]}>
+              <IconLink size="1.25em" />
+              <Text span inherit>
+                <Text span inherit fw="bold">
+                  You are browsing anonymously.
+                </Text>{" "}
+                Sign in to save your data and sync across devices.
+              </Text>
+            </Text>
 
-          {session ? (
-            <>
-              <UserNotification session={session}>
-                <ActionIcon aria-label="Notifications" variant="default">
-                  <IconBell size="1em" />
-                </ActionIcon>
-              </UserNotification>
-
-              <UserMenu
-                session={session}
-                signOut={signOut}
-                setColorScheme={setColorScheme}
-              />
-            </>
-          ) : (
-            <>
-              <div className={classes["desktop-unauthenticated-links"]}>
-                <Button component={Link} href="/sign-in" size="compact-sm">
-                  Sign in
-                </Button>
-              </div>
-
-              <ToggleTheme setColorScheme={setColorScheme} />
-            </>
-          )}
-        </Group>
-      </Container>
-    </Box>
+            <Anchor component={Link} href="/sign-up" size="sm" c="yellow">
+              Create Account
+            </Anchor>
+          </Container>
+        </div>
+      )}
+    </header>
   );
 }
 

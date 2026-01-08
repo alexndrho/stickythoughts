@@ -29,10 +29,11 @@ model User {
   displayUsername String?
   bio             String?
 
-  role       String?
-  banned     Boolean?  @default(false)
-  banReason  String?
-  banExpires DateTime?
+  isAnonymous Boolean?  @default(false)
+  role        String?
+  banned      Boolean?  @default(false)
+  banReason   String?
+  banExpires  DateTime?
 
   sessions           Session[]
   accounts           Account[]
