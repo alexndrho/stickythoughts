@@ -17,13 +17,12 @@ import {
   Title,
   TypographyStylesProvider,
 } from "@mantine/core";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { threadOptions } from "../options";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import { useDateNow } from "@/hooks/use-date-now";
 import { likeThread, unlikeThread } from "@/services/thread";
 import ThreadEditor from "./ThreadEditor";
 import CommentEditor, { type CommentSectionRef } from "./CommentEditor";
@@ -51,8 +50,6 @@ export default function Content({ id }: ContentProps) {
   const commentSectionRef = useRef<CommentSectionRef>(null);
 
   const { data: thread } = useSuspenseQuery(threadOptions(id));
-
-  const dateNow = useDateNow();
 
   const isAuthor = session?.user.id === thread.authorId;
   const hasPermission = session?.user.role === "admin";
@@ -104,7 +101,7 @@ export default function Content({ id }: ContentProps) {
             </Anchor>
 
             <Text size="xs" className={classes["header__created-at"]}>
-              {formatDistance(new Date(thread.createdAt), dateNow, {
+              {formatDistanceToNow(new Date(thread.createdAt), {
                 addSuffix: true,
               })}
 
@@ -208,7 +205,6 @@ export default function Content({ id }: ContentProps) {
           threadId={thread.id}
           session={session}
           threadAuthor={thread.authorId}
-          dateNow={dateNow}
           onOpenSignInWarningModal={signInWarningModalHandlers.open}
         />
       </section>

@@ -1,6 +1,6 @@
 import { Anchor, Avatar, Group, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 import { stripHtmlTags } from "@/utils/text";
 import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
@@ -45,7 +45,7 @@ export default function ThreadItem({ post, onLike }: ThreadItemProps) {
                 {post.author.name || post.author.username}
               </Anchor>{" "}
               •{" "}
-              {formatDistance(new Date(post.createdAt), new Date(), {
+              {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,
               })}
             </Text>

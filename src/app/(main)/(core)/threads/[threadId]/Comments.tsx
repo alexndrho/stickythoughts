@@ -18,7 +18,6 @@ export interface CommentsProps {
   threadId: string;
   session: ReturnType<typeof authClient.useSession>["data"];
   threadAuthor: string;
-  dateNow: Date;
   onOpenSignInWarningModal: () => void;
 }
 
@@ -26,7 +25,6 @@ export default function Comments({
   threadId,
   session,
   threadAuthor,
-  dateNow,
   onOpenSignInWarningModal,
 }: CommentsProps) {
   const {
@@ -124,7 +122,6 @@ export default function Comments({
               key={comment.id}
               session={session}
               comment={comment}
-              dateNow={dateNow}
               isThreadOwner={threadAuthor === comment.author.id}
               onLike={handleLike}
               onDelete={() => handleDeleteCommentModalOpen(comment)}

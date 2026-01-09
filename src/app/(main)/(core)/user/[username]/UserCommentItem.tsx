@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { Anchor, Paper, Text, Typography } from "@mantine/core";
 
 import LikeButton from "../../threads/LikeButton";
@@ -64,7 +64,7 @@ export default function UserCommentItem({
             {comment.author.name || comment.author.username}
           </Anchor>{" "}
           commented{" "}
-          {formatDistance(new Date(comment.createdAt), new Date(), {
+          {formatDistanceToNow(new Date(comment.createdAt), {
             addSuffix: true,
           })}
         </Text>

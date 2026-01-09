@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import {
   ActionIcon,
   Anchor,
@@ -30,7 +30,6 @@ import classes from "./thread.module.css";
 export interface CommentItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
   comment: ThreadCommentType;
-  dateNow: Date;
   isThreadOwner?: boolean;
   onLike: ({
     threadId,
@@ -57,7 +56,6 @@ export interface CommentItemProps {
 export default function CommentItem({
   session,
   comment,
-  dateNow,
   isThreadOwner,
   onLike,
   onDelete,
@@ -99,7 +97,7 @@ export default function CommentItem({
           </div>
 
           <Text size="xs" className={classes["comment-item__created-at"]}>
-            {formatDistance(new Date(comment.createdAt), dateNow, {
+            {formatDistanceToNow(new Date(comment.createdAt), {
               addSuffix: true,
             })}
 
