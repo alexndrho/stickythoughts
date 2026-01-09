@@ -290,7 +290,7 @@ function TwoFactorSetupForm({
 }: {
   signedInRedirect: () => void;
 }) {
-  const form = useForm({
+  const twoFactorForm = useForm({
     initialValues: {
       authenticatorCode: "",
       trustDevice: false,
@@ -300,16 +300,16 @@ function TwoFactorSetupForm({
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: (values: typeof form.values) =>
+  const twoFactormutation = useMutation({
+    mutationFn: (values: typeof twoFactorForm.values) =>
       authClient.twoFactor.verifyTotp({
         code: values.authenticatorCode,
       }),
     onSuccess: ({ error }) => {
       if (error?.message) {
-        form.setErrors({ authenticatorCode: error.message });
+        twoFactorForm.setErrors({ authenticatorCode: error.message });
       } else if (error) {
-        form.setErrors({
+        twoFactorForm.setErrors({
           authenticatorCode: "Failed to verify the authenticator code.",
         });
       } else {
@@ -318,25 +318,92 @@ function TwoFactorSetupForm({
     },
   });
 
+  const backUpCodeForm = useForm({
+    initialValues: {
+      code: "",
+      trustDevice: false,
+    },
+    validate: {
+      code: isNotEmpty("Backup code is required"),
+    },
+  });
+
+  const backUpCodeMutation = useMutation({
+    mutationFn: (values: typeof backUpCodeForm.values) =>
+      authClient.twoFactor.verifyBackupCode({
+        ...values,
+        disableSession: false,
+      }),
+    onSuccess: ({ error }) => {
+      if (error?.message) {
+        backUpCodeForm.setErrors({ code: error.message });
+      } else if (error) {
+        backUpCodeForm.setErrors({
+          code: "Failed to verify the backup code.",
+        });
+      } else {
+        signedInRedirect();
+      }
+    },
+  });
+
   return (
-    <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
-      <TextInput
-        label="Enter your authenticator code"
-        description="Open your authenticator app and enter the 6-digit code."
-        maxLength={6}
-        {...form.getInputProps("authenticatorCode")}
-        withAsterisk
-      />
-      <Checkbox
-        mt="md"
-        label="Trust this device?"
-        {...form.getInputProps("trustDevice", { type: "checkbox" })}
-      />
-      <Group justify="right" mt="md">
-        <Button type="submit" loading={mutation.isPending}>
-          Activate
-        </Button>
-      </Group>
-    </form>
+    <>
+      <form
+        onSubmit={twoFactorForm.onSubmit((values) =>
+          twoFactormutation.mutate(values),
+        )}
+      >
+        <TextInput
+          label="Enter your authenticator code"
+          description="Open your authenticator app and enter the 6-digit code."
+          maxLength={6}
+          {...twoFactorForm.getInputProps("authenticatorCode")}
+          withAsterisk
+        />
+        <Checkbox
+          mt="md"
+          label="Trust this device?"
+          {...twoFactorForm.getInputProps("trustDevice", { type: "checkbox" })}
+        />
+        <Group justify="right" mt="md">
+          <Button type="submit" loading={twoFactormutation.isPending}>
+            Activate
+          </Button>
+        </Group>
+      </form>
+
+      <Divider label="Or use a backup code" my="md" />
+
+      <form
+        onSubmit={backUpCodeForm.onSubmit((values) =>
+          backUpCodeMutation.mutate(values),
+        )}
+      >
+        <TextInput
+          label="Enter backup code"
+          description="If you cannot access your authenticator app, you can use one of your backup codes. Each code can only be used once."
+          maxLength={12}
+          withAsterisk
+          {...backUpCodeForm.getInputProps("code")}
+        />
+
+        <Checkbox
+          mt="md"
+          label="Trust this device?"
+          {...backUpCodeForm.getInputProps("trustDevice", { type: "checkbox" })}
+        />
+
+        <Group justify="right" mt="md">
+          <Button
+            variant="default"
+            type="submit"
+            loading={backUpCodeMutation.isPending}
+          >
+            Use Backup Code
+          </Button>
+        </Group>
+      </form>
+    </>
   );
 }

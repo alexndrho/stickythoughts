@@ -38,6 +38,7 @@ import UpdateBioModal from "./UpdateBioModal";
 import UpdatePasswordModal from "./UpdatePasswordModal";
 import EnableTwoFactorModal from "./EnableTwoFactorModal";
 import DisableTwoFactorModal from "./DisableTwoFactorModal";
+import BackupCodesModal from "./BackupCodesModal";
 import classes from "./settings.module.css";
 import accountClasses from "./account.module.css";
 
@@ -106,6 +107,14 @@ export default function Content() {
   const [
     disableTwoFactorModalOpened,
     { open: openDisableTwoFactorModal, close: closeDisableTwoFactorModal },
+  ] = useDisclosure(false);
+
+  const [
+    generateBackupCodesModalOpened,
+    {
+      open: openGenerateBackupCodesModal,
+      close: closeGenerateBackupCodesModal,
+    },
   ] = useDisclosure(false);
 
   const handleRemoveProfilePicture = async () => {
@@ -371,6 +380,38 @@ export default function Content() {
             </Button>
           )}
         </Skeleton>
+
+        <Text
+          mt="md"
+          size="lg"
+          className={accountClasses["account-item__label"]}
+        >
+          Backup Codes
+        </Text>
+
+        <Text size="md" className={accountClasses["account-item__description"]}>
+          Backup codes can be used to access your account if you lose access to
+          your primary two-factor authentication method.
+        </Text>
+
+        <Skeleton
+          mt="xs"
+          w="auto"
+          display="inline-block"
+          visible={isSessionPending}
+        >
+          <Tooltip
+            label="You need to enable two-factor authentication to generate backup codes"
+            disabled={!!session?.user.twoFactorEnabled}
+          >
+            <Button
+              onClick={openGenerateBackupCodesModal}
+              disabled={!session?.user.twoFactorEnabled}
+            >
+              Generate Backup Codes
+            </Button>
+          </Tooltip>
+        </Skeleton>
       </div>
 
       <UploadProfilePictureModal
@@ -410,15 +451,24 @@ export default function Content() {
         onClose={closeUpdatePasswordModal}
       />
 
-      <EnableTwoFactorModal
-        opened={enableTwoFactorModalOpened}
-        onClose={closeEnableTwoFactorModal}
-      />
+      {session?.user.twoFactorEnabled ? (
+        <>
+          <BackupCodesModal
+            opened={generateBackupCodesModalOpened}
+            onClose={closeGenerateBackupCodesModal}
+          />
 
-      <DisableTwoFactorModal
-        opened={disableTwoFactorModalOpened}
-        onClose={closeDisableTwoFactorModal}
-      />
+          <DisableTwoFactorModal
+            opened={disableTwoFactorModalOpened}
+            onClose={closeDisableTwoFactorModal}
+          />
+        </>
+      ) : (
+        <EnableTwoFactorModal
+          opened={enableTwoFactorModalOpened}
+          onClose={closeEnableTwoFactorModal}
+        />
+      )}
     </Box>
   );
 }
