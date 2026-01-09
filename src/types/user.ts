@@ -12,16 +12,8 @@ export type UserPublicAccount = Prisma.UserGetPayload<{
 }>;
 
 export type UserAccountSettings = Prisma.UserGetPayload<{
-  omit: {
-    id: true;
-    name: true;
-    displayUsername: true;
-    username: true;
-    email: true;
-    emailVerified: true;
-    image: true;
-    createdAt: true;
-    updatedAt: true;
+  select: {
+    bio: true;
   };
 }>;
 
