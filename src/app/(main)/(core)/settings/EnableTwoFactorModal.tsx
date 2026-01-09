@@ -19,7 +19,7 @@ import {
 } from "@mantine/core";
 
 import { authClient } from "@/lib/auth-client";
-import classes from "./settings.module.css";
+import classes from "./account.module.css";
 import { notifications } from "@mantine/notifications";
 
 export interface UpdateNameModalProps {
