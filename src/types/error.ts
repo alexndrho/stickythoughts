@@ -1,4 +1,4 @@
-export type systemCode = "unknown-error" | "not-found";
+export type systemCode = "ratelimit/exceeded" | "unknown-error" | "not-found";
 
 export type authCode = "auth/unauthorized" | "auth/forbidden";
 
