@@ -58,13 +58,13 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { author, message, color, turnstileToken } = createThoughtInput.parse(
       await req.json(),
     );
 
-    const clientIp = await getClientIp();
+    const clientIp = getClientIp(req);
 
     const turnstileResponse = await validateTurnstile({
       token: turnstileToken,
