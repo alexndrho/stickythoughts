@@ -8,7 +8,6 @@ import { notifications } from "@mantine/notifications";
 import {
   ActionIcon,
   Anchor,
-  Avatar,
   Center,
   Flex,
   Indicator,
@@ -43,6 +42,7 @@ import {
 import InfiniteScroll from "./InfiniteScroll";
 import { UserNotificationType } from "@/types/user";
 import classes from "@/styles/user-notification.module.css";
+import AuthorAvatar from "./AuthorAvatar";
 
 export interface UserNotificationProps {
   children: React.ReactElement;
@@ -222,13 +222,20 @@ function NotificationItem({
 
       <div className={classes["notification-item__content"]}>
         <Flex gap="sm">
-          <Avatar
-            component={Link}
-            src={notification.actorImage}
-            href={`/user/${notification.actorUsername}`}
-            className={classes["notification-item__avatar"]}
-            onClick={() => setClosed()}
-          />
+          {notification.mainActor.isAnonymous ? (
+            <AuthorAvatar
+              isAnonymous={true}
+              className={classes["notification-item__avatar"]}
+            />
+          ) : (
+            <AuthorAvatar
+              component={Link}
+              src={notification.mainActor.image}
+              href={`/user/${notification.mainActor.username}`}
+              className={classes["notification-item__avatar"]}
+              onClick={() => setClosed()}
+            />
+          )}
 
           <div>
             <Text size="sm" lineClamp={3}>
@@ -280,15 +287,19 @@ function formatNotificationBody({
   notification: UserNotificationType;
   setClosed: () => void;
 }) {
-  const actor = (
+  const actor = notification.mainActor.isAnonymous ? (
+    <Text span inherit className={classes["notification-item__actor-link"]}>
+      Anonymous
+    </Text>
+  ) : (
     <Anchor
       component={Link}
       inherit
-      href={`/user/${notification.actorUsername}`}
+      href={`/user/${notification.mainActor.username}`}
       onClick={() => setClosed()}
       className={classes["notification-item__actor-link"]}
     >
-      {notification.actorName || notification.actorUsername}
+      {notification.mainActor.name || notification.mainActor.username}
     </Anchor>
   );
 

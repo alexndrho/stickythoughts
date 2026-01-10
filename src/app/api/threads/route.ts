@@ -25,12 +25,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const { title, body } = createThreadServerInput.parse(await req.json());
+    const { title, body, isAnonymous } = createThreadServerInput.parse(
+      await req.json(),
+    );
 
     const post = await prisma.thread.create({
       data: {
         title,
         body,
+        isAnonymous: isAnonymous,
         author: {
           connect: {
             id: session.user.id,
@@ -87,7 +90,7 @@ export async function GET(req: NextRequest) {
       headers: await headers(),
     });
 
-    const Threads = await prisma.thread.findMany({
+    const threads = await prisma.thread.findMany({
       take: THREADS_PER_PAGE,
       ...(lastId && {
         skip: 1,
@@ -125,7 +128,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const formattedPosts = formatThreads(Threads);
+    const formattedPosts = formatThreads({
+      sessionUserId: session?.user?.id,
+      threads,
+    });
 
     return NextResponse.json(formattedPosts, { status: 200 });
   } catch (error) {

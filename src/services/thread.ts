@@ -160,9 +160,11 @@ export const unlikeThread = async (
 export const submitThreadComment = async ({
   id,
   body,
+  isAnonymous,
 }: {
   id: string;
   body: Prisma.ThreadCreateInput["body"];
+  isAnonymous?: boolean;
 }): Promise<ThreadCommentType> => {
   const response = await fetch(apiUrl(`/api/threads/${id}/comments`), {
     method: "POST",
@@ -171,6 +173,7 @@ export const submitThreadComment = async ({
     },
     body: JSON.stringify({
       body,
+      isAnonymous,
     }),
   });
 

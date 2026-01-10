@@ -7,6 +7,18 @@ export function formatUserNotifications(
   notifications: BaseUserNotificationType[],
 ): UserNotificationType[] {
   return notifications.map((notification) => {
+    const firstActor = notification.actors?.[0]?.user;
+    let mainActor: {
+      image: string | null;
+      name: string | null;
+      username: string | null;
+      isAnonymous?: boolean;
+    } = {
+      image: firstActor?.image || null,
+      name: firstActor?.name || null,
+      username: firstActor?.username || null,
+      isAnonymous: notification.comment?.isAnonymous || false,
+    };
     let body = "You have a new notification";
 
     switch (notification.type) {
@@ -20,17 +32,22 @@ export function formatUserNotifications(
       }
       case "THREAD_COMMENT": {
         body = notification.comment?.body || "";
+        if (notification.comment?.isAnonymous) {
+          mainActor = {
+            image: null,
+            name: null,
+            username: null,
+            isAnonymous: true,
+          };
+        }
         break;
       }
     }
 
-    const firstActor = notification.actors?.[0]?.user;
     return {
       id: notification.id,
       type: notification.type,
-      actorImage: firstActor?.image,
-      actorName: firstActor?.name,
-      actorUsername: firstActor?.username,
+      mainActor,
       otherActorCount: (notification._count?.actors ?? 1) - 1,
       threadId: notification.thread?.id || notification.comment?.thread?.id,
       commentId: notification.comment?.id,

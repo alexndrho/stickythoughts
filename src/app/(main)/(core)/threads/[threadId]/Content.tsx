@@ -8,7 +8,6 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   ActionIcon,
   Anchor,
-  Avatar,
   Button,
   Center,
   Group,
@@ -28,6 +27,7 @@ import ThreadEditor from "./ThreadEditor";
 import CommentEditor, { type CommentSectionRef } from "./CommentEditor";
 import Comments from "./Comments";
 import DeleteThreadModal from "./DeleteThreadModal";
+import AuthorAvatar from "@/components/AuthorAvatar";
 import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
 import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
 import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
@@ -51,7 +51,7 @@ export default function Content({ id }: ContentProps) {
 
   const { data: thread } = useSuspenseQuery(threadOptions(id));
 
-  const isAuthor = session?.user.id === thread.authorId;
+  const isAuthor = thread.isOwner;
   const hasPermission = session?.user.role === "admin";
 
   // Like
@@ -85,20 +85,28 @@ export default function Content({ id }: ContentProps) {
     <div className={classes.container}>
       <div className={classes.header}>
         <div className={classes.header__info}>
-          <Avatar
-            component={Link}
-            href={`/user/${thread.author.username}`}
-            src={thread.author.image}
-          />
-
-          <div>
-            <Anchor
+          {thread.isAnonymous || !thread.author ? (
+            <AuthorAvatar isAnonymous={!!thread.isAnonymous} />
+          ) : (
+            <AuthorAvatar
               component={Link}
               href={`/user/${thread.author.username}`}
-              className={classes["header__author-name"]}
-            >
-              {thread.author.name || thread.author.username}
-            </Anchor>
+              src={thread.author.image}
+            />
+          )}
+
+          <div>
+            {thread.isAnonymous || !thread.author ? (
+              <Text className={classes["header__author-name"]}>Anonymous</Text>
+            ) : (
+              <Anchor
+                component={Link}
+                href={`/user/${thread.author.username}`}
+                className={classes["header__author-name"]}
+              >
+                {thread.author.name || thread.author.username}
+              </Anchor>
+            )}
 
             <Text size="xs" className={classes["header__created-at"]}>
               {formatDistanceToNow(new Date(thread.createdAt), {
@@ -186,6 +194,7 @@ export default function Content({ id }: ContentProps) {
           <CommentEditor
             ref={commentSectionRef}
             threadId={thread.id}
+            isDefaultAnonymous={isAuthor && !!thread.isAnonymous}
             onOpenSignInWarningModal={signInWarningModalHandlers.open}
           />
         ) : (
@@ -204,7 +213,6 @@ export default function Content({ id }: ContentProps) {
         <Comments
           threadId={thread.id}
           session={session}
-          threadAuthor={thread.authorId}
           onOpenSignInWarningModal={signInWarningModalHandlers.open}
         />
       </section>

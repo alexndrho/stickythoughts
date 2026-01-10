@@ -116,13 +116,14 @@ model TwoFactor {
 }
 
 model Thread {
-  id       String          @id @default(cuid())
-  title    String
-  body     String
-  authorId String
-  author   User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likes    ThreadLike[]
-  comments ThreadComment[]
+  id          String          @id @default(cuid())
+  title       String
+  body        String
+  authorId    String
+  author      User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  isAnonymous Boolean?        @default(false)
+  likes       ThreadLike[]
+  comments    ThreadComment[]
 
   notifications Notification[]
 
@@ -146,13 +147,14 @@ model ThreadLike {
 }
 
 model ThreadComment {
-  id       String              @id @default(cuid())
-  body     String
-  authorId String
-  author   User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  threadId String
-  thread   Thread              @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  likes    ThreadCommentLike[]
+  id          String              @id @default(cuid())
+  body        String
+  authorId    String
+  author      User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  isAnonymous Boolean?            @default(false)
+  threadId    String
+  thread      Thread              @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  likes       ThreadCommentLike[]
 
   notifications Notification[]
 

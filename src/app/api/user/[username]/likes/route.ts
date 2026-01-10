@@ -68,7 +68,10 @@ export async function GET(
       },
     });
 
-    const formattedThreads = formatThreads(threads);
+    const formattedThreads = formatThreads({
+      sessionUserId: session?.user?.id,
+      threads,
+    });
 
     return NextResponse.json(formattedThreads);
   } catch (error) {

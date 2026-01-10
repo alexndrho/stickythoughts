@@ -28,7 +28,12 @@ export type BaseThreadType = Omit<PrismaBaseThread, "likes" | "_count"> & {
   _count: { likes: number; comments: number };
 };
 
-export type ThreadType = Omit<BaseThreadType, "likes" | "_count"> & {
+export type ThreadType = Omit<
+  BaseThreadType,
+  "authorId" | "author" | "likes" | "_count"
+> & {
+  author?: BaseThreadType["author"];
+  isOwner: boolean;
   likes: {
     liked: boolean;
     count: number;
@@ -40,6 +45,11 @@ export type ThreadType = Omit<BaseThreadType, "likes" | "_count"> & {
 
 type PrismaBaseThreadComment = Prisma.ThreadCommentGetPayload<{
   include: {
+    thread: {
+      select: {
+        authorId: true;
+      };
+    };
     author: {
       select: {
         id: true;
@@ -71,8 +81,10 @@ export type BaseThreadCommentType = Omit<
 
 export type ThreadCommentType = Omit<
   BaseThreadCommentType,
-  "likes" | "_count"
+  "authorId" | "author" | "likes" | "_count"
 > & {
+  author?: BaseThreadCommentType["author"];
+  isOP: boolean;
   likes: {
     liked: boolean;
     count: number;
@@ -117,8 +129,9 @@ export type BaseUserThreadCommentType = Omit<
 
 export type UserThreadCommentType = Omit<
   BaseUserThreadCommentType,
-  "likes" | "_count"
+  "authorId" | "author" | "likes" | "_count"
 > & {
+  author?: BaseUserThreadCommentType["author"];
   likes: {
     liked: boolean;
     count: number;

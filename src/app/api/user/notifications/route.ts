@@ -48,6 +48,7 @@ export async function GET(req: NextRequest) {
           select: {
             id: true,
             body: true,
+            isAnonymous: true,
             thread: {
               select: {
                 id: true,

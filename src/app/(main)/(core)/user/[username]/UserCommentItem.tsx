@@ -55,14 +55,20 @@ export default function UserCommentItem({
           truncate
           className={classes["user-comment-item__description"]}
         >
-          <Anchor
-            component={Link}
-            inherit
-            href={`/user/${comment.author.username}`}
-            className={classes["user-comment-item__link"]}
-          >
-            {comment.author.name || comment.author.username}
-          </Anchor>{" "}
+          {comment.isAnonymous || !comment.author ? (
+            <Text span inherit fw="bold">
+              Anonymous
+            </Text>
+          ) : (
+            <Anchor
+              component={Link}
+              inherit
+              href={`/user/${comment.author.username}`}
+              className={classes["user-comment-item__link"]}
+            >
+              {comment.author.name || comment.author.username}
+            </Anchor>
+          )}{" "}
           commented{" "}
           {formatDistanceToNow(new Date(comment.createdAt), {
             addSuffix: true,
@@ -79,6 +85,8 @@ export default function UserCommentItem({
           liked={comment.likes.liked}
           className={classes["user-comment-item__like-btn"]}
           onLike={() => {
+            if (!comment.author) return;
+
             onLike({
               threadId: comment.threadId,
               commentId: comment.id,

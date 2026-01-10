@@ -7,6 +7,7 @@ import {
   Button,
   Container,
   Group,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -42,6 +43,7 @@ export default function Content() {
     initialValues: {
       title: "",
       body: "<p></p>",
+      isAnonymous: false,
     },
     validate: {
       title: (value) => {
@@ -121,6 +123,12 @@ export default function Content() {
 
         <TextEditor editor={editor} error={form.errors.body} />
 
+        <Switch
+          mt="md"
+          label="Post anonymously"
+          {...form.getInputProps("isAnonymous", { type: "checkbox" })}
+        />
+
         {form.errors.root && (
           <Text size="xs" className={classes["root-error-messsage"]}>
             {form.errors.root}
@@ -131,7 +139,7 @@ export default function Content() {
           <Button
             type="submit"
             loading={mutation.isPending}
-            disabled={!form.isDirty()}
+            disabled={!form.isDirty("title") || !form.isDirty("body")}
           >
             Submit
           </Button>

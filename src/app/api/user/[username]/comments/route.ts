@@ -33,6 +33,9 @@ export async function GET(
         author: {
           username,
         },
+        ...(session?.user?.username !== username && {
+          isAnonymous: false,
+        }),
       },
       include: {
         thread: {

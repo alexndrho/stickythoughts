@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { type Editor } from "@tiptap/react";
-import { Button, Group } from "@mantine/core";
+import { Button, Group, Switch } from "@mantine/core";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 
@@ -15,6 +15,7 @@ import { setCreateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set
 
 export interface CommentEditorProps {
   threadId: string;
+  isDefaultAnonymous?: boolean;
   onOpenSignInWarningModal: () => void;
 }
 
@@ -23,10 +24,11 @@ export interface CommentSectionRef {
 }
 
 const CommentEditor = forwardRef<CommentSectionRef, CommentEditorProps>(
-  ({ threadId }, ref) => {
+  ({ threadId, isDefaultAnonymous }, ref) => {
     const form = useForm({
       initialValues: {
         body: "<p></p>",
+        isAnonymous: isDefaultAnonymous ?? false,
       },
       validate: {
         body: isNotEmptyHTML("Comment is required"),
@@ -49,11 +51,15 @@ const CommentEditor = forwardRef<CommentSectionRef, CommentEditorProps>(
         submitThreadComment({
           id: threadId,
           body: values.body,
+          isAnonymous: values.isAnonymous,
         }),
       onSuccess: (data) => {
         setCreateThreadCommentQueryData({ id: threadId, comment: data });
 
-        form.reset();
+        form.setValues({
+          body: "<p></p>",
+          isAnonymous: form.values.isAnonymous,
+        });
         editor?.commands.clearContent();
 
         notifications.show({
@@ -76,10 +82,16 @@ const CommentEditor = forwardRef<CommentSectionRef, CommentEditorProps>(
       >
         <TextEditor editor={editor} error={form.errors.body} />
 
+        <Switch
+          mt="md"
+          label="Post anonymously"
+          {...form.getInputProps("isAnonymous", { type: "checkbox" })}
+        />
+
         <Group mt="md" justify="end">
           <Button
             type="submit"
-            disabled={!form.isDirty()}
+            disabled={!form.isDirty("body")}
             loading={commentMutation.isPending}
           >
             Comment

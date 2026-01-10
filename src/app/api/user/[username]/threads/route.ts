@@ -33,6 +33,9 @@ export const GET = async (
         author: {
           username,
         },
+        ...(session?.user?.username !== username && {
+          isAnonymous: false,
+        }),
       },
       include: {
         author: {
@@ -64,7 +67,10 @@ export const GET = async (
       },
     });
 
-    const formattedThreads = formatThreads(threads);
+    const formattedThreads = formatThreads({
+      sessionUserId: session?.user?.id,
+      threads,
+    });
 
     return NextResponse.json(formattedThreads);
   } catch (error) {

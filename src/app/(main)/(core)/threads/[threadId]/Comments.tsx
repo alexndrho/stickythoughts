@@ -17,14 +17,12 @@ import DeleteCommentModal from "./DeleteCommentModal";
 export interface CommentsProps {
   threadId: string;
   session: ReturnType<typeof authClient.useSession>["data"];
-  threadAuthor: string;
   onOpenSignInWarningModal: () => void;
 }
 
 export default function Comments({
   threadId,
   session,
-  threadAuthor,
   onOpenSignInWarningModal,
 }: CommentsProps) {
   const {
@@ -122,7 +120,6 @@ export default function Comments({
               key={comment.id}
               session={session}
               comment={comment}
-              isThreadOwner={threadAuthor === comment.author.id}
               onLike={handleLike}
               onDelete={() => handleDeleteCommentModalOpen(comment)}
             />

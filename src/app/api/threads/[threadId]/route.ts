@@ -67,10 +67,12 @@ export async function GET(
       );
     }
 
-    const { likes, _count, ...restThread } = thread;
+    const { likes, _count, authorId, ...restThread } = thread;
 
     const formattedPost: ThreadType = {
       ...restThread,
+      author: restThread.isAnonymous ? undefined : restThread.author,
+      isOwner: session?.user?.id === authorId,
       likes: {
         liked: !!likes?.length,
         count: _count.likes,

@@ -35,7 +35,9 @@ export async function POST(
     }
 
     const { threadId } = await params;
-    const { body } = createThreadCommentServerInput.parse(await request.json());
+    const { body, isAnonymous } = createThreadCommentServerInput.parse(
+      await request.json(),
+    );
 
     const comment = await prisma.threadComment.create({
       data: {
@@ -50,6 +52,7 @@ export async function POST(
           },
         },
         body,
+        isAnonymous: isAnonymous,
       },
       include: {
         thread: {
@@ -83,10 +86,11 @@ export async function POST(
       },
     });
 
-    const { likes, _count, ...restComment } = comment;
+    const { authorId, likes, _count, ...restComment } = comment;
 
     const formattedPost = {
       ...restComment,
+      isOP: restComment.thread.authorId === authorId,
       likes: {
         liked: !!likes?.length,
         count: _count.likes,
@@ -157,6 +161,11 @@ export async function GET(
         threadId,
       },
       include: {
+        thread: {
+          select: {
+            authorId: true,
+          },
+        },
         author: {
           select: {
             id: true,

@@ -7,12 +7,20 @@ import type {
   UserThreadCommentType,
 } from "@/types/thread";
 
-export function formatThreads(threads: BaseThreadType[]): ThreadType[] {
+export function formatThreads({
+  sessionUserId,
+  threads,
+}: {
+  sessionUserId?: string;
+  threads: BaseThreadType[];
+}): ThreadType[] {
   return threads.map((thread) => {
-    const { likes, _count, ...rest } = thread;
+    const { authorId, likes, _count, ...rest } = thread;
 
     return {
       ...rest,
+      author: rest.isAnonymous ? undefined : rest.author,
+      isOwner: sessionUserId === authorId,
       likes: {
         liked: !!(likes && likes.length),
         count: _count.likes,
@@ -28,10 +36,12 @@ export function formatThreadComments(
   comments: BaseThreadCommentType[],
 ): ThreadCommentType[] {
   return comments.map((comment) => {
-    const { likes, _count, ...rest } = comment;
+    const { authorId, likes, _count, ...rest } = comment;
 
     return {
       ...rest,
+      author: rest.isAnonymous ? undefined : rest.author,
+      isOP: rest.thread.authorId === authorId,
       likes: {
         liked: !!(likes && likes.length),
         count: _count.likes,
@@ -44,10 +54,12 @@ export function formatUserThreadComments(
   comments: BaseUserThreadCommentType[],
 ): UserThreadCommentType[] {
   return comments.map((comment) => {
-    const { likes, _count, ...rest } = comment;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { authorId, likes, _count, ...rest } = comment;
 
     return {
       ...rest,
+      author: rest.isAnonymous ? undefined : rest.author,
       likes: {
         liked: !!(likes && likes.length),
         count: _count.likes,

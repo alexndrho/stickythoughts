@@ -20,6 +20,7 @@ import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 import { type authClient } from "@/lib/auth-client";
 import { setUpdateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import TextEditor from "@/components/TextEditor";
+import AuthorAvatar from "@/components/AuthorAvatar";
 import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { updateThreadComment } from "@/services/thread";
@@ -30,7 +31,6 @@ import classes from "./thread.module.css";
 export interface CommentItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
   comment: ThreadCommentType;
-  isThreadOwner?: boolean;
   onLike: ({
     threadId,
     commentId,
@@ -56,37 +56,46 @@ export interface CommentItemProps {
 export default function CommentItem({
   session,
   comment,
-  isThreadOwner,
   onLike,
   onDelete,
 }: CommentItemProps) {
   const [isEditable, setIsEditable] = useState(false);
 
-  const isAuthor = session?.user.id === comment.author.id;
+  const isAuthor = session?.user.id === comment.author?.id;
   const hasPermission = session?.user.role === "admin";
 
   return (
     <div>
       <div className={classes["comment-item__header"]}>
-        <Avatar
-          component={Link}
-          src={comment.author.image}
-          href={`/user/${comment.author.username}`}
-          aria-label={`View profile of ${comment.author.username}`}
-        />
+        {comment.isAnonymous || !comment.author ? (
+          <AuthorAvatar isAnonymous={!!comment.isAnonymous} />
+        ) : (
+          <Avatar
+            component={Link}
+            src={comment.author.image}
+            href={`/user/${comment.author.username}`}
+            aria-label={`View profile of ${comment.author.username}`}
+          />
+        )}
 
         <div>
           <div className={classes["comment-item__author-container"]}>
-            <Anchor
-              component={Link}
-              truncate
-              href={`/user/${comment.author.username}`}
-              className={classes["comment-item__author-name"]}
-            >
-              {comment.author.name || comment.author.username}
-            </Anchor>
+            {comment.isAnonymous || !comment.author ? (
+              <Text className={classes["comment-item__author-name"]}>
+                Anonymous
+              </Text>
+            ) : (
+              <Anchor
+                component={Link}
+                truncate
+                href={`/user/${comment.author.username}`}
+                className={classes["comment-item__author-name"]}
+              >
+                {comment.author.name || comment.author.username}
+              </Anchor>
+            )}
 
-            {isThreadOwner && (
+            {comment.isOP && (
               <Text
                 size="xs"
                 className={classes["comment-item__author-op-badge"]}
@@ -130,13 +139,15 @@ export default function CommentItem({
               <Menu.Item
                 color="red"
                 leftSection={<IconTrash size="1em" />}
-                onClick={() =>
+                onClick={() => {
+                  if (!comment.author) return;
+
                   onDelete({
                     threadId: comment.threadId,
                     commentId: comment.id,
                     username: comment.author.username,
-                  })
-                }
+                  });
+                }}
               >
                 Delete
               </Menu.Item>
@@ -159,14 +170,16 @@ export default function CommentItem({
               count={comment.likes.count}
               size="compact-sm"
               className={classes["comment-item__like-btn"]}
-              onLike={() =>
+              onLike={() => {
+                if (!comment.author) return;
+
                 onLike({
                   threadId: comment.threadId,
                   commentId: comment.id,
                   username: comment.author.username,
                   like: !comment.likes.liked,
-                })
-              }
+                });
+              }}
             />
           </>
         )}

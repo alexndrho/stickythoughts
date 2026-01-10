@@ -1,8 +1,9 @@
-import { Anchor, Avatar, Group, Paper, Text, Title } from "@mantine/core";
+import { Anchor, Group, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
 import { stripHtmlTags } from "@/utils/text";
+import AuthorAvatar from "@/components/AuthorAvatar";
 import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
 import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
 import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
@@ -26,24 +27,32 @@ export default function ThreadItem({ post, onLike }: ThreadItemProps) {
       <div className={classes["thread-item__content"]}>
         <header>
           <div className={classes["thread-item__header"]}>
-            <Avatar
-              component={Link}
-              size="xs"
-              src={post.author.image}
-              aria-label={`View profile of ${post.author.username}`}
-              href={`/user/${post.author.username}`}
-              className={classes["thread-item__avatar"]}
-            />
+            {post.isAnonymous || !post.author ? (
+              <AuthorAvatar size="xs" isAnonymous={!!post.isAnonymous} />
+            ) : (
+              <AuthorAvatar
+                component={Link}
+                size="xs"
+                src={post.author.image}
+                aria-label={`View profile of ${post.author.username}`}
+                href={`/user/${post.author.username}`}
+                className={classes["thread-item__avatar"]}
+              />
+            )}
 
             <Text size="sm">
-              <Anchor
-                component={Link}
-                inherit
-                href={`/user/${post.author.username}`}
-                className={classes["thread-item__user-link"]}
-              >
-                {post.author.name || post.author.username}
-              </Anchor>{" "}
+              {post.isAnonymous || !post.author ? (
+                "Anonymous"
+              ) : (
+                <Anchor
+                  component={Link}
+                  inherit
+                  href={`/user/${post.author.username}`}
+                  className={classes["thread-item__user-link"]}
+                >
+                  {post.author.name || post.author.username}
+                </Anchor>
+              )}{" "}
               •{" "}
               {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,

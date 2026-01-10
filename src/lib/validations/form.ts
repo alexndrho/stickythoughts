@@ -88,6 +88,7 @@ export const createThreadServerInput = z.object({
         });
       }
     }),
+  isAnonymous: z.boolean().optional(),
 });
 
 export const updateThreadServerInput = createThreadServerInput.pick({
@@ -117,6 +118,7 @@ export const createThreadCommentServerInput = z.object({
         });
       }
     }),
+  isAnonymous: z.boolean().optional(),
 });
 
 export const updateThreadCommentServerInput =
