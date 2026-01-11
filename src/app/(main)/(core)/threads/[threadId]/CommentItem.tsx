@@ -118,8 +118,10 @@ export default function CommentItem({
           <Menu>
             <Menu.Target>
               <ActionIcon
-                variant="transparent"
+                variant="subtle"
+                color="gray"
                 size="lg"
+                aria-label="Comment more actions"
                 className={classes["comment-item__more-action-btn"]}
               >
                 <IconDots size="1.25em" />

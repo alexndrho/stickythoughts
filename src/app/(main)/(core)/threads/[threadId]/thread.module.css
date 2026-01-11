@@ -25,14 +25,6 @@
   color: var(--mantine-color-dimmed);
 }
 
-.header__more-action-btn {
-  color: var(--mantine-color-text);
-}
-
-.header__more-action-btn:hover {
-  color: var(--mantine-color-hover);
-}
-
 .edit-title {
   margin-bottom: var(--mantine-spacing-md);
 }
@@ -77,11 +69,6 @@
 
 .comment-item__more-action-btn {
   margin-left: auto;
-  color: var(--mantine-color-text);
-}
-
-.comment-item__more-action-btn:hover {
-  color: var(--mantine-color-hover);
 }
 
 .comment-item__content {

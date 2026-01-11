@@ -122,9 +122,10 @@ export default function Content({ id }: ContentProps) {
           <Menu>
             <Menu.Target>
               <ActionIcon
-                variant="transparent"
+                variant="subtle"
+                color="gray"
                 size="lg"
-                className={classes["header__more-action-btn"]}
+                aria-label="Thread more actions"
               >
                 <IconDots size="1.25em" />
               </ActionIcon>
