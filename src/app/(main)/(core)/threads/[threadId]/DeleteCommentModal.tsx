@@ -27,21 +27,24 @@ export default function DeleteCommentModal({
     mutationFn: async ({
       threadId,
       commentId,
+      username,
     }: {
       threadId: string;
       commentId: string;
+      username?: string;
     }) => {
       await deleteThreadComment({
         threadId,
         commentId,
       });
 
-      return { threadId, commentId };
+      return { threadId, commentId, username };
     },
     onSuccess: (data) => {
       setDeleteThreadCommentQueryData({
         threadId: data.threadId,
         commentId: data.commentId,
+        username: data.username,
       });
 
       notifications.show({
@@ -49,6 +52,8 @@ export default function DeleteCommentModal({
         message: "The comment has been successfully deleted.",
         icon: <IconTrash size="1em" />,
       });
+
+      onClose();
     },
   });
 

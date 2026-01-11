@@ -46,7 +46,7 @@ export default function Comments({
     }: {
       threadId: string;
       commentId: string;
-      username: string;
+      username?: string;
       like: boolean;
     }) => {
       if (like) {
@@ -81,7 +81,7 @@ export default function Comments({
   }: {
     threadId: string;
     commentId: string;
-    username: string;
+    username?: string;
     like: boolean;
   }) => {
     if (!session) {
@@ -120,7 +120,14 @@ export default function Comments({
               key={comment.id}
               session={session}
               comment={comment}
-              onLike={handleLike}
+              onLike={() =>
+                handleLike({
+                  threadId: comment.threadId,
+                  commentId: comment.id,
+                  username: comment.author?.username,
+                  like: !comment.likes.liked,
+                })
+              }
               onDelete={() => handleDeleteCommentModalOpen(comment)}
             />
           ))}

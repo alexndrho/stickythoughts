@@ -31,26 +31,8 @@ import classes from "./thread.module.css";
 export interface CommentItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
   comment: ThreadCommentType;
-  onLike: ({
-    threadId,
-    commentId,
-    username,
-    like,
-  }: {
-    threadId: string;
-    commentId: string;
-    username: string;
-    like: boolean;
-  }) => void;
-  onDelete: ({
-    threadId,
-    commentId,
-    username,
-  }: {
-    threadId: string;
-    commentId: string;
-    username: string;
-  }) => void;
+  onLike: () => void;
+  onDelete: () => void;
 }
 
 export default function CommentItem({
@@ -141,15 +123,7 @@ export default function CommentItem({
               <Menu.Item
                 color="red"
                 leftSection={<IconTrash size="1em" />}
-                onClick={() => {
-                  if (!comment.author) return;
-
-                  onDelete({
-                    threadId: comment.threadId,
-                    commentId: comment.id,
-                    username: comment.author.username,
-                  });
-                }}
+                onClick={onDelete}
               >
                 Delete
               </Menu.Item>
@@ -172,16 +146,7 @@ export default function CommentItem({
               count={comment.likes.count}
               size="compact-sm"
               className={classes["comment-item__like-btn"]}
-              onLike={() => {
-                if (!comment.author) return;
-
-                onLike({
-                  threadId: comment.threadId,
-                  commentId: comment.id,
-                  username: comment.author.username,
-                  like: !comment.likes.liked,
-                });
-              }}
+              onLike={onLike}
             />
           </>
         )}

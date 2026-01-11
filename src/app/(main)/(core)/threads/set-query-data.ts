@@ -12,7 +12,11 @@ import {
   threadCommentsInfiniteOptions,
   threadOptions,
 } from "@/app/(main)/(core)/threads/options";
-import type { ThreadType, ThreadCommentType } from "@/types/thread";
+import type {
+  ThreadType,
+  ThreadCommentType,
+  UserThreadCommentType,
+} from "@/types/thread";
 
 export const setLikeThreadQueryData = ({
   username, // optional, used for user-specific queries
@@ -265,9 +269,11 @@ export const setUpdateThreadCommentQueryData = ({
 export const setDeleteThreadCommentQueryData = ({
   threadId,
   commentId,
+  username,
 }: {
   threadId: string;
   commentId: string;
+  username?: string;
 }) => {
   const queryClient = getQueryClient();
 
@@ -285,6 +291,31 @@ export const setDeleteThreadCommentQueryData = ({
     },
   );
 
+  if (username) {
+    queryClient.setQueryData<InfiniteData<UserThreadCommentType[]>>(
+      userUsernameCommentsInfiniteOptions(username).queryKey,
+      (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) =>
+            page.filter((comment) => comment.id !== commentId),
+          ),
+        };
+      },
+    );
+
+    queryClient.invalidateQueries({
+      queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
+      refetchType: "none",
+    });
+  } else {
+    queryClient.invalidateQueries({
+      queryKey: userOptions.queryKey,
+    });
+  }
+
   queryClient.invalidateQueries({
     queryKey: threadCommentsInfiniteOptions(threadId).queryKey,
     refetchType: "none",
@@ -300,7 +331,7 @@ export const setLikeThreadCommentQueryData = ({
 }: {
   threadId: string;
   commentId: string;
-  username: string;
+  username?: string;
   like: boolean;
 }) => {
   const queryClient = getQueryClient();
@@ -332,40 +363,46 @@ export const setLikeThreadCommentQueryData = ({
     },
   );
 
-  queryClient.setQueryData<InfiniteData<ThreadCommentType[]>>(
-    userUsernameCommentsInfiniteOptions(username).queryKey,
-    (oldData) => {
-      if (!oldData) return oldData;
+  if (username) {
+    queryClient.setQueryData<InfiniteData<ThreadCommentType[]>>(
+      userUsernameCommentsInfiniteOptions(username).queryKey,
+      (oldData) => {
+        if (!oldData) return oldData;
 
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page) =>
-          page.map((comment) =>
-            comment.id === commentId
-              ? ({
-                  ...comment,
-                  likes: {
-                    ...comment.likes,
-                    liked: like,
-                    count: like
-                      ? comment.likes.count + 1
-                      : comment.likes.count - 1,
-                  },
-                } satisfies ThreadCommentType)
-              : comment,
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) =>
+            page.map((comment) =>
+              comment.id === commentId
+                ? ({
+                    ...comment,
+                    likes: {
+                      ...comment.likes,
+                      liked: like,
+                      count: like
+                        ? comment.likes.count + 1
+                        : comment.likes.count - 1,
+                    },
+                  } satisfies ThreadCommentType)
+                : comment,
+            ),
           ),
-        ),
-      };
-    },
-  );
+        };
+      },
+    );
+
+    queryClient.invalidateQueries({
+      queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
+      refetchType: "none",
+    });
+  } else {
+    queryClient.invalidateQueries({
+      queryKey: userOptions.queryKey,
+    });
+  }
 
   queryClient.invalidateQueries({
     queryKey: threadCommentsInfiniteOptions(threadId).queryKey,
-    refetchType: "none",
-  });
-
-  queryClient.invalidateQueries({
-    queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
     refetchType: "none",
   });
 };
