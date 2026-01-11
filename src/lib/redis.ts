@@ -1,13 +1,18 @@
-import { Redis } from "@upstash/redis";
-// import { NextResponse } from 'next/server';
+import Redis from "ioredis";
 
-// Initialize Redis
-export const redis = Redis.fromEnv();
+let redis: Redis | null = null;
 
-// export const POST = async () => {
-//   // Fetch data from Redis
-//   const result = await redis.get("item");
+export function getRedisClient(): Redis {
+  if (!redis) {
+    redis = new Redis(process.env.REDIS_URL!, {
+      lazyConnect: true,
+      maxRetriesPerRequest: 3,
+      retryStrategy(times) {
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+      },
+    });
+  }
 
-//   // Return the result in the response
-//   return new NextResponse(JSON.stringify({ result }), { status: 200 });
-// };
+  return redis;
+}

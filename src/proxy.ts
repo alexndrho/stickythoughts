@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
-import { Ratelimit, type RatelimitConfig } from "@upstash/ratelimit";
+import {
+  type IRateLimiterRedisOptions,
+  RateLimiterRedis,
+  RateLimiterRes,
+} from "rate-limiter-flexible";
 
-import { rateLimiters } from "./lib/ratelimit";
 import { getClientIp } from "./lib/http";
-import type IError from "./types/error";
+import { rateLimiters } from "./lib/ratelimit";
+import IError from "./types/error";
 
 const ROUTE_PATTERNS = {
   threadLike: /\/api\/threads\/[^/]+\/like/,
@@ -12,7 +16,10 @@ const ROUTE_PATTERNS = {
 } as const;
 
 // Determine which rate limiter to use based on route and method
-function getRateLimiter(pathname: string, method: string): RatelimitConfig {
+function getRateLimiter(
+  pathname: string,
+  method: string,
+): IRateLimiterRedisOptions {
   const upperMethod = method.toUpperCase();
 
   // Search endpoint
@@ -61,61 +68,57 @@ function getRateLimiter(pathname: string, method: string): RatelimitConfig {
   }
 
   // Default to global rate limiter
-  return rateLimiters.global.api;
-}
-
-// Create rate limit exceeded response
-function rateLimitResponse(reset: number): NextResponse {
-  const retryAfter = Math.ceil((reset - Date.now()) / 1000);
-
-  return NextResponse.json(
-    {
-      issues: [
-        {
-          code: "ratelimit/exceeded",
-          message: "Rate limit exceeded. Please try again later.",
-        },
-      ],
-    } satisfies IError,
-    {
-      status: 429,
-      headers: {
-        "Content-Type": "application/json",
-        "Retry-After": String(retryAfter),
-        "X-RateLimit-Reset": String(reset),
-      },
-    },
-  );
+  return rateLimiters.get.standard;
 }
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const method = request.method;
 
   if (pathname.startsWith("/api/")) {
+    const rateLimiterOptions = getRateLimiter(pathname, request.method);
+    const rateLimiter = new RateLimiterRedis(rateLimiterOptions);
+
     const clientIp = getClientIp(request);
     const identifier = clientIp === "unknown" ? "fallback-limiter" : clientIp;
 
-    const rateLimiterConfig = getRateLimiter(pathname, method);
-    const rateLimiter = new Ratelimit(rateLimiterConfig);
-    // const finalIdentifier = sessionCookie
-    //   ? `${identifier}:${sessionCookie}`
-    //   : identifier;
-
     try {
-      const { success, reset, remaining } = await rateLimiter.limit(identifier);
+      const rateLimiterRes = await rateLimiter.consume(identifier);
 
-      if (!success) {
-        return rateLimitResponse(reset);
-      }
-
+      // Success - request allowed
       const response = NextResponse.next();
-      response.headers.set("X-RateLimit-Remaining", String(remaining));
-      response.headers.set("X-RateLimit-Reset", String(reset));
+      response.headers.set(
+        "X-RateLimit-Remaining",
+        rateLimiterRes.remainingPoints.toString(),
+      );
+      response.headers.set(
+        "X-RateLimit-Reset",
+        (Date.now() + rateLimiterRes.msBeforeNext).toString(),
+      );
       return response;
     } catch (error) {
-      console.error("Rate limiting error:", error);
-      // Fail open - allow request but log error
+      // Rate limit exceeded - consume() rejects with RateLimiterRes
+      if (error instanceof RateLimiterRes) {
+        return NextResponse.json(
+          {
+            issues: [
+              {
+                code: "ratelimit/exceeded",
+                message: "Rate limit exceeded. Please try again later.",
+              },
+            ],
+          } satisfies IError,
+          {
+            status: 429,
+            headers: {
+              "Retry-After": Math.ceil(error.msBeforeNext / 1000).toString(),
+              "X-RateLimit-Remaining": error.remainingPoints.toString(),
+            },
+          },
+        );
+      }
+
+      // Redis or other error - fail open (allow request)
+      console.error("Rate limiter error:", error);
       return NextResponse.next();
     }
   }
@@ -130,8 +133,6 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
-
-  return NextResponse.next();
 }
 
 export const config = {

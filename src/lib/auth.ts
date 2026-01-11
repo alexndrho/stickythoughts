@@ -15,6 +15,7 @@ import {
 import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
+import { getRedisClient } from "./redis";
 import { ac, admin } from "./permissions";
 import { resend } from "./email";
 import { removeProfilePicture } from "@/services/user";
@@ -61,6 +62,21 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+  secondaryStorage: {
+    get: async (key) => {
+      return await getRedisClient().get(key);
+    },
+    set: async (key, value, ttl) => {
+      if (ttl) {
+        await getRedisClient().set(key, value, "EX", ttl);
+      } else {
+        await getRedisClient().set(key, value);
+      }
+    },
+    delete: async (key) => {
+      await getRedisClient().del(key);
     },
   },
   databaseHooks: {
