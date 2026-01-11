@@ -17,7 +17,7 @@ export function formatUserNotifications(
       image: firstActor?.image || null,
       name: firstActor?.name || null,
       username: firstActor?.username || null,
-      isAnonymous: notification.comment?.isAnonymous || false,
+      isAnonymous: false,
     };
     let body = "You have a new notification";
 
