@@ -152,7 +152,15 @@ function SignInForm({
   });
 
   const signInAnonymouslyMutation = useMutation({
-    mutationFn: () => authClient.signIn.anonymous(),
+    mutationFn: (token: string) =>
+      authClient.signIn.anonymous({
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": token,
+          },
+          onSuccess: onSuccessSignIn,
+        },
+      }),
     onSuccess: ({ error }) => {
       if (error) {
         notifications.show({
@@ -267,7 +275,10 @@ function SignInForm({
           flex={1}
           leftSection={<IconUser size="1em" />}
           loading={signInAnonymouslyMutation.isPending}
-          onClick={() => signInAnonymouslyMutation.mutate()}
+          disabled={form.values.turnstileToken === ""}
+          onClick={() =>
+            signInAnonymouslyMutation.mutate(form.values.turnstileToken)
+          }
         >
           Anonymous
         </Button>

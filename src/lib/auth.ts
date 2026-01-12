@@ -160,6 +160,13 @@ export const auth = betterAuth({
     captcha({
       provider: "cloudflare-turnstile",
       secretKey: process.env.CLOUDFLARE_TURNSTILE_SECRET_AUTH_KEY!,
+      endpoints: [
+        "/sign-up/email",
+        "/sign-in/email",
+        "/sign-in/anonymous",
+        "/sign-in/username",
+        // "/forget-password", // Disabled because it doesn't work
+      ],
     }),
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {
