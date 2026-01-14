@@ -16,12 +16,12 @@ import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
 import { getRedisClient } from "./redis";
+import { filter } from "./bad-words";
 import { ac, admin } from "./permissions";
 import { resend } from "./email";
 import { removeProfilePicture } from "@/services/user";
 import EmailOTPTemplate from "@/components/emails/EmailOTPTemplate";
 import EmailLinkTemplate from "@/components/emails/EmailLinkTemplate";
-import { profanity } from "./profanity";
 import reservedUsernames from "@/config/reserved-usernames.json";
 
 export const auth = betterAuth({
@@ -137,7 +137,7 @@ export const auth = betterAuth({
     username({
       usernameValidator: (username) => {
         if (
-          profanity.exists(username) ||
+          filter.isProfane(username) ||
           reservedUsernames.reserved_usernames.includes(username.toLowerCase())
         ) {
           throw new APIError("BAD_REQUEST", {
@@ -148,7 +148,7 @@ export const auth = betterAuth({
         return true;
       },
       displayUsernameValidator: (displayUsername) => {
-        if (profanity.exists(displayUsername)) {
+        if (filter.isProfane(displayUsername)) {
           throw new APIError("BAD_REQUEST", {
             message: "This display name is not allowed.",
           });

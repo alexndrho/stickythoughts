@@ -1,5 +1,5 @@
-import { profanity } from "@/lib/profanity";
 import { urlRegex } from "@/config/text";
+import { filter } from "@/lib/bad-words";
 
 export const containsUrl = (text: string) => {
   return urlRegex.test(text);
@@ -16,7 +16,7 @@ export const apiUrl = (path: string) => {
 
 export const filterText = (text: string) => {
   try {
-    return profanity.censor(text);
+    return filter.clean(text);
   } catch (error) {
     console.error(error);
     return text;
