@@ -77,7 +77,7 @@ export default function Content() {
       notifications.update({
         id: "refetch-thoughts",
         loading: false,
-        icon: <IconCheck className={classes["color-swatch__icon"]} />,
+        icon: <IconCheck size="1em" />,
         title: "Thoughts updated",
         message: "New thoughts have been fetched",
         autoClose: 4000,

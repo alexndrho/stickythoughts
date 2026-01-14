@@ -15,6 +15,7 @@ import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { notifications } from "@mantine/notifications";
+import { IconMessage } from "@tabler/icons-react";
 
 import RandomButton from "@/components/RandomButton";
 import CheckColorSwatch from "@/components/CheckColorSwatch";
@@ -125,6 +126,7 @@ export default function SendThoughtModal({
         title: "Thought submitted!",
         message: "Your thought has been successfully submitted.",
         color: `${form.values.color}.6`,
+        icon: <IconMessage size="1em" />,
       });
 
       resetTurnstile();
