@@ -52,8 +52,7 @@
 }
 
 .send-thought-modal__message-length-indicator {
-  margin-bottom: var(--mantine-spacing-sm);
-  text-align: right;
+  color: var(--mantine-color-error);
 }
 
 .send-thought-modal__captcha {

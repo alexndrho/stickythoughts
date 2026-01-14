@@ -136,36 +136,50 @@ export default function SendThoughtModal({
   return (
     <Modal opened={open} onClose={onClose} title="Share a thought" centered>
       <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
-        <TextInput
-          label="Author"
-          withAsterisk
-          maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
-          disabled={mutation.isPending}
-          {...form.getInputProps("author")}
-          className={classes["send-thought-modal__text-input"]}
-        />
-
         <Textarea
           label="Message"
           withAsterisk
           rows={5}
           maxLength={THOUGHT_MAX_MESSAGE_LENGTH}
           disabled={mutation.isPending}
+          rightSection={
+            THOUGHT_MAX_MESSAGE_LENGTH - form.values.message.length <= 10 && (
+              <Text
+                size="sm"
+                className={
+                  classes["send-thought-modal__message-length-indicator"]
+                }
+              >
+                {THOUGHT_MAX_MESSAGE_LENGTH - form.values.message.length}
+              </Text>
+            )
+          }
           {...form.getInputProps("message")}
           className={classes["send-thought-modal__text-input"]}
         />
 
-        <Text
-          size="sm"
-          c={
-            form.values.message.length >= THOUGHT_MAX_MESSAGE_LENGTH
-              ? "red"
-              : undefined
+        <TextInput
+          label="Author"
+          withAsterisk
+          maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
+          disabled={mutation.isPending}
+          rightSection={
+            THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length <= 5 && (
+              <Text
+                size="sm"
+                className={
+                  classes["send-thought-modal__message-length-indicator"]
+                }
+              >
+                {THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length}
+              </Text>
+            )
           }
-          className={classes["send-thought-modal__message-length-indicator"]}
-        >{`${form.values.message.length}/${THOUGHT_MAX_MESSAGE_LENGTH}`}</Text>
+          {...form.getInputProps("author")}
+          className={classes["send-thought-modal__text-input"]}
+        />
 
-        <Group justify="center">
+        <Group mt="md" justify="center">
           <Tooltip label="Randomize color" position="left">
             <RandomButton onClick={handleRandomColor} />
           </Tooltip>
