@@ -9,8 +9,12 @@ import {
   Avatar,
   Badge,
   CopyButton,
+  Group,
+  Input,
+  Loader,
   Menu,
   Pagination,
+  Select,
   Table,
   Text,
   Title,
@@ -25,6 +29,7 @@ import {
   IconId,
   IconPhoto,
   IconRosetteDiscountCheckFilled,
+  IconSearch,
 } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -37,10 +42,17 @@ import BanUserModal from "./BanUserModal";
 import UnbanUserModal from "./UnbanUserModal";
 import dashboardClasses from "./dashboard.module.css";
 import classes from "./user.module.css";
+import { useDebouncedValue } from "@mantine/hooks";
 
 export default function Content() {
   const { data: session } = authClient.useSession();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sortDirection, setSortDirection] = useState<
+    "asc" | "desc" | "default"
+  >("default");
+
+  const [debouncedSearch] = useDebouncedValue(search, 300);
 
   const [editingUser, setEditingUser] = useState<UserWithRole | null>(null);
   const [deletingUserProfilePicture, setDeletingUserProfilePicture] =
@@ -50,7 +62,13 @@ export default function Content() {
     useState<UserWithRole | null>(null);
   const [unbanningUser, setUnbanningUser] = useState<UserWithRole | null>(null);
 
-  const { data: results } = useQuery(adminUsersPageOptions(page));
+  const { data: results, isFetching } = useQuery(
+    adminUsersPageOptions({
+      page,
+      search: debouncedSearch || undefined,
+      sortDirection: sortDirection === "default" ? undefined : sortDirection,
+    }),
+  );
 
   const handleOpenEditUserModal = (user: UserWithRole) => {
     setEditingUser(user);
@@ -90,6 +108,28 @@ export default function Content() {
   return (
     <div className={dashboardClasses.container}>
       <Title className={dashboardClasses.title}>Users</Title>
+
+      <Group mb="md" justify="end">
+        <Input
+          placeholder="Search users..."
+          leftSection={<IconSearch size="1em" />}
+          value={search}
+          onChange={(event) => setSearch(event.currentTarget.value)}
+        />
+
+        <Select
+          data={[
+            { value: "default", label: "Default" },
+            { value: "desc", label: "Newest First" },
+            { value: "asc", label: "Oldest First" },
+          ]}
+          defaultValue="default"
+          value={sortDirection}
+          onChange={(value) =>
+            setSortDirection((value as "asc" | "desc" | "default") || "default")
+          }
+        />
+      </Group>
 
       <div className={dashboardClasses["table-container"]}>
         <Table.ScrollContainer minWidth="100%" maxHeight="100%">
@@ -252,6 +292,22 @@ export default function Content() {
                   </Table.Td>
                 </Table.Tr>
               ))}
+
+              {isFetching ? (
+                <Table.Tr>
+                  <Table.Td colSpan={7} style={{ textAlign: "center" }}>
+                    <Loader />
+                  </Table.Td>
+                </Table.Tr>
+              ) : (
+                results?.data?.users.length === 0 && (
+                  <Table.Tr>
+                    <Table.Td colSpan={7} style={{ textAlign: "center" }}>
+                      No users found.
+                    </Table.Td>
+                  </Table.Tr>
+                )
+              )}
             </Table.Tbody>
           </Table>
         </Table.ScrollContainer>
