@@ -12,6 +12,7 @@ import {
   twoFactor,
   username,
 } from "better-auth/plugins";
+import { render } from "@react-email/components";
 import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
@@ -33,12 +34,16 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
+      const emailHtml = await render(
+        EmailLinkTemplate({ url, type: "email-verification" }),
+      );
+
       after(
         resend.emails.send({
           from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
           to: user.email,
           subject: "Verify your email address",
-          react: EmailLinkTemplate({ url, type: "email-verification" }),
+          html: emailHtml,
         }),
       );
     },
@@ -47,12 +52,16 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ user, url }) => {
+        const emailHtml = await render(
+          EmailLinkTemplate({ url, type: "email-change" }),
+        );
+
         after(
           resend.emails.send({
             from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
             to: user.email,
             subject: "Approve your email change",
-            react: EmailLinkTemplate({ url, type: "email-change" }),
+            html: emailHtml,
           }),
         );
       },
@@ -218,12 +227,14 @@ export const auth = betterAuth({
     }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
+        const emailHtml = await render(EmailOTPTemplate({ otp, type }));
+
         after(
           resend.emails.send({
             from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
             to: email,
             subject: `${otp} is your StickyThoughts verification code`,
-            react: EmailOTPTemplate({ otp, type }),
+            html: emailHtml,
           }),
         );
       },
