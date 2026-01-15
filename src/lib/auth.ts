@@ -145,7 +145,11 @@ export const auth = betterAuth({
     twoFactor(),
     username({
       usernameValidator: (username) => {
-        if (
+        if (/\s/.test(username)) {
+          throw new APIError("BAD_REQUEST", {
+            message: "Username cannot contain spaces.",
+          });
+        } else if (
           filter.isProfane(username) ||
           reservedUsernames.reserved_usernames.includes(username.toLowerCase())
         ) {

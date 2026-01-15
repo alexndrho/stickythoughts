@@ -61,10 +61,28 @@ export default function Content() {
 
     onSuccess: ({ error }) => {
       if (error) {
-        form.setFieldError("root", error.message);
+        if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+          form.setErrors({
+            email: "Email is already in use. Please use a different email.",
+          });
+        } else if (
+          error.code === "USERNAME_CANNOT_CONTAIN_SPACES" ||
+          error.code === "THIS_USERNAME_IS_NOT_ALLOWED"
+        ) {
+          form.setErrors({
+            username: error.message,
+          });
+        } else if (error.code === "PASSWORD_TOO_SHORT") {
+          form.setErrors({
+            password: error.message,
+          });
+        } else {
+          form.setFieldError("root", error.message);
 
-        form.setFieldValue("turnstileToken", "");
-        turnstileRef.current?.reset();
+          form.setFieldValue("turnstileToken", "");
+          turnstileRef.current?.reset();
+        }
+
         return;
       }
 

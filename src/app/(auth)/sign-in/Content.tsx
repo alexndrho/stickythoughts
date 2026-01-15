@@ -136,7 +136,12 @@ function SignInForm({
             emailOrUsername: error.message,
             password: error.message,
           });
+        } else if (error.code === "THIS_USERNAME_IS_NOT_ALLOWED") {
+          form.setErrors({
+            emailOrUsername: error.message,
+          });
         } else {
+          console.log(error);
           form.setFieldError("root", error.message);
         }
 
