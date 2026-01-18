@@ -5,6 +5,7 @@ import { Anchor, Paper, Text, Typography } from "@mantine/core";
 import LikeButton from "../../threads/LikeButton";
 import { type UserThreadCommentType } from "@/types/thread";
 import classes from "./user.module.css";
+import AuthorAvatar from "@/components/AuthorAvatar";
 
 export interface UserCommentItemProps {
   comment: UserThreadCommentType;
@@ -50,30 +51,45 @@ export default function UserCommentItem({
           </Anchor>
         </Text>
 
-        <Text
-          size="sm"
-          truncate
-          className={classes["user-comment-item__description"]}
-        >
+        <div className={classes["user-comment-item__header"]}>
           {comment.isAnonymous || !comment.author ? (
-            <Text span inherit fw="bold">
-              Anonymous
-            </Text>
+            <AuthorAvatar
+              size="xs"
+              isAnonymous={!!comment.isAnonymous}
+              className={classes["user-comment-item__anonymous-avatar"]}
+            />
           ) : (
-            <Anchor
+            <AuthorAvatar
+              size="xs"
               component={Link}
-              inherit
               href={`/user/${comment.author.username}`}
-              className={classes["user-comment-item__link"]}
-            >
-              {comment.author.name || comment.author.username}
-            </Anchor>
-          )}{" "}
-          commented{" "}
-          {formatDistanceToNow(new Date(comment.createdAt), {
-            addSuffix: true,
-          })}
-        </Text>
+              aria-label={`View profile of ${comment.author.username}`}
+              isAnonymous={!!comment.isAnonymous}
+              src={comment.author?.image}
+            />
+          )}
+
+          <Text size="sm" truncate>
+            {comment.isAnonymous || !comment.author ? (
+              <Text span inherit fw="bold">
+                Anonymous
+              </Text>
+            ) : (
+              <Anchor
+                component={Link}
+                inherit
+                href={`/user/${comment.author.username}`}
+                className={classes["user-comment-item__link"]}
+              >
+                {comment.author.name || comment.author.username}
+              </Anchor>
+            )}{" "}
+            commented{" "}
+            {formatDistanceToNow(new Date(comment.createdAt), {
+              addSuffix: true,
+            })}
+          </Text>
+        </div>
 
         <Typography>
           <div dangerouslySetInnerHTML={{ __html: comment.body }} />

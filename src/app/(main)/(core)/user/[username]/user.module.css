@@ -60,8 +60,15 @@
   padding: var(--mantine-spacing-md);
 }
 
-.user-comment-item__description {
+.user-comment-item__header {
   margin-bottom: var(--mantine-spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.user-comment-item__anonymous-avatar {
+  pointer-events: none;
 }
 
 .user-comment-item__like-btn {
