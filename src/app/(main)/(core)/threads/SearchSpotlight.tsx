@@ -27,7 +27,7 @@ export default function SearchSpotlight() {
   );
 
   return (
-    <Spotlight.Root query={query} onQueryChange={setQuery}>
+    <Spotlight.Root query={query} onQueryChange={setQuery} shortcut={["t"]}>
       <Spotlight.Search
         placeholder="Search..."
         leftSection={<IconSearch size="1em" />}

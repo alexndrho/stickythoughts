@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { Button, Pill } from "@mantine/core";
+import { Button, Kbd } from "@mantine/core";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -90,7 +90,7 @@ export default function Content() {
         <Button
           variant="default"
           leftSection={<IconSearch size="1em" />}
-          rightSection={<Pill>Ctrl + K</Pill>}
+          rightSection={<Kbd>t</Kbd>}
           onClick={spotlight.open}
           aria-label="Open search"
           classNames={{
