@@ -149,9 +149,11 @@ export const setLikeThreadQueryData = ({
 export const setCreateThreadCommentQueryData = ({
   id,
   comment,
+  authorUsername,
 }: {
   id: string;
   comment: ThreadCommentType;
+  authorUsername?: string;
 }) => {
   const queryClient = getQueryClient();
 
@@ -209,6 +211,17 @@ export const setCreateThreadCommentQueryData = ({
     },
   );
 
+  if (authorUsername) {
+    queryClient.invalidateQueries({
+      queryKey: userUsernameCommentsInfiniteOptions(authorUsername).queryKey,
+      refetchType: "none",
+    });
+  } else {
+    queryClient.invalidateQueries({
+      queryKey: userOptions.queryKey,
+    });
+  }
+
   queryClient.invalidateQueries({
     queryKey: threadCommentsInfiniteOptions(id).queryKey,
     refetchType: "none",
@@ -222,10 +235,6 @@ export const setCreateThreadCommentQueryData = ({
   queryClient.invalidateQueries({
     queryKey: threadsInfiniteOptions.queryKey,
     refetchType: "none",
-  });
-
-  queryClient.invalidateQueries({
-    queryKey: userOptions.queryKey,
   });
 };
 
