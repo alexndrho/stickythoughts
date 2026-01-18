@@ -19,13 +19,13 @@ import type {
 } from "@/types/thread";
 
 export const setLikeThreadQueryData = ({
-  username, // optional, used for user-specific queries
   threadId,
   like,
+  authorUsername, // optional, used for user-specific queries
 }: {
-  username?: string;
   threadId: string;
   like: boolean;
+  authorUsername?: string;
 }) => {
   const queryClient = getQueryClient();
 
@@ -70,9 +70,9 @@ export const setLikeThreadQueryData = ({
     },
   );
 
-  if (username) {
+  if (authorUsername) {
     queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-      userUsernameThreadsInfiniteOptions(username).queryKey,
+      userUsernameThreadsInfiniteOptions(authorUsername).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -96,7 +96,7 @@ export const setLikeThreadQueryData = ({
     );
 
     queryClient.setQueryData<InfiniteData<ThreadType[]>>(
-      userUsernameLikedThreadsInfiniteOptions(username).queryKey,
+      userUsernameLikedThreadsInfiniteOptions(authorUsername).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -120,12 +120,13 @@ export const setLikeThreadQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameThreadsInfiniteOptions(username).queryKey,
+      queryKey: userUsernameThreadsInfiniteOptions(authorUsername).queryKey,
       refetchType: "none",
     });
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameLikedThreadsInfiniteOptions(username).queryKey,
+      queryKey:
+        userUsernameLikedThreadsInfiniteOptions(authorUsername).queryKey,
       refetchType: "none",
     });
   } else {
@@ -269,11 +270,11 @@ export const setUpdateThreadCommentQueryData = ({
 export const setDeleteThreadCommentQueryData = ({
   threadId,
   commentId,
-  username,
+  authorUsername,
 }: {
   threadId: string;
   commentId: string;
-  username?: string;
+  authorUsername?: string;
 }) => {
   const queryClient = getQueryClient();
 
@@ -291,9 +292,9 @@ export const setDeleteThreadCommentQueryData = ({
     },
   );
 
-  if (username) {
+  if (authorUsername) {
     queryClient.setQueryData<InfiniteData<UserThreadCommentType[]>>(
-      userUsernameCommentsInfiniteOptions(username).queryKey,
+      userUsernameCommentsInfiniteOptions(authorUsername).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
 
@@ -307,7 +308,7 @@ export const setDeleteThreadCommentQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
+      queryKey: userUsernameCommentsInfiniteOptions(authorUsername).queryKey,
       refetchType: "none",
     });
   } else {
@@ -326,12 +327,12 @@ export const setDeleteThreadCommentQueryData = ({
 export const setLikeThreadCommentQueryData = ({
   threadId,
   commentId,
-  username,
+  authorUsername,
   like,
 }: {
   threadId: string;
   commentId: string;
-  username?: string;
+  authorUsername?: string;
   like: boolean;
 }) => {
   const queryClient = getQueryClient();
@@ -363,9 +364,9 @@ export const setLikeThreadCommentQueryData = ({
     },
   );
 
-  if (username) {
+  if (authorUsername) {
     queryClient.setQueryData<InfiniteData<ThreadCommentType[]>>(
-      userUsernameCommentsInfiniteOptions(username).queryKey,
+      userUsernameCommentsInfiniteOptions(authorUsername).queryKey,
       (oldData) => {
         if (!oldData) return oldData;
 
@@ -392,7 +393,7 @@ export const setLikeThreadCommentQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameCommentsInfiniteOptions(username).queryKey,
+      queryKey: userUsernameCommentsInfiniteOptions(authorUsername).queryKey,
       refetchType: "none",
     });
   } else {

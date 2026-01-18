@@ -42,28 +42,46 @@ export default function Content() {
   };
 
   const handleLikeMutation = useMutation({
-    mutationFn: async ({ id, like }: { id: string; like: boolean }) => {
+    mutationFn: async ({
+      id,
+      like,
+      authorUsername,
+    }: {
+      id: string;
+      like: boolean;
+      authorUsername: string;
+    }) => {
       if (like) {
         await likeThread(id);
       } else {
         await unlikeThread(id);
       }
 
-      return { threadId: id, like };
+      return { threadId: id, like, authorUsername };
     },
 
     onSuccess: (data) => {
-      setLikeThreadQueryData(data);
+      setLikeThreadQueryData({
+        ...data,
+      });
     },
   });
 
-  const handleLike = ({ id, like }: { id: string; like: boolean }) => {
+  const handleLike = ({
+    id,
+    like,
+    authorUsername,
+  }: {
+    id: string;
+    like: boolean;
+    authorUsername: string;
+  }) => {
     if (!session) {
       signInWarningModalHandler.open();
       return;
     }
 
-    handleLikeMutation.mutate({ id, like });
+    handleLikeMutation.mutate({ id, like, authorUsername });
   };
 
   return (

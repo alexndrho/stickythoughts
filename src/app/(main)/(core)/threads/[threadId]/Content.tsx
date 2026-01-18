@@ -68,6 +68,7 @@ export default function Content({ id }: ContentProps) {
       setLikeThreadQueryData({
         threadId: thread.id,
         like: !thread.likes.liked,
+        authorUsername: thread.author?.username,
       });
     },
   });

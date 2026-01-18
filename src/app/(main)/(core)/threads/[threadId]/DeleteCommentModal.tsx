@@ -27,24 +27,22 @@ export default function DeleteCommentModal({
     mutationFn: async ({
       threadId,
       commentId,
-      username,
+      authorUsername,
     }: {
       threadId: string;
       commentId: string;
-      username?: string;
+      authorUsername?: string;
     }) => {
       await deleteThreadComment({
         threadId,
         commentId,
       });
 
-      return { threadId, commentId, username };
+      return { threadId, commentId, authorUsername };
     },
     onSuccess: (data) => {
       setDeleteThreadCommentQueryData({
-        threadId: data.threadId,
-        commentId: data.commentId,
-        username: data.username,
+        ...data,
       });
 
       notifications.show({
@@ -84,6 +82,7 @@ export default function DeleteCommentModal({
             deleteMutation.mutate({
               threadId,
               commentId: comment.id,
+              authorUsername: comment.author?.username,
             });
           }}
         >

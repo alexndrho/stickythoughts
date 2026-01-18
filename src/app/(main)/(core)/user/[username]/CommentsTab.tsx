@@ -63,7 +63,7 @@ export default function CommentsTab({
       setLikeThreadCommentQueryData({
         threadId: data.threadId,
         commentId: data.commentId,
-        username,
+        authorUsername: username,
         like: data.like,
       });
     },

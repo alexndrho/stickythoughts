@@ -41,12 +41,12 @@ export default function Comments({
     mutationFn: async ({
       threadId,
       commentId,
-      username,
+      authorUsername,
       like,
     }: {
       threadId: string;
       commentId: string;
-      username?: string;
+      authorUsername?: string;
       like: boolean;
     }) => {
       if (like) {
@@ -61,14 +61,12 @@ export default function Comments({
         });
       }
 
-      return { commentId, username, like };
+      return { commentId, authorUsername, like };
     },
     onSuccess: (data) => {
       setLikeThreadCommentQueryData({
+        ...data,
         threadId,
-        commentId: data.commentId,
-        username: data.username,
-        like: data.like,
       });
     },
   });
@@ -76,12 +74,12 @@ export default function Comments({
   const handleLike = ({
     threadId,
     commentId,
-    username,
+    authorUsername,
     like,
   }: {
     threadId: string;
     commentId: string;
-    username?: string;
+    authorUsername?: string;
     like: boolean;
   }) => {
     if (!session) {
@@ -93,7 +91,7 @@ export default function Comments({
     commentLikeMutation.mutate({
       threadId,
       commentId,
-      username,
+      authorUsername,
       like,
     });
   };
@@ -124,7 +122,7 @@ export default function Comments({
                 handleLike({
                   threadId: comment.threadId,
                   commentId: comment.id,
-                  username: comment.author?.username,
+                  authorUsername: comment.author?.username,
                   like: !comment.likes.liked,
                 })
               }

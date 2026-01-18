@@ -12,7 +12,15 @@ import classes from "./threads.module.css";
 
 export interface ThreadItemProps {
   post: ThreadType;
-  onLike?: ({ id, like }: { id: string; like: boolean }) => void;
+  onLike?: ({
+    id,
+    like,
+    authorUsername,
+  }: {
+    id: string;
+    like: boolean;
+    authorUsername: string;
+  }) => void;
 }
 
 export default function ThreadItem({ post, onLike }: ThreadItemProps) {
@@ -79,6 +87,7 @@ export default function ThreadItem({ post, onLike }: ThreadItemProps) {
               onLike?.({
                 id: post.id,
                 like: !post.likes.liked,
+                authorUsername: post.author?.username || "",
               });
             }}
           />

@@ -49,9 +49,9 @@ export default function Threads({
 
     onSuccess: (data) => {
       setLikeThreadQueryData({
-        username,
         threadId: data.id,
         like: data.like,
+        authorUsername: username,
       });
     },
   });

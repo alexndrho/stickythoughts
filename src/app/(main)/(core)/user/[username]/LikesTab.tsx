@@ -48,9 +48,9 @@ export default function LikesTab({
 
     onSuccess: (data) => {
       setLikeThreadQueryData({
-        username,
         threadId: data.id,
         like: data.like,
+        authorUsername: username,
       });
     },
   });
