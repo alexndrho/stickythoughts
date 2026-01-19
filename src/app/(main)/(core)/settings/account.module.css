@@ -86,6 +86,13 @@
   color: var(--mantine-color-error);
 }
 
+.accounts {
+  margin-top: var(--mantine-spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
 .qr-code-container {
   position: relative;
   display: inline-block;

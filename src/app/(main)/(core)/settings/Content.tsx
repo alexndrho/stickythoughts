@@ -29,7 +29,7 @@ import { authClient } from "@/lib/auth-client";
 import { secondsToMinutesExtended } from "@/utils/date";
 import { removeProfilePicture } from "@/services/user";
 import { useTimer } from "@/hooks/use-timer";
-import { userAccountOptions } from "./options";
+import { userAccountListOptions, userAccountOptions } from "./options";
 import UploadProfilePictureModal from "./UploadProfilePictureModal";
 import UpdateNameModal from "./UpdateNameModal";
 import UpdateEmailModal from "./UpdateEmailModal";
@@ -41,6 +41,8 @@ import DisableTwoFactorModal from "./DisableTwoFactorModal";
 import BackupCodesModal from "./BackupCodesModal";
 import classes from "./settings.module.css";
 import accountClasses from "./account.module.css";
+import AccountItem from "./AccountItem";
+import DisconnectGoogleModal from "./DisconnectGoogleModal";
 
 export default function Content() {
   const router = useRouter();
@@ -53,6 +55,10 @@ export default function Content() {
 
   const { data: userProfile, isLoading: isUserProfileLoading } =
     useQuery(userAccountOptions);
+
+  const { data: userAccounts, isPending: isUserAccountsPending } = useQuery(
+    userAccountListOptions,
+  );
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -97,6 +103,11 @@ export default function Content() {
   const [
     updatePasswordModalOpened,
     { open: openUpdatePasswordModal, close: closeUpdatePasswordModal },
+  ] = useDisclosure(false);
+
+  const [
+    disconnectGoogleModalOpened,
+    { open: openDisconnectGoogleModal, close: closeDisconnectGoogleModal },
   ] = useDisclosure(false);
 
   const [
@@ -245,6 +256,24 @@ export default function Content() {
     },
   ];
 
+  const isGoogleConnected = userAccounts?.data?.some(
+    (account) => account.providerId === "google",
+  );
+
+  const accountList = [
+    {
+      title: "Google",
+      description: "Connect your Google account to enable Google login.",
+      connect: () =>
+        authClient.linkSocial({
+          provider: "google",
+          callbackURL: "/settings",
+        }),
+      disconnect: openDisconnectGoogleModal,
+      connected: isGoogleConnected,
+    },
+  ];
+
   return (
     <Box className={classes.container}>
       <Title order={1} size="h2" className={classes.title}>
@@ -350,6 +379,20 @@ export default function Content() {
       <div className={accountClasses.content}>
         <Button onClick={openUpdatePasswordModal}>Change Password</Button>
 
+        <div className={accountClasses.accounts}>
+          {accountList.map((account, index) => (
+            <AccountItem
+              key={index}
+              title={account.title}
+              description={account.description}
+              connect={account.connect}
+              disconnect={account.disconnect}
+              connected={account.connected}
+              loading={isUserAccountsPending}
+            />
+          ))}
+        </div>
+
         <Text
           mt="md"
           size="lg"
@@ -450,6 +493,13 @@ export default function Content() {
         opened={updatePasswordModalOpened}
         onClose={closeUpdatePasswordModal}
       />
+
+      {isGoogleConnected && (
+        <DisconnectGoogleModal
+          opened={disconnectGoogleModalOpened}
+          onClose={closeDisconnectGoogleModal}
+        />
+      )}
 
       {session?.user.twoFactorEnabled ? (
         <>
