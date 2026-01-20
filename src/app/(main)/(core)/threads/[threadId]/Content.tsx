@@ -14,7 +14,7 @@ import {
   Menu,
   Text,
   Title,
-  TypographyStylesProvider,
+  Typography,
 } from "@mantine/core";
 import { formatDistanceToNow } from "date-fns";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
@@ -165,10 +165,10 @@ export default function Content({ id }: ContentProps) {
           />
         </>
       ) : (
-        <TypographyStylesProvider>
+        <Typography>
           <h1>{thread.title}</h1>
           <div dangerouslySetInnerHTML={{ __html: thread.body }} />
-        </TypographyStylesProvider>
+        </Typography>
       )}
 
       <Group my="md">

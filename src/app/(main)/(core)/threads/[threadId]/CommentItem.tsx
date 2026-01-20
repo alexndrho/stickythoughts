@@ -12,7 +12,7 @@ import {
   Group,
   Menu,
   Text,
-  TypographyStylesProvider,
+  Typography,
 } from "@mantine/core";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
@@ -137,9 +137,9 @@ export default function CommentItem({
           <Editor comment={comment} onClose={() => setIsEditable(false)} />
         ) : (
           <>
-            <TypographyStylesProvider>
+            <Typography>
               <div dangerouslySetInnerHTML={{ __html: comment.body }} />
-            </TypographyStylesProvider>
+            </Typography>
 
             <LikeButton
               liked={comment.likes.liked}
