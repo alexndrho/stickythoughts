@@ -31,11 +31,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "StickyThoughts | Online Freedom Wall",
-    template: "%s - StickyThoughts | Online Freedom Wall",
+    default: "StickyThoughts - Your Digital Freedom Wall",
+    template: "%s - StickyThoughts",
   },
   description:
-    "StickyThoughts is an online freedom wall where you can express yourself freely and share your thoughts and experiences with others.",
+    "Share your thoughts anonymously on StickyThoughts. Express yourself freely, connect with others, and discover authentic stories.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
 };
 
