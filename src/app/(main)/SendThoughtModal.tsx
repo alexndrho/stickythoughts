@@ -141,6 +141,7 @@ export default function SendThoughtModal({
           withAsterisk
           maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
           disabled={mutation.isPending}
+          leftSection={"\u2013"}
           rightSection={
             THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length <= 5 && (
               <Text

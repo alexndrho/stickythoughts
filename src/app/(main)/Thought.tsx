@@ -25,7 +25,7 @@ export default function Thought({
         <Text
           lineClamp={1}
           className={classes["thought__author"]}
-        >{`-${filterText(author)}`}</Text>
+        >{`\u2013 ${filterText(author)}`}</Text>
       </Box>
     </Tooltip>
   );
