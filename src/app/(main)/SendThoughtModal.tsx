@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   Button,
@@ -11,7 +10,6 @@ import {
   Textarea,
   Tooltip,
 } from "@mantine/core";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { notifications } from "@mantine/notifications";
@@ -40,8 +38,6 @@ export default function SendThoughtModal({
   open,
   onClose,
 }: SendThoughtModalProps) {
-  const turnstileRef = useRef<TurnstileInstance>(null);
-
   const form = useForm({
     initialValues: {
       message: "",
@@ -50,25 +46,9 @@ export default function SendThoughtModal({
           ? localStorage.getItem("author") || ""
           : "",
       color: THOUGHT_COLORS[0] as (typeof THOUGHT_COLORS)[number],
-      turnstileToken: "",
     },
     validate: zod4Resolver(createThoughtInput),
   });
-
-  const resetTurnstile = () => {
-    form.setFieldValue("turnstileToken", "");
-    turnstileRef.current?.reset();
-  };
-
-  const resetTurnstileEffectEvent = useEffectEvent(() => {
-    resetTurnstile();
-  });
-
-  useEffect(() => {
-    if (!open) {
-      resetTurnstileEffectEvent();
-    }
-  }, [open]);
 
   const handleRandomColor = () => {
     // Get all colors except the current one.
@@ -102,8 +82,6 @@ export default function SendThoughtModal({
           color: "red",
         });
       }
-
-      resetTurnstile();
     },
     onSuccess: ({ formValues }) => {
       localStorage.setItem("author", formValues.author);
@@ -111,7 +89,6 @@ export default function SendThoughtModal({
         message: "",
         author: formValues.author,
         color: THOUGHT_COLORS[0],
-        turnstileToken: "",
       });
 
       getQueryClient().invalidateQueries({
@@ -129,7 +106,6 @@ export default function SendThoughtModal({
         icon: <IconMessage size="1em" />,
       });
 
-      resetTurnstile();
       onClose();
       form.reset();
     },
@@ -181,6 +157,15 @@ export default function SendThoughtModal({
           className={classes["send-thought-modal__text-input"]}
         />
 
+        {form.errors.root && (
+          <Text
+            size="xs"
+            className={classes["send-thought-modal__root-error-messsage"]}
+          >
+            {form.errors.root}
+          </Text>
+        )}
+
         <Group mt="md" justify="center">
           <Tooltip label="Randomize color" position="left">
             <RandomButton onClick={handleRandomColor} />
@@ -197,34 +182,8 @@ export default function SendThoughtModal({
           ))}
         </Group>
 
-        <Turnstile
-          ref={turnstileRef}
-          siteKey={
-            process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_THOUGHT_KEY!
-          }
-          className={classes["send-thought-modal__captcha"]}
-          onSuccess={(token) => form.setFieldValue("turnstileToken", token)}
-          onExpire={() => turnstileRef.current?.reset()}
-          onError={() =>
-            form.setFieldError("turnstileToken", "Captcha verification failed")
-          }
-        />
-
-        {(form.errors.root || form.errors.turnstileToken) && (
-          <Text
-            size="xs"
-            className={classes["send-thought-modal__root-error-messsage"]}
-          >
-            {form.errors.root || form.errors.turnstileToken}
-          </Text>
-        )}
-
         <Group justify="right" mt="md">
-          <Button
-            type="submit"
-            loading={mutation.isPending}
-            disabled={form.values.turnstileToken === ""}
-          >
+          <Button type="submit" loading={mutation.isPending}>
             Stick it!
           </Button>
         </Group>

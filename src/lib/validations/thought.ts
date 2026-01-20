@@ -42,5 +42,4 @@ export const createThoughtInput = z.object({
       message: "Message cannot contain URLs",
     }),
   color: thoughtColorZod,
-  turnstileToken: z.string().min(1, "Turnstile token is required"),
 }) satisfies z.Schema<Prisma.ThoughtCreateInput>;

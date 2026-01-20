@@ -1,10 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { ZodError } from "zod";
 
 import { prisma } from "@/lib/db";
-import { getClientIp } from "@/lib/http";
 import { createThoughtInput } from "@/lib/validations/thought";
-import { validateTurnstile } from "@/lib/captcha";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
 import type IError from "@/types/error";
 
@@ -60,31 +59,22 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { author, message, color, turnstileToken } = createThoughtInput.parse(
-      await req.json(),
-    );
+    const verification = await checkBotId();
 
-    const clientIp = getClientIp(req);
-
-    const turnstileResponse = await validateTurnstile({
-      token: turnstileToken,
-      secret: process.env.CLOUDFLARE_TURNSTILE_SECRET_THOUGHT_KEY!,
-      ...(clientIp !== "unknown" && { remoteip: clientIp }), // Only include if valid
-    });
-
-    if (!turnstileResponse.success) {
+    if (verification.isBot) {
       return NextResponse.json(
         {
           issues: [
-            {
-              code: "captcha/validation-failed",
-              message: "Captcha validation failed",
-            },
+            { code: "botid/validation-failed", message: "Bot detected" },
           ],
         } satisfies IError,
-        { status: 400 },
+        { status: 403 },
       );
     }
+
+    const { author, message, color } = createThoughtInput.parse(
+      await req.json(),
+    );
 
     await prisma.thought.create({
       data: {

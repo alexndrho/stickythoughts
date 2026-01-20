@@ -38,7 +38,7 @@ const getThoughts = async ({
 };
 
 const submitThought = async (
-  data: Prisma.ThoughtCreateInput & { turnstileToken: string },
+  data: Prisma.ThoughtCreateInput,
 ): Promise<{ message: string }> => {
   const response = await fetch(apiUrl("/api/thoughts"), {
     method: "POST",
