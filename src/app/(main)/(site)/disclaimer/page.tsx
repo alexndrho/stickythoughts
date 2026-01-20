@@ -27,7 +27,7 @@ export default function DisclaimerPage() {
         </Text>{" "}
         (“Company”, “we”, “our”, “us”) on{" "}
         <Text span fw="bold">
-          https://stickythoughts.alexanderho.dev/
+          https://www.stickythoughts.app/
         </Text>{" "}
         (the “Site”) is for general informational purposes only. All information
         on the Site is provided in good faith, however we make no representation
@@ -126,9 +126,9 @@ export default function DisclaimerPage() {
       </Text>
       <Text my="md">
         All logos and trademarks of third parties referenced on
-        https://stickythoughts.alexanderho.dev/ are the trademarks and logos of
-        their respective owners. Any inclusion of such trademarks or logos does
-        not imply or constitute any approval, endorsement or sponsorship of
+        https://www.stickythoughts.app/ are the trademarks and logos of their
+        respective owners. Any inclusion of such trademarks or logos does not
+        imply or constitute any approval, endorsement or sponsorship of
         StickyThoughts by such owners.
       </Text>
       <Text my="md">
@@ -151,7 +151,7 @@ export default function DisclaimerPage() {
         </Anchor>{" "}
         was created for{" "}
         <Text span fw="bold" inherit>
-          https://stickythoughts.alexanderho.dev/
+          https://www.stickythoughts.app/
         </Text>{" "}
         by{" "}
         <Anchor href="https://policymaker.io" inherit>

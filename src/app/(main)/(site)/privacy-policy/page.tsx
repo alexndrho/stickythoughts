@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
         </Text>{" "}
         (“us”, “we”, or “our”) operates{" "}
         <Text span fw="bold">
-          https://stickythoughts.alexanderho.dev/
+          https://www.stickythoughts.app/
         </Text>{" "}
         (hereinafter referred to as{" "}
         <Text span fw="bold">
@@ -46,7 +46,7 @@ export default function PrivacyPolicyPage() {
       <Text mt="md">
         Our Privacy Policy governs your visit to{" "}
         <Text span fw="bold">
-          https://stickythoughts.alexanderho.dev/
+          https://www.stickythoughts.app/
         </Text>
         , and explains how we collect, safeguard and disclose information that
         results from your use of our Service.
@@ -80,7 +80,7 @@ export default function PrivacyPolicyPage() {
         <Text span fw="bold">
           SERVICE
         </Text>{" "}
-        means the https://stickythoughts.alexanderho.dev/ website operated by
+        means the https://www.stickythoughts.app/ website operated by
         StickyThoughts.
       </Text>
       <Text mt="md">
@@ -815,7 +815,7 @@ export default function PrivacyPolicyPage() {
         </Anchor>{" "}
         was created for{" "}
         <Text span inherit fw="bold">
-          https://stickythoughts.alexanderho.dev/
+          https://www.stickythoughts.app/
         </Text>{" "}
         by{" "}
         <Anchor href="https://policymaker.io" inherit>
