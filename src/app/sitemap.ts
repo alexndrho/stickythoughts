@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     {
       url: `${base}/about`,
-      lastModified: new Date("2025-12-15"),
+      lastModified: new Date("2026-01-21"),
       changeFrequency: "monthly",
       priority: 0.8,
     },

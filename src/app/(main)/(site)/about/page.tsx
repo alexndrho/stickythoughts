@@ -28,18 +28,23 @@ export default function AboutPage() {
             Thoughts
           </Text>
           <Text span display="block" fz="xl" fs="italic">
-            A place to share your thoughts.
+            Your Digital Freedom Wall
           </Text>
         </Title>
+
         <Text mt="lg" fz="lg">
-          StickyThoughts offers a platform where you can freely express yourself
-          and share your thoughts and experiences with others. You have the
-          option to remain anonymous or not. You can post anything that you want
-          including your thoughts, experiences, and even your secrets. You can
-          also read other people&apos;s notes. The notes can be customized by
-          using different colors, and you can search for other people&apos;s
-          notes by their names. There is no limit to the number of notes you can
-          add.
+          StickyThoughts is a digital freedom wall where you can express
+          yourself freely and share your thoughts, experiences, and stories with
+          others. Whether you choose to remain anonymous or share openly, this
+          is your space to be heard.
+        </Text>
+
+        <Text mt="lg" fz="lg">
+          Post your thoughts, share experiences, confess secrets, or simply
+          express how you&apos;re feeling. Customize your notes with different
+          colors, browse thoughts from others, and create as many posts as you
+          want. Whether you choose to stay anonymous or share your name, this is
+          your safe space for honest expression.
         </Text>
 
         <Text mt="lg" fz="lg">
@@ -49,14 +54,14 @@ export default function AboutPage() {
             target="_blank"
             inherit
           >
-            Github
+            GitHub
           </Anchor>
           , created by{" "}
           <Anchor href="https://www.alexanderho.dev" target="_blank" inherit>
             Alexander Gabriel Ho
           </Anchor>
-          . This online freedom wall serves as a platform to provide an
-          emotional outlet for its users.
+          . Built as an emotional outlet and community platform for authentic
+          connection.
         </Text>
       </Box>
 
@@ -66,7 +71,7 @@ export default function AboutPage() {
           h={250}
           component={Image}
           src={noteImg}
-          alt="logo"
+          alt="StickyThoughts Logo"
         />
       </Box>
     </Flex>
