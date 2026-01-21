@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Skeleton, Text } from "@mantine/core";
 
 import { type authClient } from "@/lib/auth-client";
-import classes from "./account.module.css";
+import classes from "./settings.module.css";
 
 export interface AccountItemProps {
   title: string;
@@ -37,11 +37,11 @@ export default function AccountItem({
 
   return (
     <div>
-      <Text size="lg" truncate className={classes["account-item__label"]}>
+      <Text size="lg" truncate className={classes.label}>
         {title}
       </Text>
 
-      <Text size="md" className={classes["account-item__description"]}>
+      <Text size="md" className={classes.description}>
         {description}
       </Text>
 

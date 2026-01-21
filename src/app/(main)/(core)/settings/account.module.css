@@ -34,14 +34,6 @@
   gap: var(--mantine-spacing-md);
 }
 
-.account-item__label {
-  font-weight: bold;
-}
-
-.account-item__description {
-  color: var(--mantine-color-dimmed);
-}
-
 .account-item__skeleton-wrapper-value {
   width: auto;
   min-width: rem(150px);

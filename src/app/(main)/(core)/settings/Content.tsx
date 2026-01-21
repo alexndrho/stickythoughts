@@ -39,10 +39,10 @@ import UpdatePasswordModal from "./UpdatePasswordModal";
 import EnableTwoFactorModal from "./EnableTwoFactorModal";
 import DisableTwoFactorModal from "./DisableTwoFactorModal";
 import BackupCodesModal from "./BackupCodesModal";
-import classes from "./settings.module.css";
-import accountClasses from "./account.module.css";
 import AccountItem from "./AccountItem";
 import DisconnectGoogleModal from "./DisconnectGoogleModal";
+import classes from "./settings.module.css";
+import accountClasses from "./account.module.css";
 
 export default function Content() {
   const router = useRouter();
@@ -290,19 +290,12 @@ export default function Content() {
               className={accountClasses["user-info__account-item"]}
             >
               <div>
-                <Text
-                  size="lg"
-                  truncate
-                  className={accountClasses["account-item__label"]}
-                >
+                <Text size="lg" truncate className={classes.label}>
                   {item.label}
                 </Text>
 
                 {item.description && (
-                  <Text
-                    size="sm"
-                    className={accountClasses["account-item__description"]}
-                  >
+                  <Text size="sm" className={classes.description}>
                     {item.description}
                   </Text>
                 )}
@@ -393,16 +386,11 @@ export default function Content() {
           ))}
         </div>
 
-        <Text
-          mt="md"
-          size="lg"
-          truncate
-          className={accountClasses["account-item__label"]}
-        >
+        <Text mt="md" size="lg" truncate className={classes.label}>
           Two-Factor Authentication
         </Text>
 
-        <Text size="md" className={accountClasses["account-item__description"]}>
+        <Text size="md" className={classes.description}>
           Add an extra layer of security to your account by requiring a second
           form of authentication when logging in.
         </Text>
@@ -424,15 +412,11 @@ export default function Content() {
           )}
         </Skeleton>
 
-        <Text
-          mt="md"
-          size="lg"
-          className={accountClasses["account-item__label"]}
-        >
+        <Text mt="md" size="lg" className={classes.label}>
           Backup Codes
         </Text>
 
-        <Text size="md" className={accountClasses["account-item__description"]}>
+        <Text size="md" className={classes.description}>
           Backup codes can be used to access your account if you lose access to
           your primary two-factor authentication method.
         </Text>
