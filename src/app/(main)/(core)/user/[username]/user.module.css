@@ -24,17 +24,17 @@
   gap: var(--mantine-spacing-md);
 }
 
-.empty-thread-prompt {
+.tab-prompt {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.empty-thread-prompt__description {
+.tab-prompt__description {
   text-align: center;
 }
 
-.empty-thread-prompt__create-button {
+.tab-prompt__create-button {
   margin-top: var(--mantine-spacing-md);
 }
 

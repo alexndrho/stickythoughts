@@ -11,7 +11,7 @@ export async function GET(
   try {
     const { username } = await params;
 
-    const user: UserPublicAccount | null = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
@@ -22,6 +22,15 @@ export async function GET(
         username: true,
         bio: true,
         image: true,
+        settings: {
+          select: {
+            privacySettings: {
+              select: {
+                likesVisibility: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -39,7 +48,12 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(user);
+    const { settings, ...userRest } = user;
+
+    return NextResponse.json({
+      ...userRest,
+      isLikesPrivate: settings?.privacySettings?.likesVisibility === "PRIVATE",
+    } satisfies UserPublicAccount);
   } catch (error) {
     console.error("Error fetching user:", error);
 

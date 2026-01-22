@@ -4,7 +4,9 @@ import type {
   UserNotificationType,
   UserAccountSettings,
   UserPublicAccount,
+  UserSettingsPrivacy,
 } from "@/types/user";
+import { VisibilityLevel } from "@/generated/prisma/enums";
 import type { ThreadType, UserThreadCommentType } from "@/types/thread";
 
 export const getUser = async (
@@ -97,6 +99,42 @@ export const removeProfilePicture = async ({
 
   if (!res.ok) {
     throw toServerError("Profile picture delete error", data.issues);
+  }
+
+  return data;
+};
+
+export const getUserSettingsPrivacy =
+  async (): Promise<UserSettingsPrivacy> => {
+    const res = await fetch(apiUrl("/api/user/settings/privacy"));
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw toServerError("User settings privacy fetch error", data.issues);
+    }
+
+    return data;
+  };
+
+export const updateUserLikesVisibility = async (
+  visibility: VisibilityLevel,
+): Promise<UserSettingsPrivacy> => {
+  const res = await fetch(
+    apiUrl("/api/user/settings/privacy/likes-visibility"),
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ visibility }),
+    },
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw toServerError("User likes visibility update error", data.issues);
   }
 
   return data;

@@ -1,6 +1,7 @@
 import z from "zod";
 
 import { USER_BIO_MAX_LENGTH } from "@/config/user";
+import { VisibilityLevel } from "@/generated/prisma/enums";
 
 export const updateUserBioInput = z.object({
   bio: z
@@ -22,4 +23,9 @@ export const userNotificationOpenedInput = z.object({
 
 export const userNotificationMarkReadInput = z.object({
   isRead: z.boolean("isRead is required"),
+});
+
+// settings
+export const updateUserLikesVisibilityInput = z.object({
+  visibility: z.enum(VisibilityLevel),
 });

@@ -5,7 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { Avatar, Tabs, Text, Title } from "@mantine/core";
 import {
-  IconHeartFilled,
+  IconHeart,
+  IconHeartOff,
   IconMessage,
   IconMessageCircle,
 } from "@tabler/icons-react";
@@ -27,7 +28,7 @@ export default function Content({ username }: ContentProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data: session } = authClient.useSession();
+  const session = authClient.useSession();
 
   const [signInWarningModalOpened, signInWarningModalHandler] =
     useDisclosure(false);
@@ -78,21 +79,30 @@ export default function Content({ username }: ContentProps) {
             Comments
           </Tabs.Tab>
 
-          <Tabs.Tab value="likes" leftSection={<IconHeartFilled size="1em" />}>
+          <Tabs.Tab
+            value="likes"
+            leftSection={
+              user.isLikesPrivate ? (
+                <IconHeartOff size="1em" />
+              ) : (
+                <IconHeart size="1em" />
+              )
+            }
+          >
             Likes
           </Tabs.Tab>
         </Tabs.List>
 
         <ThreadsTab
           username={user.username}
-          session={session}
+          session={session.data}
           isActive={currentTab === "threads"}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
 
         <CommentsTab
           username={user.username}
-          session={session}
+          session={session.data}
           isActive={currentTab === "comments"}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
@@ -100,6 +110,7 @@ export default function Content({ username }: ContentProps) {
         <LikesTab
           username={user.username}
           session={session}
+          isPrivate={user.isLikesPrivate}
           isActive={currentTab === "likes"}
           openSignInWarningModal={signInWarningModalHandler.open}
         />

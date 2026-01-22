@@ -12,8 +12,8 @@ export default function EmptyThreadPrompt({
 }: EmptyThreadPromptProps) {
   if (isCurrentUser) {
     return (
-      <div className={classes["empty-thread-prompt"]}>
-        <Text className={classes["empty-thread-prompt__description"]}>
+      <div className={classes["tab-prompt"]}>
+        <Text className={classes["tab-prompt__description"]}>
           You haven&apos;t created any threads yet. Create your first thread to
           get started!
         </Text>
@@ -22,7 +22,7 @@ export default function EmptyThreadPrompt({
           component={Link}
           href="/threads/submit"
           leftSection={<IconPlus size="1em" />}
-          className={classes["empty-thread-prompt__create-button"]}
+          className={classes["tab-prompt__create-button"]}
         >
           Create Thread
         </Button>
@@ -31,7 +31,7 @@ export default function EmptyThreadPrompt({
   }
 
   return (
-    <Text className={classes["empty-thread-prompt__description"]}>
+    <Text className={classes["tab-prompt__description"]}>
       This user hasn&apos;t created any threads yet.
     </Text>
   );

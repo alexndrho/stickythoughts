@@ -9,13 +9,25 @@ export type UserPublicAccount = Prisma.UserGetPayload<{
     bio: true;
     image: true;
   };
-}>;
+}> & {
+  isLikesPrivate: boolean;
+};
 
 export type UserAccountSettings = Prisma.UserGetPayload<{
   select: {
     bio: true;
   };
 }>;
+
+type BaseUserSettingsPrivacy = Prisma.UserSettingsGetPayload<{
+  select: {
+    privacySettings: {
+      select: { likesVisibility: true };
+    };
+  };
+}>;
+
+export type UserSettingsPrivacy = BaseUserSettingsPrivacy["privacySettings"];
 
 export type BaseUserNotificationType = Prisma.NotificationGetPayload<{
   select: {

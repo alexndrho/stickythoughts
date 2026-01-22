@@ -37,6 +37,7 @@ model User {
 
   sessions           Session[]
   accounts           Account[]
+  settings           UserSettings?
   threads            Thread[]
   threadLikes        ThreadLike[]
   threadComments     ThreadComment[]
@@ -51,6 +52,27 @@ model User {
   @@unique([email])
   @@unique([username])
   @@map("user")
+}
+
+model UserSettings {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  privacySettings UserPrivacySettings?
+}
+
+enum VisibilityLevel {
+  PUBLIC
+  PRIVATE
+}
+
+model UserPrivacySettings {
+  id         String       @id @default(uuid())
+  settingsId String       @unique
+  settings   UserSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+
+  likesVisibility VisibilityLevel @default(PUBLIC)
 }
 
 model Session {

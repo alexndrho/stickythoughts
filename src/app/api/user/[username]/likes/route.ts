@@ -15,11 +15,55 @@ export async function GET(
   const lastId = searchParams.get("lastId");
 
   try {
+    const { username } = await params;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        username: true,
+        settings: {
+          select: {
+            privacySettings: {
+              select: {
+                likesVisibility: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          issues: [{ code: "not-found", message: "User not found" }],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
 
-    const { username } = await params;
+    if (
+      username !== session?.user?.username &&
+      user.settings?.privacySettings?.likesVisibility === "PRIVATE"
+    ) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "auth/forbidden",
+              message: "This user's likes are private",
+            },
+          ],
+        } satisfies IError,
+        { status: 403 },
+      );
+    }
 
     const threads = await prisma.thread.findMany({
       take: THREADS_PER_PAGE,
