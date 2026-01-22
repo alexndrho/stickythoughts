@@ -8,7 +8,7 @@ import { userUsernameLikedThreadsInfiniteOptions } from "@/app/(main)/(core)/use
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import ThreadItem from "../../threads/ThreadItem";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
-import PrivateLikesPrompt from "./PrivateLikesPrompt";
+import LikesPrompt from "./LikesPrompt";
 import { likeThread, unlikeThread } from "@/services/thread";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import classes from "./user.module.css";
@@ -74,8 +74,12 @@ export default function LikesTab({
 
   return (
     <Tabs.Panel value="likes" className={classes["tab-content"]}>
-      {!canFetchLikedThreads && !isSessionPending ? (
-        <PrivateLikesPrompt />
+      {(!canFetchLikedThreads && !isSessionPending) ||
+      (!isLikedThreadsFetching && likedThreads?.pages?.[0]?.length === 0) ? (
+        <LikesPrompt
+          isOwnProfile={sessionData?.user.username === username}
+          isPrivate={isPrivate}
+        />
       ) : (
         <InfiniteScroll
           onLoadMore={() => {

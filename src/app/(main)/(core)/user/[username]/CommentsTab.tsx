@@ -10,6 +10,7 @@ import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
 import UserCommentItem from "./UserCommentItem";
+import CommentPrompt from "./CommentPrompt";
 import classes from "./user.module.css";
 
 export interface CommentsTabProps {
@@ -88,25 +89,29 @@ export default function CommentsTab({
 
   return (
     <Tabs.Panel value="comments" className={classes["tab-content"]}>
-      <InfiniteScroll
-        onLoadMore={fetchNextCommentsPage}
-        hasNext={hasNextCommentsPage}
-        loading={isCommentsFetching}
-      >
-        <div className={classes["tab-content-container"]}>
-          {comments?.pages.map((page) =>
-            page.map((comment) => (
-              <UserCommentItem
-                key={comment.id}
-                comment={comment}
-                onLike={handleLike}
-              />
-            )),
-          )}
+      {!isCommentsFetching && comments?.pages[0].length === 0 ? (
+        <CommentPrompt isOwnProfile={session?.user.username === username} />
+      ) : (
+        <InfiniteScroll
+          onLoadMore={fetchNextCommentsPage}
+          hasNext={hasNextCommentsPage}
+          loading={isCommentsFetching}
+        >
+          <div className={classes["tab-content-container"]}>
+            {comments?.pages.map((page) =>
+              page.map((comment) => (
+                <UserCommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onLike={handleLike}
+                />
+              )),
+            )}
 
-          {isCommentsFetching && <ThreadsSkeleton />}
-        </div>
-      </InfiniteScroll>
+            {isCommentsFetching && <ThreadsSkeleton />}
+          </div>
+        </InfiniteScroll>
+      )}
     </Tabs.Panel>
   );
 }

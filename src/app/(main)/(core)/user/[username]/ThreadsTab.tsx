@@ -9,7 +9,7 @@ import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/opt
 import { likeThread, unlikeThread } from "@/services/thread";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
-import EmptyThreadPrompt from "./EmptyThreadPrompt";
+import ThreadPrompt from "./ThreadPrompt";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import classes from "./user.module.css";
 
@@ -67,29 +67,27 @@ export default function Threads({
 
   return (
     <Tabs.Panel value="threads" className={classes["tab-content"]}>
-      <InfiniteScroll
-        onLoadMore={() => {
-          fetchNextThreadsPage();
-        }}
-        hasNext={hasNextThreadsPage}
-        loading={isThreadsFetching}
-      >
-        <div className={classes["tab-content-container"]}>
-          {threads?.pages[0].length !== 0 ? (
-            threads?.pages.map((page) =>
+      {!isThreadsFetching && threads?.pages[0].length === 0 ? (
+        <ThreadPrompt isOwnProfile={session?.user?.username === username} />
+      ) : (
+        <InfiniteScroll
+          onLoadMore={() => {
+            fetchNextThreadsPage();
+          }}
+          hasNext={hasNextThreadsPage}
+          loading={isThreadsFetching}
+        >
+          <div className={classes["tab-content-container"]}>
+            {threads?.pages.map((page) =>
               page.map((thread) => (
                 <ThreadItem key={thread.id} post={thread} onLike={handleLike} />
               )),
-            )
-          ) : (
-            <EmptyThreadPrompt
-              isCurrentUser={session?.user.username === username}
-            />
-          )}
+            )}
 
-          {isThreadsFetching && <ThreadsSkeleton />}
-        </div>
-      </InfiniteScroll>
+            {isThreadsFetching && <ThreadsSkeleton />}
+          </div>
+        </InfiniteScroll>
+      )}
     </Tabs.Panel>
   );
 }

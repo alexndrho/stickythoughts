@@ -49,7 +49,7 @@ export default function Content({ username }: ContentProps) {
   };
 
   return (
-    <>
+    <div className={classes.container}>
       <div className={classes.header}>
         <Avatar size="xl" src={user.image} />
 
@@ -66,7 +66,12 @@ export default function Content({ username }: ContentProps) {
         </div>
       </div>
 
-      <Tabs variant="outline" value={currentTab} onChange={setTab}>
+      <Tabs
+        variant="outline"
+        value={currentTab}
+        onChange={setTab}
+        className={classes["tab-root"]}
+      >
         <Tabs.List>
           <Tabs.Tab value="threads" leftSection={<IconMessage size="1em" />}>
             Threads
@@ -122,6 +127,6 @@ export default function Content({ username }: ContentProps) {
           onClose={signInWarningModalHandler.close}
         />
       )}
-    </>
+    </div>
   );
 }
