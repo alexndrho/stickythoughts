@@ -6,7 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import IError from "@/types/error";
-import { updateThreadServerInput } from "@/lib/validations/form";
+import { updateThreadServerInput } from "@/lib/validations/thread";
 import type { ThreadType } from "@/types/thread";
 
 export async function GET(

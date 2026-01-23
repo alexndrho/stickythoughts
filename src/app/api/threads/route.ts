@@ -6,7 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { THREADS_PER_PAGE } from "@/config/thread";
-import { createThreadServerInput } from "@/lib/validations/form";
+import { createThreadServerInput } from "@/lib/validations/thread";
 import { formatThreads } from "@/utils/thread";
 import type IError from "@/types/error";
 

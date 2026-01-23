@@ -26,7 +26,7 @@ import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/TextEditor";
 import ServerError from "@/utils/error/ServerError";
 import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
-import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/form";
+import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/thread";
 import classes from "./thread-submit.module.css";
 
 export default function Content() {

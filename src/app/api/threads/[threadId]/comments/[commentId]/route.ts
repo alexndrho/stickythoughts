@@ -5,7 +5,7 @@ import { ZodError } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { updateThreadCommentServerInput } from "@/lib/validations/form";
+import { updateThreadCommentServerInput } from "@/lib/validations/thread";
 import type IError from "@/types/error";
 
 export async function PUT(

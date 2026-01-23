@@ -13,7 +13,7 @@ import { submitThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";
 import { setCreateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import { sanitizeString } from "@/utils/text";
-import { THREAD_COMMENT_MAX_LENGTH } from "@/lib/validations/form";
+import { THREAD_COMMENT_MAX_LENGTH } from "@/lib/validations/thread";
 
 export interface CommentEditorProps {
   threadId: string;
