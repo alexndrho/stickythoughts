@@ -41,7 +41,7 @@ export const auth = betterAuth({
 
       after(
         resend.emails.send({
-          from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+          from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
           to: user.email,
           subject: "Verify your email address",
           html: emailHtml,
@@ -59,7 +59,7 @@ export const auth = betterAuth({
 
         after(
           resend.emails.send({
-            from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+            from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
             to: user.email,
             subject: "Approve your email change",
             html: emailHtml,
@@ -237,7 +237,7 @@ export const auth = betterAuth({
 
         after(
           resend.emails.send({
-            from: "StickyThoughts <no-reply@mail.alexanderho.dev>",
+            from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
             to: email,
             subject: `${otp} is your StickyThoughts verification code`,
             html: emailHtml,
