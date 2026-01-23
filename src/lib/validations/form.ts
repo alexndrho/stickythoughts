@@ -2,6 +2,8 @@ import { z } from "zod";
 import sanitizeHtml, { type IOptions } from "sanitize-html";
 import * as cheerio from "cheerio";
 
+import { sanitizeString } from "@/utils/text";
+
 export const THREAD_TITLE_MIN_LENGTH = 1;
 export const THREAD_TITLE_MAX_LENGTH = 100;
 export const THREAD_BODY_MIN_LENGTH = 1;
@@ -60,22 +62,30 @@ const sanitizeBodyHtmlOptions: IOptions = {
 export const createThreadServerInput = z.object({
   title: z
     .string("Title is required")
-    .trim()
-    .min(THREAD_TITLE_MIN_LENGTH, "Title is required")
-    .max(
-      THREAD_TITLE_MAX_LENGTH,
-      `Title must be at most ${THREAD_TITLE_MAX_LENGTH.toLocaleString()} characters long`,
+    .transform(sanitizeString)
+    .pipe(
+      z
+        .string()
+        .min(THREAD_TITLE_MIN_LENGTH, "Title is required")
+        .max(
+          THREAD_TITLE_MAX_LENGTH,
+          `Title must be at most ${THREAD_TITLE_MAX_LENGTH.toLocaleString()} characters long`,
+        ),
     ),
   body: z
     .string("Body is required")
-    .trim()
-    .min(THREAD_BODY_MIN_LENGTH, "Body is required")
-    .max(
-      THREAD_BODY_MAX_LENGTH,
-      `Body must be at most ${THREAD_BODY_MAX_LENGTH.toLocaleString()} characters, including formatting and spaces.`,
+    .transform(sanitizeString)
+    .pipe(
+      z
+        .string()
+        .min(THREAD_BODY_MIN_LENGTH, "Body is required")
+        .max(
+          THREAD_BODY_MAX_LENGTH,
+          `Body must be at most ${THREAD_BODY_MAX_LENGTH.toLocaleString()} characters, including formatting and spaces.`,
+        ),
     )
     .transform((value) => {
-      return sanitizeHtml(value, sanitizeBodyHtmlOptions);
+      return sanitizeHtml(sanitizeString(value), sanitizeBodyHtmlOptions);
     })
     .superRefine((value, ctx) => {
       const $ = cheerio.load(value);
@@ -98,26 +108,30 @@ export const updateThreadServerInput = createThreadServerInput.pick({
 export const createThreadCommentServerInput = z.object({
   body: z
     .string("Comment is required")
-    .trim()
-    .min(THREAD_BODY_MIN_LENGTH, "Comment is required")
-    .max(
-      THREAD_COMMENT_MAX_LENGTH,
-      `Comment must be at most ${THREAD_COMMENT_MAX_LENGTH.toLocaleString()} characters long`,
-    )
-    .transform((value) => {
-      return sanitizeHtml(value, sanitizeBodyHtmlOptions);
-    })
-    .superRefine((value, ctx) => {
-      const $ = cheerio.load(value);
-      const text = $.text().trim();
+    .transform(sanitizeString)
+    .pipe(
+      z
+        .string()
+        .min(THREAD_BODY_MIN_LENGTH, "Comment is required")
+        .max(
+          THREAD_COMMENT_MAX_LENGTH,
+          `Comment must be at most ${THREAD_COMMENT_MAX_LENGTH.toLocaleString()} characters long`,
+        )
+        .transform((value) => {
+          return sanitizeHtml(value, sanitizeBodyHtmlOptions);
+        })
+        .superRefine((value, ctx) => {
+          const $ = cheerio.load(value);
+          const text = $.text().trim();
 
-      if (text.length < THREAD_BODY_MIN_LENGTH) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Comment is required",
-        });
-      }
-    }),
+          if (text.length < THREAD_BODY_MIN_LENGTH) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Comment is required",
+            });
+          }
+        }),
+    ),
   isAnonymous: z.boolean().optional(),
 });
 

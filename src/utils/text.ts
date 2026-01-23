@@ -1,8 +1,15 @@
-import { urlRegex } from "@/config/text";
 import { filter } from "@/lib/bad-words";
+import {
+  INVISIBLE_CHARS_REGEX,
+  URL_REGEX,
+  WHITESPACE_REGEX,
+} from "@/config/text";
+
+export const sanitizeString = (text: string) =>
+  text.replace(INVISIBLE_CHARS_REGEX, "").replace(WHITESPACE_REGEX, " ").trim();
 
 export const containsUrl = (text: string) => {
-  return urlRegex.test(text);
+  return URL_REGEX.test(text);
 };
 
 export const apiUrl = (path: string) => {

@@ -19,13 +19,14 @@ import {
   searchBaseOptions,
   threadsInfiniteOptions,
 } from "@/app/(main)/(core)/threads/options";
-import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/form";
+import { sanitizeString } from "@/utils/text";
 import { submitThread } from "@/services/thread";
 import { useEffect } from "react";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/TextEditor";
 import ServerError from "@/utils/error/ServerError";
 import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
+import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/form";
 import classes from "./thread-submit.module.css";
 
 export default function Content() {
@@ -47,18 +48,20 @@ export default function Content() {
     },
     validate: {
       title: (value) => {
-        if (value.length < 1) return "Title is required";
-        if (value.length > 100) {
+        const formattedValue = sanitizeString(value);
+        if (formattedValue.length < 1) return "Title is required";
+        if (formattedValue.length > 100) {
           return `Title must be at most 100 characters long`;
         }
       },
       body: () => {
-        if (editor?.isEmpty) {
+        const textContent = editor?.isEmpty
+          ? ""
+          : sanitizeString(editor?.getText() || "");
+
+        if (textContent.length < 1) {
           return "Body is required";
-        } else if (
-          (editor?.getText()?.trim().split(/\s+/).length ?? 0) >
-          THREAD_BODY_MAX_LENGTH
-        ) {
+        } else if (textContent.length > THREAD_BODY_MAX_LENGTH) {
           return `Body must be at most ${THREAD_BODY_MAX_LENGTH.toLocaleString()} characters long`;
         }
       },
@@ -123,17 +126,17 @@ export default function Content() {
 
         <TextEditor editor={editor} error={form.errors.body} />
 
-        <Switch
-          mt="md"
-          label="Post anonymously"
-          {...form.getInputProps("isAnonymous", { type: "checkbox" })}
-        />
-
         {form.errors.root && (
           <Text size="xs" className={classes["root-error-messsage"]}>
             {form.errors.root}
           </Text>
         )}
+
+        <Switch
+          mt="md"
+          label="Post anonymously"
+          {...form.getInputProps("isAnonymous", { type: "checkbox" })}
+        />
 
         <Group mt="md" justify="end">
           <Button

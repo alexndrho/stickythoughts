@@ -136,7 +136,10 @@ function SignInForm({
             emailOrUsername: error.message,
             password: error.message,
           });
-        } else if (error.code === "THIS_USERNAME_IS_NOT_ALLOWED") {
+        } else if (
+          error.code === "INVALID_USERNAME" ||
+          error.code === "THIS_USERNAME_IS_NOT_ALLOWED"
+        ) {
           form.setErrors({
             emailOrUsername: error.message,
           });

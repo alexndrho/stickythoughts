@@ -4,7 +4,7 @@ import { forwardRef, useImperativeHandle } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { type Editor } from "@tiptap/react";
 import { Button, Group, Switch } from "@mantine/core";
-import { isNotEmptyHTML, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 
 import TextEditor from "@/components/TextEditor";
@@ -12,6 +12,8 @@ import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { submitThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";
 import { setCreateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
+import { sanitizeString } from "@/utils/text";
+import { THREAD_COMMENT_MAX_LENGTH } from "@/lib/validations/form";
 
 export interface CommentEditorProps {
   threadId: string;
@@ -31,7 +33,17 @@ const CommentEditor = forwardRef<CommentSectionRef, CommentEditorProps>(
         isAnonymous: isDefaultAnonymous ?? false,
       },
       validate: {
-        body: isNotEmptyHTML("Comment is required"),
+        body: () => {
+          const textContent = editor?.isEmpty
+            ? ""
+            : sanitizeString(editor?.getText() || "");
+
+          if (textContent.length < 1) {
+            return "Comment is required";
+          } else if (textContent.length > THREAD_COMMENT_MAX_LENGTH) {
+            return `Comment must be at most ${THREAD_COMMENT_MAX_LENGTH.toLocaleString()} characters long`;
+          }
+        },
       },
     });
 

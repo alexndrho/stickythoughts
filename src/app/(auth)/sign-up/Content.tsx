@@ -66,7 +66,7 @@ export default function Content() {
             email: "Email is already in use. Please use a different email.",
           });
         } else if (
-          error.code === "USERNAME_CANNOT_CONTAIN_SPACES" ||
+          error.code === "INVALID_USERNAME" ||
           error.code === "THIS_USERNAME_IS_NOT_ALLOWED"
         ) {
           form.setErrors({

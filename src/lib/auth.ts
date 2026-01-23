@@ -24,6 +24,7 @@ import { removeProfilePicture } from "@/services/user";
 import EmailOTPTemplate from "@/components/emails/EmailOTPTemplate";
 import EmailLinkTemplate from "@/components/emails/EmailLinkTemplate";
 import reservedUsernames from "@/config/reserved-usernames.json";
+import { USERNAME_REGEX } from "@/config/text";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -101,8 +102,7 @@ export const auth = betterAuth({
             let existingUser = null;
 
             for (let attempt = 0; attempt < maxAttempts; attempt++) {
-              const randomDigits = Math.floor(1000 + Math.random() * 9000);
-              generatedUsername = `${generateUsername()}${randomDigits}`;
+              generatedUsername = generateUsername("", 4);
 
               existingUser = await ctx?.context.adapter.findOne({
                 model: "user",
@@ -145,9 +145,11 @@ export const auth = betterAuth({
     twoFactor(),
     username({
       usernameValidator: (username) => {
-        if (/\s/.test(username)) {
+        if (!USERNAME_REGEX.test(username)) {
           throw new APIError("BAD_REQUEST", {
-            message: "Username cannot contain spaces.",
+            code: "INVALID_USERNAME",
+            message:
+              "Username can only contain letters, numbers, and single hyphens no leading, trailing, or consecutive hyphens.",
           });
         } else if (
           filter.isProfane(username) ||
