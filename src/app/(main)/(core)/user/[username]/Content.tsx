@@ -54,9 +54,15 @@ export default function Content({ username }: ContentProps) {
         <Avatar size="xl" src={user.image} />
 
         <div className={classes.header__info}>
-          <Title size="h2">{user.name || user.username}</Title>
+          {user.name ? (
+            <>
+              <Title size="h2">{user.name || user.username}</Title>
 
-          <Text size="lg">@{user.username}</Text>
+              <Text size="lg">@{user.username}</Text>
+            </>
+          ) : (
+            <Title size="h2">@{user.username}</Title>
+          )}
 
           {user.bio && (
             <Text size="sm" className={classes.header__bio}>
