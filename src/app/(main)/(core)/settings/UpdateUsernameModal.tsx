@@ -37,7 +37,7 @@ export default function UpdateUsernameModal({
     mutationFn: (values: typeof form.values) => authClient.updateUser(values),
     onSuccess: ({ error }) => {
       if (error) {
-        form.setFieldError("root", error.message);
+        form.setFieldError("username", error.message);
         return;
       }
 

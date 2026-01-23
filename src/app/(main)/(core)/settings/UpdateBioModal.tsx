@@ -51,11 +51,12 @@ export default function UpdateBioModal({
     },
     onError: (error) => {
       if (error instanceof ServerError) {
-        form.setErrors({ bio: error.issues[0].message });
+        form.setFieldError("bio", error.issues[0].message);
       } else {
-        form.setErrors({
-          bio: "An unexpected error occurred. Please try again.",
-        });
+        form.setFieldError(
+          "bio",
+          "An unexpected error occurred. Please try again.",
+        );
       }
     },
   });
