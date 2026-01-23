@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useEffectEvent, useState } from "react";
-import { type UserWithRole } from "better-auth/plugins";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
@@ -19,7 +18,10 @@ import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
 
 export interface BanUserModalProps {
-  user: UserWithRole | null;
+  user: {
+    id: string;
+    username: string;
+  } | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -79,7 +81,6 @@ export default function BanUserModal({
 
       notifications.show({
         title: "User Banned",
-        // @ts-expect-error - username exists but not in UserWithRole type
         message: `@${user?.username} has been successfully banned.`,
         icon: <IconHammer size="1em" />,
       });
@@ -101,7 +102,6 @@ export default function BanUserModal({
 
   return (
     <Modal
-      // @ts-expect-error - username exists but not in UserWithRole type
       title={`Ban @${user?.username}?`}
       opened={opened}
       onClose={handleClose}

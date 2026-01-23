@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { type UserWithRole } from "better-auth/plugins";
 import { useMutation } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Button, Group, Modal } from "@mantine/core";
@@ -13,7 +12,10 @@ import { removeProfilePicture } from "@/services/user";
 import ServerError from "@/utils/error/ServerError";
 
 export interface DeleteUserProfilePictureModalProps {
-  user: UserWithRole | null;
+  user: {
+    id: string;
+    username: string;
+  } | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -41,7 +43,6 @@ export default function DeleteUserProfilePictureModal({
 
       notifications.show({
         title: "Profile Picture Deleted",
-        // @ts-expect-error - username exists but not in UserWithRole type
         message: `Profile picture for @${user?.username} has been successfully deleted.`,
         icon: <IconPhoto size="1em" />,
       });
@@ -72,7 +73,6 @@ export default function DeleteUserProfilePictureModal({
 
   return (
     <Modal
-      // @ts-expect-error - username exists but not in UserWithRole type
       title={`Delete Profile Picture for @${user?.username}`}
       opened={opened}
       onClose={onClose}

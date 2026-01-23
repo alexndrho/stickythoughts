@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { UserWithRole } from "better-auth/plugins";
 import { Button, Group, Modal } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
@@ -12,7 +11,10 @@ import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
 
 export interface UnbanUserModalProps {
-  user: UserWithRole | null;
+  user: {
+    id: string;
+    username: string;
+  } | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -50,7 +52,6 @@ export default function UnbanUserModal({
 
       notifications.show({
         title: "User Unbanned",
-        // @ts-expect-error - username exists but not in UserWithRole type
         message: `@${user?.username} has been successfully unbanned.`,
         icon: <IconHammerOff size="1em" />,
       });
@@ -64,7 +65,6 @@ export default function UnbanUserModal({
 
   return (
     <Modal
-      // @ts-expect-error - username exists but not in UserWithRole type
       title={`Unban @${user?.username || "User"}`}
       opened={opened}
       onClose={handleClose}

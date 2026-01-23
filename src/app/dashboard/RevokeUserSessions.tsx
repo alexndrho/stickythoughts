@@ -3,13 +3,15 @@ import { Button, Group, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconClock, IconX } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { type UserWithRole } from "better-auth/plugins";
 import { adminUsersOptions } from "./options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { useState } from "react";
 
 export interface RevokeUserSessionsProps {
-  user: UserWithRole | null;
+  user: {
+    id: string;
+    username: string;
+  } | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -57,7 +59,6 @@ export default function RevokeUserSessions({
 
   return (
     <Modal
-      // @ts-expect-error - username exists but not in UserWithRole type
       title={`Revoke all sessions for @${user?.username}`}
       opened={opened}
       onClose={handleClose}

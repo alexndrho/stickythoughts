@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useEffectEvent } from "react";
-import { type UserWithRole } from "better-auth/plugins";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { Button, Group, Modal, Text, TextInput } from "@mantine/core";
@@ -14,7 +13,12 @@ import { adminUsersOptions } from "./options";
 import TextInputLabelModifiedIndicator from "@/components/TextInputLabelModifiedIndicator";
 
 export interface EditUserModalProps {
-  user: UserWithRole | null;
+  user: {
+    id: string;
+    name?: string;
+    username: string;
+    email: string;
+  } | null;
   opened: boolean;
   hasPermissionToUpdate?: boolean;
   onClose: () => void;
@@ -27,20 +31,17 @@ export default function EditUserModal({
 }: EditUserModalProps) {
   const form = useForm({
     initialValues: {
-      name: undefined as UserWithRole["name"] | undefined,
+      name: undefined as string | undefined,
       username: undefined as string | undefined,
-      email: undefined as UserWithRole["email"] | undefined,
-      // role: undefined as UserWithRole["role"] | undefined,
+      email: undefined as string | undefined,
     },
   });
 
-  const setForm = useEffectEvent((user: UserWithRole | null) => {
+  const setForm = useEffectEvent((user: EditUserModalProps["user"]) => {
     form.setInitialValues({
       name: user?.name,
-      // @ts-expect-error - username exists but not in UserWithRole type
       username: user?.username,
       email: user?.email,
-      // role: user?.role,
     });
 
     form.reset();
@@ -115,7 +116,6 @@ export default function EditUserModal({
                 modified={form.isDirty("username")}
               />
             }
-            // @ts-expect-error - username exists but not in UserWithRole type
             placeholder={user.username}
             {...form.getInputProps("username")}
           />

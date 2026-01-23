@@ -321,32 +321,74 @@ export default function Content() {
       />
 
       <EditUserModal
-        user={editingUser}
+        user={
+          editingUser
+            ? {
+                id: editingUser.id,
+                name: editingUser.name,
+                // @ts-expect-error - username exists but not in UserWithRole type
+                username: editingUser.username,
+                email: editingUser.email,
+              }
+            : null
+        }
         opened={!!editingUser}
         hasPermissionToUpdate={hasPermissionToUpdateUsers}
         onClose={handleCloseEditUserModal}
       />
 
       <DeleteUserProfilePictureModal
-        user={deletingUserProfilePicture}
+        user={
+          deletingUserProfilePicture
+            ? {
+                id: deletingUserProfilePicture.id,
+                // @ts-expect-error - username exists but not in UserWithRole type
+                username: deletingUserProfilePicture.username,
+              }
+            : null
+        }
         opened={!!deletingUserProfilePicture}
         onClose={handleCloseDeleteUserProfilePictureModal}
       />
 
       <RevokeUserSessions
-        user={revokingSessionsUser}
+        user={
+          revokingSessionsUser
+            ? {
+                id: revokingSessionsUser.id,
+                // @ts-expect-error - username exists but not in UserWithRole type
+                username: revokingSessionsUser.username,
+              }
+            : null
+        }
         opened={!!revokingSessionsUser}
         onClose={() => setRevokingSessionsUser(null)}
       />
 
       <BanUserModal
-        user={banningUser}
+        user={
+          banningUser
+            ? {
+                id: banningUser.id,
+                // @ts-expect-error - username exists but not in UserWithRole type
+                username: banningUser.username,
+              }
+            : null
+        }
         opened={!!banningUser}
         onClose={handleCloseBanUserModal}
       />
 
       <UnbanUserModal
-        user={unbanningUser}
+        user={
+          unbanningUser
+            ? {
+                id: unbanningUser.id,
+                // @ts-expect-error - username exists but not in UserWithRole type
+                username: unbanningUser.username,
+              }
+            : null
+        }
         opened={!!unbanningUser}
         onClose={handleCloseUnbanUserModal}
       />
