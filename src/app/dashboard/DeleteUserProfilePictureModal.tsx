@@ -8,6 +8,7 @@ import { IconPhoto, IconX } from "@tabler/icons-react";
 
 import { adminUsersOptions } from "./options";
 import { getQueryClient } from "@/lib/get-query-client";
+import { userUsernameOptions } from "../(main)/(core)/user/options";
 import { removeProfilePicture } from "@/services/user";
 import ServerError from "@/utils/error/ServerError";
 
@@ -40,6 +41,12 @@ export default function DeleteUserProfilePictureModal({
       queryClient.invalidateQueries({
         queryKey: adminUsersOptions.queryKey,
       });
+
+      if (user?.username) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameOptions(user.username).queryKey,
+        });
+      }
 
       notifications.show({
         title: "Profile Picture Deleted",

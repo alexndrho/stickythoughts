@@ -7,6 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { IconHammerOff, IconX } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
+import { userUsernameOptions } from "../(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
 
@@ -48,6 +49,12 @@ export default function UnbanUserModal({
         queryKey: adminUsersOptions.queryKey,
       });
 
+      if (user?.username) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameOptions(user.username).queryKey,
+        });
+      }
+
       handleClose();
 
       notifications.show({
@@ -71,7 +78,10 @@ export default function UnbanUserModal({
       centered
     >
       <Group justify="end">
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button variant="default" onClick={handleClose}>
+          Cancel
+        </Button>
+
         <Button
           color="red"
           loading={mutation.isPending}

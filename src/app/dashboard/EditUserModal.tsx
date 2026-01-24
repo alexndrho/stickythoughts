@@ -10,6 +10,7 @@ import { IconEdit } from "@tabler/icons-react";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
+import { userUsernameOptions } from "../(main)/(core)/user/options";
 import TextInputLabelModifiedIndicator from "@/components/TextInputLabelModifiedIndicator";
 
 export interface EditUserModalProps {
@@ -17,15 +18,16 @@ export interface EditUserModalProps {
     id: string;
     name?: string;
     username: string;
-    email: string;
+    email?: string;
   } | null;
+  onUsernameChange?: (newUsername: string) => void;
   opened: boolean;
-  hasPermissionToUpdate?: boolean;
   onClose: () => void;
 }
 
 export default function EditUserModal({
   user,
+  onUsernameChange,
   opened,
   onClose,
 }: EditUserModalProps) {
@@ -80,6 +82,23 @@ export default function EditUserModal({
         queryKey: adminUsersOptions.queryKey,
       });
 
+      if (
+        form.values.username &&
+        user?.username &&
+        form.values.username !== user.username
+      ) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameOptions(user.username).queryKey,
+          refetchType: "none",
+        });
+
+        onUsernameChange?.(form.values.username);
+      } else if (user?.username) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameOptions(user.username).queryKey,
+        });
+      }
+
       onClose();
       notifications.show({
         title: "User Updated",
@@ -120,17 +139,19 @@ export default function EditUserModal({
             {...form.getInputProps("username")}
           />
 
-          <TextInput
-            mt="md"
-            label={
-              <TextInputLabelModifiedIndicator
-                label="Email"
-                modified={form.isDirty("email")}
-              />
-            }
-            placeholder={user.email}
-            {...form.getInputProps("email")}
-          />
+          {user.email && (
+            <TextInput
+              mt="md"
+              label={
+                <TextInputLabelModifiedIndicator
+                  label="Email"
+                  modified={form.isDirty("email")}
+                />
+              }
+              placeholder={user.email}
+              {...form.getInputProps("email")}
+            />
+          )}
 
           {/* <Select
             mt="md"

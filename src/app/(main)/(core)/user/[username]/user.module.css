@@ -8,10 +8,16 @@
   padding-top: var(--mantine-spacing-xl);
   padding-bottom: var(--mantine-spacing-xl);
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 .header__info {
+  display: flex;
+  align-items: center;
+}
+
+.header__details {
   margin-left: var(--mantine-spacing-md);
 }
 

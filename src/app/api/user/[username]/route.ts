@@ -1,5 +1,7 @@
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { UserPublicAccount } from "@/types/user";
 import IError from "@/types/error";
@@ -10,6 +12,23 @@ export async function GET(
 ) {
   try {
     const { username } = await params;
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    const hasPermissionToBan = session
+      ? (
+          await auth.api.userHasPermission({
+            body: {
+              userId: session.user.id,
+              permission: {
+                thread: ["moderate"],
+              },
+            },
+          })
+        ).success
+      : false;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -22,6 +41,7 @@ export async function GET(
         username: true,
         bio: true,
         image: true,
+        banned: hasPermissionToBan,
         settings: {
           select: {
             privacySettings: {

@@ -37,7 +37,7 @@ import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
 import { adminUsersPageOptions } from "./options";
 import EditUserModal from "./EditUserModal";
 import DeleteUserProfilePictureModal from "./DeleteUserProfilePictureModal";
-import RevokeUserSessions from "./RevokeUserSessions";
+import RevokeUserSessionsModal from "./RevokeUserSessionsModal";
 import BanUserModal from "./BanUserModal";
 import UnbanUserModal from "./UnbanUserModal";
 import dashboardClasses from "./dashboard.module.css";
@@ -333,7 +333,6 @@ export default function Content() {
             : null
         }
         opened={!!editingUser}
-        hasPermissionToUpdate={hasPermissionToUpdateUsers}
         onClose={handleCloseEditUserModal}
       />
 
@@ -351,7 +350,7 @@ export default function Content() {
         onClose={handleCloseDeleteUserProfilePictureModal}
       />
 
-      <RevokeUserSessions
+      <RevokeUserSessionsModal
         user={
           revokingSessionsUser
             ? {

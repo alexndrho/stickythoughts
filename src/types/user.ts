@@ -1,6 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 
-export type UserPublicAccount = Prisma.UserGetPayload<{
+export type BaseUserPublicAccount = Prisma.UserGetPayload<{
   select: {
     id: true;
     displayUsername: true;
@@ -8,9 +8,25 @@ export type UserPublicAccount = Prisma.UserGetPayload<{
     username: true;
     bio: true;
     image: true;
+    banned: true;
+    settings: {
+      select: {
+        privacySettings: {
+          select: {
+            likesVisibility: true;
+          };
+        };
+      };
+    };
   };
-}> & {
+}>;
+
+export type UserPublicAccount = Omit<
+  BaseUserPublicAccount,
+  "settings" | "banned"
+> & {
   isLikesPrivate: boolean;
+  banned?: BaseUserPublicAccount["banned"];
 };
 
 export type UserAccountSettings = Prisma.UserGetPayload<{

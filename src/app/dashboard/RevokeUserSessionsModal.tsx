@@ -7,7 +7,7 @@ import { adminUsersOptions } from "./options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { useState } from "react";
 
-export interface RevokeUserSessionsProps {
+export interface RevokeUserSessionsModalProps {
   user: {
     id: string;
     username: string;
@@ -16,11 +16,11 @@ export interface RevokeUserSessionsProps {
   onClose: () => void;
 }
 
-export default function RevokeUserSessions({
+export default function RevokeUserSessionsModal({
   user,
   opened,
   onClose,
-}: RevokeUserSessionsProps) {
+}: RevokeUserSessionsModalProps) {
   const [areYouSure, setAreYouSure] = useState(false);
 
   const mutation = useMutation({

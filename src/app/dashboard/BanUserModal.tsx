@@ -16,6 +16,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
+import { userUsernameOptions } from "../(main)/(core)/user/options";
 
 export interface BanUserModalProps {
   user: {
@@ -76,6 +77,12 @@ export default function BanUserModal({
       queryClient.invalidateQueries({
         queryKey: adminUsersOptions.queryKey,
       });
+
+      if (user?.username) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameOptions(user.username).queryKey,
+        });
+      }
 
       handleClose();
 
