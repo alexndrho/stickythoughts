@@ -23,7 +23,7 @@ export async function GET(
             body: {
               userId: session.user.id,
               permission: {
-                thread: ["moderate"],
+                user: ["ban"],
               },
             },
           })

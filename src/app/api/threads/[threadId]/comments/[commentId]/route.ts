@@ -111,7 +111,7 @@ export async function DELETE(
       body: {
         userId: session.user.id,
         permission: {
-          threadComment: ["moderate"],
+          threadComment: ["delete"],
         },
       },
     });

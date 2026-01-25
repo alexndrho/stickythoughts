@@ -29,7 +29,7 @@ export async function DELETE(
       body: {
         userId: session.user.id,
         permission: {
-          thought: ["moderate"],
+          thought: ["delete"],
         },
       },
     });

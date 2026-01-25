@@ -196,7 +196,7 @@ export async function DELETE(
       body: {
         userId: session.user.id,
         permission: {
-          thread: ["moderate"],
+          thread: ["delete"],
         },
       },
     });

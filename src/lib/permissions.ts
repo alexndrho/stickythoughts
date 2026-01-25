@@ -3,16 +3,16 @@ import { defaultStatements, adminAc } from "better-auth/plugins/admin/access";
 
 const statement = {
   ...defaultStatements,
-  thought: ["moderate"],
-  thread: ["moderate"],
-  threadComment: ["moderate"],
+  thought: ["delete"],
+  thread: ["delete"],
+  threadComment: ["delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
 
 export const admin = ac.newRole({
   ...adminAc.statements,
-  thought: ["moderate"],
-  thread: ["moderate"],
-  threadComment: ["moderate"],
+  thought: ["delete"],
+  thread: ["delete"],
+  threadComment: ["delete"],
 });
