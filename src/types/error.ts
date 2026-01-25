@@ -4,6 +4,7 @@ export type authCode = "auth/unauthorized" | "auth/forbidden";
 
 export type validationCode =
   | "validation/unique-constraint"
+  | "validation/invalid-request"
   | "validation/invalid-input"
   | "validation/too-large";
 

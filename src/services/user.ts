@@ -59,6 +59,26 @@ export const updateUserBio = async (bio: string): Promise<{ bio: string }> => {
   return data;
 };
 
+// allows admins to delete a user's bio. note: users can clear their own bio by setting it to an empty string.
+export const deleteUserBio = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const searchParams = new URLSearchParams();
+  searchParams.append("id", id);
+
+  return await fetch(apiUrl(`/api/user/bio?${searchParams.toString()}`), {
+    method: "DELETE",
+  }).then(async (res) => {
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw toServerError("User bio delete error", data.issues);
+    }
+
+    return data;
+  });
+};
+
 export const uploadProfilePicture = async (
   formData: FormData,
 ): Promise<{ image: string }> => {

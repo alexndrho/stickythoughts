@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -51,6 +51,79 @@ export async function PUT(request: Request) {
     }
 
     console.error("Error updating user bio:", error);
+    return NextResponse.json(
+      {
+        issues: [{ code: "unknown-error", message: "Unknown error" }],
+      } satisfies IError,
+      { status: 500 },
+    );
+  }
+}
+
+// allows admins to delete a user's bio. note: users can clear their own bio by setting it to an empty string.
+export async function DELETE(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const userId = searchParams.get("userId");
+
+  try {
+    if (!userId) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "validation/invalid-request",
+              message: "User ID is required",
+            },
+          ],
+        } satisfies IError,
+        { status: 400 },
+      );
+    }
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json(
+        {
+          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
+        } satisfies IError,
+        { status: 401 },
+      );
+    }
+
+    const hasPermission = await auth.api.userHasPermission({
+      body: {
+        userId: session.user.id,
+        permission: {
+          user: ["update"],
+        },
+      },
+    });
+
+    if (!hasPermission.success) {
+      return NextResponse.json(
+        {
+          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
+        } satisfies IError,
+        { status: 403 },
+      );
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { bio: null },
+    });
+
+    return NextResponse.json(
+      {
+        message: "User bio deleted successfully",
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Error deleting user bio:", error);
     return NextResponse.json(
       {
         issues: [{ code: "unknown-error", message: "Unknown error" }],

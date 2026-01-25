@@ -18,6 +18,7 @@ import {
   IconClock,
   IconDots,
   IconEdit,
+  IconFaceId,
   IconHammer,
   IconHammerOff,
   IconHeart,
@@ -36,6 +37,7 @@ import CommentsTab from "./CommentsTab";
 import SignInWarningModal from "@/components/SignInWarningModal";
 import EditUserModal from "@/app/dashboard/EditUserModal";
 import DeleteUserProfilePictureModal from "@/app/dashboard/DeleteUserProfilePictureModal";
+import DeleteUserBioModal from "@/app/dashboard/DeleteUserBioModal";
 import RevokeUserSessionsModal from "@/app/dashboard/RevokeUserSessionsModal";
 import BanUserModal from "@/app/dashboard/BanUserModal";
 import UnbanUserModal from "@/app/dashboard/UnbanUserModal";
@@ -59,6 +61,8 @@ export default function Content({ username }: ContentProps) {
     deleteUserProfilePictureModalOpened,
     deleteUserProfilePictureModalHandler,
   ] = useDisclosure(false);
+  const [deleteUserBioModalOpened, deleteUserBioModalHandler] =
+    useDisclosure(false);
   const [revokeUserSessionsModalOpened, revokeUserSessionsModalHandler] =
     useDisclosure(false);
   const [banUserModalOpened, banUserModalHandler] = useDisclosure(false);
@@ -161,6 +165,15 @@ export default function Content({ username }: ContentProps) {
                     onClick={deleteUserProfilePictureModalHandler.open}
                   >
                     Delete Profile Picture
+                  </Menu.Item>
+
+                  <Menu.Item
+                    leftSection={<IconFaceId size="1em" />}
+                    color="red"
+                    disabled={!user.bio}
+                    onClick={deleteUserBioModalHandler.open}
+                  >
+                    Delete Bio
                   </Menu.Item>
 
                   <Menu.Item
@@ -279,6 +292,15 @@ export default function Content({ username }: ContentProps) {
             }}
             opened={deleteUserProfilePictureModalOpened}
             onClose={deleteUserProfilePictureModalHandler.close}
+          />
+
+          <DeleteUserBioModal
+            user={{
+              id: user.id,
+              username: user.username,
+            }}
+            opened={deleteUserBioModalOpened}
+            onClose={deleteUserBioModalHandler.close}
           />
 
           <RevokeUserSessionsModal
