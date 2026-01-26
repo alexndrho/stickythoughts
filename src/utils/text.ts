@@ -1,9 +1,9 @@
-import { filter } from "@/lib/bad-words";
 import {
   INVISIBLE_AND_FORMATTING,
   URL_REGEX,
   WHITESPACE_REGEX,
 } from "@/config/text";
+import { censor, matcher } from "@/lib/bad-words";
 
 export const sanitizeString = (text: string) =>
   text
@@ -25,12 +25,9 @@ export const apiUrl = (path: string) => {
 };
 
 export const filterText = (text: string) => {
-  try {
-    return filter.clean(text);
-  } catch (error) {
-    console.error(error);
-    return text;
-  }
+  const matches = matcher.getAllMatches(text);
+
+  return censor.applyTo(text, matches);
 };
 
 export const extractKeyFromUrl = (url: string) => {

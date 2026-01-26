@@ -1,15 +1,31 @@
-// import { Profanity, ProfanityOptions } from "@2toad/profanity";
-
-// import badwords from "@/config/badwords.json";
-
-// const options = new ProfanityOptions();
-// options.grawlix = "*****";
-
-// export const profanity = new Profanity(options);
-// profanity.addWords([...badwords.filipino]);
-
-import { Filter } from "bad-words";
+import {
+  RegExpMatcher,
+  TextCensor,
+  asteriskCensorStrategy,
+  englishDataset,
+  englishRecommendedTransformers,
+  pattern,
+} from "obscenity";
 
 import badwords from "@/config/badwords.json";
 
-export const filter = new Filter({ list: badwords.filipino });
+const englishData = englishDataset.build();
+
+// Start IDs after the English dataset's terms
+const startId = englishData.blacklistedTerms.length;
+
+const customBlacklistedTerms = badwords.filipino.map((word, index) => ({
+  id: startId + index,
+  pattern: pattern`${word}`,
+}));
+
+export const matcher = new RegExpMatcher({
+  ...englishData,
+  blacklistedTerms: [
+    ...englishData.blacklistedTerms,
+    ...customBlacklistedTerms,
+  ],
+  ...englishRecommendedTransformers,
+});
+
+export const censor = new TextCensor().setStrategy(asteriskCensorStrategy());
