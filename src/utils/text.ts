@@ -1,12 +1,15 @@
 import { filter } from "@/lib/bad-words";
 import {
-  INVISIBLE_CHARS_REGEX,
+  INVISIBLE_AND_FORMATTING,
   URL_REGEX,
   WHITESPACE_REGEX,
 } from "@/config/text";
 
 export const sanitizeString = (text: string) =>
-  text.replace(INVISIBLE_CHARS_REGEX, "").replace(WHITESPACE_REGEX, " ").trim();
+  text
+    .replace(INVISIBLE_AND_FORMATTING, "")
+    .replace(WHITESPACE_REGEX, " ")
+    .trim();
 
 export const containsUrl = (text: string) => {
   return URL_REGEX.test(text);
