@@ -31,16 +31,16 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { userUsernameOptions } from "../options";
-import ThreadsTab from "./ThreadsTab";
-import LikesTab from "./LikesTab";
-import CommentsTab from "./CommentsTab";
-import SignInWarningModal from "@/components/SignInWarningModal";
-import EditUserModal from "@/app/dashboard/EditUserModal";
-import DeleteUserProfilePictureModal from "@/app/dashboard/DeleteUserProfilePictureModal";
-import DeleteUserBioModal from "@/app/dashboard/DeleteUserBioModal";
-import RevokeUserSessionsModal from "@/app/dashboard/RevokeUserSessionsModal";
-import BanUserModal from "@/app/dashboard/BanUserModal";
-import UnbanUserModal from "@/app/dashboard/UnbanUserModal";
+import ThreadsTab from "./threads-tab";
+import LikesTab from "./likes-tab";
+import CommentsTab from "./comments-tab";
+import SignInWarningModal from "@/components/sign-in-warning-modal";
+import EditUserModal from "@/app/dashboard/edit-user-modal";
+import DeleteUserProfilePictureModal from "@/app/dashboard/delete-user-profile-picture-modal";
+import DeleteUserBioModal from "@/app/dashboard/delete-user-bio-modal";
+import RevokeUserSessionsModal from "@/app/dashboard/revoke-user-sessions-modal";
+import BanUserModal from "@/app/dashboard/ban-user-modal";
+import UnbanUserModal from "@/app/dashboard/unban-user-modal";
 import { notifications } from "@mantine/notifications";
 import classes from "./user.module.css";
 

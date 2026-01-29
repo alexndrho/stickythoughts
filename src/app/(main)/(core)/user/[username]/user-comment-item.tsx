@@ -2,10 +2,10 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Anchor, Paper, Text, Typography } from "@mantine/core";
 
-import LikeButton from "../../threads/LikeButton";
+import LikeButton from "../../threads/like-button";
 import { type UserThreadCommentType } from "@/types/thread";
 import classes from "./user.module.css";
-import AuthorAvatar from "@/components/AuthorAvatar";
+import AuthorAvatar from "@/components/author-avatar";
 
 export interface UserCommentItemProps {
   comment: UserThreadCommentType;

@@ -7,7 +7,7 @@ import { Button, Group, Switch } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 
-import TextEditor from "@/components/TextEditor";
+import TextEditor from "@/components/text-editor";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { submitThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";

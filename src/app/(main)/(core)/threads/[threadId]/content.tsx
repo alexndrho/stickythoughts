@@ -23,15 +23,15 @@ import { authClient } from "@/lib/auth-client";
 import { threadOptions } from "../options";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import { likeThread, unlikeThread } from "@/services/thread";
-import ThreadEditor from "./ThreadEditor";
-import CommentEditor, { type CommentSectionRef } from "./CommentEditor";
-import Comments from "./Comments";
-import DeleteThreadModal from "./DeleteThreadModal";
-import AuthorAvatar from "@/components/AuthorAvatar";
-import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
-import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
-import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
-import SignInWarningModal from "@/components/SignInWarningModal";
+import ThreadEditor from "./thread-editor";
+import CommentEditor, { type CommentSectionRef } from "./comment-editor";
+import Comments from "./comments";
+import DeleteThreadModal from "./delete-thread-modal";
+import AuthorAvatar from "@/components/author-avatar";
+import LikeButton from "@/app/(main)/(core)/threads/like-button";
+import CommentButton from "@/app/(main)/(core)/threads/comment-button";
+import ShareButton from "@/app/(main)/(core)/threads/share-button";
+import SignInWarningModal from "@/components/sign-in-warning-modal";
 import classes from "./thread.module.css";
 
 export interface ContentProps {

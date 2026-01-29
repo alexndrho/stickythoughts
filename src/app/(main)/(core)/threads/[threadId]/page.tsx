@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import Content from "./Content";
+import Content from "./content";
 import { getQueryClient } from "@/lib/get-query-client";
 import { threadOptions } from "@/app/(main)/(core)/threads/options";
 import { getThread } from "@/services/thread";

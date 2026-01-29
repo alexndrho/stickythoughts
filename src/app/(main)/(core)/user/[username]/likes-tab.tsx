@@ -6,11 +6,11 @@ import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 import { userUsernameLikedThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import ThreadItem from "../../threads/ThreadItem";
-import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
-import LikesPrompt from "./LikesPrompt";
+import ThreadItem from "../../threads/thread-item";
+import { ThreadsSkeleton } from "../../threads/threads-skeleton";
+import LikesPrompt from "./likes-prompt";
 import { likeThread, unlikeThread } from "@/services/thread";
-import InfiniteScroll from "@/components/InfiniteScroll";
+import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./user.module.css";
 
 export interface LikesTabProps {

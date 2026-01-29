@@ -25,7 +25,7 @@ import {
 } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
-import { AuthContainer } from "../AuthContainer";
+import { AuthContainer } from "../auth-container";
 import classes from "../auth.module.css";
 
 export default function Content() {

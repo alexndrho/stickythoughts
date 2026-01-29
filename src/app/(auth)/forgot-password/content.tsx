@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Stepper, Title } from "@mantine/core";
 
-import StepOne from "./StepOne";
-import StepTwo from "./StepTwo";
-import StepThree from "./StepThree";
-import StepCompleted from "./StepCompleted";
+import StepOne from "./step-one";
+import StepTwo from "./step-two";
+import StepThree from "./step-three";
+import StepCompleted from "./step-completed";
 
 export default function Content() {
   const [activeStep, setActiveStep] = useState(0);

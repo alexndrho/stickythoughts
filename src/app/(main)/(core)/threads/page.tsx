@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 
-import Content from "./Content";
+import Content from "./content";
 
 export const metadata: Metadata = {
   title: "Threads",

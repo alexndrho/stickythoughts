@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button, Center, Group, PinInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import { AuthContainer } from "../AuthContainer";
+import { AuthContainer } from "../auth-container";
 import { authClient } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import classes from "./forgot-password.module.css";

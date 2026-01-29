@@ -29,7 +29,7 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { AuthContainer } from "../AuthContainer";
+import { AuthContainer } from "../auth-container";
 import classes from "../auth.module.css";
 
 export default function Content() {

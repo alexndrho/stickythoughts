@@ -19,9 +19,9 @@ import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
 import { type authClient } from "@/lib/auth-client";
 import { setUpdateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import TextEditor from "@/components/TextEditor";
-import AuthorAvatar from "@/components/AuthorAvatar";
-import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
+import TextEditor from "@/components/text-editor";
+import AuthorAvatar from "@/components/author-avatar";
+import LikeButton from "@/app/(main)/(core)/threads/like-button";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { updateThreadComment } from "@/services/thread";
 import ServerError from "@/utils/error/ServerError";

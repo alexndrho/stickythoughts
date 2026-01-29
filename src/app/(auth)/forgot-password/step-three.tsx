@@ -6,7 +6,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { IconLock } from "@tabler/icons-react";
 
-import { AuthContainer } from "../AuthContainer";
+import { AuthContainer } from "../auth-container";
 import { authClient } from "@/lib/auth-client";
 import classes from "./forgot-password.module.css";
 

@@ -39,10 +39,10 @@ import {
   userNotificationMarkRead,
   userNotificationOpened,
 } from "@/services/user";
-import InfiniteScroll from "./InfiniteScroll";
+import InfiniteScroll from "./infinite-scroll";
 import { UserNotificationType } from "@/types/user";
 import classes from "@/styles/user-notification.module.css";
-import AuthorAvatar from "./AuthorAvatar";
+import AuthorAvatar from "./author-avatar";
 
 export interface UserNotificationProps {
   children: React.ReactElement;

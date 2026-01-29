@@ -3,10 +3,10 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
 import { stripHtmlTags } from "@/utils/text";
-import AuthorAvatar from "@/components/AuthorAvatar";
-import LikeButton from "@/app/(main)/(core)/threads/LikeButton";
-import CommentButton from "@/app/(main)/(core)/threads/CommentButton";
-import ShareButton from "@/app/(main)/(core)/threads/ShareButton";
+import AuthorAvatar from "@/components/author-avatar";
+import LikeButton from "@/app/(main)/(core)/threads/like-button";
+import CommentButton from "@/app/(main)/(core)/threads/comment-button";
+import ShareButton from "@/app/(main)/(core)/threads/share-button";
 import type { ThreadType } from "@/types/thread";
 import classes from "./threads.module.css";
 

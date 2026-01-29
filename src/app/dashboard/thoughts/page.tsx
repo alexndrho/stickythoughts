@@ -17,7 +17,7 @@ import { type Thought } from "@/generated/prisma/client";
 import { thoughtCountOptions, thoughtPageOptions } from "@/app/(main)/options";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
 import dashboardClasses from "../dashboard.module.css";
-import DeleteThoughtModal from "./DeleteThoughtModal";
+import DeleteThoughtModal from "./delete-thought-modal";
 
 export default function ThoughtsPage() {
   const [page, setPage] = useState(1);

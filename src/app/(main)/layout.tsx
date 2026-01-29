@@ -1,8 +1,8 @@
 import { Container } from "@mantine/core";
 
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import ScrollUpButton from "@/components/ScrollUpButton";
+import Nav from "@/components/nav";
+import Footer from "@/components/footer";
+import ScrollUpButton from "@/components/scroll-up-button";
 import classes from "./layout.module.css";
 
 export default function CoreLayout({

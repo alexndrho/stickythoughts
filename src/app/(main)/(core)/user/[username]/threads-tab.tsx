@@ -4,13 +4,13 @@ import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Tabs } from "@mantine/core";
 
 import type { authClient } from "@/lib/auth-client";
-import ThreadItem from "../../threads/ThreadItem";
+import ThreadItem from "../../threads/thread-item";
 import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { likeThread, unlikeThread } from "@/services/thread";
 import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
-import ThreadPrompt from "./ThreadPrompt";
-import InfiniteScroll from "@/components/InfiniteScroll";
+import { ThreadsSkeleton } from "../../threads/threads-skeleton";
+import ThreadPrompt from "./thread-prompt";
+import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./user.module.css";
 
 interface ThreadsTabProps {

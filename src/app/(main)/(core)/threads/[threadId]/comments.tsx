@@ -8,11 +8,11 @@ import { type authClient } from "@/lib/auth-client";
 import { threadCommentsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
 import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
 import { setLikeThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import InfiniteScroll from "@/components/InfiniteScroll";
-import CommentItem from "./CommentItem";
+import InfiniteScroll from "@/components/infinite-scroll";
+import CommentItem from "./comment-item";
 import { type ThreadCommentType } from "@/types/thread";
 import classes from "./thread.module.css";
-import DeleteCommentModal from "./DeleteCommentModal";
+import DeleteCommentModal from "./delete-comment-modal";
 
 export interface CommentsProps {
   threadId: string;

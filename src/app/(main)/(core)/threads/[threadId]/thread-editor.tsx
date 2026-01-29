@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { Prisma } from "@/generated/prisma/client";
-import TextEditor from "@/components/TextEditor";
+import TextEditor from "@/components/text-editor";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
 import { Button, Flex, Text } from "@mantine/core";

@@ -22,9 +22,9 @@ import {
   thoughtsInfiniteOptions,
   thoughtsSearchInfiniteOptions,
 } from "@/app/(main)/options";
-import Thoughts from "@/app/(main)/Thoughts";
-import SendThoughtModal from "./SendThoughtModal";
-import InfiniteScroll from "@/components/InfiniteScroll";
+import Thoughts from "@/app/(main)/thoughts";
+import SendThoughtModal from "./send-thought-modal";
+import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./home.module.css";
 
 export default function Content() {

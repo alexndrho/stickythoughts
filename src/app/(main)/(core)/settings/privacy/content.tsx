@@ -9,7 +9,7 @@ import { IconChevronRight } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { userSettingsPrivacy } from "./options";
-import LikesVisibilityModal from "./LikesVisibilityModal";
+import LikesVisibilityModal from "./likes-visibility-modal";
 import classes from "../settings.module.css";
 import privacyClasses from "./privacy.module.css";
 

@@ -23,7 +23,7 @@ import { sanitizeString } from "@/utils/text";
 import { submitThread } from "@/services/thread";
 import { useEffect } from "react";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
-import TextEditor from "@/components/TextEditor";
+import TextEditor from "@/components/text-editor";
 import ServerError from "@/utils/error/ServerError";
 import { userUsernameThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { THREAD_BODY_MAX_LENGTH } from "@/lib/validations/thread";

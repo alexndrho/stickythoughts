@@ -7,10 +7,10 @@ import { type authClient } from "@/lib/auth-client";
 import { userUsernameCommentsInfiniteOptions } from "../options";
 import { setLikeThreadCommentQueryData } from "../../threads/set-query-data";
 import { likeThreadComment, unlikeThreadComment } from "@/services/thread";
-import InfiniteScroll from "@/components/InfiniteScroll";
-import { ThreadsSkeleton } from "../../threads/ThreadsSkeleton";
-import UserCommentItem from "./UserCommentItem";
-import CommentPrompt from "./CommentPrompt";
+import InfiniteScroll from "@/components/infinite-scroll";
+import { ThreadsSkeleton } from "../../threads/threads-skeleton";
+import UserCommentItem from "./user-comment-item";
+import CommentPrompt from "./comment-prompt";
 import classes from "./user.module.css";
 
 export interface CommentsTabProps {

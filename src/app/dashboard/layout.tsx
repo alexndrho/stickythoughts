@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import AdminShell from "./AdminShell";
+import AdminShell from "./admin-shell";
 
 export default async function AdminLayout({
   children,

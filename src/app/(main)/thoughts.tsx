@@ -1,5 +1,5 @@
 import type { Thought as ThoughtType } from "@/generated/prisma/client";
-import Thought from "./Thought";
+import Thought from "./thought";
 import classes from "./home.module.css";
 
 export interface ThoughtsProps {

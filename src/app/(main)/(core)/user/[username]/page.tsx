@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { userUsernameOptions } from "@/app/(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { getUser } from "@/services/user";
-import Content from "./Content";
+import Content from "./content";
 
 export async function generateMetadata({
   params,

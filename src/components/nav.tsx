@@ -37,7 +37,7 @@ import { useThrottledCallback } from "@mantine/hooks";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtsInfiniteOptions, thoughtsOptions } from "@/app/(main)/options";
-import UserNotification from "./UserNotification";
+import UserNotification from "./user-notification";
 import classes from "@/styles/nav.module.css";
 
 const navLinks = [

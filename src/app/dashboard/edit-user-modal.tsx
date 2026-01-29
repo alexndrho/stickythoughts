@@ -11,7 +11,7 @@ import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
 import { userUsernameOptions } from "../(main)/(core)/user/options";
-import TextInputLabelModifiedIndicator from "@/components/TextInputLabelModifiedIndicator";
+import TextInputLabelModifiedIndicator from "@/components/text-input-label-modified-indicator";
 
 export interface EditUserModalProps {
   user: {

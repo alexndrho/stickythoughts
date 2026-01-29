@@ -15,8 +15,8 @@ import { zod4Resolver } from "mantine-form-zod-resolver";
 import { notifications } from "@mantine/notifications";
 import { IconMessage } from "@tabler/icons-react";
 
-import RandomButton from "@/components/RandomButton";
-import CheckColorSwatch from "@/components/CheckColorSwatch";
+import RandomButton from "@/components/random-button";
+import CheckColorSwatch from "@/components/check-color-swatch";
 import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtsInfiniteOptions, thoughtsOptions } from "@/app/(main)/options";
 import { submitThought } from "@/services/thought";

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Center, Text, Title, Button, Stack } from "@mantine/core";
 
-import { AuthContainer } from "../AuthContainer";
+import { AuthContainer } from "../auth-container";
 
 export default function StepCompleted() {
   return (

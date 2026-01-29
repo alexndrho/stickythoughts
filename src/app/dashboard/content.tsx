@@ -35,11 +35,11 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
 import { adminUsersPageOptions } from "./options";
-import EditUserModal from "./EditUserModal";
-import DeleteUserProfilePictureModal from "./DeleteUserProfilePictureModal";
-import RevokeUserSessionsModal from "./RevokeUserSessionsModal";
-import BanUserModal from "./BanUserModal";
-import UnbanUserModal from "./UnbanUserModal";
+import EditUserModal from "./edit-user-modal";
+import DeleteUserProfilePictureModal from "./delete-user-profile-picture-modal";
+import RevokeUserSessionsModal from "./revoke-user-sessions-modal";
+import BanUserModal from "./ban-user-modal";
+import UnbanUserModal from "./unban-user-modal";
 import dashboardClasses from "./dashboard.module.css";
 import classes from "./user.module.css";
 import { useDebouncedValue } from "@mantine/hooks";
