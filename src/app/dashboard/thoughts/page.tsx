@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ActionIcon,
-  ColorSwatch,
-  Pagination,
-  Table,
-  Text,
-  Title,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Pagination, Table, Text, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
 import { type Thought } from "@/generated/prisma/client";
@@ -47,7 +39,6 @@ export default function ThoughtsPage() {
               <Table.Tr>
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Message</Table.Th>
-                <Table.Th>Color</Table.Th>
                 <Table.Th />
               </Table.Tr>
             </Table.Thead>
@@ -59,12 +50,6 @@ export default function ThoughtsPage() {
 
                   <Table.Td>
                     <Text>{thought.message}</Text>
-                  </Table.Td>
-
-                  <Table.Td>
-                    <Tooltip label={thought.color}>
-                      <ColorSwatch color={thought.color} />
-                    </Tooltip>
                   </Table.Td>
 
                   <Table.Td>

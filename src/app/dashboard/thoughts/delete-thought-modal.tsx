@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Paper, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { type Thought } from "@/generated/prisma/client";
@@ -38,10 +38,13 @@ export default function DeleteThoughtModal({
       onClose={onClose}
       centered
     >
-      <Text mt="md" style={{ wordBreak: "break-word" }}>
-        &quot;{thought?.message}&quot;
-      </Text>
-      <Text ta="end">-{thought?.author}</Text>
+      <Paper p="xs" c="black" bg={`${thought?.color}.6`} withBorder>
+        <Text>{thought?.message}</Text>
+
+        <Text ta="end">
+          {"\u2013"} {thought?.author}
+        </Text>
+      </Paper>
 
       <Group mt="md" justify="end">
         <Button variant="default" onClick={onClose}>
