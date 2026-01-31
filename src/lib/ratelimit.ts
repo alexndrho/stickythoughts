@@ -33,12 +33,21 @@ export const rateLimiters = {
       keyPrefix: "ratelimit:mutate:standard",
     } satisfies IRateLimiterRedisOptions,
 
-    // Post/comment mutations - 20 requests per 60 seconds
+    // Anonymous thought posts - 3 requests per 60 seconds
+    thought: {
+      storeClient: redis,
+      points: 3,
+      duration: 60,
+      blockDuration: 300,
+      keyPrefix: "ratelimit:mutate:thought",
+    } satisfies IRateLimiterRedisOptions,
+
+    // Post/comment mutations - 10 requests per 60 seconds
     content: {
       storeClient: redis,
-      points: 20,
+      points: 10,
       duration: 60,
-      blockDuration: 60,
+      blockDuration: 120,
       keyPrefix: "ratelimit:mutate:content",
     } satisfies IRateLimiterRedisOptions,
   },
@@ -58,6 +67,7 @@ export const rateLimiters = {
       storeClient: redis,
       points: 60,
       duration: 60,
+      blockDuration: 60,
       keyPrefix: "ratelimit:interaction:notifications",
     } satisfies IRateLimiterRedisOptions,
   },

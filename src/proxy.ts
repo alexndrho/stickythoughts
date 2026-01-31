@@ -15,14 +15,25 @@ const ROUTE_PATTERNS = {
   commentLike: /\/api\/threads\/[^/]+\/comments\/[^/]+\/like/,
 } as const;
 
-// Determine which rate limiter to use based on route and method
-function getRateLimiter(
-  pathname: string,
-  method: string,
-): IRateLimiterRedisOptions {
-  const upperMethod = method.toUpperCase();
+// Determine which rate limiter to use based on route, method, and query params
+function getRateLimiter(request: NextRequest): IRateLimiterRedisOptions {
+  const { pathname, searchParams } = request.nextUrl;
+  const upperMethod = request.method.toUpperCase();
+
+  // Anonymous thought posts
+  if (pathname === "/api/thoughts" && upperMethod === "POST") {
+    return rateLimiters.mutate.thought;
+  }
 
   // Search endpoint
+  if (
+    pathname === "/api/thoughts" &&
+    upperMethod === "GET" &&
+    searchParams.has("searchTerm")
+  ) {
+    return rateLimiters.get.search;
+  }
+
   if (pathname.startsWith("/api/search")) {
     return rateLimiters.get.search;
   }
@@ -75,7 +86,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/")) {
-    const rateLimiterOptions = getRateLimiter(pathname, request.method);
+    const rateLimiterOptions = getRateLimiter(request);
     const rateLimiter = new RateLimiterRedis(rateLimiterOptions);
 
     const clientIp = getClientIp(request);
