@@ -12,6 +12,7 @@ export async function GET(
 ) {
   try {
     const { username } = await params;
+    const normalizedUsername = username.toLowerCase();
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -32,7 +33,7 @@ export async function GET(
 
     const user = await prisma.user.findUnique({
       where: {
-        username,
+        username: normalizedUsername,
       },
       select: {
         id: true,

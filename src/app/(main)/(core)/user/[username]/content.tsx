@@ -279,7 +279,7 @@ export default function Content({ username }: ContentProps) {
               username: user.username,
             }}
             onUsernameChange={(newUsername) =>
-              router.replace(`/user/${newUsername}`)
+              router.replace(`/user/${newUsername.toLowerCase()}`)
             }
             opened={editUserModalOpened}
             onClose={editUserModalHandler.close}
