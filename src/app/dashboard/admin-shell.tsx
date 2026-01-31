@@ -9,12 +9,12 @@ import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
 import classes from "./layout.module.css";
 
 const navLinks = [
-  { icon: <IconUser size="1em" />, label: "Users", href: "/dashboard" },
   {
     icon: <IconMessage size="1em" />,
     label: "Thoughts",
-    href: "/dashboard/thoughts",
+    href: "/dashboard",
   },
+  { icon: <IconUser size="1em" />, label: "Users", href: "/dashboard/users" },
 ];
 
 export default function AdminShell({

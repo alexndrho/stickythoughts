@@ -1,14 +1,13 @@
 import { type Metadata } from "next";
-
 import Content from "./content";
 
 export const metadata: Metadata = {
-  title: "Thoughts",
+  title: "Users",
   alternates: {
-    canonical: "/dashboard/thoughts",
+    canonical: "/dashboard/users",
   },
 };
 
-export default function ThoughtsPage() {
+export default function AdminUsersPage() {
   return <Content />;
 }

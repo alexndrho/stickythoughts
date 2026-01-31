@@ -16,7 +16,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
-import { userUsernameOptions } from "../(main)/(core)/user/options";
+import { userUsernameOptions } from "../../(main)/(core)/user/options";
 
 export interface BanUserModalProps {
   user: {

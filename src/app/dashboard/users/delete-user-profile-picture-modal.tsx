@@ -1,13 +1,16 @@
+"use client";
+
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Button, Group, Modal } from "@mantine/core";
-import { IconFaceId, IconX } from "@tabler/icons-react";
+import { IconPhoto, IconX } from "@tabler/icons-react";
 
-import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
+import { getQueryClient } from "@/lib/get-query-client";
+import { userUsernameOptions } from "../../(main)/(core)/user/options";
+import { removeProfilePicture } from "@/services/user";
 import ServerError from "@/utils/error/ServerError";
-import { userUsernameOptions } from "../(main)/(core)/user/options";
 
 export interface DeleteUserProfilePictureModalProps {
   user: {
@@ -18,7 +21,7 @@ export interface DeleteUserProfilePictureModalProps {
   onClose: () => void;
 }
 
-export default function DeleteUserBioModal({
+export default function DeleteUserProfilePictureModal({
   user,
   opened,
   onClose,
@@ -27,10 +30,12 @@ export default function DeleteUserBioModal({
 
   const mutation = useMutation({
     mutationFn: () =>
-      fetch(`/api/user/bio?userId=${user?.id || ""}`, {
-        method: "DELETE",
+      removeProfilePicture({
+        userId: user?.id || "",
       }),
     onSuccess: () => {
+      handleClose();
+
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
@@ -44,24 +49,22 @@ export default function DeleteUserBioModal({
       }
 
       notifications.show({
-        title: "Bio Deleted",
-        message: `Bio for @${user?.username} has been successfully deleted.`,
-        icon: <IconFaceId size="1em" />,
+        title: "Profile Picture Deleted",
+        message: `Profile picture for @${user?.username} has been successfully deleted.`,
+        icon: <IconPhoto size="1em" />,
       });
-
-      handleClose();
     },
     onError: (error) => {
       if (error instanceof ServerError) {
         notifications.show({
-          title: "Error Deleting Bio",
+          title: "Error Deleting Profile Picture",
           message: error.issues[0].message || "An unknown error occurred.",
           color: "red",
           icon: <IconX size="1em" />,
         });
       } else {
         notifications.show({
-          title: "Error Deleting Bio",
+          title: "Error Deleting Profile Picture",
           message: "An unknown error occurred.",
           color: "red",
           icon: <IconX size="1em" />,
@@ -77,9 +80,9 @@ export default function DeleteUserBioModal({
 
   return (
     <Modal
-      title={`Delete Bio for @${user?.username}`}
+      title={`Delete Profile Picture for @${user?.username}`}
       opened={opened}
-      onClose={handleClose}
+      onClose={onClose}
       centered
     >
       <Group justify="end">
@@ -97,7 +100,7 @@ export default function DeleteUserBioModal({
             mutation.mutate();
           }}
         >
-          {areYouSure ? "Are you sure?" : "Delete Bio"}
+          {areYouSure ? "Are you sure?" : "Delete Profile Picture"}
         </Button>
       </Group>
     </Modal>

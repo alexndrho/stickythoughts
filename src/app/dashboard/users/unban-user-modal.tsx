@@ -7,7 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { IconHammerOff, IconX } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
-import { userUsernameOptions } from "../(main)/(core)/user/options";
+import { userUsernameOptions } from "../../(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminUsersOptions } from "./options";
 
