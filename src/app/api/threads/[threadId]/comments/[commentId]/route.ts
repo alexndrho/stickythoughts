@@ -7,28 +7,17 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { updateThreadCommentServerInput } from "@/lib/validations/thread";
 import type IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ threadId: string; commentId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "You must be logged in to like a post",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId, commentId } = await params;
@@ -136,22 +125,10 @@ export async function DELETE(
   try {
     const { threadId, commentId } = await params;
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "You must be logged in to like a post",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const hasPermission = await auth.api.userHasPermission({

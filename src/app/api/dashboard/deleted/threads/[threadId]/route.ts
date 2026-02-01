@@ -1,8 +1,7 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { guardSession } from "@/lib/session-guard";
 import type IError from "@/types/error";
 
 export async function PATCH(
@@ -10,35 +9,14 @@ export async function PATCH(
   { params }: { params: Promise<{ threadId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
-    }
-
-    const hasPermission = await auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          thread: ["restore"],
-        },
+    const session = await guardSession({
+      permission: {
+        thread: ["restore"],
       },
     });
 
-    if (!hasPermission.success) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-        } satisfies IError,
-        { status: 403 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId } = await params;
@@ -87,35 +65,14 @@ export async function DELETE(
   { params }: { params: Promise<{ threadId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
-    }
-
-    const hasPermission = await auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          thread: ["purge"],
-        },
+    const session = await guardSession({
+      permission: {
+        thread: ["purge"],
       },
     });
 
-    if (!hasPermission.success) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-        } satisfies IError,
-        { status: 403 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId } = await params;

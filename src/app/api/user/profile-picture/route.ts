@@ -8,19 +8,13 @@ import IError from "@/types/error";
 import { deleteFile, isUrlStorage, uploadFile } from "@/lib/storage";
 import { extractKeyFromUrl } from "@/utils/text";
 import { prisma } from "@/lib/db";
+import { guardSession } from "@/lib/session-guard";
 
 export async function PUT(req: Request) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await guardSession({ headers: await headers() });
 
-  if (!session?.user?.id) {
-    return NextResponse.json(
-      {
-        issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-      } satisfies IError,
-      { status: 401 },
-    );
+  if (session instanceof NextResponse) {
+    return session;
   }
 
   let newFileKey: string | null = null;
@@ -173,17 +167,10 @@ export async function DELETE(req: NextRequest) {
   const userId = searchParams.get("userId");
 
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     let userImage: string | null | undefined = null;

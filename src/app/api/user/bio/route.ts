@@ -1,25 +1,18 @@
 import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import IError from "@/types/error";
 import { updateUserBioInput } from "@/lib/validations/user";
 import z from "zod";
+import { guardSession } from "@/lib/session-guard";
 
 export async function PUT(request: Request) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { bio } = updateUserBioInput.parse(await request.json());
@@ -80,35 +73,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const session = await auth.api.getSession({
+    const session = await guardSession({
       headers: await headers(),
+      permission: { user: ["update"] },
     });
 
-    if (!session) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
-    }
-
-    const hasPermission = await auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          user: ["update"],
-        },
-      },
-    });
-
-    if (!hasPermission.success) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-        } satisfies IError,
-        { status: 403 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     await prisma.user.update({

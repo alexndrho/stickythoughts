@@ -2,28 +2,16 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
-import { auth } from "@/lib/auth";
 import IError from "@/types/error";
 import type { UserSettingsPrivacy } from "@/types/user";
+import { guardSession } from "@/lib/session-guard";
 
 export async function GET() {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "Unauthorized",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const userSettings = await prisma.userSettings.findUnique({

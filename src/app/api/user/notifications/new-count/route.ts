@@ -1,24 +1,17 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { userNotificationOpenedInput } from "@/lib/validations/user";
 import type IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function GET() {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const user = await prisma.user.findUnique({
@@ -69,17 +62,10 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { opened } = userNotificationOpenedInput.parse(await req.json());

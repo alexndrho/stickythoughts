@@ -3,29 +3,19 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { prisma } from "@/lib/db";
-import { auth } from "@/lib/auth";
 import { updateUserLikesVisibilityInput } from "@/lib/validations/user";
 import IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function PUT(request: Request) {
   try {
     const { visibility } = updateUserLikesVisibilityInput.parse(
       await request.json(),
     );
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "Unauthorized",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const updatedUser = await prisma.user.update({

@@ -10,28 +10,17 @@ import { THREAD_COMMENTS_PER_PAGE } from "@/config/thread";
 import { formatThreadComments } from "@/utils/thread";
 import type { ThreadCommentType } from "@/types/thread";
 import type IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ threadId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "You must be logged in to like a post",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId } = await params;

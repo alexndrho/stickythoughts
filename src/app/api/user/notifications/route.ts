@@ -1,28 +1,21 @@
 import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatUserNotifications } from "@/utils/user";
 import { NOTIFICATION_PER_PAGE } from "@/config/user";
 import type IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const lastUpdatedAt = searchParams.get("lastUpdatedAt");
 
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const notifications = await prisma.notification.findMany({

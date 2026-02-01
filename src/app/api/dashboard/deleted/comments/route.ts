@@ -1,43 +1,21 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { guardSession } from "@/lib/session-guard";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
 import type IError from "@/types/error";
 import type { DeletedThreadCommentFromServer } from "@/types/deleted";
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
-    }
-
-    const hasPermission = await auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          threadComment: ["list-deleted"],
-        },
+    const session = await guardSession({
+      permission: {
+        threadComment: ["list-deleted"],
       },
     });
 
-    if (!hasPermission.success) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-        } satisfies IError,
-        { status: 403 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const searchParams = req.nextUrl.searchParams;

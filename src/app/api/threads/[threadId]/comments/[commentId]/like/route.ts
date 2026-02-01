@@ -2,32 +2,20 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { NotificationType, Prisma } from "@/generated/prisma/client";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
 import type IError from "@/types/error";
+import { guardSession } from "@/lib/session-guard";
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ threadId: string; commentId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "You must be logged in to like a post",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId, commentId } = await params;
@@ -168,22 +156,10 @@ export async function DELETE(
   { params }: { params: Promise<{ threadId: string; commentId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/unauthorized",
-              message: "You must be logged in to like a post",
-            },
-          ],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const { threadId, commentId } = await params;

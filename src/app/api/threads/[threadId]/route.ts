@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { guardSession } from "@/lib/session-guard";
 import IError from "@/types/error";
 import { updateThreadServerInput } from "@/lib/validations/thread";
 import type { ThreadType } from "@/types/thread";
@@ -107,17 +108,10 @@ export async function PUT(
     const { threadId } = await params;
     const { body } = updateThreadServerInput.parse(await request.json());
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const updateResult = await prisma.thread.update({
@@ -206,17 +200,10 @@ export async function DELETE(
   try {
     const { threadId } = await params;
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const hasPermission = await auth.api.userHasPermission({

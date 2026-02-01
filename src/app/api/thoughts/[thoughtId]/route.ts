@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
+import { guardSession } from "@/lib/session-guard";
 import { prisma } from "@/lib/db";
 import type IError from "@/types/error";
 
@@ -13,17 +14,10 @@ export async function DELETE(
   try {
     const { thoughtId } = await params;
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await guardSession({ headers: await headers() });
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
-      );
+    if (session instanceof NextResponse) {
+      return session;
     }
 
     const hasPermission = await auth.api.userHasPermission({
