@@ -139,6 +139,7 @@ export default function Content() {
                 <Table.Th>User</Table.Th>
                 <Table.Th>Email</Table.Th>
                 <Table.Th>Role</Table.Th>
+                <Table.Th>Anonymous</Table.Th>
                 <Table.Th>Banned</Table.Th>
                 <Table.Th>Ban Reason</Table.Th>
                 <Table.Th>Ban Expires</Table.Th>
@@ -189,6 +190,9 @@ export default function Content() {
                       {user.role || "user"}
                     </Badge>
                   </Table.Td>
+
+                  {/* @ts-expect-error - isAnonymous exists but not in UserWithRole type */}
+                  <Table.Td>{user.isAnonymous ? "Yes" : "No"}</Table.Td>
 
                   <Table.Td>{user.banned ? "Yes" : "No"}</Table.Td>
 
@@ -295,14 +299,14 @@ export default function Content() {
 
               {isFetching ? (
                 <Table.Tr>
-                  <Table.Td colSpan={7} style={{ textAlign: "center" }}>
+                  <Table.Td colSpan={8} style={{ textAlign: "center" }}>
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
                 results?.data?.users.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={7} style={{ textAlign: "center" }}>
+                    <Table.Td colSpan={8} style={{ textAlign: "center" }}>
                       No users found.
                     </Table.Td>
                   </Table.Tr>
