@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/purge-deleted",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/purge-anonymous",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

@@ -1,4 +1,8 @@
-export type systemCode = "ratelimit/exceeded" | "unknown-error" | "not-found";
+export type systemCode =
+  | "ratelimit/exceeded"
+  | "unknown-error"
+  | "not-found"
+  | "config/missing-cron-secret";
 
 export type authCode = "auth/unauthorized" | "auth/forbidden";
 
