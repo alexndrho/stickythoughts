@@ -28,6 +28,7 @@ import {
   permanentlyDeleteThread,
   restoreDeletedThread,
 } from "@/services/moderate/deleted";
+import { formatUserDisplayName } from "@/utils/user";
 import {
   PermanentlyDeleteThreadModal,
   RecoverThreadModal,
@@ -118,9 +119,7 @@ export default function ThreadsTab({ isActive }: ThreadsTabProps) {
                       <Text>{thread.title}</Text>
                     </Table.Td>
                     <Table.Td>
-                      {thread.author.name
-                        ? `${thread.author.name} (@${thread.author.username})`
-                        : `@${thread.author.username}`}
+                      {formatUserDisplayName(thread.author)}
                     </Table.Td>
                     <Table.Td>
                       {thread.deletedById === thread.authorId ? (

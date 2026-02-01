@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { userUsernameOptions } from "@/app/(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { getUser } from "@/services/user";
+import { formatUserDisplayName } from "@/utils/user";
 import Content from "./content";
 
 export async function generateMetadata({
@@ -37,9 +38,7 @@ export async function generateMetadata({
     }
 
     return {
-      title: user.name
-        ? `${user.name} (@${user.username})`
-        : `@${user.username}`,
+      title: formatUserDisplayName(user),
       alternates: {
         canonical,
       },

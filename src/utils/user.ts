@@ -57,3 +57,17 @@ export function formatUserNotifications(
     };
   });
 }
+
+export const formatUserDisplayName = (user: {
+  name?: string | null;
+  username: string;
+}) => {
+  const name = user.name?.trim() || "";
+  const username = user.username?.trim() || "";
+
+  if (name && username) return `${name} (@${username})`;
+  if (username) return `@${username}`;
+  if (name) return name;
+
+  return "";
+};

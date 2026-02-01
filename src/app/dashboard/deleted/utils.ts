@@ -1,3 +1,5 @@
+import { formatUserDisplayName } from "@/utils/user";
+
 export const formatDeletedDate = (value: string | Date | null | undefined) => {
   if (!value) return "-";
   const date = value instanceof Date ? value : new Date(value);
@@ -25,9 +27,5 @@ export const formatDeletedByLabel = (deletedBy?: {
 } | null) => {
   if (!deletedBy) return "-";
 
-  const label = deletedBy.name
-    ? `${deletedBy.name} (@${deletedBy.username})`
-    : `@${deletedBy.username}`;
-
-  return label;
+  return formatUserDisplayName(deletedBy);
 };

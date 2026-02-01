@@ -15,7 +15,10 @@ import {
 } from "@mantine/core";
 import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
 
-import { deletedCommentsCountOptions, deletedCommentsPageOptions } from "./options";
+import {
+  deletedCommentsCountOptions,
+  deletedCommentsPageOptions,
+} from "./options";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
 import dashboardClasses from "../dashboard.module.css";
 import classes from "./deleted.module.css";
@@ -33,6 +36,7 @@ import {
   restoreDeletedComment,
 } from "@/services/moderate/deleted";
 import { stripHtmlTags } from "@/utils/text";
+import { formatUserDisplayName } from "@/utils/user";
 import {
   PermanentlyDeleteCommentModal,
   RecoverCommentModal,
@@ -129,11 +133,7 @@ export default function CommentsTab({ isActive }: CommentsTabProps) {
                     <Table.Td>
                       <Text lineClamp={2}>{stripHtmlTags(comment.body)}</Text>
                     </Table.Td>
-                    <Table.Td>
-                      {comment.author.name
-                        ? `${comment.author.name} (@${comment.author.username})`
-                        : `@${comment.author.username}`}
-                    </Table.Td>
+                    <Table.Td>{formatUserDisplayName(comment.author)}</Table.Td>
                     <Table.Td>
                       <Text lineClamp={1}>{comment.thread.title}</Text>
                     </Table.Td>
