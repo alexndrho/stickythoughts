@@ -5,11 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { ActionIcon, Pagination, Table, Text, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
-import { type Thought } from "@/generated/prisma/client";
 import { thoughtCountOptions, thoughtPageOptions } from "@/app/(main)/options";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
 import dashboardClasses from "./dashboard.module.css";
 import DeleteThoughtModal from "./delete-thought-modal";
+import type { PublicThoughtPayload } from "@/utils/thought";
 
 export default function Content() {
   const [page, setPage] = useState(1);
@@ -18,9 +18,10 @@ export default function Content() {
 
   const { data: count } = useQuery(thoughtCountOptions);
 
-  const [deletingThought, setDeletingThought] = useState<Thought | null>(null);
+  const [deletingThought, setDeletingThought] =
+    useState<PublicThoughtPayload | null>(null);
 
-  const handleOpenDeleteModal = (thought: Thought) => {
+  const handleOpenDeleteModal = (thought: PublicThoughtPayload) => {
     setDeletingThought(thought);
   };
 

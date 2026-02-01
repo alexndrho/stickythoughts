@@ -4,12 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Group, Modal, Paper, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import { type Thought } from "@/generated/prisma/client";
+import type { PublicThoughtPayload } from "@/utils/thought";
 import { thoughtsOptions } from "@/app/(main)/options";
+import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { deleteThought } from "@/services/moderate/thought";
 
 export interface DeleteThoughtModalProps {
-  thought: Thought | null;
+  thought: PublicThoughtPayload | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -27,6 +28,9 @@ export default function DeleteThoughtModal({
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
         queryKey: thoughtsOptions.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: deletedThoughtsOptions.queryKey,
       });
     },
   });

@@ -4,7 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Burger, Group, NavLink, Text } from "@mantine/core";
-import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
+import {
+  IconHome,
+  IconMessage,
+  IconTrash,
+  IconUser,
+} from "@tabler/icons-react";
 
 import classes from "./layout.module.css";
 
@@ -15,6 +20,11 @@ const navLinks = [
     href: "/dashboard",
   },
   { icon: <IconUser size="1em" />, label: "Users", href: "/dashboard/users" },
+  {
+    icon: <IconTrash size="1em" />,
+    label: "Deleted",
+    href: "/dashboard/deleted",
+  },
 ];
 
 export default function AdminShell({

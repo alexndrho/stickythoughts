@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { createThoughtInput } from "@/lib/validations/thought";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
+import type { PublicThoughtPayload } from "@/utils/thought";
 import type IError from "@/types/error";
 
 export async function GET(req: NextRequest) {
@@ -26,20 +27,30 @@ export async function GET(req: NextRequest) {
         : {
             skip: (page - 1) * THOUGHTS_PER_PAGE,
           }),
-      where: searchTerm
-        ? {
-            author: {
-              contains: searchTerm,
-              mode: "insensitive",
-            },
-          }
-        : undefined,
+      where: {
+        ...(searchTerm && {
+          author: {
+            contains: searchTerm,
+            mode: "insensitive",
+          },
+        }),
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        author: true,
+        message: true,
+        color: true,
+        createdAt: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    return NextResponse.json(thoughts, { status: 200 });
+    const typedThoughts = thoughts satisfies PublicThoughtPayload[];
+
+    return NextResponse.json(typedThoughts, { status: 200 });
   } catch (error) {
     console.error(error);
 

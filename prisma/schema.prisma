@@ -8,13 +8,16 @@ datasource db {
 }
 
 model Thought {
-  id        String   @id @default(uuid())
-  author    String
-  message   String
-  color     String
-  createdAt DateTime @default(now())
+  id          String    @id @default(uuid())
+  author      String
+  message     String
+  color       String
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
 
-  @@index([createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc)])
 }
 
 model User {
@@ -35,13 +38,16 @@ model User {
   banReason   String?
   banExpires  DateTime?
 
-  sessions           Session[]
-  accounts           Account[]
-  settings           UserSettings?
-  threads            Thread[]
-  threadLikes        ThreadLike[]
-  threadComments     ThreadComment[]
-  threadCommentLikes ThreadCommentLike[]
+  sessions              Session[]
+  accounts              Account[]
+  settings              UserSettings?
+  threads               Thread[]            @relation("ThreadAuthor")
+  threadLikes           ThreadLike[]
+  threadComments        ThreadComment[]     @relation("ThreadCommentAuthor")
+  threadCommentLikes    ThreadCommentLike[]
+  deletedThreads        Thread[]            @relation("ThreadDeletedBy")
+  deletedThreadComments ThreadComment[]     @relation("ThreadCommentDeletedBy")
+  deletedThoughts       Thought[]           @relation("ThoughtDeletedBy")
 
   notifications      Notification[]      @relation("UserNotification")
   actedNotifications NotificationActor[]
@@ -142,18 +148,21 @@ model Thread {
   title       String
   body        String
   authorId    String
-  author      User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author      User            @relation("ThreadAuthor", fields: [authorId], references: [id], onDelete: Cascade)
   isAnonymous Boolean?        @default(false)
   likes       ThreadLike[]
   comments    ThreadComment[]
 
   notifications Notification[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?     @relation("ThreadDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  @@unique([authorId, title])
-  @@index([createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc)])
+  @@index([authorId, deletedAt, createdAt(sort: Desc)])
 }
 
 model ThreadLike {
@@ -172,7 +181,7 @@ model ThreadComment {
   id          String              @id @default(cuid())
   body        String
   authorId    String
-  author      User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author      User                @relation("ThreadCommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
   isAnonymous Boolean?            @default(false)
   threadId    String
   thread      Thread              @relation(fields: [threadId], references: [id], onDelete: Cascade)
@@ -180,10 +189,14 @@ model ThreadComment {
 
   notifications Notification[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?     @relation("ThreadCommentDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  @@index([createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc)])
+  @@index([threadId, deletedAt, createdAt(sort: Desc)])
 }
 
 model ThreadCommentLike {

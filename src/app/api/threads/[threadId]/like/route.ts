@@ -32,6 +32,24 @@ export async function POST(
     }
 
     const { threadId } = await params;
+    const threadStatus = await prisma.thread.findUnique({
+      where: { id: threadId },
+      select: { deletedAt: true },
+    });
+
+    if (!threadStatus || threadStatus.deletedAt) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Thread post not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
 
     const threadLike = await prisma.threadLike.create({
       data: {

@@ -12,6 +12,7 @@ import {
   threadCommentsInfiniteOptions,
   threadOptions,
 } from "@/app/(main)/(core)/threads/options";
+import { deletedCommentsOptions } from "@/app/dashboard/deleted/options";
 import type {
   ThreadType,
   ThreadCommentType,
@@ -329,6 +330,10 @@ export const setDeleteThreadCommentQueryData = ({
   queryClient.invalidateQueries({
     queryKey: threadCommentsInfiniteOptions(threadId).queryKey,
     refetchType: "none",
+  });
+
+  queryClient.invalidateQueries({
+    queryKey: deletedCommentsOptions.queryKey,
   });
 };
 

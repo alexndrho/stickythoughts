@@ -31,6 +31,37 @@ export async function POST(
     }
 
     const { threadId, commentId } = await params;
+    const commentStatus = await prisma.threadComment.findUnique({
+      where: { id: commentId },
+      select: {
+        threadId: true,
+        deletedAt: true,
+        thread: {
+          select: {
+            deletedAt: true,
+          },
+        },
+      },
+    });
+
+    if (
+      !commentStatus ||
+      commentStatus.threadId !== threadId ||
+      commentStatus.deletedAt ||
+      commentStatus.thread.deletedAt
+    ) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Comment not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
 
     const commentLike = await prisma.threadCommentLike.create({
       data: {
@@ -156,6 +187,37 @@ export async function DELETE(
     }
 
     const { threadId, commentId } = await params;
+    const commentStatus = await prisma.threadComment.findUnique({
+      where: { id: commentId },
+      select: {
+        threadId: true,
+        deletedAt: true,
+        thread: {
+          select: {
+            deletedAt: true,
+          },
+        },
+      },
+    });
+
+    if (
+      !commentStatus ||
+      commentStatus.threadId !== threadId ||
+      commentStatus.deletedAt ||
+      commentStatus.thread.deletedAt
+    ) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Comment not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
 
     const deletedLike = await prisma.threadCommentLike.delete({
       where: {

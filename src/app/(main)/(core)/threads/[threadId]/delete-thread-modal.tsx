@@ -3,6 +3,7 @@ import { Button, Flex, Modal, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { threadsInfiniteOptions } from "@/app/(main)/(core)/threads/options";
+import { deletedThreadsOptions } from "@/app/dashboard/deleted/options";
 import { deleteThread } from "@/services/thread";
 
 export interface DeleteThreadModalProps {
@@ -25,8 +26,13 @@ export default function DeleteThreadModal({
     onSuccess: () => {
       if (onDelete) onDelete();
 
-      getQueryClient().invalidateQueries({
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({
         queryKey: threadsInfiniteOptions.queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: deletedThreadsOptions.queryKey,
       });
 
       onClose();

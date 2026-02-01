@@ -34,16 +34,63 @@ export async function PUT(
     const { threadId, commentId } = await params;
     const { body } = updateThreadCommentServerInput.parse(await request.json());
 
-    const updatedComment = await prisma.threadComment.update({
+    const updateResult = await prisma.threadComment.updateMany({
       where: {
         id: commentId,
         threadId,
+        deletedAt: null,
         authorId: session.user.id,
+        thread: {
+          deletedAt: null,
+        },
       },
       data: {
         body,
       },
     });
+
+    if (updateResult.count === 0) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Comment not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
+
+    const updatedComment = await prisma.threadComment.findUnique({
+      where: {
+        id: commentId,
+      },
+      select: {
+        id: true,
+        body: true,
+        authorId: true,
+        isAnonymous: true,
+        threadId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!updatedComment) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Comment not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
 
     return NextResponse.json(updatedComment, { status: 200 });
   } catch (error) {
@@ -116,11 +163,16 @@ export async function DELETE(
       },
     });
 
-    const deletedComment = await prisma.threadComment.delete({
+    const deletedComment = await prisma.threadComment.update({
       where: {
         id: commentId,
         threadId,
+        deletedAt: null,
         ...(hasPermission.success ? {} : { authorId: session.user.id }),
+      },
+      data: {
+        deletedAt: new Date(),
+        deletedById: session.user.id,
       },
       select: {
         authorId: true,

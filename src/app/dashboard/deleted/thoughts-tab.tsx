@@ -1,0 +1,216 @@
+"use client";
+
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  ActionIcon,
+  Group,
+  Loader,
+  Pagination,
+  Table,
+  Tabs,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
+
+import { deletedThoughtsCountOptions, deletedThoughtsPageOptions } from "./options";
+import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
+import dashboardClasses from "../dashboard.module.css";
+import classes from "./deleted.module.css";
+import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from "./utils";
+import { getQueryClient } from "@/lib/get-query-client";
+import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
+import { thoughtsOptions } from "@/app/(main)/options";
+import type { DeletedThought } from "@/types/deleted";
+import {
+  permanentlyDeleteThought,
+  restoreDeletedThought,
+} from "@/services/moderate/deleted";
+import {
+  PermanentlyDeleteThoughtModal,
+  RecoverThoughtModal,
+} from "./thought-modals";
+
+export interface ThoughtsTabProps {
+  isActive: boolean;
+}
+
+export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
+  const [page, setPage] = useState(1);
+  const [permanentlyDeletingThought, setPermanentlyDeletingThought] =
+    useState<DeletedThought | null>(null);
+  const [restoringThought, setRestoringThought] =
+    useState<DeletedThought | null>(null);
+  const [restoringThoughtId, setRestoringThoughtId] = useState<string | null>(
+    null,
+  );
+  const [deletingThoughtId, setDeletingThoughtId] = useState<string | null>(
+    null,
+  );
+
+  const { data, isFetching } = useQuery({
+    ...deletedThoughtsPageOptions(page),
+    enabled: isActive,
+  });
+
+  const { data: totalCount } = useQuery({
+    ...deletedThoughtsCountOptions(),
+    enabled: isActive,
+  });
+
+  const total = getPagedTotal(totalCount, ADMIN_DELETED_PER_PAGE);
+
+  const handleInvalidate = () => {
+    const queryClient = getQueryClient();
+    queryClient.invalidateQueries({ queryKey: deletedThoughtsOptions.queryKey });
+    queryClient.invalidateQueries({ queryKey: thoughtsOptions.queryKey });
+  };
+
+  const restoreMutation = useMutation({
+    mutationFn: restoreDeletedThought,
+    onMutate: (id) => {
+      setRestoringThoughtId(id);
+    },
+    onSuccess: handleInvalidate,
+    onSettled: () => {
+      setRestoringThoughtId(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: permanentlyDeleteThought,
+    onMutate: (id) => {
+      setDeletingThoughtId(id);
+    },
+    onSuccess: () => {
+      setPermanentlyDeletingThought(null);
+      handleInvalidate();
+    },
+    onSettled: () => {
+      setDeletingThoughtId(null);
+    },
+  });
+
+  const handleConfirmPermanentDelete = (thought: DeletedThought) => {
+    deleteMutation.mutate(thought.id);
+  };
+
+  return (
+    <Tabs.Panel value="thoughts" className={classes.panel}>
+      <div className={dashboardClasses.container}>
+        <div className={dashboardClasses["table-container"]}>
+          <Table.ScrollContainer minWidth="100%" maxHeight="100%">
+            <Table highlightOnHover withColumnBorders withRowBorders>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Author</Table.Th>
+                  <Table.Th>Message</Table.Th>
+                  <Table.Th>Deleted By</Table.Th>
+                  <Table.Th>Deleted</Table.Th>
+                  <Table.Th>Actions</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+
+              <Table.Tbody>
+                {data?.map((thought) => (
+                  <Table.Tr key={thought.id}>
+                    <Table.Td>{thought.author}</Table.Td>
+                    <Table.Td>
+                      <Text>{thought.message}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      {formatDeletedByLabel(thought.deletedBy)}
+                    </Table.Td>
+                    <Table.Td>{formatDeletedDate(thought.deletedAt)}</Table.Td>
+                    <Table.Td>
+                      <Group gap="xs">
+                        <Tooltip label="Recover thought">
+                          <ActionIcon
+                            aria-label="Recover thought"
+                            variant="default"
+                            onClick={() => setRestoringThought(thought)}
+                            loading={
+                              restoreMutation.isPending &&
+                              restoringThoughtId === thought.id
+                            }
+                            disabled={
+                              restoreMutation.isPending &&
+                              restoringThoughtId === thought.id
+                            }
+                          >
+                            <IconArrowBackUp size="1em" />
+                          </ActionIcon>
+                        </Tooltip>
+
+                        <Tooltip label="Permanently delete thought">
+                          <ActionIcon
+                            aria-label="Permanently delete thought"
+                            color="red"
+                            onClick={() =>
+                              setPermanentlyDeletingThought(thought)
+                            }
+                            loading={
+                              deleteMutation.isPending &&
+                              deletingThoughtId === thought.id
+                            }
+                            disabled={
+                              deleteMutation.isPending &&
+                              deletingThoughtId === thought.id
+                            }
+                          >
+                            <IconTrashX size="1em" />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+
+                {isFetching ? (
+                  <Table.Tr>
+                    <Table.Td colSpan={5} ta="center">
+                      <Loader />
+                    </Table.Td>
+                  </Table.Tr>
+                ) : (
+                  data?.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5} ta="center">
+                        No deleted thoughts found.
+                      </Table.Td>
+                    </Table.Tr>
+                  )
+                )}
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+        </div>
+
+        <Pagination mt="md" value={page} onChange={setPage} total={total} />
+      </div>
+
+      <PermanentlyDeleteThoughtModal
+        thought={permanentlyDeletingThought}
+        opened={!!permanentlyDeletingThought}
+        onClose={() => setPermanentlyDeletingThought(null)}
+        onConfirm={handleConfirmPermanentDelete}
+        loading={deleteMutation.isPending}
+      />
+
+      <RecoverThoughtModal
+        thought={restoringThought}
+        opened={!!restoringThought}
+        onClose={() => setRestoringThought(null)}
+        onConfirm={(thought) => {
+          restoreMutation.mutate(thought.id);
+          setRestoringThought(null);
+        }}
+        loading={
+          restoreMutation.isPending &&
+          restoringThoughtId === restoringThought?.id
+        }
+      />
+    </Tabs.Panel>
+  );
+}

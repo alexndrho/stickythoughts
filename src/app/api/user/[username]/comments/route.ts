@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { formatUserThreadComments } from "@/utils/thread";
+import type { UserThreadCommentType } from "@/types/thread";
 import { THREADS_PER_PAGE } from "@/config/thread";
 import type IError from "@/types/error";
 
@@ -32,6 +33,10 @@ export async function GET(
       where: {
         author: {
           username,
+        },
+        deletedAt: null,
+        thread: {
+          deletedAt: null,
         },
         ...(session?.user?.username !== username && {
           isAnonymous: false,
@@ -72,7 +77,8 @@ export async function GET(
       },
     });
 
-    const formattedComments = formatUserThreadComments(comments);
+    const formattedComments =
+      formatUserThreadComments(comments) satisfies UserThreadCommentType[];
 
     return NextResponse.json(formattedComments);
   } catch (error) {

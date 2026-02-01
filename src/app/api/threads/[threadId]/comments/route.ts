@@ -35,6 +35,25 @@ export async function POST(
     }
 
     const { threadId } = await params;
+    const threadStatus = await prisma.thread.findUnique({
+      where: { id: threadId },
+      select: { deletedAt: true },
+    });
+
+    if (!threadStatus || threadStatus.deletedAt) {
+      return NextResponse.json(
+        {
+          issues: [
+            {
+              code: "not-found",
+              message: "Thread post not found",
+            },
+          ],
+        } satisfies IError,
+        { status: 404 },
+      );
+    }
+
     const { body, isAnonymous } = createThreadCommentServerInput.parse(
       await request.json(),
     );
@@ -159,6 +178,10 @@ export async function GET(
       }),
       where: {
         threadId,
+        deletedAt: null,
+        thread: {
+          deletedAt: null,
+        },
       },
       include: {
         thread: {

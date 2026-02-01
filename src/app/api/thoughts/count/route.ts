@@ -5,7 +5,9 @@ import IError from "@/types/error";
 
 export async function GET() {
   try {
-    const count = await prisma.thought.count();
+    const count = await prisma.thought.count({
+      where: { deletedAt: null },
+    });
 
     return NextResponse.json({ count }, { status: 200 });
   } catch (error) {

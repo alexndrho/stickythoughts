@@ -1,7 +1,14 @@
 import { type Prisma } from "@/generated/prisma/client";
 
 type PrismaBaseThread = Prisma.ThreadGetPayload<{
-  include: {
+  select: {
+    id: true;
+    title: true;
+    body: true;
+    authorId: true;
+    isAnonymous: true;
+    createdAt: true;
+    updatedAt: true;
     author: {
       select: {
         name: true;
@@ -44,7 +51,14 @@ export type ThreadType = Omit<
 };
 
 type PrismaBaseThreadComment = Prisma.ThreadCommentGetPayload<{
-  include: {
+  select: {
+    id: true;
+    body: true;
+    authorId: true;
+    isAnonymous: true;
+    threadId: true;
+    createdAt: true;
+    updatedAt: true;
     thread: {
       select: {
         authorId: true;
@@ -92,7 +106,14 @@ export type ThreadCommentType = Omit<
 };
 
 type PrismaBaseUserThreadComment = Prisma.ThreadCommentGetPayload<{
-  include: {
+  select: {
+    id: true;
+    body: true;
+    authorId: true;
+    isAnonymous: true;
+    threadId: true;
+    createdAt: true;
+    updatedAt: true;
     thread: {
       select: {
         title: true;

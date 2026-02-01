@@ -4,6 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatThreads } from "@/utils/thread";
+import type { ThreadType } from "@/types/thread";
 import { THREADS_PER_PAGE } from "@/config/thread";
 import type IError from "@/types/error";
 
@@ -33,6 +34,7 @@ export const GET = async (
         author: {
           username,
         },
+        deletedAt: null,
         ...(session?.user?.username !== username && {
           isAnonymous: false,
         }),
@@ -58,7 +60,11 @@ export const GET = async (
         _count: {
           select: {
             likes: true,
-            comments: true,
+            comments: {
+              where: {
+                deletedAt: null,
+              },
+            },
           },
         },
       },
@@ -70,7 +76,7 @@ export const GET = async (
     const formattedThreads = formatThreads({
       sessionUserId: session?.user?.id,
       threads,
-    });
+    }) satisfies ThreadType[];
 
     return NextResponse.json(formattedThreads);
   } catch (error) {

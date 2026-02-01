@@ -98,6 +98,7 @@ export async function GET(req: NextRequest) {
           id: lastId,
         },
       }),
+      where: { deletedAt: null },
       include: {
         author: {
           select: {
@@ -119,7 +120,11 @@ export async function GET(req: NextRequest) {
         _count: {
           select: {
             likes: true,
-            comments: true,
+            comments: {
+              where: {
+                deletedAt: null,
+              },
+            },
           },
         },
       },

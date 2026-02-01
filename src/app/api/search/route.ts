@@ -38,6 +38,7 @@ export async function GET(req: NextRequest) {
         take: MAX_RESULTS,
         where: {
           title: { contains: q, mode: "insensitive" },
+          deletedAt: null,
         },
         select: {
           id: true,
@@ -71,6 +72,7 @@ export async function GET(req: NextRequest) {
         take: MAX_RESULTS / 2,
         where: {
           title: { contains: q, mode: "insensitive" },
+          deletedAt: null,
         },
         select: {
           id: true,

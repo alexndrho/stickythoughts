@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type IError from "@/types/error";
@@ -43,8 +44,12 @@ export async function DELETE(
       );
     }
 
-    await prisma.thought.delete({
-      where: { id: thoughtId },
+    await prisma.thought.update({
+      where: {
+        id: thoughtId,
+        deletedAt: null,
+      },
+      data: { deletedAt: new Date(), deletedById: session.user.id },
     });
 
     return NextResponse.json(
@@ -52,8 +57,23 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
-    console.error(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        return NextResponse.json(
+          {
+            issues: [
+              {
+                code: "not-found",
+                message: "Thought not found",
+              },
+            ],
+          } satisfies IError,
+          { status: 404 },
+        );
+      }
+    }
 
+    console.error(error);
     return NextResponse.json(
       {
         issues: [

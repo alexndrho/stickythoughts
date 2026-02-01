@@ -1,11 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
+import { adminOptions } from "../options";
 import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
-
-export const adminOptions = queryOptions({
-  queryKey: ["admin"],
-});
 
 export const adminUsersOptions = queryOptions({
   queryKey: [...adminOptions.queryKey, "users"],

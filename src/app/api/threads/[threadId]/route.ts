@@ -45,13 +45,17 @@ export async function GET(
         _count: {
           select: {
             likes: true,
-            comments: true,
+            comments: {
+              where: {
+                deletedAt: null,
+              },
+            },
           },
         },
       },
     });
 
-    if (!thread) {
+    if (!thread || thread.deletedAt) {
       return NextResponse.json(
         {
           issues: [
@@ -80,7 +84,7 @@ export async function GET(
       comments: {
         count: _count.comments,
       },
-    };
+    } satisfies ThreadType;
 
     return NextResponse.json(formattedPost);
   } catch (error) {
@@ -116,15 +120,23 @@ export async function PUT(
       );
     }
 
-    const updatedThread = await prisma.thread.update({
+    const updateResult = await prisma.thread.update({
       where: {
         id: threadId,
         authorId: session.user.id,
+        deletedAt: null,
       },
       data: {
         body,
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        authorId: true,
+        isAnonymous: true,
+        createdAt: true,
+        updatedAt: true,
         author: {
           select: {
             name: true,
@@ -135,7 +147,22 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updatedThread);
+    const { authorId, ...restThread } = updateResult;
+
+    const formattedThread: ThreadType = {
+      ...restThread,
+      author: restThread.isAnonymous ? undefined : restThread.author,
+      isOwner: session.user.id === authorId,
+      likes: {
+        liked: false,
+        count: 0,
+      },
+      comments: {
+        count: 0,
+      },
+    } satisfies ThreadType;
+
+    return NextResponse.json(formattedThread);
   } catch (error) {
     if (error instanceof ZodError) {
       const zodError: IError = {
@@ -147,7 +174,7 @@ export async function PUT(
 
       return NextResponse.json(zodError, { status: 400 });
     } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2015") {
+      if (error.code === "P2025") {
         return NextResponse.json(
           {
             issues: [
@@ -201,10 +228,15 @@ export async function DELETE(
       },
     });
 
-    await prisma.thread.delete({
+    await prisma.thread.update({
       where: {
         id: threadId,
+        deletedAt: null,
         ...(hasPermission.success ? {} : { authorId: session.user.id }),
+      },
+      data: {
+        deletedAt: new Date(),
+        deletedById: session.user.id,
       },
     });
 
@@ -216,7 +248,7 @@ export async function DELETE(
     );
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2015") {
+      if (error.code === "P2025") {
         return NextResponse.json(
           {
             issues: [

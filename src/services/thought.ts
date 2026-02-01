@@ -1,5 +1,9 @@
-import type { Prisma, Thought } from "@/generated/prisma/client";
-import { parseThoughtFromServer, ThoughtFromServer } from "@/utils/thought";
+import type { Prisma } from "@/generated/prisma/client";
+import {
+  parsePublicThoughtFromServer,
+  PublicThoughtFromServer,
+  PublicThoughtPayload,
+} from "@/utils/thought";
 import { toServerError } from "@/utils/error/ServerError";
 import { apiUrl } from "@/utils/text";
 
@@ -11,7 +15,7 @@ const getThoughts = async ({
   lastId?: string;
   page?: number;
   searchTerm?: string;
-}): Promise<Thought[]> => {
+}): Promise<PublicThoughtPayload[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
@@ -34,7 +38,7 @@ const getThoughts = async ({
     throw toServerError("Failed to get thoughts", data.issues);
   }
 
-  return data.map(parseThoughtFromServer);
+  return data.map(parsePublicThoughtFromServer);
 };
 
 const submitThought = async (
@@ -86,4 +90,4 @@ const getThoughtsCount = async (): Promise<number> => {
 
 export { getThoughts, getThoughtsCount, submitThought };
 
-export type { ThoughtFromServer };
+export type { PublicThoughtFromServer, PublicThoughtPayload };
