@@ -16,3 +16,10 @@ export const admin = ac.newRole({
   thread: ["list-deleted", "delete", "restore", "purge"],
   threadComment: ["list-deleted", "delete", "restore", "purge"],
 });
+
+export const moderator = ac.newRole({
+  user: ["ban"],
+  thought: ["delete"],
+  thread: ["delete"],
+  threadComment: ["delete"],
+});

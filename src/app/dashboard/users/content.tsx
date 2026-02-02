@@ -186,7 +186,15 @@ export default function Content() {
                   </Table.Td>
 
                   <Table.Td>
-                    <Badge color={user.role === "admin" ? "blue" : "gray"}>
+                    <Badge
+                      color={
+                        user.role === "admin"
+                          ? "blue"
+                          : user.role === "moderator"
+                            ? "green"
+                            : "gray"
+                      }
+                    >
                       {user.role || "user"}
                     </Badge>
                   </Table.Td>

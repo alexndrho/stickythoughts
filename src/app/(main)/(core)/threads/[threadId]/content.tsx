@@ -52,7 +52,15 @@ export default function Content({ id }: ContentProps) {
   const { data: thread } = useSuspenseQuery(threadOptions(id));
 
   const isAuthor = thread.isOwner;
-  const hasPermission = session?.user.role === "admin";
+  const hasPermissionToDelete =
+    session?.user?.role === "admin" || session?.user?.role === "moderator"
+      ? authClient.admin.checkRolePermission({
+          role: session.user.role,
+          permission: {
+            thread: ["delete"],
+          },
+        })
+      : false;
 
   // Like
   const handleLikeMutation = useMutation({
@@ -119,7 +127,7 @@ export default function Content({ id }: ContentProps) {
           </div>
         </div>
 
-        {(isAuthor || hasPermission) && (
+        {(isAuthor || hasPermissionToDelete) && (
           <Menu>
             <Menu.Target>
               <ActionIcon
@@ -219,7 +227,7 @@ export default function Content({ id }: ContentProps) {
         />
       </section>
 
-      {(isAuthor || hasPermission) && (
+      {(isAuthor || hasPermissionToDelete) && (
         <DeleteThreadModal
           id={thread.id}
           title={thread.title}

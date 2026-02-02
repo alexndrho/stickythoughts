@@ -11,27 +11,57 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 
+import { authClient } from "@/lib/auth-client";
 import classes from "./layout.module.css";
 
-const navLinks = [
+type AdminCheckParams = Parameters<
+  typeof authClient.admin.checkRolePermission
+>[0];
+type AdminPermissions = NonNullable<
+  Extract<AdminCheckParams, { permissions: unknown }>["permissions"]
+>;
+
+type NavLinkConfig = {
+  icon: React.ReactNode;
+  label: string;
+  href: string;
+  permissions?: AdminPermissions;
+};
+
+const navLinks: NavLinkConfig[] = [
   {
     icon: <IconMessage size="1em" />,
     label: "Thoughts",
     href: "/dashboard",
   },
-  { icon: <IconUser size="1em" />, label: "Users", href: "/dashboard/users" },
+  {
+    icon: <IconUser size="1em" />,
+    label: "Users",
+    href: "/dashboard/users",
+    permissions: {
+      user: ["list"],
+    },
+  },
   {
     icon: <IconTrash size="1em" />,
     label: "Deleted",
     href: "/dashboard/deleted",
+    permissions: {
+      thought: ["list-deleted"],
+      thread: ["list-deleted"],
+      threadComment: ["list-deleted"],
+    },
   },
 ];
 
+export interface AdminShellProps {
+  role: "admin" | "moderator";
+}
+
 export default function AdminShell({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  role,
+}: React.PropsWithChildren<AdminShellProps>) {
   const pathname = usePathname();
   const [opened, { toggle, close }] = useDisclosure();
 
@@ -59,19 +89,28 @@ export default function AdminShell({
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        {navLinks.map((link) => (
-          <NavLink
-            key={link.label}
-            component={Link}
-            href={link.href}
-            label={link.label}
-            leftSection={link.icon}
-            active={pathname === link.href}
-            onClick={() => {
-              close();
-            }}
-          />
-        ))}
+        {navLinks
+          .filter((link) => {
+            return link.permissions
+              ? authClient.admin.checkRolePermission({
+                  role,
+                  permissions: link.permissions,
+                })
+              : true;
+          })
+          .map((link) => (
+            <NavLink
+              key={link.label}
+              component={Link}
+              href={link.href}
+              label={link.label}
+              leftSection={link.icon}
+              active={pathname === link.href}
+              onClick={() => {
+                close();
+              }}
+            />
+          ))}
 
         <NavLink
           mt="auto"

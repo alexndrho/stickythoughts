@@ -1,7 +1,11 @@
 import { headers } from "next/headers";
 import { after } from "next/server";
 import { betterAuth } from "better-auth";
-import { APIError } from "better-auth/api";
+import {
+  APIError,
+  createAuthMiddleware,
+  getSessionFromCtx,
+} from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
@@ -17,7 +21,7 @@ import { generateUsername } from "unique-username-generator";
 
 import { prisma } from "./db";
 import { getRedisClient } from "./redis";
-import { ac, admin } from "./permissions";
+import { ac, admin, moderator } from "./permissions";
 import { resend } from "./email";
 import { removeProfilePicture } from "@/services/user";
 import EmailOTPTemplate from "@/components/emails/email-otp-template";
@@ -140,6 +144,7 @@ export const auth = betterAuth({
       ac,
       roles: {
         admin,
+        moderator,
       },
     }),
     twoFactor(),
@@ -246,4 +251,40 @@ export const auth = betterAuth({
       },
     }),
   ],
+  hooks: {
+    // current better-auth version doesn't support targeting specific roles
+    // only admin can ban everyone, moderator can only ban user or null role
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/admin/ban-user" && ctx.path !== "/admin/unban-user") {
+        return;
+      }
+
+      const session = await getSessionFromCtx(ctx);
+      if (!session || session.user.role === "admin") {
+        return;
+      }
+
+      const targetUserId =
+        typeof ctx.body === "object" && ctx.body ? ctx.body.userId : undefined;
+
+      if (!targetUserId || typeof targetUserId !== "string") {
+        return;
+      }
+
+      const targetUser = await prisma.user.findUnique({
+        where: { id: targetUserId },
+        select: { role: true },
+      });
+
+      if (!targetUser) {
+        throw new APIError("NOT_FOUND", { message: "User not found" });
+      }
+
+      if (targetUser.role !== "user" && targetUser.role !== null) {
+        throw new APIError("FORBIDDEN", {
+          message: "You are not allowed to ban this user.",
+        });
+      }
+    }),
+  },
 });

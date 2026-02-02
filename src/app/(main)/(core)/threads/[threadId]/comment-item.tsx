@@ -17,7 +17,7 @@ import {
 import { isNotEmptyHTML, useForm } from "@mantine/form";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
-import { type authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { setUpdateThreadCommentQueryData } from "@/app/(main)/(core)/threads/set-query-data";
 import TextEditor from "@/components/text-editor";
 import AuthorAvatar from "@/components/author-avatar";
@@ -44,7 +44,15 @@ export default function CommentItem({
   const [isEditable, setIsEditable] = useState(false);
 
   const isAuthor = session?.user.id === comment.author?.id;
-  const hasPermission = session?.user.role === "admin";
+  const hasPermission =
+    session?.user?.role === "admin" || session?.user?.role === "moderator"
+      ? authClient.admin.checkRolePermission({
+          role: session.user.role,
+          permission: {
+            thread: ["delete"],
+          },
+        })
+      : false;
 
   return (
     <div>

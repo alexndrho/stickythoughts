@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent } from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal, Text, TextInput } from "@mantine/core";
+import { Button, Group, Modal, Select, Text, TextInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { IconEdit } from "@tabler/icons-react";
 
@@ -19,6 +19,7 @@ export interface EditUserModalProps {
     name?: string;
     username: string;
     email?: string;
+    role?: string;
   } | null;
   onUsernameChange?: (newUsername: string) => void;
   opened: boolean;
@@ -36,6 +37,7 @@ export default function EditUserModal({
       name: undefined as string | undefined,
       username: undefined as string | undefined,
       email: undefined as string | undefined,
+      role: undefined as string | undefined,
     },
   });
 
@@ -44,6 +46,7 @@ export default function EditUserModal({
       name: user?.name,
       username: user?.username,
       email: user?.email,
+      role: user?.role,
     });
 
     form.reset();
@@ -61,7 +64,7 @@ export default function EditUserModal({
           name: values.name,
           email: values.email,
           username: values.username,
-          // role: values.role,
+          role: values.role,
         },
       }),
     onSuccess: ({ error }) => {
@@ -153,7 +156,7 @@ export default function EditUserModal({
             />
           )}
 
-          {/* <Select
+          <Select
             mt="md"
             allowDeselect={false}
             label={
@@ -163,13 +166,12 @@ export default function EditUserModal({
               />
             }
             data={[
-              { value: "user", label: "User" },
               { value: "moderator", label: "Moderator" },
-              { value: "admin", label: "Admin" },
+              { value: "user", label: "User" },
             ]}
             value={form.values.role}
             onChange={(value) => form.setFieldValue("role", value || undefined)}
-          /> */}
+          />
 
           {form.errors.root && (
             <Text mt="xs" size="xs" c="red">

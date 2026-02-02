@@ -1,5 +1,8 @@
 import { type Metadata } from "next";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
+import { auth } from "@/lib/auth";
 import Content from "./content";
 
 export const metadata: Metadata = {
@@ -9,6 +12,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DeletedContentPage() {
+export default async function DeletedContentPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const hasPermission = await auth.api.userHasPermission({
+    body: {
+      userId: session?.user.id,
+      permission: {
+        thought: ["list-deleted"],
+        thread: ["list-deleted"],
+        threadComment: ["list-deleted"],
+      },
+    },
+  });
+
+  if (!hasPermission.success) {
+    notFound();
+  }
+
   return <Content />;
 }

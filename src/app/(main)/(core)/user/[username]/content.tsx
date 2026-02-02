@@ -48,6 +48,21 @@ export interface ContentProps {
   username: string;
 }
 
+type AdminCheckParams = Parameters<
+  typeof authClient.admin.checkRolePermission
+>[0];
+type AdminPermissions = NonNullable<
+  Extract<AdminCheckParams, { permissions: unknown }>["permissions"]
+>;
+
+const hasAdminPermission = (
+  role: AdminCheckParams["role"] | undefined,
+  permissions: AdminPermissions,
+) => {
+  if (!role) return false;
+  return authClient.admin.checkRolePermission({ role, permissions });
+};
+
 export default function Content({ username }: ContentProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -83,9 +98,25 @@ export default function Content({ username }: ContentProps) {
     router.replace(`${pathname}?${params.toString()}`);
   };
 
+  const role = session?.data?.user.role;
   const isOwner = session?.data?.user.username === user.username;
-  const hasPermission = session?.data?.user.role === "admin";
-  const canManageUser = hasPermission && !isOwner;
+  const isStaff = role === "admin" || role === "moderator";
+
+  const canUpdateUser = isStaff
+    ? hasAdminPermission(role, { user: ["update"] })
+    : false;
+  const canBanUser = isStaff
+    ? hasAdminPermission(role, { user: ["ban"] })
+    : false;
+  const canRevokeSessions = isStaff
+    ? hasAdminPermission(role, { session: ["revoke"] })
+    : false;
+
+  const canEditOtherUser = !isOwner && canUpdateUser;
+  const canRevokeOtherUserSessions = !isOwner && canRevokeSessions;
+  const canBanOtherUser = !isOwner && canBanUser;
+  const canManageUser =
+    canEditOtherUser || canBanOtherUser || canRevokeOtherUserSessions;
 
   return (
     <div className={classes.container}>
@@ -112,7 +143,7 @@ export default function Content({ username }: ContentProps) {
           </div>
         </div>
 
-        {(isOwner || hasPermission) && (
+        {(isOwner || canManageUser) && (
           <Menu>
             <Menu.Target>
               <ActionIcon variant="default" aria-label="User actions">
@@ -121,20 +152,22 @@ export default function Content({ username }: ContentProps) {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item
-                leftSection={<IconEdit size="1em" />}
-                onClick={() => {
-                  if (canManageUser) {
-                    editUserModalHandler.open();
-                  } else {
-                    router.push("/settings");
-                  }
-                }}
-              >
-                Edit
-              </Menu.Item>
+              {(isOwner || canEditOtherUser) && (
+                <Menu.Item
+                  leftSection={<IconEdit size="1em" />}
+                  onClick={() => {
+                    if (canEditOtherUser) {
+                      editUserModalHandler.open();
+                    } else {
+                      router.push("/settings");
+                    }
+                  }}
+                >
+                  Edit
+                </Menu.Item>
+              )}
 
-              {canManageUser && (
+              {canEditOtherUser && (
                 <>
                   <CopyButton value={user.id}>
                     {({ copy }) => (
@@ -175,34 +208,37 @@ export default function Content({ username }: ContentProps) {
                   >
                     Delete Bio
                   </Menu.Item>
-
-                  <Menu.Item
-                    color="red"
-                    leftSection={<IconClock size="1em" />}
-                    onClick={revokeUserSessionsModalHandler.open}
-                  >
-                    Revoke Sessions
-                  </Menu.Item>
-
-                  {!user.banned ? (
-                    <Menu.Item
-                      color="red"
-                      leftSection={<IconHammer size="1em" />}
-                      onClick={banUserModalHandler.open}
-                    >
-                      Ban
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      color="red"
-                      leftSection={<IconHammerOff size="1em" />}
-                      onClick={unbanUserModalHandler.open}
-                    >
-                      Unban
-                    </Menu.Item>
-                  )}
                 </>
               )}
+
+              {canRevokeOtherUserSessions && (
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconClock size="1em" />}
+                  onClick={revokeUserSessionsModalHandler.open}
+                >
+                  Revoke Sessions
+                </Menu.Item>
+              )}
+
+              {canBanOtherUser &&
+                (!user.banned ? (
+                  <Menu.Item
+                    color="red"
+                    leftSection={<IconHammer size="1em" />}
+                    onClick={banUserModalHandler.open}
+                  >
+                    Ban
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    color="red"
+                    leftSection={<IconHammerOff size="1em" />}
+                    onClick={unbanUserModalHandler.open}
+                  >
+                    Unban
+                  </Menu.Item>
+                ))}
             </Menu.Dropdown>
           </Menu>
         )}
@@ -270,7 +306,7 @@ export default function Content({ username }: ContentProps) {
         />
       )}
 
-      {canManageUser && (
+      {canEditOtherUser && (
         <>
           <EditUserModal
             user={{
@@ -302,16 +338,22 @@ export default function Content({ username }: ContentProps) {
             opened={deleteUserBioModalOpened}
             onClose={deleteUserBioModalHandler.close}
           />
+        </>
+      )}
 
-          <RevokeUserSessionsModal
-            user={{
-              id: user.id,
-              username: user.username,
-            }}
-            opened={revokeUserSessionsModalOpened}
-            onClose={revokeUserSessionsModalHandler.close}
-          />
+      {canRevokeOtherUserSessions && (
+        <RevokeUserSessionsModal
+          user={{
+            id: user.id,
+            username: user.username,
+          }}
+          opened={revokeUserSessionsModalOpened}
+          onClose={revokeUserSessionsModalHandler.close}
+        />
+      )}
 
+      {canBanOtherUser && (
+        <>
           <BanUserModal
             user={{
               id: user.id,

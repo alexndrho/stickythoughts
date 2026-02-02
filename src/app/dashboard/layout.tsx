@@ -13,9 +13,9 @@ export default async function AdminLayout({
     headers: await headers(),
   });
 
-  if (session?.user.role !== "admin") {
+  if (session?.user.role !== "admin" && session?.user.role !== "moderator") {
     notFound();
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminShell role={session.user.role}>{children}</AdminShell>;
 }

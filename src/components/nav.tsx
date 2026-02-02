@@ -242,7 +242,8 @@ function UserMenu({
       <Menu.Dropdown>
         {session.user && (
           <>
-            {session.user.role === "admin" && (
+            {(session.user.role === "admin" ||
+              session.user.role === "moderator") && (
               <>
                 <Menu.Item
                   component={Link}
