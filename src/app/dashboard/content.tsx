@@ -2,11 +2,19 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ActionIcon, Pagination, Table, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Loader,
+  Pagination,
+  Table,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
-import { thoughtCountOptions, thoughtPageOptions } from "@/app/(main)/options";
-import { THOUGHTS_PER_PAGE } from "@/config/thought";
+import { adminThoughtsPageOptions } from "@/app/dashboard/thoughts/options";
+import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
+import { thoughtCountOptions } from "@/app/(main)/options";
 import dashboardClasses from "./dashboard.module.css";
 import DeleteThoughtModal from "./delete-thought-modal";
 import type { PublicThoughtPayload } from "@/utils/thought";
@@ -14,7 +22,7 @@ import type { PublicThoughtPayload } from "@/utils/thought";
 export default function Content() {
   const [page, setPage] = useState(1);
 
-  const { data } = useQuery(thoughtPageOptions(page));
+  const { data, isFetching } = useQuery(adminThoughtsPageOptions(page));
 
   const { data: count } = useQuery(thoughtCountOptions);
 
@@ -64,6 +72,22 @@ export default function Content() {
                   </Table.Td>
                 </Table.Tr>
               ))}
+
+              {isFetching ? (
+                <Table.Tr>
+                  <Table.Td colSpan={3} ta="center">
+                    <Loader />
+                  </Table.Td>
+                </Table.Tr>
+              ) : (
+                data?.length === 0 && (
+                  <Table.Tr>
+                    <Table.Td colSpan={3} ta="center">
+                      No thoughts found.
+                    </Table.Td>
+                  </Table.Tr>
+                )
+              )}
             </Table.Tbody>
           </Table>
         </Table.ScrollContainer>
@@ -73,7 +97,7 @@ export default function Content() {
         mt="md"
         value={page}
         onChange={setPage}
-        total={Math.ceil((count || 0) / THOUGHTS_PER_PAGE)}
+        total={Math.ceil((count || 0) / ADMIN_THOUGHTS_PER_PAGE)}
       />
 
       <DeleteThoughtModal

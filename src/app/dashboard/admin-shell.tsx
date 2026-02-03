@@ -33,6 +33,9 @@ const navLinks: NavLinkConfig[] = [
     icon: <IconMessage size="1em" />,
     label: "Thoughts",
     href: "/dashboard",
+    permissions: {
+      thought: ["list"],
+    },
   },
   {
     icon: <IconUser size="1em" />,

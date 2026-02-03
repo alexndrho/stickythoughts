@@ -12,7 +12,6 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const searchTerm = searchParams.get("searchTerm");
   const lastId = searchParams.get("lastId");
-  const page = Number(searchParams.get("page") || "1");
 
   try {
     const thoughts = await prisma.thought.findMany({
@@ -24,9 +23,7 @@ export async function GET(req: NextRequest) {
               id: lastId,
             },
           }
-        : {
-            skip: (page - 1) * THOUGHTS_PER_PAGE,
-          }),
+        : {}),
       where: {
         ...(searchTerm && {
           author: {

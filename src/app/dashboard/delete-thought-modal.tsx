@@ -6,6 +6,7 @@ import { Button, Group, Modal, Paper, Text } from "@mantine/core";
 import { getQueryClient } from "@/lib/get-query-client";
 import type { PublicThoughtPayload } from "@/utils/thought";
 import { thoughtsOptions } from "@/app/(main)/options";
+import { adminThoughtsOptions } from "@/app/dashboard/thoughts/options";
 import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { deleteThought } from "@/services/moderate/thought";
 
@@ -28,6 +29,9 @@ export default function DeleteThoughtModal({
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
         queryKey: thoughtsOptions.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminThoughtsOptions.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: deletedThoughtsOptions.queryKey,

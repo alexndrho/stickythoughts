@@ -9,20 +9,15 @@ import { apiUrl } from "@/utils/text";
 
 const getThoughts = async ({
   lastId,
-  page,
   searchTerm,
 }: {
   lastId?: string;
-  page?: number;
   searchTerm?: string;
 }): Promise<PublicThoughtPayload[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
     params.append("lastId", lastId);
-  }
-  if (page) {
-    params.append("page", page.toString());
   }
   if (searchTerm) {
     params.append("searchTerm", searchTerm);

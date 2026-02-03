@@ -15,13 +15,6 @@ export const thoughtCountOptions = queryOptions({
   },
 });
 
-export const thoughtPageOptions = (page: number) => {
-  return queryOptions({
-    queryKey: [...thoughtsOptions.queryKey, page],
-    queryFn: () => getThoughts({ page }),
-  });
-};
-
 // infinite query options
 export const thoughtsInfiniteOptions = infiniteQueryOptions({
   queryKey: [...thoughtsOptions.queryKey, "infiniteThoughts"],
