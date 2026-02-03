@@ -155,6 +155,29 @@ export default function Content() {
           </Skeleton>
         </div>
 
+        <div className={classes["feature-grid"]}>
+          <div className={classes["feature-card"]}>
+            <Text className={classes["feature-title"]}>Stick a thought</Text>
+            <Text size="sm" c="dimmed">
+              Enough space for a feeling, a moment, or a question.
+            </Text>
+          </div>
+
+          <div className={classes["feature-card"]}>
+            <Text className={classes["feature-title"]}>Find your people</Text>
+            <Text size="sm" c="dimmed">
+              Search by author to follow voices you care about.
+            </Text>
+          </div>
+
+          <div className={classes["feature-card"]}>
+            <Text className={classes["feature-title"]}>Join the threads</Text>
+            <Text size="sm" c="dimmed">
+              Start longer conversations when a thought deserves more.
+            </Text>
+          </div>
+        </div>
+
         <div className={classes["actions-bar"]}>
           <Input
             ref={searchRef}

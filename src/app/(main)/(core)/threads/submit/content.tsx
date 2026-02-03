@@ -114,7 +114,7 @@ export default function Content() {
 
   return (
     <Container size="sm" className={classes.container}>
-      <Title className={classes.title}>Create post</Title>
+      <Title className={classes.title}>Start a thread</Title>
 
       <form onSubmit={form.onSubmit((value) => mutation.mutate(value))}>
         <TextInput
@@ -144,7 +144,7 @@ export default function Content() {
             loading={mutation.isPending}
             disabled={!form.isDirty("title") || !form.isDirty("body")}
           >
-            Submit
+            Post it!
           </Button>
         </Group>
       </form>

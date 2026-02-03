@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { Button, Card, Kbd, Text } from "@mantine/core";
+import { Button, Card, Kbd, Text, Title } from "@mantine/core";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -86,6 +86,15 @@ export default function Content() {
 
   return (
     <div className={classes.container}>
+      <div className={classes["threads-header"]}>
+        <Title>Threads</Title>
+
+        <Text c="dimmed">
+          Longer conversations. Start a new thread or jump into one that speaks
+          to you.
+        </Text>
+      </div>
+
       <div className={classes["actions-bar"]}>
         <Button
           variant="default"
@@ -105,7 +114,7 @@ export default function Content() {
           rightSection={<IconMessage size="1em" />}
           onClick={handleClickSubmitPost}
         >
-          Submit a thread
+          Start a thread
         </Button>
       </div>
 
