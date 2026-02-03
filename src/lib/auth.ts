@@ -185,7 +185,7 @@ export const auth = betterAuth({
         "/sign-in/email",
         "/sign-in/anonymous",
         "/sign-in/username",
-        // "/forget-password", // Disabled because it doesn't work
+        "/email-otp/send-verification-otp",
       ],
     }),
     anonymous({
