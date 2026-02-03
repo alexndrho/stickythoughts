@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { Button, Kbd } from "@mantine/core";
+import { Button, Card, Kbd, Text } from "@mantine/core";
 import { IconMessage, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -108,6 +108,33 @@ export default function Content() {
           Submit a thread
         </Button>
       </div>
+
+      {!session && (
+        <Card withBorder className={classes["sign-in-card"]}>
+          <Text
+            size="sm"
+            c="blue"
+            className={classes["sign-in-prompt__eyebrow"]}
+          >
+            New here?
+          </Text>
+
+          <Text size="lg" className={classes["sign-in-prompt__title"]}>
+            Start a thread or join the conversation
+          </Text>
+
+          <Text className={classes["sign-in-prompt__copy"]}>
+            Sign in to post or comment. You can also continue anonymously and
+            decide later whether to keep the account for creating.
+          </Text>
+
+          <div className={classes["sign-in-prompt__actions"]}>
+            <Button component="a" href="/sign-in" variant="default">
+              Sign in
+            </Button>
+          </div>
+        </Card>
+      )}
 
       <InfiniteScroll
         onLoadMore={fetchNextPostsPage}

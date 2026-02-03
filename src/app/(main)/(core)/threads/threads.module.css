@@ -20,6 +20,31 @@
   flex: 1;
 }
 
+.sign-in-card {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.sign-in-card__stack {
+  align-items: flex-start;
+}
+
+.sign-in-prompt__eyebrow {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sign-in-prompt__title {
+  font-weight: 600;
+}
+
+.sign-in-prompt__copy {
+  color: var(--mantine-color-dimmed);
+}
+
+.sign-in-prompt__actions {
+  margin-top: var(--mantine-spacing-xs);
+}
+
 .threads {
   display: flex;
   flex-direction: column;
