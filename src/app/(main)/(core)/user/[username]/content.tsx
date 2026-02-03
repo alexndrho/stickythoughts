@@ -7,6 +7,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   ActionIcon,
   Avatar,
+  Badge,
   CopyButton,
   Menu,
   Tabs,
@@ -127,12 +128,26 @@ export default function Content({ username }: ContentProps) {
           <div className={classes.header__details}>
             {user.name ? (
               <>
-                <Title size="h2">{user.name || user.username}</Title>
+                <div className={classes.header__nameRow}>
+                  <Title size="h2">{user.name || user.username}</Title>
+                  {isStaff && user.banned && (
+                    <Badge color="red" size="sm">
+                      Banned
+                    </Badge>
+                  )}
+                </div>
 
                 <Text size="lg">@{user.username}</Text>
               </>
             ) : (
-              <Title size="h2">@{user.username}</Title>
+              <div className={classes.header__nameRow}>
+                <Title size="h2">@{user.username}</Title>
+                {isStaff && user.banned && (
+                  <Badge color="red" size="sm">
+                    Banned
+                  </Badge>
+                )}
+              </div>
             )}
 
             {user.bio && (

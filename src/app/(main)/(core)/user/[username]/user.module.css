@@ -21,6 +21,13 @@
   margin-left: var(--mantine-spacing-md);
 }
 
+.header__nameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  flex-wrap: wrap;
+}
+
 .header__bio {
   color: var(--mantine-color-dimmed);
 }
