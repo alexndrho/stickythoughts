@@ -3,9 +3,9 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { formatThreads } from "@/utils/thread";
-import type { ThreadType } from "@/types/thread";
-import { THREADS_PER_PAGE } from "@/config/thread";
+import { formatLetters } from "@/utils/letter";
+import type { LetterType } from "@/types/letter";
+import { LETTERS_PER_PAGE } from "@/config/letter";
 import type IError from "@/types/error";
 
 export async function GET(
@@ -66,8 +66,8 @@ export async function GET(
       );
     }
 
-    const threads = await prisma.thread.findMany({
-      take: THREADS_PER_PAGE,
+    const letters = await prisma.letter.findMany({
+      take: LETTERS_PER_PAGE,
       ...(lastId && {
         skip: 1,
         cursor: {
@@ -105,7 +105,7 @@ export async function GET(
         _count: {
           select: {
             likes: true,
-            comments: {
+            replies: {
               where: {
                 deletedAt: null,
               },
@@ -118,12 +118,12 @@ export async function GET(
       },
     });
 
-    const formattedThreads = formatThreads({
+    const formattedLetters = formatLetters({
       sessionUserId: session?.user?.id,
-      threads,
-    }) satisfies ThreadType[];
+      letters,
+    }) satisfies LetterType[];
 
-    return NextResponse.json(formattedThreads);
+    return NextResponse.json(formattedLetters);
   } catch (error) {
     console.error("Error fetching user likes:", error);
 

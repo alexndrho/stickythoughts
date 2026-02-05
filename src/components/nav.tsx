@@ -47,9 +47,9 @@ const navLinks = [
     href: "/",
   },
   {
-    label: "Threads",
+    label: "Letters",
     icon: IconMessage,
-    href: "/threads",
+    href: "/letters",
   },
   {
     label: "About",

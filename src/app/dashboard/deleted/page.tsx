@@ -22,8 +22,8 @@ export default async function DeletedContentPage() {
       userId: session?.user.id,
       permission: {
         thought: ["list-deleted"],
-        thread: ["list-deleted"],
-        threadComment: ["list-deleted"],
+        letter: ["list-deleted"],
+        letterReply: ["list-deleted"],
       },
     },
   });

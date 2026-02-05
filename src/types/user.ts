@@ -51,18 +51,18 @@ export type BaseUserNotificationType = Prisma.NotificationGetPayload<{
     type: true;
     isRead: true;
     updatedAt: true;
-    thread: {
+    letter: {
       select: {
         id: true;
         title: true;
       };
     };
-    comment: {
+    reply: {
       select: {
         id: true;
         body: true;
         isAnonymous: true;
-        thread: {
+        letter: {
           select: {
             id: true;
           };
@@ -100,8 +100,8 @@ export type UserNotificationType = Pick<
     isAnonymous?: boolean;
   };
   otherActorCount: number;
-  threadId: string | undefined;
-  commentId: string | undefined;
+  letterId: string | undefined;
+  replyId: string | undefined;
   body: string;
   updatedAt: string;
 };

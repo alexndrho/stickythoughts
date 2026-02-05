@@ -31,18 +31,18 @@ export async function GET(req: NextRequest) {
         type: true,
         isRead: true,
         updatedAt: true,
-        thread: {
+        letter: {
           select: {
             id: true,
             title: true,
           },
         },
-        comment: {
+        reply: {
           select: {
             id: true,
             body: true,
             isAnonymous: true,
-            thread: {
+            letter: {
               select: {
                 id: true,
               },

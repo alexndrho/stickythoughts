@@ -31,8 +31,8 @@ export async function generateMetadata({
 
     const tabParam = resolvedSearchParams.tab || "";
     let canonical = `/user/${username}`;
-    if (tabParam === "comments") {
-      canonical = `/user/${username}?tab=comments`;
+    if (tabParam === "replies") {
+      canonical = `/user/${username}?tab=replies`;
     } else if (tabParam === "likes") {
       canonical = `/user/${username}?tab=likes`;
     }

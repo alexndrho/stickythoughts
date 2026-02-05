@@ -72,17 +72,17 @@
   margin-top: var(--mantine-spacing-md);
 }
 
-.user-comment-item {
+.user-reply-item {
   position: relative;
   box-shadow: var(--mantine-shadow-xs);
   transition: all 0.3s ease;
 }
 
-.user-comment-item:hover {
+.user-reply-item:hover {
   transform: translateY(calc(-1 * var(--mantine-spacing-xs)));
 }
 
-.user-comment-item__main-link {
+.user-reply-item__main-link {
   position: absolute;
   top: 0;
   left: 0;
@@ -90,27 +90,27 @@
   right: 0;
 }
 
-.user-comment-item__content {
+.user-reply-item__content {
   padding: var(--mantine-spacing-md);
 }
 
-.user-comment-item__header {
+.user-reply-item__header {
   margin-bottom: var(--mantine-spacing-sm);
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-xs);
 }
 
-.user-comment-item__anonymous-avatar {
+.user-reply-item__anonymous-avatar {
   pointer-events: none;
 }
 
-.user-comment-item__like-btn {
+.user-reply-item__like-btn {
   position: relative;
   margin-top: var(--mantine-spacing-md);
 }
 
-.user-comment-item__link {
+.user-reply-item__link {
   position: relative;
   font-weight: bold;
   color: var(--mantine-color-text);

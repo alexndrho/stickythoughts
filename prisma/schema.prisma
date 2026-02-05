@@ -38,16 +38,16 @@ model User {
   banReason   String?
   banExpires  DateTime?
 
-  sessions              Session[]
-  accounts              Account[]
-  settings              UserSettings?
-  threads               Thread[]            @relation("ThreadAuthor")
-  threadLikes           ThreadLike[]
-  threadComments        ThreadComment[]     @relation("ThreadCommentAuthor")
-  threadCommentLikes    ThreadCommentLike[]
-  deletedThreads        Thread[]            @relation("ThreadDeletedBy")
-  deletedThreadComments ThreadComment[]     @relation("ThreadCommentDeletedBy")
-  deletedThoughts       Thought[]           @relation("ThoughtDeletedBy")
+  sessions             Session[]
+  accounts             Account[]
+  settings             UserSettings?
+  letters              Letter[]          @relation("LetterAuthor")
+  letterLikes          LetterLike[]
+  letterReplies        LetterReply[]     @relation("LetterReplyAuthor")
+  letterReplyLikes     LetterReplyLike[]
+  deletedLetters       Letter[]          @relation("LetterDeletedBy")
+  deletedLetterReplies LetterReply[]     @relation("LetterReplyDeletedBy")
+  deletedThoughts      Thought[]         @relation("ThoughtDeletedBy")
 
   notifications      Notification[]      @relation("UserNotification")
   actedNotifications NotificationActor[]
@@ -143,21 +143,21 @@ model TwoFactor {
   @@map("twoFactor")
 }
 
-model Thread {
-  id          String          @id @default(cuid())
+model Letter {
+  id          String        @id @default(cuid())
   title       String
   body        String
   authorId    String
-  author      User            @relation("ThreadAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  isAnonymous Boolean?        @default(false)
-  likes       ThreadLike[]
-  comments    ThreadComment[]
+  author      User          @relation("LetterAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  isAnonymous Boolean?      @default(false)
+  likes       LetterLike[]
+  replies     LetterReply[]
 
   notifications Notification[]
 
   deletedAt   DateTime?
   deletedById String?
-  deletedBy   User?     @relation("ThreadDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  deletedBy   User?     @relation("LetterDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -165,56 +165,56 @@ model Thread {
   @@index([authorId, deletedAt, createdAt(sort: Desc)])
 }
 
-model ThreadLike {
+model LetterLike {
   id       String @id @default(uuid())
   userId   String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  threadId String
-  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  letterId String
+  letter   Letter @relation(fields: [letterId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, threadId])
+  @@unique([userId, letterId])
 }
 
-model ThreadComment {
-  id          String              @id @default(cuid())
+model LetterReply {
+  id          String            @id @default(cuid())
   body        String
   authorId    String
-  author      User                @relation("ThreadCommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  isAnonymous Boolean?            @default(false)
-  threadId    String
-  thread      Thread              @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  likes       ThreadCommentLike[]
+  author      User              @relation("LetterReplyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  isAnonymous Boolean?          @default(false)
+  letterId    String
+  letter      Letter            @relation(fields: [letterId], references: [id], onDelete: Cascade)
+  likes       LetterReplyLike[]
 
   notifications Notification[]
 
   deletedAt   DateTime?
   deletedById String?
-  deletedBy   User?     @relation("ThreadCommentDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  deletedBy   User?     @relation("LetterReplyDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([deletedAt, createdAt(sort: Desc)])
-  @@index([threadId, deletedAt, createdAt(sort: Desc)])
+  @@index([letterId, deletedAt, createdAt(sort: Desc)])
 }
 
-model ThreadCommentLike {
-  id        String        @id @default(uuid())
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  commentId String
-  comment   ThreadComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+model LetterReplyLike {
+  id      String      @id @default(uuid())
+  userId  String
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replyId String
+  reply   LetterReply @relation(fields: [replyId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, commentId])
+  @@unique([userId, replyId])
 }
 
 enum NotificationType {
-  THREAD_LIKE
-  THREAD_COMMENT
-  THREAD_COMMENT_LIKE
+  LETTER_LIKE
+  LETTER_REPLY
+  LETTER_REPLY_LIKE
 }
 
 model Notification {
@@ -224,16 +224,16 @@ model Notification {
   isRead             Boolean          @default(false)
   isCountDecremented Boolean          @default(false)
 
-  actors    NotificationActor[]
-  threadId  String?
-  commentId String?
+  actors   NotificationActor[]
+  letterId String?
+  replyId  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user    User           @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
-  thread  Thread?        @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  comment ThreadComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user   User         @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
+  letter Letter?      @relation(fields: [letterId], references: [id], onDelete: Cascade)
+  reply  LetterReply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
 
   @@index([userId, updatedAt(sort: Desc)])
 }

@@ -202,19 +202,19 @@ export const auth = betterAuth({
           }
 
           await prisma.$transaction([
-            prisma.thread.updateMany({
+            prisma.letter.updateMany({
               where: { authorId: oldUserId },
               data: { authorId: newUserId },
             }),
-            prisma.threadLike.updateMany({
+            prisma.letterLike.updateMany({
               where: { userId: oldUserId },
               data: { userId: newUserId },
             }),
-            prisma.threadComment.updateMany({
+            prisma.letterReply.updateMany({
               where: { authorId: oldUserId },
               data: { authorId: newUserId },
             }),
-            prisma.threadCommentLike.updateMany({
+            prisma.letterReplyLike.updateMany({
               where: { userId: oldUserId },
               data: { userId: newUserId },
             }),

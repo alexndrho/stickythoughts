@@ -7,7 +7,7 @@ import type {
   UserSettingsPrivacy,
 } from "@/types/user";
 import { VisibilityLevel } from "@/generated/prisma/enums";
-import type { ThreadType, UserThreadCommentType } from "@/types/thread";
+import type { LetterType, UserLetterReplyType } from "@/types/letter";
 
 export const getUser = async (
   username: string,
@@ -253,13 +253,13 @@ export const deleteUserNotification = async (id: string) => {
 };
 
 // profile
-export const getUserThreads = async ({
+export const getUserLetters = async ({
   username,
   lastId,
 }: {
   username: string;
   lastId?: string;
-}): Promise<ThreadType[]> => {
+}): Promise<LetterType[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
@@ -267,25 +267,25 @@ export const getUserThreads = async ({
   }
 
   const res = await fetch(
-    apiUrl(`/api/user/${username}/threads?${searchParams}`),
+    apiUrl(`/api/user/${username}/letters?${searchParams}`),
   );
 
   const data = await res.json();
 
   if (!res.ok) {
-    throw toServerError("User threads fetch error", data.issues);
+    throw toServerError("User letters fetch error", data.issues);
   }
 
   return data;
 };
 
-export const getUserComments = async ({
+export const getUserReplies = async ({
   username,
   lastId,
 }: {
   username: string;
   lastId?: string;
-}): Promise<UserThreadCommentType[]> => {
+}): Promise<UserLetterReplyType[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
@@ -293,25 +293,25 @@ export const getUserComments = async ({
   }
 
   const response = await fetch(
-    apiUrl(`/api/user/${username}/comments?${searchParams}`),
+    apiUrl(`/api/user/${username}/replies?${searchParams}`),
   );
 
   const dataResponse = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to get comments", dataResponse.issues);
+    throw toServerError("Failed to get replies", dataResponse.issues);
   }
 
   return dataResponse;
 };
 
-export const getUserLikedThreads = async ({
+export const getUserLikedLetters = async ({
   username,
   lastId,
 }: {
   username: string;
   lastId?: string;
-}): Promise<ThreadType[]> => {
+}): Promise<LetterType[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
@@ -325,7 +325,7 @@ export const getUserLikedThreads = async ({
   const data = await res.json();
 
   if (!res.ok) {
-    throw toServerError("User liked threads fetch error", data.issues);
+    throw toServerError("User liked letters fetch error", data.issues);
   }
 
   return data;

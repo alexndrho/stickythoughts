@@ -22,17 +22,17 @@ export function formatUserNotifications(
     let body = "You have a new notification";
 
     switch (notification.type) {
-      case "THREAD_LIKE": {
-        body = notification.thread?.title || "";
+      case "LETTER_LIKE": {
+        body = notification.letter?.title || "";
         break;
       }
-      case "THREAD_COMMENT_LIKE": {
-        body = notification.comment?.body || "";
+      case "LETTER_REPLY_LIKE": {
+        body = notification.reply?.body || "";
         break;
       }
-      case "THREAD_COMMENT": {
-        body = notification.comment?.body || "";
-        if (notification.comment?.isAnonymous) {
+      case "LETTER_REPLY": {
+        body = notification.reply?.body || "";
+        if (notification.reply?.isAnonymous) {
           mainActor = {
             image: null,
             name: null,
@@ -49,8 +49,8 @@ export function formatUserNotifications(
       type: notification.type,
       mainActor,
       otherActorCount: (notification._count?.actors ?? 1) - 1,
-      threadId: notification.thread?.id || notification.comment?.thread?.id,
-      commentId: notification.comment?.id,
+      letterId: notification.letter?.id || notification.reply?.letter?.id,
+      replyId: notification.reply?.id,
       body,
       isRead: notification.isRead,
       updatedAt: notification.updatedAt.toISOString(),

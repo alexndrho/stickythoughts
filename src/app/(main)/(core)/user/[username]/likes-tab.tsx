@@ -4,12 +4,12 @@ import { Tabs } from "@mantine/core";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
-import { userUsernameLikedThreadsInfiniteOptions } from "@/app/(main)/(core)/user/options";
-import { setLikeThreadQueryData } from "@/app/(main)/(core)/threads/set-query-data";
-import ThreadItem from "../../threads/thread-item";
-import { ThreadsSkeleton } from "../../threads/threads-skeleton";
+import { userUsernameLikedLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
+import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
+import LetterItem from "../../letters/letter-item";
+import { LettersSkeleton } from "../../letters/letters-skeleton";
 import LikesPrompt from "./likes-prompt";
-import { likeThread, unlikeThread } from "@/services/thread";
+import { likeLetter, unlikeLetter } from "@/services/letter";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./user.module.css";
 
@@ -30,33 +30,33 @@ export default function LikesTab({
 }: LikesTabProps) {
   const { data: sessionData, isPending: isSessionPending } = session;
 
-  const canFetchLikedThreads =
+  const canFetchLikedLetters =
     !isPrivate || sessionData?.user.username === username;
 
   const {
-    data: likedThreads,
-    isFetching: isLikedThreadsFetching,
-    fetchNextPage: fetchNextLikedThreadsPage,
-    hasNextPage: hasNextLikedThreadsPage,
+    data: likedLetters,
+    isFetching: isLikedLettersFetching,
+    fetchNextPage: fetchNextLikedLettersPage,
+    hasNextPage: hasNextLikedLettersPage,
   } = useInfiniteQuery({
-    ...userUsernameLikedThreadsInfiniteOptions(username),
-    enabled: isActive && canFetchLikedThreads,
+    ...userUsernameLikedLettersInfiniteOptions(username),
+    enabled: isActive && canFetchLikedLetters,
   });
 
   const likeMutation = useMutation({
     mutationFn: async ({ id, like }: { id: string; like: boolean }) => {
       if (like) {
-        await likeThread(id);
+        await likeLetter(id);
       } else {
-        await unlikeThread(id);
+        await unlikeLetter(id);
       }
 
       return { id, like };
     },
 
     onSuccess: (data) => {
-      setLikeThreadQueryData({
-        threadId: data.id,
+      setLikeLetterQueryData({
+        letterId: data.id,
         like: data.like,
         authorUsername: username,
       });
@@ -74,8 +74,8 @@ export default function LikesTab({
 
   return (
     <Tabs.Panel value="likes" className={classes["tab-content"]}>
-      {(!canFetchLikedThreads && !isSessionPending) ||
-      (!isLikedThreadsFetching && likedThreads?.pages?.[0]?.length === 0) ? (
+      {(!canFetchLikedLetters && !isSessionPending) ||
+      (!isLikedLettersFetching && likedLetters?.pages?.[0]?.length === 0) ? (
         <LikesPrompt
           isOwnProfile={sessionData?.user.username === username}
           isPrivate={isPrivate}
@@ -83,19 +83,19 @@ export default function LikesTab({
       ) : (
         <InfiniteScroll
           onLoadMore={() => {
-            fetchNextLikedThreadsPage();
+            fetchNextLikedLettersPage();
           }}
-          hasNext={hasNextLikedThreadsPage}
-          loading={isLikedThreadsFetching}
+          hasNext={hasNextLikedLettersPage}
+          loading={isLikedLettersFetching}
         >
           <div className={classes["tab-content-container"]}>
-            {likedThreads?.pages.map((page) =>
-              page.map((thread) => (
-                <ThreadItem key={thread.id} post={thread} onLike={handleLike} />
+            {likedLetters?.pages.map((page) =>
+              page.map((letter) => (
+                <LetterItem key={letter.id} post={letter} onLike={handleLike} />
               )),
             )}
 
-            {isLikedThreadsFetching && <ThreadsSkeleton />}
+            {isLikedLettersFetching && <LettersSkeleton />}
           </div>
         </InfiniteScroll>
       )}

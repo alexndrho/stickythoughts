@@ -195,12 +195,12 @@ function NotificationItem({
   });
 
   const link =
-    notification.type === "THREAD_LIKE"
-      ? `/threads/${notification.threadId}`
-      : notification.type === "THREAD_COMMENT_LIKE"
-        ? `/threads/${notification.threadId}`
-        : notification.type === "THREAD_COMMENT"
-          ? `/threads/${notification.threadId}`
+    notification.type === "LETTER_LIKE"
+      ? `/letters/${notification.letterId}`
+      : notification.type === "LETTER_REPLY_LIKE"
+        ? `/letters/${notification.letterId}`
+        : notification.type === "LETTER_REPLY"
+          ? `/letters/${notification.letterId}`
           : "#";
 
   return (
@@ -211,7 +211,7 @@ function NotificationItem({
       }`}
     >
       <Link
-        aria-label="View Thread"
+        aria-label="View Letter"
         href={link}
         onClick={() => {
           setClosed();
@@ -319,29 +319,29 @@ function formatNotificationBody({
     ) : null;
 
   switch (notification.type) {
-    case "THREAD_LIKE":
+    case "LETTER_LIKE":
       return (
         <>
           {actor}
           {others}
-          {" liked your thread: "}
+          {" liked your letter: "}
           {notification.body}
         </>
       );
-    case "THREAD_COMMENT_LIKE":
+    case "LETTER_REPLY_LIKE":
       return (
         <>
           {actor}
           {others}
-          {" liked your comment: "}
+          {" liked your reply: "}
           {stripHtmlTags(notification.body)}
         </>
       );
-    case "THREAD_COMMENT":
+    case "LETTER_REPLY":
       return (
         <>
           {actor}
-          {" commented on your thread: "}
+          {" replied to your letter: "}
           {stripHtmlTags(notification.body)}
         </>
       );

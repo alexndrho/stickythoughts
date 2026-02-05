@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Tabs, Title } from "@mantine/core";
 
 import ThoughtsTab from "./thoughts-tab";
-import ThreadsTab from "./threads-tab";
-import CommentsTab from "./comments-tab";
+import LettersTab from "./letters-tab";
+import RepliesTab from "./replies-tab";
 import dashboardClasses from "../dashboard.module.css";
 import classes from "./deleted.module.css";
 
@@ -24,13 +24,13 @@ export default function Content() {
       >
         <Tabs.List mb="md">
           <Tabs.Tab value="thoughts">Thoughts</Tabs.Tab>
-          <Tabs.Tab value="threads">Threads</Tabs.Tab>
-          <Tabs.Tab value="comments">Comments</Tabs.Tab>
+          <Tabs.Tab value="letters">Letters</Tabs.Tab>
+          <Tabs.Tab value="replies">Replies</Tabs.Tab>
         </Tabs.List>
 
         <ThoughtsTab isActive={activeTab === "thoughts"} />
-        <ThreadsTab isActive={activeTab === "threads"} />
-        <CommentsTab isActive={activeTab === "comments"} />
+        <LettersTab isActive={activeTab === "letters"} />
+        <RepliesTab isActive={activeTab === "replies"} />
       </Tabs>
     </div>
   );

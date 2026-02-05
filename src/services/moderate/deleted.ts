@@ -7,8 +7,8 @@ import {
 import type {
   DeletedThoughtFromServer,
   DeletedThought,
-  DeletedThreadFromServer,
-  DeletedThreadCommentFromServer,
+  DeletedLetterFromServer,
+  DeletedLetterReplyFromServer,
 } from "@/types/deleted";
 
 export const getDeletedThoughts = async ({
@@ -35,38 +35,38 @@ export const getDeletedThoughts = async ({
   })) satisfies DeletedThought[];
 };
 
-export const getDeletedThreads = async ({
+export const getDeletedLetters = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedThreadFromServer[]> => {
+}): Promise<DeletedLetterFromServer[]> => {
   const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/threads?page=${page}`),
+    apiUrl(`/api/dashboard/deleted/letters?page=${page}`),
   );
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to get deleted threads", data.issues);
+    throw toServerError("Failed to get deleted letters", data.issues);
   }
 
   return data;
 };
 
-export const getDeletedThreadComments = async ({
+export const getDeletedLetterReplies = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedThreadCommentFromServer[]> => {
+}): Promise<DeletedLetterReplyFromServer[]> => {
   const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/comments?page=${page}`),
+    apiUrl(`/api/dashboard/deleted/replies?page=${page}`),
   );
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to get deleted comments", data.issues);
+    throw toServerError("Failed to get deleted replies", data.issues);
   }
 
-  return data as DeletedThreadCommentFromServer[];
+  return data as DeletedLetterReplyFromServer[];
 };
 
 export const getDeletedThoughtsCount = async (): Promise<number> => {
@@ -80,23 +80,23 @@ export const getDeletedThoughtsCount = async (): Promise<number> => {
   return Number(data?.total ?? 0);
 };
 
-export const getDeletedThreadsCount = async (): Promise<number> => {
-  const response = await fetch(apiUrl("/api/dashboard/deleted/threads/count"));
+export const getDeletedLettersCount = async (): Promise<number> => {
+  const response = await fetch(apiUrl("/api/dashboard/deleted/letters/count"));
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to get deleted threads count", data.issues);
+    throw toServerError("Failed to get deleted letters count", data.issues);
   }
 
   return Number(data?.total ?? 0);
 };
 
-export const getDeletedCommentsCount = async (): Promise<number> => {
-  const response = await fetch(apiUrl("/api/dashboard/deleted/comments/count"));
+export const getDeletedRepliesCount = async (): Promise<number> => {
+  const response = await fetch(apiUrl("/api/dashboard/deleted/replies/count"));
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to get deleted comments count", data.issues);
+    throw toServerError("Failed to get deleted replies count", data.issues);
   }
 
   return Number(data?.total ?? 0);
@@ -136,37 +136,37 @@ export const permanentlyDeleteThought = async (id: string) => {
   return data;
 };
 
-export const restoreDeletedThread = async (id: string) => {
-  const response = await fetch(apiUrl(`/api/dashboard/deleted/threads/${id}`), {
+export const restoreDeletedLetter = async (id: string) => {
+  const response = await fetch(apiUrl(`/api/dashboard/deleted/letters/${id}`), {
     method: "PATCH",
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to restore thread", data.issues);
+    throw toServerError("Failed to restore letter", data.issues);
   }
 
   return data;
 };
 
-export const permanentlyDeleteThread = async (id: string) => {
-  const response = await fetch(apiUrl(`/api/dashboard/deleted/threads/${id}`), {
+export const permanentlyDeleteLetter = async (id: string) => {
+  const response = await fetch(apiUrl(`/api/dashboard/deleted/letters/${id}`), {
     method: "DELETE",
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to delete thread permanently", data.issues);
+    throw toServerError("Failed to delete letter permanently", data.issues);
   }
 
   return data;
 };
 
-export const restoreDeletedComment = async (id: string) => {
+export const restoreDeletedReply = async (id: string) => {
   const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/comments/${id}`),
+    apiUrl(`/api/dashboard/deleted/replies/${id}`),
     {
       method: "PATCH",
     },
@@ -175,15 +175,15 @@ export const restoreDeletedComment = async (id: string) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to restore comment", data.issues);
+    throw toServerError("Failed to restore reply", data.issues);
   }
 
   return data;
 };
 
-export const permanentlyDeleteComment = async (id: string) => {
+export const permanentlyDeleteReply = async (id: string) => {
   const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/comments/${id}`),
+    apiUrl(`/api/dashboard/deleted/replies/${id}`),
     {
       method: "DELETE",
     },
@@ -192,7 +192,7 @@ export const permanentlyDeleteComment = async (id: string) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw toServerError("Failed to delete comment permanently", data.issues);
+    throw toServerError("Failed to delete reply permanently", data.issues);
   }
 
   return data;

@@ -171,7 +171,7 @@ export default function Content() {
           </div>
 
           <div className={classes["feature-card"]}>
-            <Text className={classes["feature-title"]}>Join the threads</Text>
+            <Text className={classes["feature-title"]}>Write a letter</Text>
             <Text size="sm" c="dimmed">
               Start longer conversations when a thought deserves more.
             </Text>

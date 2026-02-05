@@ -45,8 +45,8 @@ export async function GET(request: Request) {
       where: {
         isAnonymous: true,
         createdAt: { lte: cutoff },
-        threads: { none: { deletedAt: null } },
-        threadComments: { none: { deletedAt: null } },
+        letters: { none: { deletedAt: null } },
+        letterReplies: { none: { deletedAt: null } },
       },
       select: { id: true, image: true, createdAt: true },
     });

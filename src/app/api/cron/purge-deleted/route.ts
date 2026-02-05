@@ -35,11 +35,11 @@ export async function GET(request: Request) {
 
     const cutoff = subMonths(new Date(), 1);
 
-    const [comments, threads, thoughts] = await prisma.$transaction([
-      prisma.threadComment.deleteMany({
+    const [replies, letters, thoughts] = await prisma.$transaction([
+      prisma.letterReply.deleteMany({
         where: { deletedAt: { lte: cutoff } },
       }),
-      prisma.thread.deleteMany({
+      prisma.letter.deleteMany({
         where: { deletedAt: { lte: cutoff } },
       }),
       prisma.thought.deleteMany({
@@ -51,8 +51,8 @@ export async function GET(request: Request) {
       {
         cutoff: cutoff.toISOString(),
         deleted: {
-          comments: comments.count,
-          threads: threads.count,
+          replies: replies.count,
+          letters: letters.count,
           thoughts: thoughts.count,
         },
       },

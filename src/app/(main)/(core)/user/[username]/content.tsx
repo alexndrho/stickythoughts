@@ -25,16 +25,16 @@ import {
   IconHeart,
   IconHeartOff,
   IconId,
-  IconMessage,
+  IconMail,
   IconMessageCircle,
   IconPhoto,
 } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { userUsernameOptions } from "../options";
-import ThreadsTab from "./threads-tab";
+import LettersTab from "./letters-tab";
 import LikesTab from "./likes-tab";
-import CommentsTab from "./comments-tab";
+import RepliesTab from "./replies-tab";
 import SignInWarningModal from "@/components/sign-in-warning-modal";
 import EditUserModal from "@/app/dashboard/users/edit-user-modal";
 import DeleteUserProfilePictureModal from "@/app/dashboard/users/delete-user-profile-picture-modal";
@@ -88,12 +88,12 @@ export default function Content({ username }: ContentProps) {
 
   const currentTab = useMemo(() => {
     const tab = searchParams.get("tab");
-    if (tab === "threads" || tab === "comments" || tab === "likes") return tab;
-    return "threads";
+    if (tab === "letters" || tab === "replies" || tab === "likes") return tab;
+    return "letters";
   }, [searchParams]);
 
   const setTab = (value: string | null) => {
-    const next = value ?? "threads";
+    const next = value ?? "letters";
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", next);
     router.replace(`${pathname}?${params.toString()}`);
@@ -266,15 +266,15 @@ export default function Content({ username }: ContentProps) {
         className={classes["tab-root"]}
       >
         <Tabs.List>
-          <Tabs.Tab value="threads" leftSection={<IconMessage size="1em" />}>
-            Threads
+          <Tabs.Tab value="letters" leftSection={<IconMail size="1em" />}>
+            Letters
           </Tabs.Tab>
 
           <Tabs.Tab
-            value="comments"
+            value="replies"
             leftSection={<IconMessageCircle size="1em" />}
           >
-            Comments
+            Replies
           </Tabs.Tab>
 
           <Tabs.Tab
@@ -291,17 +291,17 @@ export default function Content({ username }: ContentProps) {
           </Tabs.Tab>
         </Tabs.List>
 
-        <ThreadsTab
+        <LettersTab
           username={user.username}
           session={session.data}
-          isActive={currentTab === "threads"}
+          isActive={currentTab === "letters"}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
 
-        <CommentsTab
+        <RepliesTab
           username={user.username}
           session={session.data}
-          isActive={currentTab === "comments"}
+          isActive={currentTab === "replies"}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
 

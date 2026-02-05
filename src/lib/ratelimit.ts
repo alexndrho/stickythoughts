@@ -42,7 +42,7 @@ export const rateLimiters = {
       keyPrefix: "ratelimit:mutate:thought",
     } satisfies IRateLimiterRedisOptions,
 
-    // Post/comment mutations - 10 requests per 60 seconds
+    // Post/reply mutations - 10 requests per 60 seconds
     content: {
       storeClient: redis,
       points: 10,

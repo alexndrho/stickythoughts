@@ -12,7 +12,7 @@ export type validationCode =
   | "validation/invalid-input"
   | "validation/too-large";
 
-export type threadCode = "thread/title-already-exists";
+export type letterCode = "letter/title-already-exists";
 
 export type antiBotCode =
   | "captcha/validation-failed"
@@ -22,7 +22,7 @@ export type errorCode =
   | systemCode
   | authCode
   | validationCode
-  | threadCode
+  | letterCode
   | antiBotCode;
 
 export default interface IError {

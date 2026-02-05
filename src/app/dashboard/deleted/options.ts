@@ -3,11 +3,11 @@ import { queryOptions } from "@tanstack/react-query";
 import { adminOptions } from "../options";
 import {
   getDeletedThoughts,
-  getDeletedThreads,
-  getDeletedThreadComments,
+  getDeletedLetters,
+  getDeletedLetterReplies,
   getDeletedThoughtsCount,
-  getDeletedThreadsCount,
-  getDeletedCommentsCount,
+  getDeletedLettersCount,
+  getDeletedRepliesCount,
 } from "@/services/moderate/deleted";
 
 export const adminDeletedOptions = queryOptions({
@@ -18,12 +18,12 @@ export const deletedThoughtsOptions = queryOptions({
   queryKey: [...adminDeletedOptions.queryKey, "thoughts"],
 });
 
-export const deletedThreadsOptions = queryOptions({
-  queryKey: [...adminDeletedOptions.queryKey, "threads"],
+export const deletedLettersOptions = queryOptions({
+  queryKey: [...adminDeletedOptions.queryKey, "letters"],
 });
 
-export const deletedCommentsOptions = queryOptions({
-  queryKey: [...adminDeletedOptions.queryKey, "comments"],
+export const deletedRepliesOptions = queryOptions({
+  queryKey: [...adminDeletedOptions.queryKey, "replies"],
 });
 
 export const deletedThoughtsPageOptions = (page: number) =>
@@ -38,26 +38,26 @@ export const deletedThoughtsCountOptions = () =>
     queryFn: () => getDeletedThoughtsCount(),
   });
 
-export const deletedThreadsPageOptions = (page: number) =>
+export const deletedLettersPageOptions = (page: number) =>
   queryOptions({
-    queryKey: [...deletedThreadsOptions.queryKey, page],
-    queryFn: () => getDeletedThreads({ page }),
+    queryKey: [...deletedLettersOptions.queryKey, page],
+    queryFn: () => getDeletedLetters({ page }),
   });
 
-export const deletedThreadsCountOptions = () =>
+export const deletedLettersCountOptions = () =>
   queryOptions({
-    queryKey: [...deletedThreadsOptions.queryKey, "count"],
-    queryFn: () => getDeletedThreadsCount(),
+    queryKey: [...deletedLettersOptions.queryKey, "count"],
+    queryFn: () => getDeletedLettersCount(),
   });
 
-export const deletedCommentsPageOptions = (page: number) =>
+export const deletedRepliesPageOptions = (page: number) =>
   queryOptions({
-    queryKey: [...deletedCommentsOptions.queryKey, page],
-    queryFn: () => getDeletedThreadComments({ page }),
+    queryKey: [...deletedRepliesOptions.queryKey, page],
+    queryFn: () => getDeletedLetterReplies({ page }),
   });
 
-export const deletedCommentsCountOptions = () =>
+export const deletedRepliesCountOptions = () =>
   queryOptions({
-    queryKey: [...deletedCommentsOptions.queryKey, "count"],
-    queryFn: () => getDeletedCommentsCount(),
+    queryKey: [...deletedRepliesOptions.queryKey, "count"],
+    queryFn: () => getDeletedRepliesCount(),
   });

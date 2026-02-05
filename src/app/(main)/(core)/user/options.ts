@@ -2,13 +2,13 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import {
   getUser,
-  getUserComments,
-  getUserLikedThreads,
+  getUserReplies,
+  getUserLikedLetters,
   getUserNewNotificationCount,
   getUserNotifications,
-  getUserThreads,
+  getUserLetters,
 } from "@/services/user";
-import { THREAD_COMMENTS_PER_PAGE, THREADS_PER_PAGE } from "@/config/thread";
+import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from "@/config/letter";
 import { NOTIFICATION_PER_PAGE } from "@/config/user";
 
 export const userOptions = queryOptions({
@@ -42,50 +42,50 @@ export const userNotificationCountOptions = queryOptions({
   queryFn: getUserNewNotificationCount,
 });
 
-export const userUsernameThreadsInfiniteOptions = (username: string) => {
+export const userUsernameLettersInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userUsernameOptions(username).queryKey, "infiniteThreads"],
+    queryKey: [...userUsernameOptions(username).queryKey, "infiniteLetters"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      getUserThreads({
+      getUserLetters({
         username,
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREADS_PER_PAGE) return undefined;
+      if (posts.length < LETTERS_PER_PAGE) return undefined;
 
       return posts[posts.length - 1].id;
     },
   });
 };
 
-export const userUsernameCommentsInfiniteOptions = (username: string) => {
+export const userUsernameRepliesInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userUsernameOptions(username).queryKey, "infiniteComments"],
+    queryKey: [...userUsernameOptions(username).queryKey, "infiniteReplies"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      getUserComments({
+      getUserReplies({
         username,
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREAD_COMMENTS_PER_PAGE) return undefined;
+      if (posts.length < LETTER_REPLIES_PER_PAGE) return undefined;
       return posts[posts.length - 1].id;
     },
   });
 };
 
-export const userUsernameLikedThreadsInfiniteOptions = (username: string) => {
+export const userUsernameLikedLettersInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
     queryKey: [...userUsernameOptions(username).queryKey, "infiniteLikes"],
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      getUserLikedThreads({
+      getUserLikedLetters({
         username,
         lastId: pageParam,
       }),
     getNextPageParam: (posts) => {
-      if (posts.length < THREADS_PER_PAGE) return undefined;
+      if (posts.length < LETTERS_PER_PAGE) return undefined;
 
       return posts[posts.length - 1].id;
     },

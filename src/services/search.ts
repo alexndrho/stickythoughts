@@ -2,14 +2,14 @@ import { apiUrl } from "@/utils/text";
 import type {
   SearchAllType,
   SearchSegmentType,
-  SearchThreadType,
+  SearchLetterType,
   SearchUserType,
 } from "@/types/search";
 import { toServerError } from "@/utils/error/ServerError";
 
 type SearchResultMap = {
   users: SearchUserType[];
-  threads: SearchThreadType[];
+  letters: SearchLetterType[];
   all: SearchAllType[];
 };
 

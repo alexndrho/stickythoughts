@@ -11,8 +11,8 @@ import { rateLimiters } from "./lib/ratelimit";
 import IError from "./types/error";
 
 const ROUTE_PATTERNS = {
-  threadLike: /\/api\/threads\/[^/]+\/like/,
-  commentLike: /\/api\/threads\/[^/]+\/comments\/[^/]+\/like/,
+  letterLike: /\/api\/letters\/[^/]+\/like/,
+  replyLike: /\/api\/letters\/[^/]+\/replies\/[^/]+\/like/,
 } as const;
 
 // Determine which rate limiter to use based on route, method, and query params
@@ -38,17 +38,17 @@ function getRateLimiter(request: NextRequest): IRateLimiterRedisOptions {
     return rateLimiters.get.search;
   }
 
-  // Like/unlike endpoints (threads and comments)
+  // Like/unlike endpoints (letters and replies)
   if (
-    pathname.match(ROUTE_PATTERNS.threadLike) ||
-    pathname.match(ROUTE_PATTERNS.commentLike)
+    pathname.match(ROUTE_PATTERNS.letterLike) ||
+    pathname.match(ROUTE_PATTERNS.replyLike)
   ) {
     return rateLimiters.interaction.like;
   }
 
-  // Post/comment mutation endpoints
+  // Post/reply mutation endpoints
   if (
-    pathname.startsWith("/api/threads") &&
+    pathname.startsWith("/api/letters") &&
     (upperMethod === "POST" ||
       upperMethod === "PUT" ||
       upperMethod === "DELETE")
@@ -136,7 +136,7 @@ export async function proxy(request: NextRequest) {
 
   // Auth checks...
   if (
-    pathname.startsWith("/threads/submit") ||
+    pathname.startsWith("/letters/submit") ||
     pathname.startsWith("/settings")
   ) {
     const sessionCookie = getSessionCookie(request);
@@ -152,7 +152,7 @@ export const config = {
     "/api/((?!auth|_next/static|_next/image|favicon.ico).*)",
 
     // Protected pages
-    "/threads/submit/:path*",
+    "/letters/submit/:path*",
     "/settings/:path*",
   ],
 };

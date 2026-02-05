@@ -9,7 +9,7 @@ const MAX_RESULTS = 10;
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const q = searchParams.get("q") ?? "";
-  const type = searchParams.get("type"); // "all", "threads", "users"
+  const type = searchParams.get("type"); // "all", "letters", "users"
 
   try {
     if (type === "users") {
@@ -33,8 +33,8 @@ export async function GET(req: NextRequest) {
         users.map((user) => ({ ...user, type: "users" as const })),
         { status: 200 },
       );
-    } else if (type === "threads") {
-      const threads = await prisma.thread.findMany({
+    } else if (type === "letters") {
+      const letters = await prisma.letter.findMany({
         take: MAX_RESULTS,
         where: {
           title: { contains: q, mode: "insensitive" },
@@ -47,12 +47,12 @@ export async function GET(req: NextRequest) {
       });
 
       return NextResponse.json(
-        threads.map((thread) => ({ ...thread, type: "threads" as const })),
+        letters.map((letter) => ({ ...letter, type: "letters" as const })),
         { status: 200 },
       );
     }
 
-    const [users, threads] = await Promise.all([
+    const [users, letters] = await Promise.all([
       prisma.user.findMany({
         take: MAX_RESULTS / 2,
         where: {
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
           image: true,
         },
       }),
-      prisma.thread.findMany({
+      prisma.letter.findMany({
         take: MAX_RESULTS / 2,
         where: {
           title: { contains: q, mode: "insensitive" },
@@ -81,10 +81,10 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    // Combine results (users first, then threads)
+    // Combine results (users first, then letters)
     const combinedResults: SearchAllType[] = [
       ...users.map((user) => ({ ...user, type: "users" as const })),
-      ...threads.map((thread) => ({ ...thread, type: "threads" as const })),
+      ...letters.map((letter) => ({ ...letter, type: "letters" as const })),
     ];
 
     return NextResponse.json(combinedResults, { status: 200 });

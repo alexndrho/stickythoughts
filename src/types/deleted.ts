@@ -1,4 +1,4 @@
-import type { Thread, ThreadComment, Thought } from "@/generated/prisma/client";
+import type { Letter, LetterReply, Thought } from "@/generated/prisma/client";
 
 export type DeletedUserSummary = {
   id: string;
@@ -23,8 +23,8 @@ export type DeletedThought = Omit<
   deletedAt: Date | null;
 };
 
-export type DeletedThreadFromServer = Omit<
-  Thread,
+export type DeletedLetterFromServer = Omit<
+  Letter,
   "createdAt" | "updatedAt" | "deletedAt"
 > & {
   createdAt: Date;
@@ -38,8 +38,8 @@ export type DeletedThreadFromServer = Omit<
   deletedBy: DeletedUserSummary | null;
 };
 
-export type DeletedThreadCommentFromServer = Omit<
-  ThreadComment,
+export type DeletedLetterReplyFromServer = Omit<
+  LetterReply,
   "createdAt" | "updatedAt" | "deletedAt"
 > & {
   createdAt: Date;
@@ -52,7 +52,7 @@ export type DeletedThreadCommentFromServer = Omit<
     image: string | null;
   };
   deletedBy: DeletedUserSummary | null;
-  thread: {
+  letter: {
     id: string;
     title: string;
   };

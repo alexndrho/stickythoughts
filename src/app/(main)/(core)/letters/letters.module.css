@@ -1,0 +1,137 @@
+.container {
+  margin-top: var(--mantine-spacing-md);
+  margin-bottom: var(--mantine-spacing-md);
+  width: 100%;
+}
+
+.letters-header {
+  margin-bottom: var(--mantine-spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+}
+
+.letters-title {
+  font-weight: 700;
+}
+
+.letters-subtitle {
+  max-width: 40rem;
+}
+
+.letters-tagline {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.actions-bar {
+  margin-bottom: var(--mantine-spacing-md);
+  width: 100%;
+  display: flex;
+  gap: var(--mantine-spacing-md);
+}
+
+.actions-bar__search-btn {
+  flex: 1;
+  color: var(--mantine-color-dimmed);
+}
+
+.actions-bar__search-btn__label {
+  flex: 1;
+}
+
+.sign-in-card {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.sign-in-card__stack {
+  align-items: flex-start;
+}
+
+.sign-in-prompt__eyebrow {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sign-in-prompt__title {
+  font-weight: 600;
+}
+
+.sign-in-prompt__copy {
+  color: var(--mantine-color-dimmed);
+}
+
+.sign-in-prompt__actions {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.letters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.letter-item {
+  position: relative;
+  box-shadow: var(--mantine-shadow-xs);
+  transition: var(--surface-hover-transition);
+}
+
+.letter-item:hover {
+  transform: translateY(var(--surface-hover-translate));
+  box-shadow: var(--surface-hover-shadow);
+}
+
+.letter-item__main-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.letter-item__content {
+  padding: var(--mantine-spacing-md);
+}
+
+.letter-item__header {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.letter-item__avatar {
+  position: relative;
+}
+
+.letter-item__user-link {
+  position: relative;
+  color: var(--mantine-color-text);
+}
+
+.letter-item__group-actions {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.letter-item__action {
+  position: relative;
+}
+
+.letter-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.letter-skeleton {
+  height: rem(200px);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.spotlight__action-overide[data-selected="true"] {
+  color: var(--mantine-color-default-color);
+  background-color: #0000;
+}
+
+.spotlight__action-overide[data-selected="true"]:hover {
+  background-color: var(--mantine-color-default);
+}

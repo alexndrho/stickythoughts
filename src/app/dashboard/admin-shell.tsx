@@ -51,8 +51,8 @@ const navLinks: NavLinkConfig[] = [
     href: "/dashboard/deleted",
     permissions: {
       thought: ["list-deleted"],
-      thread: ["list-deleted"],
-      threadComment: ["list-deleted"],
+      letter: ["list-deleted"],
+      letterReply: ["list-deleted"],
     },
   },
 ];

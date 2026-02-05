@@ -29,7 +29,7 @@ function PrivateLikesContent() {
       <IconLock size="3rem" className={classes["tab-prompt__icon"]} />
 
       <Title order={2} size="h3" className={classes["tab-prompt__title"]}>
-        This user&apos;s liked threads are private.
+        This user&apos;s liked letters are private.
       </Title>
     </>
   );
@@ -42,11 +42,11 @@ function PublicLikesContent({ isOwnProfile }: { isOwnProfile: boolean }) {
 
       {isOwnProfile ? (
         <Title order={2} size="h3" className={classes["tab-prompt__title"]}>
-          You haven&apos;t liked any threads yet.
+          You haven&apos;t liked any letters yet.
         </Title>
       ) : (
         <Title order={2} size="h3" className={classes["tab-prompt__title"]}>
-          This user hasn&apos;t liked any threads yet.
+          This user hasn&apos;t liked any letters yet.
         </Title>
       )}
     </>

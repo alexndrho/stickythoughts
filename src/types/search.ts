@@ -2,7 +2,7 @@ import type { Prisma } from "@/generated/prisma/client";
 
 export const searchSegments = [
   { label: "All", value: "all" },
-  { label: "Threads", value: "threads" },
+  { label: "Letters", value: "letters" },
   { label: "Users", value: "users" },
 ] as const;
 
@@ -10,7 +10,7 @@ export type SearchSegmentType = (typeof searchSegments)[number]["value"];
 
 export type SearchResultMap = {
   users: SearchUserType[];
-  threads: SearchThreadType[];
+  letters: SearchLetterType[];
   all: SearchAllType[];
 };
 
@@ -28,7 +28,7 @@ export type SearchUserType = Prisma.UserGetPayload<{
 }> &
   SearchResult;
 
-export type SearchThreadType = Prisma.ThreadGetPayload<{
+export type SearchLetterType = Prisma.LetterGetPayload<{
   select: {
     id: true;
     title: true;
@@ -36,4 +36,4 @@ export type SearchThreadType = Prisma.ThreadGetPayload<{
 }> &
   SearchResult;
 
-export type SearchAllType = SearchUserType | SearchThreadType;
+export type SearchAllType = SearchUserType | SearchLetterType;

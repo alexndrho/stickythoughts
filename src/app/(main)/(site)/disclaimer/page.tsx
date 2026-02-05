@@ -137,7 +137,7 @@ export default function DisclaimerPage() {
         </Text>
       </Text>
       <Text my="md">
-        Should you have any feedback, comments, requests for technical support
+        Should you have any feedback, replies, requests for technical support
         or other inquiries, please contact us by email:{" "}
         <Text span fw="bold">
           ho.alexander.g@gmail.com
