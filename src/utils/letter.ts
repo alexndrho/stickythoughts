@@ -14,8 +14,22 @@ export function formatLetters({
 }: {
   sessionUserId?: string;
   letters: BaseLetterType[];
-}): LetterType[] {
-  return letters.map((letter) => {
+}): LetterType[];
+export function formatLetters({
+  sessionUserId,
+  letters,
+}: {
+  sessionUserId?: string;
+  letters: BaseLetterType;
+}): LetterType;
+export function formatLetters({
+  sessionUserId,
+  letters,
+}: {
+  sessionUserId?: string;
+  letters: BaseLetterType[] | BaseLetterType;
+}): LetterType[] | LetterType {
+  const formatLetter = (letter: BaseLetterType): LetterType => {
     const { authorId, likes, _count, ...rest } = letter;
 
     return {
@@ -30,14 +44,26 @@ export function formatLetters({
         count: _count.replies,
       },
     } satisfies LetterType;
-  });
+  };
+
+  return Array.isArray(letters)
+    ? letters.map(formatLetter)
+    : formatLetter(letters);
 }
 
 export function formatLetterReplies(
   replies: BaseLetterReplyType[],
   sessionUserId?: string,
-): LetterReplyType[] {
-  return replies.map((reply) => {
+): LetterReplyType[];
+export function formatLetterReplies(
+  replies: BaseLetterReplyType,
+  sessionUserId?: string,
+): LetterReplyType;
+export function formatLetterReplies(
+  replies: BaseLetterReplyType[] | BaseLetterReplyType,
+  sessionUserId?: string,
+): LetterReplyType[] | LetterReplyType {
+  const formatLetterReply = (reply: BaseLetterReplyType): LetterReplyType => {
     const { authorId, likes, _count, ...rest } = reply;
     const isOP =
       rest.letter.authorId === authorId &&
@@ -59,13 +85,25 @@ export function formatLetterReplies(
         count: _count.likes,
       },
     } satisfies LetterReplyType;
-  });
+  };
+
+  return Array.isArray(replies)
+    ? replies.map(formatLetterReply)
+    : formatLetterReply(replies);
 }
 
 export function formatUserLetterReplies(
   replies: BaseUserLetterReplyType[],
-): UserLetterReplyType[] {
-  return replies.map((reply) => {
+): UserLetterReplyType[];
+export function formatUserLetterReplies(
+  replies: BaseUserLetterReplyType,
+): UserLetterReplyType;
+export function formatUserLetterReplies(
+  replies: BaseUserLetterReplyType[] | BaseUserLetterReplyType,
+): UserLetterReplyType[] | UserLetterReplyType {
+  const formatUserLetterReply = (
+    reply: BaseUserLetterReplyType,
+  ): UserLetterReplyType => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { authorId, likes, _count, ...rest } = reply;
 
@@ -77,5 +115,9 @@ export function formatUserLetterReplies(
         count: _count.likes,
       },
     };
-  });
+  };
+
+  return Array.isArray(replies)
+    ? replies.map(formatUserLetterReply)
+    : formatUserLetterReply(replies);
 }

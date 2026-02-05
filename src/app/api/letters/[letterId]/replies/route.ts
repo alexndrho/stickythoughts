@@ -8,8 +8,6 @@ import { NotificationType } from "@/generated/prisma/enums";
 import { createLetterReplyServerInput } from "@/lib/validations/letter";
 import { LETTER_REPLIES_PER_PAGE } from "@/config/letter";
 import { formatLetterReplies } from "@/utils/letter";
-import { getAnonymousLabel } from "@/utils/anonymous";
-import type { LetterReplyType } from "@/types/letter";
 import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
 
@@ -96,27 +94,7 @@ export async function POST(
       },
     });
 
-    const { authorId, likes, _count, ...restReply } = reply;
-    const isOP =
-      restReply.letter.authorId === authorId &&
-      restReply.letter.isAnonymous === restReply.isAnonymous;
-    const anonymousLabel =
-      restReply.isAnonymous && !isOP
-        ? getAnonymousLabel({ letterId: restReply.letterId, authorId })
-        : undefined;
-
-    const isSelf = session.user.id === authorId;
-
-    const formattedPost = {
-      ...restReply,
-      isOP,
-      isSelf,
-      anonymousLabel,
-      likes: {
-        liked: !!likes?.length,
-        count: _count.likes,
-      },
-    } satisfies LetterReplyType;
+    const formattedPost = formatLetterReplies(reply, session.user.id);
 
     if (reply.letter.authorId !== reply.authorId) {
       await prisma.notification.create({

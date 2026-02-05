@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 import { guardSession } from "@/lib/session-guard";
 import IError from "@/types/error";
 import { updateLetterServerInput } from "@/lib/validations/letter";
-import type { LetterType } from "@/types/letter";
+import { formatLetters } from "@/utils/letter";
 
 export async function GET(
   request: Request,
@@ -72,20 +72,10 @@ export async function GET(
       );
     }
 
-    const { likes, _count, authorId, ...restLetter } = letter;
-
-    const formattedPost: LetterType = {
-      ...restLetter,
-      author: restLetter.isAnonymous ? undefined : restLetter.author,
-      isOwner: session?.user?.id === authorId,
-      likes: {
-        liked: !!likes?.length,
-        count: _count.likes,
-      },
-      replies: {
-        count: _count.replies,
-      },
-    } satisfies LetterType;
+    const formattedPost = formatLetters({
+      sessionUserId: session?.user?.id,
+      letters: letter,
+    });
 
     return NextResponse.json(formattedPost);
   } catch (error) {
@@ -114,7 +104,7 @@ export async function PUT(
       return session;
     }
 
-    const updateResult = await prisma.letter.update({
+    const updatedLetter = await prisma.letter.update({
       where: {
         id: letterId,
         authorId: session.user.id,
@@ -123,14 +113,7 @@ export async function PUT(
       data: {
         body,
       },
-      select: {
-        id: true,
-        title: true,
-        body: true,
-        authorId: true,
-        isAnonymous: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         author: {
           select: {
             name: true,
@@ -138,23 +121,31 @@ export async function PUT(
             image: true,
           },
         },
+        likes: {
+          where: {
+            userId: session.user.id,
+          },
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            replies: {
+              where: {
+                deletedAt: null,
+              },
+            },
+          },
+        },
       },
     });
 
-    const { authorId, ...restLetter } = updateResult;
-
-    const formattedLetter: LetterType = {
-      ...restLetter,
-      author: restLetter.isAnonymous ? undefined : restLetter.author,
-      isOwner: session.user.id === authorId,
-      likes: {
-        liked: false,
-        count: 0,
-      },
-      replies: {
-        count: 0,
-      },
-    } satisfies LetterType;
+    const formattedLetter = formatLetters({
+      sessionUserId: session.user.id,
+      letters: updatedLetter,
+    });
 
     return NextResponse.json(formattedLetter);
   } catch (error) {

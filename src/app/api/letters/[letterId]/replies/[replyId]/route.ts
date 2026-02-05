@@ -6,7 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { updateLetterReplyServerInput } from "@/lib/validations/letter";
-import { getAnonymousLabel } from "@/utils/anonymous";
+import { formatLetterReplies } from "@/utils/letter";
 import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
 
@@ -24,7 +24,7 @@ export async function PUT(
     const { letterId, replyId } = await params;
     const { body } = updateLetterReplyServerInput.parse(await request.json());
 
-    const updateResult = await prisma.letterReply.updateMany({
+    const updatedReply = await prisma.letterReply.update({
       where: {
         id: replyId,
         letterId,
@@ -37,76 +37,40 @@ export async function PUT(
       data: {
         body,
       },
-    });
-
-    if (updateResult.count === 0) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: "Reply not found",
-            },
-          ],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
-
-    const updatedReply = await prisma.letterReply.findUnique({
-      where: {
-        id: replyId,
-      },
-      select: {
-        id: true,
-        body: true,
-        authorId: true,
-        isAnonymous: true,
-        letterId: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         letter: {
           select: {
             authorId: true,
             isAnonymous: true,
           },
         },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            image: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: session.user.id,
+          },
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
     });
 
-    if (!updatedReply) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: "Reply not found",
-            },
-          ],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
+    const formattedReply = formatLetterReplies(updatedReply, session.user.id);
 
-    const { authorId, ...restReply } = updatedReply;
-    const isOP =
-      restReply.letter.authorId === authorId &&
-      restReply.letter.isAnonymous === restReply.isAnonymous;
-    const isSelf = session.user.id === authorId;
-    const anonymousLabel =
-      restReply.isAnonymous && !isOP
-        ? getAnonymousLabel({ letterId: restReply.letterId, authorId })
-        : undefined;
-
-    return NextResponse.json(
-      {
-        ...restReply,
-        isOP,
-        isSelf,
-        anonymousLabel,
-      },
-      { status: 200 },
-    );
+    return NextResponse.json(formattedReply, { status: 200 });
   } catch (error) {
     if (error instanceof ZodError) {
       const zodError: IError = {
