@@ -230,6 +230,7 @@ export default function Content({ id }: ContentProps) {
         <DeleteLetterModal
           id={letter.id}
           title={letter.title}
+          authorUsername={letter.author?.username}
           opened={deleteModalOpened}
           onClose={deleteModalHandlers.close}
           onDelete={() => router.push("/letters")}

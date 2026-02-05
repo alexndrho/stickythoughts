@@ -3,12 +3,14 @@ import { Button, Flex, Modal, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { lettersInfiniteOptions } from "@/app/(main)/(core)/letters/options";
+import { userUsernameLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { deletedLettersOptions } from "@/app/dashboard/deleted/options";
 import { deleteLetter } from "@/services/letter";
 
 export interface DeleteLetterModalProps {
   id: string;
   title: string;
+  authorUsername?: string;
   opened: boolean;
   onClose: () => void;
   onDelete?: () => void;
@@ -17,6 +19,7 @@ export interface DeleteLetterModalProps {
 export default function DeleteLetterModal({
   id,
   title,
+  authorUsername,
   opened,
   onClose,
   onDelete,
@@ -34,6 +37,12 @@ export default function DeleteLetterModal({
       queryClient.invalidateQueries({
         queryKey: deletedLettersOptions.queryKey,
       });
+
+      if (authorUsername) {
+        queryClient.invalidateQueries({
+          queryKey: userUsernameLettersInfiniteOptions(authorUsername).queryKey,
+        });
+      }
 
       onClose();
     },
