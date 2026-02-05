@@ -63,6 +63,12 @@
   font-weight: bold;
 }
 
+.reply-item__author-self-badge {
+  margin-left: rem(5px);
+  color: var(--mantine-color-dimmed);
+  font-weight: bold;
+}
+
 .reply-item__created-at {
   color: var(--mantine-color-dimmed);
 }

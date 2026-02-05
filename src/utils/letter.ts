@@ -6,6 +6,7 @@ import type {
   LetterType,
   UserLetterReplyType,
 } from "@/types/letter";
+import { getAnonymousLabel } from "@/utils/anonymous";
 
 export function formatLetters({
   sessionUserId,
@@ -34,14 +35,25 @@ export function formatLetters({
 
 export function formatLetterReplies(
   replies: BaseLetterReplyType[],
+  sessionUserId?: string,
 ): LetterReplyType[] {
   return replies.map((reply) => {
     const { authorId, likes, _count, ...rest } = reply;
+    const isOP =
+      rest.letter.authorId === authorId &&
+      rest.letter.isAnonymous === rest.isAnonymous;
+    const isSelf = sessionUserId === authorId;
+    const anonymousLabel =
+      rest.isAnonymous && !isOP
+        ? getAnonymousLabel({ letterId: rest.letterId, authorId })
+        : undefined;
 
     return {
       ...rest,
       author: rest.isAnonymous ? undefined : rest.author,
-      isOP: rest.letter.authorId === authorId,
+      isOP,
+      isSelf,
+      anonymousLabel,
       likes: {
         liked: !!(likes && likes.length),
         count: _count.likes,

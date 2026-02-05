@@ -44,6 +44,9 @@ export default function ReplyItem({
   const [isEditable, setIsEditable] = useState(false);
 
   const isAuthor = session?.user.id === reply.author?.id;
+  const anonymousName = reply.anonymousLabel
+    ? `Anonymous ${reply.anonymousLabel}`
+    : "Anonymous";
   const hasPermission =
     session?.user?.role === "admin" || session?.user?.role === "moderator"
       ? authClient.admin.checkRolePermission({
@@ -72,7 +75,7 @@ export default function ReplyItem({
           <div className={classes["reply-item__author-container"]}>
             {reply.isAnonymous || !reply.author ? (
               <Text className={classes["reply-item__author-name"]}>
-                Anonymous
+                {reply.isOP ? "Anonymous" : anonymousName}
               </Text>
             ) : (
               <Anchor
@@ -83,6 +86,15 @@ export default function ReplyItem({
               >
                 {reply.author.name || reply.author.username}
               </Anchor>
+            )}
+
+            {reply.isSelf && (
+              <Text
+                size="xs"
+                className={classes["reply-item__author-self-badge"]}
+              >
+                You
+              </Text>
             )}
 
             {reply.isOP && (

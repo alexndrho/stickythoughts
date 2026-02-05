@@ -62,6 +62,7 @@ type PrismaBaseLetterReply = Prisma.LetterReplyGetPayload<{
     letter: {
       select: {
         authorId: true;
+        isAnonymous: true;
       };
     };
     author: {
@@ -99,6 +100,8 @@ export type LetterReplyType = Omit<
 > & {
   author?: BaseLetterReplyType["author"];
   isOP: boolean;
+  isSelf: boolean;
+  anonymousLabel?: string;
   likes: {
     liked: boolean;
     count: number;

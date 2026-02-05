@@ -6,6 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { updateLetterReplyServerInput } from "@/lib/validations/letter";
+import { getAnonymousLabel } from "@/utils/anonymous";
 import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
 
@@ -64,6 +65,12 @@ export async function PUT(
         letterId: true,
         createdAt: true,
         updatedAt: true,
+        letter: {
+          select: {
+            authorId: true,
+            isAnonymous: true,
+          },
+        },
       },
     });
 
@@ -81,7 +88,25 @@ export async function PUT(
       );
     }
 
-    return NextResponse.json(updatedReply, { status: 200 });
+    const { authorId, ...restReply } = updatedReply;
+    const isOP =
+      restReply.letter.authorId === authorId &&
+      restReply.letter.isAnonymous === restReply.isAnonymous;
+    const isSelf = session.user.id === authorId;
+    const anonymousLabel =
+      restReply.isAnonymous && !isOP
+        ? getAnonymousLabel({ letterId: restReply.letterId, authorId })
+        : undefined;
+
+    return NextResponse.json(
+      {
+        ...restReply,
+        isOP,
+        isSelf,
+        anonymousLabel,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     if (error instanceof ZodError) {
       const zodError: IError = {
