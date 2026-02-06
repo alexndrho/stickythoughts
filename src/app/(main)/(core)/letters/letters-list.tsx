@@ -1,11 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
-import { spotlight } from "@mantine/spotlight";
-import { Button, Card, Kbd, List, Paper, Text, Title } from "@mantine/core";
-import { IconMail, IconSearch } from "@tabler/icons-react";
+import { Button, Card, Text } from "@mantine/core";
 
 import { authClient } from "@/lib/auth-client";
 import { likeLetter, unlikeLetter } from "@/services/letter";
@@ -13,15 +10,12 @@ import { lettersInfiniteOptions } from "@/app/(main)/(core)/letters/options";
 import InfiniteScroll from "@/components/infinite-scroll";
 import SignInWarningModal from "@/components/sign-in-warning-modal";
 import LetterItem from "./letter-item";
-import SearchSpotlight from "./search-spotlight";
 import { LettersSkeleton } from "./letters-skeleton";
 import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
 import classes from "./letters.module.css";
 
-export default function Content() {
+export default function LettersList() {
   const { data: session } = authClient.useSession();
-  const router = useRouter();
-
   const [signInWarningModalOpened, signInWarningModalHandler] =
     useDisclosure(false);
 
@@ -31,15 +25,6 @@ export default function Content() {
     fetchNextPage: fetchNextPostsPage,
     hasNextPage: hasNextPostsPage,
   } = useInfiniteQuery(lettersInfiniteOptions);
-
-  const handleClickSubmitPost = () => {
-    if (!session) {
-      signInWarningModalHandler.open();
-      return;
-    }
-
-    router.push("/letters/submit");
-  };
 
   const handleLikeMutation = useMutation({
     mutationFn: async ({
@@ -85,57 +70,7 @@ export default function Content() {
   };
 
   return (
-    <div className={classes.container}>
-      <Paper withBorder className={classes["header"]}>
-        <div>
-          <Text size="xs" className={classes["header__eyebrow"]}>
-            Letters
-          </Text>
-
-          <Title className={classes["header__title"]}>
-            Longer stories. Slower replies.
-          </Title>
-
-          <Text className={classes.header__description}>
-            When a thought needs more room, write a letter. Read, reply, and
-            keep the conversation moving.
-          </Text>
-
-          <div className={classes["actions-bar"]}>
-            <Button
-              variant="default"
-              leftSection={<IconSearch size="1em" />}
-              rightSection={<Kbd>t</Kbd>}
-              onClick={spotlight.open}
-              aria-label="Open search"
-              classNames={{
-                root: classes["actions-bar__search-btn"],
-                label: classes["actions-bar__search-btn__label"],
-              }}
-            >
-              Search...
-            </Button>
-
-            <Button
-              rightSection={<IconMail size="1em" />}
-              onClick={handleClickSubmitPost}
-            >
-              Write a letter
-            </Button>
-          </div>
-        </div>
-
-        <Card withBorder className={classes["header__note"]}>
-          <Text className={classes["header__note-title"]}>What you can do</Text>
-
-          <List>
-            <List.Item>Write a letter with a title and a story.</List.Item>
-            <List.Item>Reply to a letter that resonates.</List.Item>
-            <List.Item>Prefer privacy? Write anonymously.</List.Item>
-          </List>
-        </Card>
-      </Paper>
-
+    <>
       {!session && (
         <Card withBorder className={classes["sign-in-card"]}>
           <Text
@@ -179,14 +114,12 @@ export default function Content() {
         </div>
       </InfiniteScroll>
 
-      <SearchSpotlight />
-
       {!session && (
         <SignInWarningModal
           opened={signInWarningModalOpened}
           onClose={signInWarningModalHandler.close}
         />
       )}
-    </div>
+    </>
   );
 }

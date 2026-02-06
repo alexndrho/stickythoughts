@@ -1,6 +1,10 @@
 import { type Metadata } from "next";
+import { Paper, Text, Title } from "@mantine/core";
 
-import Content from "./content";
+import HeaderNote from "./header-note";
+import LettersActions from "./letters-actions";
+import LettersList from "./letters-list";
+import classes from "./letters.module.css";
 
 export const metadata: Metadata = {
   title: "Letters",
@@ -10,5 +14,30 @@ export const metadata: Metadata = {
 };
 
 export default function LettersPage() {
-  return <Content />;
+  return (
+    <div className={classes.container}>
+      <Paper withBorder className={classes["header"]}>
+        <div>
+          <Text size="xs" className={classes["header__eyebrow"]}>
+            Letters
+          </Text>
+
+          <Title className={classes["header__title"]}>
+            Longer stories. Slower replies.
+          </Title>
+
+          <Text className={classes.header__description}>
+            When a thought needs more room, write a letter. Read, reply, and
+            keep the conversation moving.
+          </Text>
+
+          <LettersActions />
+        </div>
+
+        <HeaderNote />
+      </Paper>
+
+      <LettersList />
+    </div>
+  );
 }
