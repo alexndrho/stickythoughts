@@ -14,11 +14,18 @@ import {
 } from "@mantine/core";
 import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
 
-import { deletedThoughtsCountOptions, deletedThoughtsPageOptions } from "./options";
+import {
+  deletedThoughtsCountOptions,
+  deletedThoughtsPageOptions,
+} from "./options";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import dashboardClasses from "../dashboard.module.css";
 import classes from "./deleted.module.css";
-import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from "./utils";
+import { getFormattedDate } from "@/utils/date";
+import {
+  formatDeletedByLabel,
+  formatDeletedDate,
+  getPagedTotal,
+} from "./utils";
 import { getQueryClient } from "@/lib/get-query-client";
 import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { thoughtsOptions } from "@/app/(main)/options";
@@ -31,6 +38,7 @@ import {
   PermanentlyDeleteThoughtModal,
   RecoverThoughtModal,
 } from "./thought-modals";
+import dashboardClasses from "../dashboard.module.css";
 
 export interface ThoughtsTabProps {
   isActive: boolean;
@@ -63,7 +71,9 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
 
   const handleInvalidate = () => {
     const queryClient = getQueryClient();
-    queryClient.invalidateQueries({ queryKey: deletedThoughtsOptions.queryKey });
+    queryClient.invalidateQueries({
+      queryKey: deletedThoughtsOptions.queryKey,
+    });
     queryClient.invalidateQueries({ queryKey: thoughtsOptions.queryKey });
   };
 
@@ -106,6 +116,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                 <Table.Tr>
                   <Table.Th>Author</Table.Th>
                   <Table.Th>Message</Table.Th>
+                  <Table.Th>Created At</Table.Th>
                   <Table.Th>Deleted By</Table.Th>
                   <Table.Th>Deleted</Table.Th>
                   <Table.Th>Actions</Table.Th>
@@ -119,6 +130,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                     <Table.Td>
                       <Text>{thought.message}</Text>
                     </Table.Td>
+                    <Table.Td>{getFormattedDate(thought.createdAt)}</Table.Td>
                     <Table.Td>
                       {formatDeletedByLabel(thought.deletedBy)}
                     </Table.Td>
@@ -169,14 +181,14 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
 
                 {isFetching ? (
                   <Table.Tr>
-                    <Table.Td colSpan={5} ta="center">
+                    <Table.Td colSpan={6} ta="center">
                       <Loader />
                     </Table.Td>
                   </Table.Tr>
                 ) : (
                   data?.length === 0 && (
                     <Table.Tr>
-                      <Table.Td colSpan={5} ta="center">
+                      <Table.Td colSpan={6} ta="center">
                         No deleted thoughts found.
                       </Table.Td>
                     </Table.Tr>

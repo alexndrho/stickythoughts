@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
+import { getFormattedDate } from "@/utils/date";
 import { adminThoughtsPageOptions } from "@/app/dashboard/thoughts/options";
 import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import { thoughtCountOptions } from "@/app/(main)/options";
@@ -48,6 +49,7 @@ export default function Content() {
               <Table.Tr>
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Message</Table.Th>
+                <Table.Th>Created At</Table.Th>
                 <Table.Th />
               </Table.Tr>
             </Table.Thead>
@@ -60,6 +62,8 @@ export default function Content() {
                   <Table.Td>
                     <Text>{thought.message}</Text>
                   </Table.Td>
+
+                  <Table.Td>{getFormattedDate(thought.createdAt)}</Table.Td>
 
                   <Table.Td>
                     <ActionIcon
@@ -75,14 +79,14 @@ export default function Content() {
 
               {isFetching ? (
                 <Table.Tr>
-                  <Table.Td colSpan={3} ta="center">
+                  <Table.Td colSpan={4} ta="center">
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
                 data?.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={3} ta="center">
+                    <Table.Td colSpan={4} ta="center">
                       No thoughts found.
                     </Table.Td>
                   </Table.Tr>
