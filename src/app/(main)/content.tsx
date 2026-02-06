@@ -4,10 +4,12 @@ import { useEffect, useRef } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Card,
   Group,
   Input,
   Kbd,
   Loader,
+  Paper,
   Skeleton,
   Text,
   Title,
@@ -116,6 +118,81 @@ export default function Content() {
 
   return (
     <div className={classes.container}>
+      <Paper withBorder className={classes.header}>
+        <div>
+          <Text size="xs" className={classes["header__eyebrow"]}>
+            STICKYTHOUGHTS
+          </Text>
+
+          <Title className={classes["header__title"]}>
+            A place where you can freely express yourself
+          </Title>
+
+          <Text className={classes["header__description"]}>
+            Share a thought, start a letter, or find the voices you care about.
+            Everything begins with a line.
+          </Text>
+
+          <Skeleton
+            visible={!thoughtsCountIsFetched}
+            component={Card}
+            className={classes["header__skeleton-wrapper-thought-counter"]}
+          >
+            <IconMessage
+              size="1em"
+              className={classes["header__thought-counter-icon"]}
+            />
+
+            <Text className={classes["header__thought-counter"]}>
+              {thoughtsCountData ? thoughtsCountData.toLocaleString() : 0}{" "}
+              <Text c="blue" span inherit>
+                thoughts
+              </Text>{" "}
+              submitted
+            </Text>
+          </Skeleton>
+        </div>
+
+        <div className={classes["header__notes"]}>
+          <Card withBorder className={classes["header__note"]}>
+            <Text className={classes["header__note-title"]}>
+              Stick a thought
+            </Text>
+            <Text size="sm" className={classes["header__note-description"]}>
+              Share a feeling, a moment, or a question. Short or long, it&apos;s
+              welcome.
+            </Text>
+          </Card>
+
+          <Card withBorder className={classes["header__note"]}>
+            <Text className={classes["header__note-title"]}>
+              Find your people
+            </Text>
+            <Text size="sm" className={classes["header__note-description"]}>
+              Search by author to follow voices you care about and discover new
+              ones.
+            </Text>
+          </Card>
+        </div>
+      </Paper>
+
+      <div className={classes["actions-bar"]}>
+        <Input
+          ref={searchRef}
+          leftSection={<IconSearch size="1rem" />}
+          rightSection={<Kbd>t</Kbd>}
+          placeholder="Search for an author"
+          onChange={(e) => setSearchBarValue(e.currentTarget.value)}
+          className={classes["actions-bar__search-bar"]}
+        />
+
+        <Tooltip label="Press (s) to stick" position="bottom">
+          <Button rightSection={<IconMessage size="1em" />} onClick={open}>
+            Stick a thought
+          </Button>
+        </Tooltip>
+      </div>
+
       <InfiniteScroll
         onLoadMore={() => {
           if (searchBarValue.length > 0) {
@@ -134,67 +211,6 @@ export default function Content() {
           </Group>
         }
       >
-        <div className={classes.header}>
-          <Title className={classes.title}>
-            A place where you can freely express yourself
-          </Title>
-
-          <Skeleton
-            visible={!thoughtsCountIsFetched}
-            className={classes["skeleton-wrapper-description"]}
-          >
-            <IconMessage className={classes["description-icon"]} />
-
-            <Text size="md" className={classes.description}>
-              {thoughtsCountData?.toLocaleString()}{" "}
-              <Text c="blue" span inherit>
-                thoughts
-              </Text>{" "}
-              submitted
-            </Text>
-          </Skeleton>
-        </div>
-
-        <div className={classes["feature-grid"]}>
-          <div className={classes["feature-card"]}>
-            <Text className={classes["feature-title"]}>Stick a thought</Text>
-            <Text size="sm" c="dimmed">
-              Enough space for a feeling, a moment, or a question.
-            </Text>
-          </div>
-
-          <div className={classes["feature-card"]}>
-            <Text className={classes["feature-title"]}>Find your people</Text>
-            <Text size="sm" c="dimmed">
-              Search by author to follow voices you care about.
-            </Text>
-          </div>
-
-          <div className={classes["feature-card"]}>
-            <Text className={classes["feature-title"]}>Write a letter</Text>
-            <Text size="sm" c="dimmed">
-              Start longer conversations when a thought deserves more.
-            </Text>
-          </div>
-        </div>
-
-        <div className={classes["actions-bar"]}>
-          <Input
-            ref={searchRef}
-            leftSection={<IconSearch size="1rem" />}
-            rightSection={<Kbd>t</Kbd>}
-            placeholder="Search for an author"
-            onChange={(e) => setSearchBarValue(e.currentTarget.value)}
-            className={classes["actions-bar__search-bar"]}
-          />
-
-          <Tooltip label="Press (s) to stick" position="bottom">
-            <Button rightSection={<IconMessage size="1em" />} onClick={open}>
-              Stick a thought
-            </Button>
-          </Tooltip>
-        </div>
-
         {searchBarValue.length > 0
           ? searchData && (
               <Thoughts

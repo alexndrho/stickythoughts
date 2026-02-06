@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://stickythoughts.alexanderho.dev";
-  const today = new Date("2026-02-05");
+  const today = new Date("2026-02-06");
 
   return [
     {
