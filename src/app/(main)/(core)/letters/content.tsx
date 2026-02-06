@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { Button, Card, Kbd, Text, Title } from "@mantine/core";
+import { Button, Card, Kbd, List, Paper, Text, Title } from "@mantine/core";
 import { IconMail, IconSearch } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -86,42 +86,60 @@ export default function Content() {
 
   return (
     <div className={classes.container}>
-      <div className={classes["letters-header"]}>
-        <Title>Letters</Title>
+      <Paper withBorder className={classes["header"]}>
+        <div>
+          <Text size="xs" className={classes["header__eyebrow"]}>
+            Letters
+          </Text>
 
-        <Text c="dimmed">
-          Longer conversations. Write a new letter or respond to one that
-          resonates.
-        </Text>
-      </div>
+          <Title className={classes["header__title"]}>
+            Longer stories. Slower replies.
+          </Title>
 
-      <div className={classes["actions-bar"]}>
-        <Button
-          variant="default"
-          leftSection={<IconSearch size="1em" />}
-          rightSection={<Kbd>t</Kbd>}
-          onClick={spotlight.open}
-          aria-label="Open search"
-          classNames={{
-            root: classes["actions-bar__search-btn"],
-            label: classes["actions-bar__search-btn__label"],
-          }}
-        >
-          Search...
-        </Button>
+          <Text className={classes.header__description}>
+            When a thought needs more room, write a letter. Read, reply, and
+            keep the conversation moving.
+          </Text>
 
-        <Button
-          rightSection={<IconMail size="1em" />}
-          onClick={handleClickSubmitPost}
-        >
-          Write a letter
-        </Button>
-      </div>
+          <div className={classes["actions-bar"]}>
+            <Button
+              variant="default"
+              leftSection={<IconSearch size="1em" />}
+              rightSection={<Kbd>t</Kbd>}
+              onClick={spotlight.open}
+              aria-label="Open search"
+              classNames={{
+                root: classes["actions-bar__search-btn"],
+                label: classes["actions-bar__search-btn__label"],
+              }}
+            >
+              Search...
+            </Button>
+
+            <Button
+              rightSection={<IconMail size="1em" />}
+              onClick={handleClickSubmitPost}
+            >
+              Write a letter
+            </Button>
+          </div>
+        </div>
+
+        <Card withBorder className={classes["header__note"]}>
+          <Text className={classes["header__note-title"]}>What you can do</Text>
+
+          <List>
+            <List.Item>Write a letter with a title and a story.</List.Item>
+            <List.Item>Reply to a letter that resonates.</List.Item>
+            <List.Item>Prefer privacy? Write anonymously.</List.Item>
+          </List>
+        </Card>
+      </Paper>
 
       {!session && (
         <Card withBorder className={classes["sign-in-card"]}>
           <Text
-            size="sm"
+            size="xs"
             c="blue"
             className={classes["sign-in-prompt__eyebrow"]}
           >
