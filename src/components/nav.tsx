@@ -27,10 +27,10 @@ import {
   IconAddressBook,
   IconLogin,
   IconUser,
-  IconMessage,
   IconBell,
   IconTools,
   IconLink,
+  IconMail,
 } from "@tabler/icons-react";
 import { useThrottledCallback } from "@mantine/hooks";
 
@@ -48,7 +48,7 @@ const navLinks = [
   },
   {
     label: "Letters",
-    icon: IconMessage,
+    icon: IconMail,
     href: "/letters",
   },
   {
