@@ -22,18 +22,21 @@ const formatDateTime = new Intl.DateTimeFormat("en-US", {
   hour12: true,
 });
 
-export const getFormattedDate = (date: Date) => {
+export const getFormattedDate = (date: Date | string) => {
+  const parsedDate = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) return "-";
+
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const oneWeekAgo = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
 
-  if (date > today) {
-    return formatTime.format(date);
-  } else if (date > oneWeekAgo) {
-    return formatDayTime.format(date);
+  if (parsedDate > today) {
+    return formatTime.format(parsedDate);
+  } else if (parsedDate > oneWeekAgo) {
+    return formatDayTime.format(parsedDate);
   } else {
-    return formatDateTime.format(date);
+    return formatDateTime.format(parsedDate);
   }
 };
 
