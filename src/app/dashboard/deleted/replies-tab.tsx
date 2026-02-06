@@ -27,6 +27,7 @@ import {
   formatDeletedDate,
   getPagedTotal,
 } from "./utils";
+import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { deletedRepliesOptions } from "@/app/dashboard/deleted/options";
 import { letterBaseOptions } from "@/app/(main)/(core)/letters/options";
@@ -37,10 +38,7 @@ import {
 } from "@/services/moderate/deleted";
 import { stripHtmlTags } from "@/utils/text";
 import { formatUserDisplayName } from "@/utils/user";
-import {
-  PermanentlyDeleteReplyModal,
-  RecoverReplyModal,
-} from "./reply-modals";
+import { PermanentlyDeleteReplyModal, RecoverReplyModal } from "./reply-modals";
 
 export interface RepliesTabProps {
   isActive: boolean;
@@ -52,12 +50,28 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
     useState<DeletedLetterReplyFromServer | null>(null);
   const [restoringReply, setRestoringReply] =
     useState<DeletedLetterReplyFromServer | null>(null);
-  const [restoringReplyId, setRestoringReplyId] = useState<string | null>(
-    null,
-  );
-  const [deletingReplyId, setDeletingReplyId] = useState<string | null>(
-    null,
-  );
+  const [restoringReplyId, setRestoringReplyId] = useState<string | null>(null);
+  const [deletingReplyId, setDeletingReplyId] = useState<string | null>(null);
+
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role;
+  const isStaff = role === "admin" || role === "moderator";
+  const canRestoreReply = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          letterReply: ["restore"],
+        },
+      })
+    : false;
+  const canPermanentlyDeleteReply = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          letterReply: ["purge"],
+        },
+      })
+    : false;
 
   const { data, isFetching } = useQuery({
     ...deletedRepliesPageOptions(page),
@@ -151,14 +165,19 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                           <ActionIcon
                             aria-label="Recover reply"
                             variant="default"
-                            onClick={() => setRestoringReply(reply)}
+                            onClick={() => {
+                              if (canRestoreReply) {
+                                setRestoringReply(reply);
+                              }
+                            }}
                             loading={
                               restoreMutation.isPending &&
                               restoringReplyId === reply.id
                             }
                             disabled={
-                              restoreMutation.isPending &&
-                              restoringReplyId === reply.id
+                              !canRestoreReply ||
+                              (restoreMutation.isPending &&
+                                restoringReplyId === reply.id)
                             }
                           >
                             <IconArrowBackUp size="1em" />
@@ -169,16 +188,19 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                           <ActionIcon
                             aria-label="Permanently delete reply"
                             color="red"
-                            onClick={() =>
-                              setPermanentlyDeletingReply(reply)
-                            }
+                            onClick={() => {
+                              if (canPermanentlyDeleteReply) {
+                                setPermanentlyDeletingReply(reply);
+                              }
+                            }}
                             loading={
                               deleteMutation.isPending &&
                               deletingReplyId === reply.id
                             }
                             disabled={
-                              deleteMutation.isPending &&
-                              deletingReplyId === reply.id
+                              !canPermanentlyDeleteReply ||
+                              (deleteMutation.isPending &&
+                                deletingReplyId === reply.id)
                             }
                           >
                             <IconTrashX size="1em" />
@@ -212,27 +234,30 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
         <Pagination mt="md" value={page} onChange={setPage} total={total} />
       </div>
 
-      <PermanentlyDeleteReplyModal
-        reply={permanentlyDeletingReply}
-        opened={!!permanentlyDeletingReply}
-        onClose={() => setPermanentlyDeletingReply(null)}
-        onConfirm={handleConfirmPermanentDelete}
-        loading={deleteMutation.isPending}
-      />
+      {canPermanentlyDeleteReply && (
+        <PermanentlyDeleteReplyModal
+          reply={permanentlyDeletingReply}
+          opened={!!permanentlyDeletingReply}
+          onClose={() => setPermanentlyDeletingReply(null)}
+          onConfirm={handleConfirmPermanentDelete}
+          loading={deleteMutation.isPending}
+        />
+      )}
 
-      <RecoverReplyModal
-        reply={restoringReply}
-        opened={!!restoringReply}
-        onClose={() => setRestoringReply(null)}
-        onConfirm={(reply) => {
-          restoreMutation.mutate(reply.id);
-          setRestoringReply(null);
-        }}
-        loading={
-          restoreMutation.isPending &&
-          restoringReplyId === restoringReply?.id
-        }
-      />
+      {canRestoreReply && (
+        <RecoverReplyModal
+          reply={restoringReply}
+          opened={!!restoringReply}
+          onClose={() => setRestoringReply(null)}
+          onConfirm={(reply) => {
+            restoreMutation.mutate(reply.id);
+            setRestoringReply(null);
+          }}
+          loading={
+            restoreMutation.isPending && restoringReplyId === restoringReply?.id
+          }
+        />
+      )}
     </Tabs.Panel>
   );
 }

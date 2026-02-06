@@ -26,6 +26,7 @@ import {
   formatDeletedDate,
   getPagedTotal,
 } from "./utils";
+import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { thoughtsOptions } from "@/app/(main)/options";
@@ -56,6 +57,26 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const [deletingThoughtId, setDeletingThoughtId] = useState<string | null>(
     null,
   );
+
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role;
+  const isStaff = role === "admin" || role === "moderator";
+  const canRestoreThought = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          thought: ["restore"],
+        },
+      })
+    : false;
+  const canPermanentlyDeleteThought = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          thought: ["purge"],
+        },
+      })
+    : false;
 
   const { data, isFetching } = useQuery({
     ...deletedThoughtsPageOptions(page),
@@ -141,14 +162,19 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                           <ActionIcon
                             aria-label="Recover thought"
                             variant="default"
-                            onClick={() => setRestoringThought(thought)}
+                            onClick={() => {
+                              if (canRestoreThought) {
+                                setRestoringThought(thought);
+                              }
+                            }}
                             loading={
                               restoreMutation.isPending &&
                               restoringThoughtId === thought.id
                             }
                             disabled={
-                              restoreMutation.isPending &&
-                              restoringThoughtId === thought.id
+                              !canRestoreThought ||
+                              (restoreMutation.isPending &&
+                                restoringThoughtId === thought.id)
                             }
                           >
                             <IconArrowBackUp size="1em" />
@@ -159,16 +185,19 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                           <ActionIcon
                             aria-label="Permanently delete thought"
                             color="red"
-                            onClick={() =>
-                              setPermanentlyDeletingThought(thought)
-                            }
+                            onClick={() => {
+                              if (canPermanentlyDeleteThought) {
+                                setPermanentlyDeletingThought(thought);
+                              }
+                            }}
                             loading={
                               deleteMutation.isPending &&
                               deletingThoughtId === thought.id
                             }
                             disabled={
-                              deleteMutation.isPending &&
-                              deletingThoughtId === thought.id
+                              !canPermanentlyDeleteThought ||
+                              (deleteMutation.isPending &&
+                                deletingThoughtId === thought.id)
                             }
                           >
                             <IconTrashX size="1em" />
@@ -202,27 +231,31 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
         <Pagination mt="md" value={page} onChange={setPage} total={total} />
       </div>
 
-      <PermanentlyDeleteThoughtModal
-        thought={permanentlyDeletingThought}
-        opened={!!permanentlyDeletingThought}
-        onClose={() => setPermanentlyDeletingThought(null)}
-        onConfirm={handleConfirmPermanentDelete}
-        loading={deleteMutation.isPending}
-      />
+      {canPermanentlyDeleteThought && (
+        <PermanentlyDeleteThoughtModal
+          thought={permanentlyDeletingThought}
+          opened={!!permanentlyDeletingThought}
+          onClose={() => setPermanentlyDeletingThought(null)}
+          onConfirm={handleConfirmPermanentDelete}
+          loading={deleteMutation.isPending}
+        />
+      )}
 
-      <RecoverThoughtModal
-        thought={restoringThought}
-        opened={!!restoringThought}
-        onClose={() => setRestoringThought(null)}
-        onConfirm={(thought) => {
-          restoreMutation.mutate(thought.id);
-          setRestoringThought(null);
-        }}
-        loading={
-          restoreMutation.isPending &&
-          restoringThoughtId === restoringThought?.id
-        }
-      />
+      {canRestoreThought && (
+        <RecoverThoughtModal
+          thought={restoringThought}
+          opened={!!restoringThought}
+          onClose={() => setRestoringThought(null)}
+          onConfirm={(thought) => {
+            restoreMutation.mutate(thought.id);
+            setRestoringThought(null);
+          }}
+          loading={
+            restoreMutation.isPending &&
+            restoringThoughtId === restoringThought?.id
+          }
+        />
+      )}
     </Tabs.Panel>
   );
 }

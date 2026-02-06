@@ -15,11 +15,19 @@ import {
 } from "@mantine/core";
 import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
 
-import { deletedLettersCountOptions, deletedLettersPageOptions } from "./options";
+import {
+  deletedLettersCountOptions,
+  deletedLettersPageOptions,
+} from "./options";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
 import dashboardClasses from "../dashboard.module.css";
 import classes from "./deleted.module.css";
-import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from "./utils";
+import {
+  formatDeletedByLabel,
+  formatDeletedDate,
+  getPagedTotal,
+} from "./utils";
+import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { deletedLettersOptions } from "@/app/dashboard/deleted/options";
 import { letterBaseOptions } from "@/app/(main)/(core)/letters/options";
@@ -48,6 +56,26 @@ export default function LettersTab({ isActive }: LettersTabProps) {
     null,
   );
   const [deletingLetterId, setDeletingLetterId] = useState<string | null>(null);
+
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role;
+  const isStaff = role === "admin" || role === "moderator";
+  const canRestoreLetter = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          letter: ["restore"],
+        },
+      })
+    : false;
+  const canPermanentlyDeleteLetter = isStaff
+    ? authClient.admin.checkRolePermission({
+        role,
+        permission: {
+          letter: ["purge"],
+        },
+      })
+    : false;
 
   const { data, isFetching } = useQuery({
     ...deletedLettersPageOptions(page),
@@ -118,9 +146,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                     <Table.Td>
                       <Text>{letter.title}</Text>
                     </Table.Td>
-                    <Table.Td>
-                      {formatUserDisplayName(letter.author)}
-                    </Table.Td>
+                    <Table.Td>{formatUserDisplayName(letter.author)}</Table.Td>
                     <Table.Td>
                       {letter.deletedById === letter.authorId ? (
                         <Badge size="sm">Author</Badge>
@@ -135,14 +161,19 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                           <ActionIcon
                             aria-label="Recover letter"
                             variant="default"
-                            onClick={() => setRestoringLetter(letter)}
+                            onClick={() => {
+                              if (canRestoreLetter) {
+                                setRestoringLetter(letter);
+                              }
+                            }}
                             loading={
                               restoreMutation.isPending &&
                               restoringLetterId === letter.id
                             }
                             disabled={
-                              restoreMutation.isPending &&
-                              restoringLetterId === letter.id
+                              !canRestoreLetter ||
+                              (restoreMutation.isPending &&
+                                restoringLetterId === letter.id)
                             }
                           >
                             <IconArrowBackUp size="1em" />
@@ -153,16 +184,19 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                           <ActionIcon
                             aria-label="Permanently delete letter"
                             color="red"
-                            onClick={() =>
-                              setPermanentlyDeletingLetter(letter)
-                            }
+                            onClick={() => {
+                              if (canPermanentlyDeleteLetter) {
+                                setPermanentlyDeletingLetter(letter);
+                              }
+                            }}
                             loading={
                               deleteMutation.isPending &&
                               deletingLetterId === letter.id
                             }
                             disabled={
-                              deleteMutation.isPending &&
-                              deletingLetterId === letter.id
+                              !canPermanentlyDeleteLetter ||
+                              (deleteMutation.isPending &&
+                                deletingLetterId === letter.id)
                             }
                           >
                             <IconTrashX size="1em" />
@@ -196,27 +230,31 @@ export default function LettersTab({ isActive }: LettersTabProps) {
         <Pagination mt="md" value={page} onChange={setPage} total={total} />
       </div>
 
-      <PermanentlyDeleteLetterModal
-        letter={permanentlyDeletingLetter}
-        opened={!!permanentlyDeletingLetter}
-        onClose={() => setPermanentlyDeletingLetter(null)}
-        onConfirm={handleConfirmPermanentDelete}
-        loading={deleteMutation.isPending}
-      />
+      {canPermanentlyDeleteLetter && (
+        <PermanentlyDeleteLetterModal
+          letter={permanentlyDeletingLetter}
+          opened={!!permanentlyDeletingLetter}
+          onClose={() => setPermanentlyDeletingLetter(null)}
+          onConfirm={handleConfirmPermanentDelete}
+          loading={deleteMutation.isPending}
+        />
+      )}
 
-      <RecoverLetterModal
-        letter={restoringLetter}
-        opened={!!restoringLetter}
-        onClose={() => setRestoringLetter(null)}
-        onConfirm={(letter) => {
-          restoreMutation.mutate(letter.id);
-          setRestoringLetter(null);
-        }}
-        loading={
-          restoreMutation.isPending &&
-          restoringLetterId === restoringLetter?.id
-        }
-      />
+      {canRestoreLetter && (
+        <RecoverLetterModal
+          letter={restoringLetter}
+          opened={!!restoringLetter}
+          onClose={() => setRestoringLetter(null)}
+          onConfirm={(letter) => {
+            restoreMutation.mutate(letter.id);
+            setRestoringLetter(null);
+          }}
+          loading={
+            restoreMutation.isPending &&
+            restoringLetterId === restoringLetter?.id
+          }
+        />
+      )}
     </Tabs.Panel>
   );
 }

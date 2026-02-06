@@ -19,7 +19,7 @@ export const admin = ac.newRole({
 
 export const moderator = ac.newRole({
   user: ["ban"],
-  thought: ["list", "delete"],
-  letter: ["delete"],
-  letterReply: ["delete"],
+  thought: ["list", "list-deleted", "delete"],
+  letter: ["list-deleted", "delete"],
+  letterReply: ["list-deleted", "delete"],
 });
