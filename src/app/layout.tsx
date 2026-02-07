@@ -19,6 +19,8 @@ import Providers from "./providers";
 import { theme } from "./theme";
 import "./global.css";
 
+import { getBaseUrl } from "@/lib/seo/base-url.server";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,7 +38,7 @@ export const metadata: Metadata = {
   },
   description:
     "Share your thoughts anonymously on StickyThoughts. Express yourself freely, connect with others, and discover authentic stories.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
+  metadataBase: getBaseUrl(),
 };
 
 export default function RootLayout({
