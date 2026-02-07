@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { hasActiveSession } from "@/lib/has-active-session";
 import { deleteFile, isUrlStorage } from "@/lib/storage";
 import { ONE_WEEK_MS } from "@/config/cron";
-import { extractKeyFromUrl } from "@/utils/text";
+import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
 import type IError from "@/types/error";
 
 export const dynamic = "force-dynamic";
@@ -76,21 +76,32 @@ export async function GET(request: Request) {
           })
         : { count: 0 };
 
-    const imageUrls = deletableUsers
-      .map((user) => user.image)
-      .filter((image): image is string => Boolean(image));
+    const imageDeleteTargets = deletableUsers
+      .filter((user) => Boolean(user.image) && isUrlStorage(user.image!))
+      .map((user) => {
+        const key = extractUserProfileImageKeyFromUrl(user.image!, user.id);
+        if (!key) {
+          console.error(
+            "Refusing to delete profile image during purge: key does not match expected prefix.",
+            { userId: user.id },
+          );
+          return null;
+        }
+        return { userId: user.id, key };
+      })
+      .filter(
+        (target): target is { userId: string; key: string } => target !== null,
+      );
 
     const imageDeleteResults = await Promise.allSettled(
-      imageUrls
-        .filter((image) => isUrlStorage(image))
-        .map((image) =>
-          deleteFile({
-            params: {
-              Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
-              Key: extractKeyFromUrl(image),
-            },
-          }),
-        ),
+      imageDeleteTargets.map((t) =>
+        deleteFile({
+          params: {
+            Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+            Key: t.key,
+          },
+        }),
+      ),
     );
 
     const profileImagesDeleted = imageDeleteResults.filter(

@@ -6,7 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import IError from "@/types/error";
 import { deleteFile, isUrlStorage, uploadFile } from "@/lib/storage";
-import { extractKeyFromUrl } from "@/utils/text";
+import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
 import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
 
@@ -77,7 +77,11 @@ export async function PUT(req: Request) {
 
     // Store old image key for cleanup if needed
     if (session.user.image && isUrlStorage(session.user.image)) {
-      oldImageKey = extractKeyFromUrl(session.user.image);
+      // Only delete keys that belong to this user.
+      oldImageKey = extractUserProfileImageKeyFromUrl(
+        session.user.image,
+        session.user.id,
+      );
     }
 
     // Upload new file first
@@ -174,6 +178,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     let userImage: string | null | undefined = null;
+    const targetUserId = userId ?? session.user.id;
 
     if (userId) {
       // moderator deleting another user's profile picture
@@ -224,8 +229,17 @@ export async function DELETE(req: NextRequest) {
     }
 
     const imageKey = isUrlStorage(userImage)
-      ? extractKeyFromUrl(userImage)
+      ? extractUserProfileImageKeyFromUrl(userImage, targetUserId)
       : null;
+
+    // If the image is in our storage but doesn't match the expected per-user prefix,
+    // treat it as non-deletable to avoid arbitrary object deletion.
+    if (isUrlStorage(userImage) && !imageKey) {
+      console.error(
+        "Refusing to delete profile image: storage URL key does not match expected prefix.",
+        { targetUserId },
+      );
+    }
 
     try {
       // Update database first

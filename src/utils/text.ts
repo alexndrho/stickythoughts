@@ -35,6 +35,24 @@ export const extractKeyFromUrl = (url: string) => {
   return decodeURIComponent(urlObj.pathname.slice(1));
 };
 
+export const safeExtractKeyFromUrl = (url: string) => {
+  try {
+    return extractKeyFromUrl(url);
+  } catch {
+    return null;
+  }
+};
+
+// Only allow deleting profile images that are under the expected per-user prefix.
+// This prevents a poisoned `user.image` URL from causing arbitrary object deletion.
+export const extractUserProfileImageKeyFromUrl = (url: string, userId: string) => {
+  const key = safeExtractKeyFromUrl(url);
+  if (!key) return null;
+
+  const expectedPrefix = `user/${userId}/profile/`;
+  return key.startsWith(expectedPrefix) ? key : null;
+};
+
 export const stripHtmlTags = (text: string) => {
   // Replace <p> and </p> tags with a space or newline
   const sanitizedText = text.replace(/<\/?p>/g, " ");
