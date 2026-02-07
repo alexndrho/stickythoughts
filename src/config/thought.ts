@@ -1,5 +1,5 @@
 const THOUGHTS_PER_ROW = 4;
-const ROWS_PER_PAGE = 3;
+const ROWS_PER_PAGE = 6;
 export const THOUGHTS_PER_PAGE = THOUGHTS_PER_ROW * ROWS_PER_PAGE;
 
 export const THOUGHT_MIN_AUTHOR_LENGTH = 2;
