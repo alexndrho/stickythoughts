@@ -185,6 +185,7 @@ export default function Content({ id }: ContentProps) {
           count={letter.likes.count}
           onLike={handleLike}
           size="compact-sm"
+          loading={handleLikeMutation.isPending}
         />
 
         <ReplyButton

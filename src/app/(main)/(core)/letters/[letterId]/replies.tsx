@@ -34,8 +34,9 @@ export default function Replies({
     hasNextPage: hasNextRepliesPage,
   } = useInfiniteQuery(letterRepliesInfiniteOptions(letterId));
 
-  const [deletingReply, setDeletingReply] =
-    useState<LetterReplyType | null>(null);
+  const [deletingReply, setDeletingReply] = useState<LetterReplyType | null>(
+    null,
+  );
 
   const replyLikeMutation = useMutation({
     mutationFn: async ({
@@ -118,6 +119,10 @@ export default function Replies({
               key={reply.id}
               session={session}
               reply={reply}
+              likeLoading={
+                replyLikeMutation.isPending &&
+                replyLikeMutation.variables?.replyId === reply.id
+              }
               onLike={() =>
                 handleLike({
                   letterId: reply.letterId,

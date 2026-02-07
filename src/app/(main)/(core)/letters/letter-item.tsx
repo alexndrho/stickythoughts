@@ -12,6 +12,7 @@ import classes from "./letters.module.css";
 
 export interface LetterItemProps {
   post: LetterType;
+  likeLoading?: boolean;
   onLike?: ({
     id,
     like,
@@ -23,7 +24,11 @@ export interface LetterItemProps {
   }) => void;
 }
 
-export default function LetterItem({ post, onLike }: LetterItemProps) {
+export default function LetterItem({
+  post,
+  likeLoading,
+  onLike,
+}: LetterItemProps) {
   return (
     <Paper component="article" withBorder className={classes["letter-item"]}>
       <Link
@@ -81,6 +86,7 @@ export default function LetterItem({ post, onLike }: LetterItemProps) {
             count={post.likes.count}
             size="compact-sm"
             className={classes["letter-item__action"]}
+            loading={likeLoading}
             onLike={(e) => {
               e.preventDefault();
 

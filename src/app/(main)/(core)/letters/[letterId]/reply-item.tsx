@@ -32,6 +32,7 @@ export interface ReplyItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
   reply: LetterReplyType;
   onLike: () => void;
+  likeLoading?: boolean;
   onDelete: () => void;
 }
 
@@ -39,6 +40,7 @@ export default function ReplyItem({
   session,
   reply,
   onLike,
+  likeLoading,
   onDelete,
 }: ReplyItemProps) {
   const [isEditable, setIsEditable] = useState(false);
@@ -166,6 +168,7 @@ export default function ReplyItem({
               count={reply.likes.count}
               size="compact-sm"
               className={classes["reply-item__like-btn"]}
+              loading={likeLoading}
               onLike={onLike}
             />
           </>

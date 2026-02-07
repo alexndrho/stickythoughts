@@ -107,7 +107,15 @@ export default function LettersList() {
           {postsData?.pages
             .reduce((acc, page) => acc.concat(page))
             .map((post) => (
-              <LetterItem key={post.id} post={post} onLike={handleLike} />
+              <LetterItem
+                key={post.id}
+                post={post}
+                likeLoading={
+                  handleLikeMutation.isPending &&
+                  handleLikeMutation.variables?.id === post.id
+                }
+                onLike={handleLike}
+              />
             ))}
 
           {isFetchingPosts && <LettersSkeleton />}
