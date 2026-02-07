@@ -47,7 +47,7 @@ export default function SettingsLayout({
         ))}
       </aside>
 
-      <div className={classes.content}>{children}</div>
+      <section className={classes.content}>{children}</section>
     </div>
   );
 }

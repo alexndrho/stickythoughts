@@ -111,7 +111,7 @@ export default function Replies({
       hasNext={hasNextRepliesPage}
       loading={isFetchingReplies || isRefetchingReplies}
     >
-      <div className={classes.replies}>
+      <section className={classes.replies}>
         {repliesData?.pages
           .reduce((acc, page) => acc.concat(page))
           .map((reply) => (
@@ -140,7 +140,7 @@ export default function Replies({
             <Loader />
           </Center>
         )}
-      </div>
+      </section>
 
       <DeleteReplyModal
         letterId={letterId}

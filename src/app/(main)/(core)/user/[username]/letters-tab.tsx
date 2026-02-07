@@ -77,7 +77,7 @@ export default function Letters({
           hasNext={hasNextLettersPage}
           loading={isLettersFetching}
         >
-          <div className={classes["tab-content-container"]}>
+          <section className={classes["tab-content-container"]}>
             {letters?.pages.map((page) =>
               page.map((letter) => (
                 <LetterItem key={letter.id} post={letter} onLike={handleLike} />
@@ -85,7 +85,7 @@ export default function Letters({
             )}
 
             {isLettersFetching && <LettersSkeleton />}
-          </div>
+          </section>
         </InfiniteScroll>
       )}
     </Tabs.Panel>

@@ -103,7 +103,7 @@ export default function LettersList() {
         hasNext={hasNextPostsPage}
         loading={isFetchingPosts}
       >
-        <div className={classes.letters}>
+        <section className={classes.letters}>
           {postsData?.pages
             .reduce((acc, page) => acc.concat(page))
             .map((post) => (
@@ -119,7 +119,7 @@ export default function LettersList() {
             ))}
 
           {isFetchingPosts && <LettersSkeleton />}
-        </div>
+        </section>
       </InfiniteScroll>
 
       {!session && (

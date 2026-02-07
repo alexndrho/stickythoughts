@@ -121,7 +121,7 @@ export default function Content({ username }: ContentProps) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <header className={classes.header}>
         <div className={classes.header__info}>
           <Avatar size="xl" src={user.image} />
 
@@ -257,7 +257,7 @@ export default function Content({ username }: ContentProps) {
             </Menu.Dropdown>
           </Menu>
         )}
-      </div>
+      </header>
 
       <Tabs
         variant="outline"

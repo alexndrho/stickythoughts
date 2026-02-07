@@ -60,8 +60,8 @@ export default function ReplyItem({
       : false;
 
   return (
-    <div>
-      <div className={classes["reply-item__header"]}>
+    <article>
+      <header className={classes["reply-item__header"]}>
         {reply.isAnonymous || !reply.author ? (
           <AuthorAvatar isAnonymous={!!reply.isAnonymous} />
         ) : (
@@ -152,7 +152,7 @@ export default function ReplyItem({
             </Menu.Dropdown>
           </Menu>
         )}
-      </div>
+      </header>
 
       <div className={classes["reply-item__content"]}>
         {isEditable ? (
@@ -174,7 +174,7 @@ export default function ReplyItem({
           </>
         )}
       </div>
-    </div>
+    </article>
   );
 }
 

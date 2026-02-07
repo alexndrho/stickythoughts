@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className={classes.container}>
-      <Paper withBorder className={classes.header}>
+      <Paper component="header" withBorder className={classes.header}>
         <div>
           <Text size="xs" className={classes["header__eyebrow"]}>
             STICKYTHOUGHTS

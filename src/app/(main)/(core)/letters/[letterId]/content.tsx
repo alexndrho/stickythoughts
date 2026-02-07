@@ -92,7 +92,7 @@ export default function Content({ id }: ContentProps) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <header className={classes.header}>
         <div className={classes.header__info}>
           {letter.isAnonymous || !letter.author ? (
             <AuthorAvatar isAnonymous={!!letter.isAnonymous} />
@@ -160,7 +160,7 @@ export default function Content({ id }: ContentProps) {
             </Menu.Dropdown>
           </Menu>
         )}
-      </div>
+      </header>
 
       {isEditable ? (
         <>

@@ -97,7 +97,7 @@ export default function RepliesTab({
           hasNext={hasNextRepliesPage}
           loading={isRepliesFetching}
         >
-          <div className={classes["tab-content-container"]}>
+          <section className={classes["tab-content-container"]}>
             {replies?.pages.map((page) =>
               page.map((reply) => (
                 <UserReplyItem
@@ -109,7 +109,7 @@ export default function RepliesTab({
             )}
 
             {isRepliesFetching && <LettersSkeleton />}
-          </div>
+          </section>
         </InfiniteScroll>
       )}
     </Tabs.Panel>

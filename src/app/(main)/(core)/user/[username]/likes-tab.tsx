@@ -88,7 +88,7 @@ export default function LikesTab({
           hasNext={hasNextLikedLettersPage}
           loading={isLikedLettersFetching}
         >
-          <div className={classes["tab-content-container"]}>
+          <section className={classes["tab-content-container"]}>
             {likedLetters?.pages.map((page) =>
               page.map((letter) => (
                 <LetterItem key={letter.id} post={letter} onLike={handleLike} />
@@ -96,7 +96,7 @@ export default function LikesTab({
             )}
 
             {isLikedLettersFetching && <LettersSkeleton />}
-          </div>
+          </section>
         </InfiniteScroll>
       )}
     </Tabs.Panel>

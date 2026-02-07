@@ -32,7 +32,7 @@ export default function SessionItem({
   });
 
   return (
-    <Paper withBorder className={classes["session-item"]}>
+    <Paper component="article" withBorder className={classes["session-item"]}>
       <div>
         {session.token === currentToken && (
           <Text className={classes["session-item__current-device-label"]}>

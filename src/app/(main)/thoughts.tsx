@@ -2,14 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Group,
-  Input,
-  Kbd,
-  Loader,
-  Tooltip,
-} from "@mantine/core";
+import { Button, Group, Input, Kbd, Loader, Tooltip } from "@mantine/core";
 import { useDebouncedState, useDisclosure, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconMessage, IconSearch, IconX } from "@tabler/icons-react";
@@ -144,7 +137,7 @@ export default function HomeThoughts() {
           </Group>
         }
       >
-        <div className={classes.thoughts}>
+        <section className={classes.thoughts}>
           {searchBarValue.length > 0
             ? searchData?.pages
                 .reduce((acc, page) => acc.concat(page), [])
@@ -168,7 +161,7 @@ export default function HomeThoughts() {
                     createdAt={thought.createdAt}
                   />
                 ))}
-        </div>
+        </section>
       </InfiniteScroll>
 
       <SendThoughtModal open={messageOpen} onClose={close} />

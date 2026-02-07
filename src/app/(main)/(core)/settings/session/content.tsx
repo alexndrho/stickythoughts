@@ -65,7 +65,7 @@ export default function Content() {
         </Button>
       </Group>
 
-      <div className={sessionClasses.sessions}>
+      <section className={sessionClasses.sessions}>
         {sortedSessions
           ? sortedSessions.map((session) => (
               <SessionItem
@@ -79,7 +79,7 @@ export default function Content() {
                 <Loader />
               </Group>
             )}
-      </div>
+      </section>
     </div>
   );
 }

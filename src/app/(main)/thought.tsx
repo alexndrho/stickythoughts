@@ -19,7 +19,7 @@ export default function Thought({
 }: NoteProps) {
   return (
     <Tooltip label={getFormattedDate(createdAt)}>
-      <Box role="article" bg={`${color}.6`} className={classes.thought}>
+      <Box component="article" bg={`${color}.6`} className={classes.thought}>
         <Text lineClamp={9}>{filterText(message)}</Text>
 
         <Text

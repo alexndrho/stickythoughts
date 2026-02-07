@@ -22,10 +22,7 @@ export interface UserReplyItemProps {
   }) => void;
 }
 
-export default function UserReplyItem({
-  reply,
-  onLike,
-}: UserReplyItemProps) {
+export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
   return (
     <Paper
       component="article"
@@ -51,7 +48,7 @@ export default function UserReplyItem({
           </Anchor>
         </Text>
 
-        <div className={classes["user-reply-item__header"]}>
+        <header className={classes["user-reply-item__header"]}>
           {reply.isAnonymous || !reply.author ? (
             <AuthorAvatar
               size="xs"
@@ -89,7 +86,7 @@ export default function UserReplyItem({
               addSuffix: true,
             })}
           </Text>
-        </div>
+        </header>
 
         <Typography>
           <div dangerouslySetInnerHTML={{ __html: reply.body }} />
