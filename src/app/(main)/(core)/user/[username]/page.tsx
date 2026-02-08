@@ -1,11 +1,13 @@
-import { headers } from "next/headers";
 import { Metadata } from "next";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 import { userUsernameOptions } from "@/app/(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
-import { getUser } from "@/services/user";
+import {
+  getUserServer,
+  UserNotFoundError,
+} from "@/app/(main)/(core)/user/[username]/user.server";
 import { formatUserDisplayName } from "@/utils/user";
 import Content from "./content";
 
@@ -18,16 +20,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { username } = await params;
   const resolvedSearchParams = await searchParams;
-  const headerList = await headers();
-  const cookie = headerList.get("cookie");
-
-  const queryClient = getQueryClient();
 
   try {
-    const user = await queryClient.ensureQueryData({
-      ...userUsernameOptions(username),
-      queryFn: () => getUser(username, cookie ?? undefined),
-    });
+    const user = await getUserServer(username);
 
     const tabParam = resolvedSearchParams.tab || "";
     let canonical = `/user/${username}`;
@@ -43,8 +38,11 @@ export async function generateMetadata({
         canonical,
       },
     };
-  } catch {
-    notFound();
+  } catch (err) {
+    if (err instanceof UserNotFoundError) {
+      notFound();
+    }
+    throw err;
   }
 }
 
@@ -54,18 +52,17 @@ export default async function UserPage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = await params;
-  const headerList = await headers();
-  const cookie = headerList.get("cookie");
 
   const queryClient = getQueryClient();
 
   try {
-    await queryClient.prefetchQuery({
-      ...userUsernameOptions(username),
-      queryFn: () => getUser(username, cookie ?? undefined),
-    });
-  } catch {
-    notFound();
+    const user = await getUserServer(username);
+    queryClient.setQueryData(userUsernameOptions(username).queryKey, user);
+  } catch (err) {
+    if (err instanceof UserNotFoundError) {
+      notFound();
+    }
+    throw err;
   }
 
   return (

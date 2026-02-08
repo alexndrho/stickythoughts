@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { guardSession } from "@/lib/session-guard";
 import IError from "@/types/error";
 import { updateLetterServerInput } from "@/lib/validations/letter";
+import { getLetterPublic, LetterNotFoundError } from "@/lib/queries/letter";
 import { formatLetters } from "@/utils/letter";
 
 export async function GET(
@@ -20,43 +21,14 @@ export async function GET(
     });
 
     const { letterId } = await params;
-
-    const letter = await prisma.letter.findUnique({
-      where: {
-        id: letterId,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: session
-          ? {
-              where: {
-                userId: session.user.id,
-              },
-              select: {
-                userId: true,
-              },
-            }
-          : false,
-        _count: {
-          select: {
-            likes: true,
-            replies: {
-              where: {
-                deletedAt: null,
-              },
-            },
-          },
-        },
-      },
+    const letter = await getLetterPublic({
+      letterId,
+      sessionUserId: session?.user?.id ?? null,
     });
 
-    if (!letter || letter.deletedAt) {
+    return NextResponse.json(letter);
+  } catch (error) {
+    if (error instanceof LetterNotFoundError) {
       return NextResponse.json(
         {
           issues: [
@@ -72,13 +44,6 @@ export async function GET(
       );
     }
 
-    const formattedPost = formatLetters({
-      sessionUserId: session?.user?.id,
-      letters: letter,
-    });
-
-    return NextResponse.json(formattedPost);
-  } catch (error) {
     console.error(error);
 
     return NextResponse.json(

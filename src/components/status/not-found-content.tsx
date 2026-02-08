@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button, Text, Title } from "@mantine/core";
 
-import classes from "@/styles/not-found-content.module.css";
+import classes from "@/styles/status/not-found-content.module.css";
 
 export default function NotFoundContent() {
   return (

@@ -4,43 +4,14 @@ import { RateLimiterRes } from "rate-limiter-flexible";
 import type IError from "@/types/error";
 import { getClientIp } from "@/lib/http/get-client-ip";
 import { buildRateLimitKey } from "./keys";
-import { getTierLimiters, type TierLimiters } from "./limiters";
+import { getTierLimiters } from "./limiters";
 import { RATE_LIMITS, type RateLimitTier } from "./config";
+import { consumeWithFallback } from "./core";
 
 const ROUTE_PATTERNS = {
   letterLike: /\/api\/letters\/[^/]+\/like/,
   replyLike: /\/api\/letters\/[^/]+\/replies\/[^/]+\/like/,
 } as const;
-
-export class RateLimitInternalError extends Error {
-  name = "RateLimitInternalError";
-  constructor(message: string, cause?: unknown) {
-    super(message);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any).cause = cause;
-  }
-}
-
-export async function consumeWithFallback(
-  limiters: TierLimiters,
-  key: string,
-): Promise<RateLimiterRes> {
-  try {
-    return await limiters.primary.consume(key);
-  } catch (err) {
-    if (err instanceof RateLimiterRes) throw err; // exceeded on primary
-
-    try {
-      return await limiters.fallback.consume(key);
-    } catch (fallbackErr) {
-      if (fallbackErr instanceof RateLimiterRes) throw fallbackErr; // exceeded on fallback
-      throw new RateLimitInternalError(
-        "Rate limiter unavailable (fail closed).",
-        fallbackErr,
-      );
-    }
-  }
-}
 
 function pickTier(request: NextRequest): RateLimitTier {
   const { pathname, searchParams } = request.nextUrl;

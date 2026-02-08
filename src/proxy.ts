@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 
-import { enforceRateLimit } from "@/lib/rate-limit";
+import { enforceRateLimit } from "./lib/rate-limit/enforce";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

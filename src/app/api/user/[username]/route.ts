@@ -2,9 +2,9 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import type { UserPublicAccount } from "@/types/user";
 import IError from "@/types/error";
+import { getUserPublicAccount, UserNotFoundError } from "@/lib/queries/user";
 
 export async function GET(
   req: Request,
@@ -31,31 +31,14 @@ export async function GET(
         ).success
       : false;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        username: normalizedUsername,
-      },
-      select: {
-        id: true,
-        displayUsername: true,
-        name: true,
-        username: true,
-        bio: true,
-        image: true,
-        banned: hasPermissionToBan,
-        settings: {
-          select: {
-            privacySettings: {
-              select: {
-                likesVisibility: true,
-              },
-            },
-          },
-        },
-      },
+    const user = await getUserPublicAccount({
+      username: normalizedUsername,
+      canSeeBanned: hasPermissionToBan,
     });
 
-    if (!user) {
+    return NextResponse.json(user satisfies UserPublicAccount);
+  } catch (error) {
+    if (error instanceof UserNotFoundError) {
       return NextResponse.json(
         {
           issues: [
@@ -69,13 +52,6 @@ export async function GET(
       );
     }
 
-    const { settings, ...userRest } = user;
-
-    return NextResponse.json({
-      ...userRest,
-      isLikesPrivate: settings?.privacySettings?.likesVisibility === "PRIVATE",
-    } satisfies UserPublicAccount);
-  } catch (error) {
     console.error("Error fetching user:", error);
 
     return NextResponse.json(
