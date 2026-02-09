@@ -5,7 +5,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ActionIcon,
   Badge,
-  Group,
   Loader,
   Pagination,
   Table,
@@ -160,7 +159,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                     </Table.Td>
                     <Table.Td>{formatDeletedDate(reply.deletedAt)}</Table.Td>
                     <Table.Td>
-                      <Group gap="xs">
+                      <ActionIcon.Group>
                         <Tooltip label="Recover reply">
                           <ActionIcon
                             aria-label="Recover reply"
@@ -206,7 +205,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                             <IconTrashX size="1em" />
                           </ActionIcon>
                         </Tooltip>
-                      </Group>
+                      </ActionIcon.Group>
                     </Table.Td>
                   </Table.Tr>
                 ))}

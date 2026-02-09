@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ActionIcon,
-  Group,
   Loader,
   Pagination,
   Table,
@@ -157,7 +156,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                     </Table.Td>
                     <Table.Td>{formatDeletedDate(thought.deletedAt)}</Table.Td>
                     <Table.Td>
-                      <Group gap="xs">
+                      <ActionIcon.Group>
                         <Tooltip label="Recover thought">
                           <ActionIcon
                             aria-label="Recover thought"
@@ -203,7 +202,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                             <IconTrashX size="1em" />
                           </ActionIcon>
                         </Tooltip>
-                      </Group>
+                      </ActionIcon.Group>
                     </Table.Td>
                   </Table.Tr>
                 ))}

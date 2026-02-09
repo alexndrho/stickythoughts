@@ -5,7 +5,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ActionIcon,
   Badge,
-  Group,
   Loader,
   Pagination,
   Table,
@@ -156,7 +155,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                     </Table.Td>
                     <Table.Td>{formatDeletedDate(letter.deletedAt)}</Table.Td>
                     <Table.Td>
-                      <Group gap="xs">
+                      <ActionIcon.Group>
                         <Tooltip label="Recover letter">
                           <ActionIcon
                             aria-label="Recover letter"
@@ -202,7 +201,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                             <IconTrashX size="1em" />
                           </ActionIcon>
                         </Tooltip>
-                      </Group>
+                      </ActionIcon.Group>
                     </Table.Td>
                   </Table.Tr>
                 ))}
