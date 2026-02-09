@@ -13,7 +13,7 @@ import {
 import { IconTrash } from "@tabler/icons-react";
 
 import { getFormattedDate } from "@/utils/date";
-import { adminThoughtsPageOptions } from "@/app/dashboard/thoughts/options";
+import { adminThoughtsPageOptions } from "@/app/dashboard/options";
 import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import { thoughtCountOptions } from "@/app/(main)/options";
 import dashboardClasses from "./dashboard.module.css";

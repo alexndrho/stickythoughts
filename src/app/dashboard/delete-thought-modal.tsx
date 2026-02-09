@@ -6,7 +6,7 @@ import { Button, Group, Modal, Paper, Text } from "@mantine/core";
 import { getQueryClient } from "@/lib/get-query-client";
 import type { PublicThoughtPayload } from "@/utils/thought";
 import { thoughtsOptions } from "@/app/(main)/options";
-import { adminThoughtsOptions } from "@/app/dashboard/thoughts/options";
+import { adminThoughtsOptions } from "@/app/dashboard/options";
 import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { deleteThought } from "@/services/moderate/thought";
 
