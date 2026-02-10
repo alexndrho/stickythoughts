@@ -1,7 +1,8 @@
 "use client";
 
-import { Button, Group, Modal, Paper, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from "@mantine/core";
 
+import Thought from "@/app/(main)/thought";
 import type { DeletedThought } from "@/types/deleted";
 
 export interface PermanentlyDeleteThoughtModalProps {
@@ -26,13 +27,12 @@ export const PermanentlyDeleteThoughtModal = ({
       onClose={onClose}
       centered
     >
-      <Paper p="xs" c="black" bg={`${thought?.color}.6`} withBorder>
-        <Text>{thought?.message}</Text>
-
-        <Text ta="end">
-          {"\u2013"} {thought?.author}
-        </Text>
-      </Paper>
+      <Thought
+        message={thought?.message ?? "No thought selected yet."}
+        author={thought?.author ?? "Unknown"}
+        color={thought?.color}
+        fluid
+      />
 
       <Text mt="sm" c="dimmed" size="sm">
         This action cannot be undone.
@@ -79,13 +79,12 @@ export const RecoverThoughtModal = ({
       onClose={onClose}
       centered
     >
-      <Paper p="xs" c="black" bg={`${thought?.color}.6`} withBorder>
-        <Text>{thought?.message}</Text>
-
-        <Text ta="end">
-          {"\u2013"} {thought?.author}
-        </Text>
-      </Paper>
+      <Thought
+        message={thought?.message ?? "No thought selected yet."}
+        author={thought?.author ?? "Unknown"}
+        color={thought?.color}
+        fluid
+      />
 
       <Text mt="sm" c="dimmed" size="sm">
         This will restore the thought and make it visible again.

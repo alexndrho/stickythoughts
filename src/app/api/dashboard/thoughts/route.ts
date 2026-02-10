@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
 import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
-import type { PublicThoughtPayload } from "@/utils/thought";
+import type { PrivateThoughtPayload } from "@/types/thought";
 import type IError from "@/types/error";
 
 export async function GET(req: NextRequest) {
@@ -36,11 +36,19 @@ export async function GET(req: NextRequest) {
         author: true,
         message: true,
         color: true,
+        highlightedAt: true,
         createdAt: true,
+        highlightedBy: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
       },
     });
 
-    return NextResponse.json(thoughts satisfies PublicThoughtPayload[], {
+    return NextResponse.json(thoughts satisfies PrivateThoughtPayload[], {
       status: 200,
     });
   } catch (error) {

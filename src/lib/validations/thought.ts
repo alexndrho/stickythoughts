@@ -51,3 +51,7 @@ export const createThoughtInput = z.object({
     ),
   color: thoughtColorZod,
 }) satisfies z.Schema<Prisma.ThoughtCreateInput>;
+
+export const highlightThoughtInput = z.object({
+  highlighted: z.boolean(),
+});

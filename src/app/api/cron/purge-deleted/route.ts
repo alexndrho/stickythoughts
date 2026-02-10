@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type IError from "@/types/error";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: Request) {
   try {
     const cronSecret = process.env.CRON_SECRET;

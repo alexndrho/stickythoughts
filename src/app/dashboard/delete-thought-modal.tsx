@@ -1,14 +1,15 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal, Paper, Text } from "@mantine/core";
+import { Button, Group, Modal } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import type { PublicThoughtPayload } from "@/utils/thought";
 import { thoughtsOptions } from "@/app/(main)/options";
 import { adminThoughtsOptions } from "@/app/dashboard/options";
 import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
 import { deleteThought } from "@/services/moderate/thought";
+import Thought from "../(main)/thought";
+import type { PublicThoughtPayload } from "@/types/thought";
 
 export interface DeleteThoughtModalProps {
   thought: PublicThoughtPayload | null;
@@ -46,13 +47,12 @@ export default function DeleteThoughtModal({
       onClose={onClose}
       centered
     >
-      <Paper p="xs" c="black" bg={`${thought?.color}.6`} withBorder>
-        <Text>{thought?.message}</Text>
-
-        <Text ta="end">
-          {"\u2013"} {thought?.author}
-        </Text>
-      </Paper>
+      <Thought
+        message={thought?.message ?? "No thought selected yet."}
+        author={thought?.author ?? "Unknown"}
+        color={thought?.color}
+        fluid
+      />
 
       <Group mt="md" justify="end">
         <Button variant="default" onClick={onClose}>

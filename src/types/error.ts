@@ -14,6 +14,8 @@ export type validationCode =
 
 export type letterCode = "letter/title-already-exists";
 
+export type thoughtCode = "thought/highlight-locked";
+
 export type antiBotCode =
   | "captcha/validation-failed"
   | "botid/validation-failed";
@@ -23,6 +25,7 @@ export type errorCode =
   | authCode
   | validationCode
   | letterCode
+  | thoughtCode
   | antiBotCode;
 
 export default interface IError {

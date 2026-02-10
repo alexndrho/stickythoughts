@@ -1,9 +1,7 @@
 import { apiUrl } from "@/utils/text";
 import { toServerError } from "@/utils/error/ServerError";
-import {
-  parsePublicThoughtFromServer,
-  type PublicThoughtFromServer,
-} from "@/utils/thought";
+import { parsePublicThoughtFromServer } from "@/utils/thought";
+import type { PublicThoughtFromServer } from "@/types/thought";
 import type {
   DeletedThoughtFromServer,
   DeletedThought,
@@ -165,12 +163,9 @@ export const permanentlyDeleteLetter = async (id: string) => {
 };
 
 export const restoreDeletedReply = async (id: string) => {
-  const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/replies/${id}`),
-    {
-      method: "PATCH",
-    },
-  );
+  const response = await fetch(apiUrl(`/api/dashboard/deleted/replies/${id}`), {
+    method: "PATCH",
+  });
 
   const data = await response.json();
 
@@ -182,12 +177,9 @@ export const restoreDeletedReply = async (id: string) => {
 };
 
 export const permanentlyDeleteReply = async (id: string) => {
-  const response = await fetch(
-    apiUrl(`/api/dashboard/deleted/replies/${id}`),
-    {
-      method: "DELETE",
-    },
-  );
+  const response = await fetch(apiUrl(`/api/dashboard/deleted/replies/${id}`), {
+    method: "DELETE",
+  });
 
   const data = await response.json();
 

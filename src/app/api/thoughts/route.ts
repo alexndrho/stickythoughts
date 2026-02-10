@@ -5,7 +5,7 @@ import { ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { createThoughtInput } from "@/lib/validations/thought";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
-import type { PublicThoughtPayload } from "@/utils/thought";
+import type { PublicThoughtPayload } from "@/types/thought";
 import type IError from "@/types/error";
 
 export async function GET(req: NextRequest) {

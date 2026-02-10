@@ -15,3 +15,10 @@ export const THOUGHT_COLORS = [
   "green",
   "pink",
 ] as const;
+
+export const HIGHLIGHT_LOCK_HOURS = 12;
+export const HIGHLIGHT_LOCK_DURATION_MS = HIGHLIGHT_LOCK_HOURS * 60 * 60 * 1000;
+
+export const HIGHLIGHT_MAX_AGE_DAYS = 3;
+export const HIGHLIGHT_MAX_AGE_MS =
+  HIGHLIGHT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;

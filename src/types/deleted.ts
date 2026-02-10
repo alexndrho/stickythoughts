@@ -8,7 +8,7 @@ export type DeletedUserSummary = {
 
 export type DeletedThoughtFromServer = Omit<
   Thought,
-  "createdAt" | "deletedAt"
+  "highlightedAt" | "highlightedById" | "createdAt" | "deletedAt"
 > & {
   createdAt: Date;
   deletedAt: Date | null;
@@ -17,7 +17,7 @@ export type DeletedThoughtFromServer = Omit<
 
 export type DeletedThought = Omit<
   DeletedThoughtFromServer,
-  "createdAt" | "deletedAt"
+  "highlightedAt" | "highlightedById" | "createdAt" | "deletedAt"
 > & {
   createdAt: Date;
   deletedAt: Date | null;

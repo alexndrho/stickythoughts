@@ -61,14 +61,56 @@
   margin-right: rem(5px);
 }
 
+.header__highlight-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.header__note-description {
+  color: var(--mantine-color-dimmed);
+}
+
+.header__carousel {
+  width: min(100%, 22rem);
+}
+
+.header__carousel__root {
+  &:hover {
+    .header__carousel__controls {
+      opacity: 1;
+    }
+  }
+}
+
+.header__carousel__controls {
+  transition: opacity 150ms ease;
+  opacity: 0;
+}
+
+.header__carousel__control {
+  &[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  }
+}
+
+.header__carousel__slide {
+  display: flex;
+  justify-content: center;
+}
+
 .header__notes {
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: var(--mantine-spacing-md);
 
   @media (min-width: $mantine-breakpoint-sm) {
-    width: auto;
+    width: 100%;
   }
 }
 
@@ -82,10 +124,6 @@
 .header__note-title {
   font-weight: 700;
   margin-bottom: var(--mantine-spacing-xs);
-}
-
-.header__note-description {
-  color: var(--mantine-color-dimmed);
 }
 
 .actions-bar {
@@ -128,6 +166,7 @@
 }
 
 .thought {
+  width: 16.5rem;
   aspect-ratio: 9 / 10;
   padding: 0.75em;
   color: var(--mantine-color-dark-9);
@@ -141,4 +180,14 @@
 
 .thought__author {
   text-align: right;
+}
+
+.thought--fluid {
+  width: auto;
+  aspect-ratio: auto;
+}
+
+.thought--empty {
+  border-style: dashed;
+  color: inherit;
 }

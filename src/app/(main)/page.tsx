@@ -1,8 +1,12 @@
 import { type Metadata } from "next";
-import { Card, Paper, Text, Title } from "@mantine/core";
+import { subDays } from "date-fns";
+import { Paper, Text, Title } from "@mantine/core";
 
+import { getHighlightedThought } from "@/lib/queries/thought";
 import Thoughts from "./thoughts";
 import ThoughtCount from "./thought-count";
+import HeaderCarousel from "./header-carousel";
+import { HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
 import classes from "./home.module.css";
 
 export const metadata: Metadata = {
@@ -11,7 +15,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export const revalidate = 86400; // 24 hours in seconds
+
+export default async function HomePage() {
+  const highlightCutoff = subDays(new Date(), HIGHLIGHT_MAX_AGE_DAYS);
+
+  const highlightedThought = await getHighlightedThought({ highlightCutoff });
+
   return (
     <div className={classes.container}>
       <Paper component="header" withBorder className={classes.header}>
@@ -32,27 +42,7 @@ export default function HomePage() {
           <ThoughtCount />
         </div>
 
-        <div className={classes["header__notes"]}>
-          <Card withBorder className={classes["header__note"]}>
-            <Text className={classes["header__note-title"]}>
-              Stick a thought
-            </Text>
-            <Text size="sm" className={classes["header__note-description"]}>
-              Share a feeling, a moment, or a question. Short or long, it&apos;s
-              welcome.
-            </Text>
-          </Card>
-
-          <Card withBorder className={classes["header__note"]}>
-            <Text className={classes["header__note-title"]}>
-              Find your people
-            </Text>
-            <Text size="sm" className={classes["header__note-description"]}>
-              Search by author to follow voices you care about and discover new
-              ones.
-            </Text>
-          </Card>
-        </div>
+        <HeaderCarousel highlightedThought={highlightedThought ?? undefined} />
       </Paper>
 
       <Thoughts />

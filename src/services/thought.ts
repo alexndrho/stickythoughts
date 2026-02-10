@@ -1,11 +1,11 @@
 import type { Prisma } from "@/generated/prisma/client";
-import {
-  parsePublicThoughtFromServer,
-  PublicThoughtFromServer,
-  PublicThoughtPayload,
-} from "@/utils/thought";
+import { parsePublicThoughtFromServer } from "@/utils/thought";
 import { toServerError } from "@/utils/error/ServerError";
 import { apiUrl } from "@/utils/text";
+import type {
+  PublicThoughtFromServer,
+  PublicThoughtPayload,
+} from "@/types/thought";
 
 const getThoughts = async ({
   lastId,

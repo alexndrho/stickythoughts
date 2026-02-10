@@ -7,8 +7,6 @@ import { ONE_WEEK_MS } from "@/config/cron";
 import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
 import type IError from "@/types/error";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: Request) {
   try {
     const cronSecret = process.env.CRON_SECRET;

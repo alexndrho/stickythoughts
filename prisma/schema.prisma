@@ -8,14 +8,18 @@ datasource db {
 }
 
 model Thought {
-  id          String    @id @default(uuid())
-  author      String
-  message     String
-  color       String
-  deletedAt   DateTime?
-  deletedById String?
-  deletedBy   User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
-  createdAt   DateTime  @default(now())
+  id        String   @id @default(uuid())
+  author    String
+  message   String
+  color     String
+  createdAt DateTime @default(now())
+
+  highlightedAt   DateTime?
+  highlightedById String?
+  highlightedBy   User?     @relation("ThoughtHighlightedBy", fields: [highlightedById], references: [id], onDelete: SetNull)
+  deletedAt       DateTime?
+  deletedById     String?
+  deletedBy       User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
 
   @@index([deletedAt, createdAt(sort: Desc)])
 }
@@ -45,6 +49,7 @@ model User {
   letterLikes          LetterLike[]
   letterReplies        LetterReply[]     @relation("LetterReplyAuthor")
   letterReplyLikes     LetterReplyLike[]
+  highlightedThoughts  Thought[]         @relation("ThoughtHighlightedBy")
   deletedLetters       Letter[]          @relation("LetterDeletedBy")
   deletedLetterReplies LetterReply[]     @relation("LetterReplyDeletedBy")
   deletedThoughts      Thought[]         @relation("ThoughtDeletedBy")
