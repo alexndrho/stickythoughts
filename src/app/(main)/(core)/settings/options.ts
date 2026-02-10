@@ -1,15 +1,17 @@
+import "client-only";
+
 import { queryOptions } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
-import { userOptions } from "../user/options";
 import { getUserAccountSettings } from "@/services/user";
+import { userKeys } from "@/lib/query-keys";
 
 export const userAccountOptions = queryOptions({
-  queryKey: [...userOptions.queryKey, "account"],
+  queryKey: userKeys.account(),
   queryFn: getUserAccountSettings,
 });
 
 export const userAccountListOptions = queryOptions({
-  queryKey: [...userOptions.queryKey, "account-list"],
+  queryKey: userKeys.accountList(),
   queryFn: () => authClient.listAccounts(),
 });

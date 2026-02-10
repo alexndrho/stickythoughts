@@ -1,12 +1,11 @@
 import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { formatUserLetterReplies } from "@/utils/letter";
 import type { UserLetterReplyType } from "@/types/letter";
-import { LETTER_REPLIES_PER_PAGE } from "@/config/letter";
-import type IError from "@/types/error";
+import { unknownErrorResponse } from "@/lib/http";
+import { listUserReplies } from "@/server/user";
 
 export async function GET(
   req: NextRequest,
@@ -22,59 +21,11 @@ export async function GET(
       headers: await headers(),
     });
 
-    const replies = await prisma.letterReply.findMany({
-      take: LETTER_REPLIES_PER_PAGE,
-      ...(lastId && {
-        skip: 1,
-        cursor: {
-          id: lastId,
-        },
-      }),
-      where: {
-        author: {
-          username,
-        },
-        deletedAt: null,
-        letter: {
-          deletedAt: null,
-        },
-        ...(session?.user?.username !== username && {
-          isAnonymous: false,
-        }),
-      },
-      include: {
-        letter: {
-          select: {
-            title: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: session
-          ? {
-              where: {
-                userId: session.user.id,
-              },
-              select: {
-                userId: true,
-              },
-            }
-          : false,
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const replies = await listUserReplies({
+      username,
+      lastId,
+      viewerUsername: session?.user?.username ?? null,
+      viewerUserId: session?.user?.id,
     });
 
     const formattedReplies =
@@ -83,12 +34,6 @@ export async function GET(
     return NextResponse.json(formattedReplies);
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

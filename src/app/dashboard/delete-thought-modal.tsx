@@ -4,9 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Group, Modal } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtsOptions } from "@/app/(main)/options";
-import { adminThoughtsOptions } from "@/app/dashboard/options";
-import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
+import { thoughtKeys } from "@/lib/query-keys";
+import { adminKeys } from "@/lib/query-keys";
 import { deleteThought } from "@/services/moderate/thought";
 import Thought from "../(main)/thought";
 import type { PublicThoughtPayload } from "@/types/thought";
@@ -29,13 +28,13 @@ export default function DeleteThoughtModal({
 
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
-        queryKey: thoughtsOptions.queryKey,
+        queryKey: thoughtKeys.all(),
       });
       queryClient.invalidateQueries({
-        queryKey: adminThoughtsOptions.queryKey,
+        queryKey: adminKeys.thoughts(),
       });
       queryClient.invalidateQueries({
-        queryKey: deletedThoughtsOptions.queryKey,
+        queryKey: adminKeys.deletedThoughts(),
       });
     },
   });

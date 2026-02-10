@@ -1,7 +1,8 @@
+import "client-only";
+
 import type { Prisma } from "@/generated/prisma/client";
 import { parsePublicThoughtFromServer } from "@/utils/thought";
-import { toServerError } from "@/utils/error/ServerError";
-import { apiUrl } from "@/utils/text";
+import { fetchJson } from "@/services/http";
 import type {
   PublicThoughtFromServer,
   PublicThoughtPayload,
@@ -23,15 +24,11 @@ const getThoughts = async ({
     params.append("searchTerm", searchTerm);
   }
 
-  const response = await fetch(
-    apiUrl(`/api/thoughts${params.toString() ? `?${params.toString()}` : ""}`),
+  const data = await fetchJson<PublicThoughtFromServer[]>(
+    `/api/thoughts${params.toString() ? `?${params.toString()}` : ""}`,
+    undefined,
+    { errorMessage: "Failed to get thoughts" },
   );
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to get thoughts", data.issues);
-  }
 
   return data.map(parsePublicThoughtFromServer);
 };
@@ -39,49 +36,30 @@ const getThoughts = async ({
 const submitThought = async (
   data: Prisma.ThoughtCreateInput,
 ): Promise<{ message: string }> => {
-  const response = await fetch(apiUrl("/api/thoughts"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  return fetchJson(
+    "/api/thoughts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+      }),
     },
-    body: JSON.stringify({
-      ...data,
-    }),
-  });
-
-  const dataResponse = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to submit thought", dataResponse.issues);
-  }
-
-  return dataResponse;
+    { errorMessage: "Failed to submit thought" },
+  );
 };
 
 const getThoughtsCount = async (): Promise<number> => {
-  const response = await fetch(apiUrl("/api/thoughts/count"));
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to get thoughts count", data.issues);
-  }
+  const data = await fetchJson<{ count: number }>(
+    "/api/thoughts/count",
+    undefined,
+    { errorMessage: "Failed to get thoughts count" },
+  );
 
   return data.count;
 };
-
-// const searchThoughts = async (searchTerm: string): Promise<Thought[]> => {
-//   const response = await fetch(
-//     `/api/thoughts?searchTerm=${encodeURIComponent(searchTerm)}`,
-//   );
-
-//   const data = await response.json();
-
-//   if (!response.ok) {
-//     throw new Error(data.issues[0].message);
-//   }
-
-//   return data.map(convertThoughtDates);
-// };
 
 export { getThoughts, getThoughtsCount, submitThought };
 

@@ -2,10 +2,13 @@ import { ZodError } from "zod";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-import { prisma } from "@/lib/db";
 import { userNotificationMarkReadInput } from "@/lib/validations/user";
-import IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
+import { unknownErrorResponse, zodInvalidInput } from "@/lib/http";
+import {
+  deleteNotification,
+  markNotificationRead,
+} from "@/server/user";
 
 export async function PUT(
   req: Request,
@@ -22,31 +25,20 @@ export async function PUT(
 
     const { isRead } = userNotificationMarkReadInput.parse(await req.json());
 
-    await prisma.notification.update({
-      where: { id: notificationId, userId: session.user.id },
-      data: { isRead },
+    await markNotificationRead({
+      notificationId,
+      userId: session.user.id,
+      isRead,
     });
 
     return NextResponse.json({ message: "Notification updated successfully" });
   } catch (error) {
     if (error instanceof ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
-
-      return NextResponse.json(zodError, { status: 400 });
+      return zodInvalidInput(error);
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }
 
@@ -63,18 +55,11 @@ export async function DELETE(
       return session;
     }
 
-    await prisma.notification.delete({
-      where: { id: notificationId, userId: session.user.id },
-    });
+    await deleteNotification({ notificationId, userId: session.user.id });
 
     return NextResponse.json({ message: "Notification deleted successfully" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

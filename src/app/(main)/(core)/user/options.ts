@@ -1,3 +1,5 @@
+import "client-only";
+
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import {
@@ -10,24 +12,25 @@ import {
 } from "@/services/user";
 import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from "@/config/letter";
 import { NOTIFICATION_PER_PAGE } from "@/config/user";
+import { userKeys } from "@/lib/query-keys";
 
 export const userOptions = queryOptions({
-  queryKey: ["user"],
+  queryKey: userKeys.all(),
 });
 
 export const userUsernameOptions = (username: string) => {
   return queryOptions({
-    queryKey: [...userOptions.queryKey, username],
+    queryKey: userKeys.byUsername(username),
     queryFn: () => getUser(username),
   });
 };
 
 export const userNotificationsOptions = queryOptions({
-  queryKey: [...userOptions.queryKey, "notifications"],
+  queryKey: userKeys.notifications(),
 });
 
 export const userNotificationsInfiniteOptions = infiniteQueryOptions({
-  queryKey: [...userNotificationsOptions.queryKey, "infiniteNotifications"],
+  queryKey: userKeys.notificationsInfinite(),
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getUserNotifications(pageParam),
@@ -38,13 +41,13 @@ export const userNotificationsInfiniteOptions = infiniteQueryOptions({
 });
 
 export const userNotificationCountOptions = queryOptions({
-  queryKey: [...userNotificationsOptions.queryKey, "count"],
+  queryKey: userKeys.notificationCount(),
   queryFn: getUserNewNotificationCount,
 });
 
 export const userUsernameLettersInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userUsernameOptions(username).queryKey, "infiniteLetters"],
+    queryKey: userKeys.infiniteLetters(username),
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserLetters({
@@ -61,7 +64,7 @@ export const userUsernameLettersInfiniteOptions = (username: string) => {
 
 export const userUsernameRepliesInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userUsernameOptions(username).queryKey, "infiniteReplies"],
+    queryKey: userKeys.infiniteReplies(username),
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserReplies({
@@ -77,7 +80,7 @@ export const userUsernameRepliesInfiniteOptions = (username: string) => {
 
 export const userUsernameLikedLettersInfiniteOptions = (username: string) => {
   return infiniteQueryOptions({
-    queryKey: [...userUsernameOptions(username).queryKey, "infiniteLikes"],
+    queryKey: userKeys.infiniteLikes(username),
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getUserLikedLetters({

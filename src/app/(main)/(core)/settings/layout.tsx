@@ -1,53 +1,14 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { NavLink } from "@mantine/core";
-import { IconClock, IconLock, IconUser } from "@tabler/icons-react";
+import type { ReactNode } from "react";
 
 import classes from "./layout.module.css";
+import SettingsSidebar from "./settings-sidebar";
 
-const navLinks = [
-  {
-    icon: <IconUser size="1em" />,
-    label: "Account",
-    href: "/settings",
-  },
-  {
-    icon: <IconLock size="1em" />,
-    label: "Privacy",
-    href: "/settings/privacy",
-  },
-  {
-    icon: <IconClock size="1em" />,
-    label: "Session",
-    href: "/settings/session",
-  },
-];
-
-export default function SettingsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-
+export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
     <div className={classes.container}>
-      <aside className={classes.sidebar}>
-        {navLinks.map((link) => (
-          <NavLink
-            key={link.label}
-            label={link.label}
-            component={Link}
-            href={link.href}
-            leftSection={link.icon}
-            active={pathname === link.href}
-          />
-        ))}
-      </aside>
-
+      <SettingsSidebar />
       <section className={classes.content}>{children}</section>
     </div>
   );
 }
+

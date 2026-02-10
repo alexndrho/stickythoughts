@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import type { Prisma } from "@/generated/prisma/client";
 import TextEditor from "@/components/text-editor";
@@ -9,10 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateLetter } from "@/services/letter";
 import { getQueryClient } from "@/lib/get-query-client";
 import ServerError from "@/utils/error/ServerError";
-import {
-  lettersInfiniteOptions,
-  letterOptions,
-} from "@/app/(main)/(core)/letters/options";
+import { letterKeys } from "@/lib/query-keys";
 import type { LetterType } from "@/types/letter";
 import classes from "./letter.module.css";
 
@@ -62,7 +61,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       updateForm.reset();
 
       getQueryClient().setQueryData(
-        letterOptions(id).queryKey,
+        letterKeys.byId(id),
         (oldData: LetterType | undefined) =>
           oldData
             ? {
@@ -73,12 +72,12 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       );
 
       getQueryClient().invalidateQueries({
-        queryKey: letterOptions(id).queryKey,
+        queryKey: letterKeys.byId(id),
         refetchType: "none",
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: lettersInfiniteOptions.queryKey,
+        queryKey: letterKeys.infiniteList(),
       });
     },
     onError: (error) => {

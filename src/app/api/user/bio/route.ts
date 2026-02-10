@@ -1,11 +1,15 @@
 import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import IError from "@/types/error";
 import { updateUserBioInput } from "@/lib/validations/user";
 import z from "zod";
 import { guardSession } from "@/lib/session-guard";
+import {
+  jsonError,
+  unknownErrorResponse,
+  zodInvalidInput,
+} from "@/lib/http";
+import { clearUserBio, updateUserBio } from "@/server/user";
 
 export async function PUT(request: Request) {
   try {
@@ -17,14 +21,7 @@ export async function PUT(request: Request) {
 
     const { bio } = updateUserBioInput.parse(await request.json());
 
-    await prisma.user.update({
-      where: {
-        id: session.user.id,
-      },
-      data: {
-        bio,
-      },
-    });
+    await updateUserBio({ userId: session.user.id, bio });
 
     return NextResponse.json(
       {
@@ -34,22 +31,11 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
-      return NextResponse.json(zodError, { status: 400 });
+      return zodInvalidInput(error);
     }
 
     console.error("Error updating user bio:", error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }
 
@@ -60,16 +46,14 @@ export async function DELETE(request: NextRequest) {
 
   try {
     if (!userId) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "validation/invalid-request",
-              message: "User ID is required",
-            },
-          ],
-        } satisfies IError,
-        { status: 400 },
+      return jsonError(
+        [
+          {
+            code: "validation/invalid-request",
+            message: "User ID is required",
+          },
+        ],
+        400,
       );
     }
 
@@ -82,10 +66,7 @@ export async function DELETE(request: NextRequest) {
       return session;
     }
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: { bio: null },
-    });
+    await clearUserBio({ userId });
 
     return NextResponse.json(
       {
@@ -95,11 +76,6 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error deleting user bio:", error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }

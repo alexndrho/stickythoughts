@@ -1,10 +1,11 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import IError from "@/types/error";
 import type { UserAccountSettings } from "@/types/user";
 import { guardSession } from "@/lib/session-guard";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { getUserAccountSettings } from "@/server/user";
+import { UserNotFoundError } from "@/server/user";
 
 export async function GET() {
   const session = await guardSession({ headers: await headers() });
@@ -14,34 +15,17 @@ export async function GET() {
   }
 
   try {
-    const userSettings: UserAccountSettings | null =
-      await prisma.user.findUnique({
-        where: {
-          id: session.user.id,
-        },
-        select: {
-          bio: true,
-        },
-      });
-
-    if (!userSettings) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "not-found", message: "User not found" }],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
+    const userSettings: UserAccountSettings = await getUserAccountSettings({
+      userId: session.user.id,
+    });
 
     return NextResponse.json(userSettings);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    if (error instanceof UserNotFoundError) {
+      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+    }
 
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    console.error("Error fetching user:", error);
+    return unknownErrorResponse("Unknown error");
   }
 }

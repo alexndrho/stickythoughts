@@ -36,7 +36,7 @@ import { useThrottledCallback } from "@mantine/hooks";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtsInfiniteOptions, thoughtsOptions } from "@/app/(main)/options";
+import { thoughtKeys } from "@/lib/query-keys";
 import UserNotification from "./user-notification";
 import classes from "@/styles/nav.module.css";
 
@@ -71,10 +71,10 @@ export default function Nav() {
 
   const handleRefetch = useThrottledCallback(() => {
     getQueryClient().invalidateQueries({
-      queryKey: thoughtsInfiniteOptions.queryKey,
+      queryKey: thoughtKeys.infinite(),
     });
     getQueryClient().invalidateQueries({
-      queryKey: thoughtsOptions.queryKey,
+      queryKey: thoughtKeys.all(),
     });
   }, 10000);
 

@@ -1,11 +1,11 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { guardSession } from "@/lib/session-guard";
-import { prisma } from "@/lib/db";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { isRecordNotFoundError } from "@/server/db";
+import { softDeleteThought } from "@/server/thought";
 
 export async function DELETE(
   request: Request,
@@ -30,54 +30,24 @@ export async function DELETE(
     });
 
     if (!hasPermission.success) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-        } satisfies IError,
-        { status: 403 },
-      );
+      return jsonError([{ code: "auth/forbidden", message: "Forbidden" }], 403);
     }
 
-    await prisma.thought.update({
-      where: {
-        id: thoughtId,
-        deletedAt: null,
-      },
-      data: { deletedAt: new Date(), deletedById: session.user.id },
-    });
+    await softDeleteThought({ thoughtId, deletedById: session.user.id });
 
     return NextResponse.json(
       { message: "Thought deleted successfully" },
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          {
-            issues: [
-              {
-                code: "not-found",
-                message: "Thought not found",
-              },
-            ],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+    if (isRecordNotFoundError(error)) {
+      return jsonError(
+        [{ code: "not-found", message: "Thought not found" }],
+        404,
+      );
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Button, Text, Title } from "@mantine/core";
 
@@ -17,9 +15,9 @@ export default function NotFoundContent() {
         Sorry, we couldn&apos;t find the page you&apos;re looking for.
       </Text>
 
-      <Button component={Link} href="/" variant="default">
-        Return to home
-      </Button>
+      <Link href="/">
+        <Button variant="default">Return to home</Button>
+      </Link>
     </div>
   );
 }

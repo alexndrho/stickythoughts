@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { UnstyledButton } from "@mantine/core";
 import { useThrottledCallback } from "@mantine/hooks";

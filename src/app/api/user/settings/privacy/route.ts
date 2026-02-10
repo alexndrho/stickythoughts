@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import IError from "@/types/error";
 import type { UserSettingsPrivacy } from "@/types/user";
 import { guardSession } from "@/lib/session-guard";
+import { unknownErrorResponse } from "@/lib/http";
+import { getUserPrivacySettings } from "@/server/user";
 
 export async function GET() {
   try {
@@ -14,27 +14,16 @@ export async function GET() {
       return session;
     }
 
-    const userSettings = await prisma.userSettings.findUnique({
-      where: { userId: session.user.id },
-      select: {
-        privacySettings: {
-          select: { likesVisibility: true },
-        },
-      },
+    const privacySettings = await getUserPrivacySettings({
+      userId: session.user.id,
     });
 
     return NextResponse.json(
-      (userSettings?.privacySettings ?? null) satisfies UserSettingsPrivacy,
+      (privacySettings ?? null) satisfies UserSettingsPrivacy,
       { status: 200 },
     );
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

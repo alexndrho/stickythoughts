@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import Content from "./content";
 import { getQueryClient } from "@/lib/get-query-client";
-import { letterOptions } from "@/app/(main)/(core)/letters/options";
+import { letterKeys } from "@/lib/query-keys";
 import {
   getLetterServer,
   LetterNotFoundError,
@@ -43,7 +43,7 @@ export default async function PostPage({
 
   try {
     const letter = await getLetterServer(letterId);
-    queryClient.setQueryData(letterOptions(letterId).queryKey, letter);
+    queryClient.setQueryData(letterKeys.byId(letterId), letter);
   } catch (err) {
     if (err instanceof LetterNotFoundError) {
       notFound();

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
-import type IError from "@/types/error";
+import { unknownErrorResponse } from "@/lib/http";
+import { countDeletedThoughts } from "@/server/thought";
 
 export async function GET() {
   try {
@@ -16,23 +16,11 @@ export async function GET() {
       return session;
     }
 
-    const total = await prisma.thought.count({
-      where: {
-        deletedAt: {
-          not: null,
-        },
-      },
-    });
+    const total = await countDeletedThoughts();
 
     return NextResponse.json({ total }, { status: 200 });
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

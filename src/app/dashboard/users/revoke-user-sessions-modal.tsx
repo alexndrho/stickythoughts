@@ -1,11 +1,13 @@
+"use client";
+
 import { authClient } from "@/lib/auth-client";
 import { Button, Group, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconClock, IconX } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { adminUsersOptions } from "./options";
 import { getQueryClient } from "@/lib/get-query-client";
 import { useState } from "react";
+import { adminKeys } from "@/lib/query-keys";
 
 export interface RevokeUserSessionsModalProps {
   user: {
@@ -38,7 +40,7 @@ export default function RevokeUserSessionsModal({
 
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       handleClose();

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
@@ -5,9 +7,10 @@ import { Button, Group, Modal } from "@mantine/core";
 import { IconFaceId, IconX } from "@tabler/icons-react";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminUsersOptions } from "./options";
+import { adminKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 import ServerError from "@/utils/error/ServerError";
-import { userUsernameOptions } from "../../(main)/(core)/user/options";
+import { deleteUserBio } from "@/services/user";
 
 export interface DeleteUserProfilePictureModalProps {
   user: {
@@ -26,20 +29,17 @@ export default function DeleteUserBioModal({
   const [areYouSure, setAreYouSure] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: () =>
-      fetch(`/api/user/bio?userId=${user?.id || ""}`, {
-        method: "DELETE",
-      }),
+    mutationFn: () => deleteUserBio(user?.id || ""),
     onSuccess: () => {
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       if (user?.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
         });
       }
 
@@ -83,7 +83,9 @@ export default function DeleteUserBioModal({
       centered
     >
       <Group justify="end">
-        <Button variant="default">Cancel</Button>
+        <Button variant="default" onClick={handleClose}>
+          Cancel
+        </Button>
 
         <Button
           color="red"

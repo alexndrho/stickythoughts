@@ -6,9 +6,9 @@ import { notifications } from "@mantine/notifications";
 import { Button, Group, Modal } from "@mantine/core";
 import { IconPhoto, IconX } from "@tabler/icons-react";
 
-import { adminUsersOptions } from "./options";
 import { getQueryClient } from "@/lib/get-query-client";
-import { userUsernameOptions } from "../../(main)/(core)/user/options";
+import { adminKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 import { removeProfilePicture } from "@/services/user";
 import ServerError from "@/utils/error/ServerError";
 
@@ -39,12 +39,12 @@ export default function DeleteUserProfilePictureModal({
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       if (user?.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
         });
       }
 
@@ -82,11 +82,13 @@ export default function DeleteUserProfilePictureModal({
     <Modal
       title={`Delete Profile Picture for @${user?.username}`}
       opened={opened}
-      onClose={onClose}
+      onClose={handleClose}
       centered
     >
       <Group justify="end">
-        <Button variant="default">Cancel</Button>
+        <Button variant="default" onClick={handleClose}>
+          Cancel
+        </Button>
 
         <Button
           color="red"

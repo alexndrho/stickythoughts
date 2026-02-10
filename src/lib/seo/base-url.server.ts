@@ -1,3 +1,5 @@
+import "server-only";
+
 const FALLBACK_BASE_URL = "http://localhost:3000";
 
 function pickRawBaseUrl(): string {

@@ -1,10 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
-import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import type { PrivateThoughtPayload } from "@/types/thought";
-import type IError from "@/types/error";
+import { unknownErrorResponse } from "@/lib/http";
+import { listAdminThoughts } from "@/server/thought";
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,45 +19,13 @@ export async function GET(req: NextRequest) {
 
     const searchParams = req.nextUrl.searchParams;
     const page = Math.max(Number(searchParams.get("page") || "1"), 1);
-    const skip = (page - 1) * ADMIN_THOUGHTS_PER_PAGE;
-
-    const thoughts = await prisma.thought.findMany({
-      take: ADMIN_THOUGHTS_PER_PAGE,
-      skip,
-      where: {
-        deletedAt: null,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        id: true,
-        author: true,
-        message: true,
-        color: true,
-        highlightedAt: true,
-        createdAt: true,
-        highlightedBy: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-          },
-        },
-      },
-    });
+    const thoughts = await listAdminThoughts({ page });
 
     return NextResponse.json(thoughts satisfies PrivateThoughtPayload[], {
       status: 200,
     });
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

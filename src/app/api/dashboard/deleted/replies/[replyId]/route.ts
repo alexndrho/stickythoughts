@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import {
+  getDeletedReplyStatus,
+  purgeReply,
+  restoreReply,
+} from "@/server/admin";
 
 export async function PATCH(
   request: Request,
@@ -21,24 +25,13 @@ export async function PATCH(
 
     const { replyId } = await params;
 
-    const reply = await prisma.letterReply.findUnique({
-      where: { id: replyId },
-      select: { deletedAt: true },
-    });
+    const reply = await getDeletedReplyStatus({ replyId });
 
     if (!reply || !reply.deletedAt) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "not-found", message: "Reply not found" }],
-        } satisfies IError,
-        { status: 404 },
-      );
+      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
     }
 
-    await prisma.letterReply.update({
-      where: { id: replyId },
-      data: { deletedAt: null, deletedById: null },
-    });
+    await restoreReply({ replyId });
 
     return NextResponse.json(
       { message: "Reply restored successfully" },
@@ -46,17 +39,7 @@ export async function PATCH(
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }
 
@@ -77,23 +60,13 @@ export async function DELETE(
 
     const { replyId } = await params;
 
-    const reply = await prisma.letterReply.findUnique({
-      where: { id: replyId },
-      select: { deletedAt: true },
-    });
+    const reply = await getDeletedReplyStatus({ replyId });
 
     if (!reply || !reply.deletedAt) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "not-found", message: "Reply not found" }],
-        } satisfies IError,
-        { status: 404 },
-      );
+      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
     }
 
-    await prisma.letterReply.delete({
-      where: { id: replyId },
-    });
+    await purgeReply({ replyId });
 
     return NextResponse.json(
       { message: "Reply deleted permanently" },
@@ -101,16 +74,6 @@ export async function DELETE(
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

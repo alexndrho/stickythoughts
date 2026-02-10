@@ -1,5 +1,5 @@
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminThoughtsOptions, adminThoughtsPageOptions } from "./options";
+import { adminKeys } from "@/lib/query-keys";
 import type { PrivateThoughtPayload } from "@/types/thought";
 
 export const setThoughtHighlighting = ({
@@ -13,7 +13,7 @@ export const setThoughtHighlighting = ({
   const isHighlighted = !!thought.highlightedAt;
 
   queryClient.setQueryData<PrivateThoughtPayload[]>(
-    adminThoughtsPageOptions(page).queryKey,
+    adminKeys.thoughtsPage(page),
     (oldData) =>
       oldData?.map((oldThought) => {
         if (oldThought.id === thought.id) {
@@ -29,7 +29,7 @@ export const setThoughtHighlighting = ({
   );
 
   queryClient.invalidateQueries({
-    queryKey: adminThoughtsOptions.queryKey,
+    queryKey: adminKeys.thoughts(),
     refetchType: "none",
   });
 };

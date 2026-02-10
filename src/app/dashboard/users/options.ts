@@ -1,11 +1,13 @@
+import "client-only";
+
 import { queryOptions } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
-import { adminOptions } from "../options";
 import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
+import { adminKeys } from "@/lib/query-keys";
 
 export const adminUsersOptions = queryOptions({
-  queryKey: [...adminOptions.queryKey, "users"],
+  queryKey: adminKeys.users(),
 });
 
 export const adminUsersPageOptions = ({
@@ -17,12 +19,8 @@ export const adminUsersPageOptions = ({
   search?: string;
   sortDirection?: "asc" | "desc";
 }) => {
-  console.log("sortDirection", {
-    ...(sortDirection && { sortDirection }),
-  });
-
   return queryOptions({
-    queryKey: [...adminOptions.queryKey, "users", page, search, sortDirection],
+    queryKey: adminKeys.usersPage({ page, search, sortDirection }),
     queryFn: () =>
       authClient.admin.listUsers({
         query: {

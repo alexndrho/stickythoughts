@@ -2,11 +2,14 @@ import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import { formatLetters } from "@/utils/letter";
 import type { LetterType } from "@/types/letter";
-import { LETTERS_PER_PAGE } from "@/config/letter";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import {
+  getUserLikesVisibility,
+  listUserLikedLetters,
+} from "@/server/user";
+import { UserNotFoundError } from "@/server/user";
 
 export async function GET(
   req: NextRequest,
@@ -18,32 +21,7 @@ export async function GET(
   try {
     const { username } = await params;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        username,
-      },
-      select: {
-        username: true,
-        settings: {
-          select: {
-            privacySettings: {
-              select: {
-                likesVisibility: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "not-found", message: "User not found" }],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
+    const user = await getUserLikesVisibility({ username });
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -51,71 +29,18 @@ export async function GET(
 
     if (
       username !== session?.user?.username &&
-      user.settings?.privacySettings?.likesVisibility === "PRIVATE"
+      user.likesVisibility === "PRIVATE"
     ) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "auth/forbidden",
-              message: "This user's likes are private",
-            },
-          ],
-        } satisfies IError,
-        { status: 403 },
+      return jsonError(
+        [{ code: "auth/forbidden", message: "This user's likes are private" }],
+        403,
       );
     }
 
-    const letters = await prisma.letter.findMany({
-      take: LETTERS_PER_PAGE,
-      ...(lastId && {
-        skip: 1,
-        cursor: {
-          id: lastId,
-        },
-      }),
-      where: {
-        likes: {
-          some: {
-            user: {
-              username,
-            },
-          },
-        },
-        deletedAt: null,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: session
-          ? {
-              where: {
-                userId: session.user.id,
-              },
-              select: {
-                userId: true,
-              },
-            }
-          : false,
-        _count: {
-          select: {
-            likes: true,
-            replies: {
-              where: {
-                deletedAt: null,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const letters = await listUserLikedLetters({
+      username,
+      lastId,
+      viewerUserId: session?.user?.id,
     });
 
     const formattedLetters = formatLetters({
@@ -125,13 +50,11 @@ export async function GET(
 
     return NextResponse.json(formattedLetters);
   } catch (error) {
-    console.error("Error fetching user likes:", error);
+    if (error instanceof UserNotFoundError) {
+      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+    }
 
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    console.error("Error fetching user likes:", error);
+    return unknownErrorResponse("Unknown error");
   }
 }

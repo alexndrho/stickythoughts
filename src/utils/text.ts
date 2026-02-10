@@ -15,15 +15,6 @@ export const containsUrl = (text: string) => {
   return URL_REGEX.test(text);
 };
 
-export const apiUrl = (path: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!baseUrl) {
-    throw new Error("API base URL is not defined");
-  }
-
-  return `${baseUrl}${path}`;
-};
-
 export const filterText = (text: string) => {
   const matches = matcher.getAllMatches(text);
 
@@ -45,7 +36,10 @@ export const safeExtractKeyFromUrl = (url: string) => {
 
 // Only allow deleting profile images that are under the expected per-user prefix.
 // This prevents a poisoned `user.image` URL from causing arbitrary object deletion.
-export const extractUserProfileImageKeyFromUrl = (url: string, userId: string) => {
+export const extractUserProfileImageKeyFromUrl = (
+  url: string,
+  userId: string,
+) => {
   const key = safeExtractKeyFromUrl(url);
   if (!key) return null;
 

@@ -1,73 +1,42 @@
-import { subMonths } from "date-fns";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { purgeSoftDeletedContent } from "@/server/cron";
 
 export async function GET(request: Request) {
   try {
     const cronSecret = process.env.CRON_SECRET;
     if (!cronSecret) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "config/missing-cron-secret",
-              message: "CRON_SECRET is not configured",
-            },
-          ],
-        } satisfies IError,
-        { status: 500 },
+      return jsonError(
+        [
+          {
+            code: "config/missing-cron-secret",
+            message: "CRON_SECRET is not configured",
+          },
+        ],
+        500,
       );
     }
 
     const authHeader = request.headers.get("authorization");
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
+      return jsonError(
+        [{ code: "auth/unauthorized", message: "Unauthorized" }],
+        401,
       );
     }
 
-    const cutoff = subMonths(new Date(), 1);
-
-    const [replies, letters, thoughts] = await prisma.$transaction([
-      prisma.letterReply.deleteMany({
-        where: { deletedAt: { lte: cutoff } },
-      }),
-      prisma.letter.deleteMany({
-        where: { deletedAt: { lte: cutoff } },
-      }),
-      prisma.thought.deleteMany({
-        where: { deletedAt: { lte: cutoff } },
-      }),
-    ]);
+    const result = await purgeSoftDeletedContent();
 
     return NextResponse.json(
       {
-        cutoff: cutoff.toISOString(),
-        deleted: {
-          replies: replies.count,
-          letters: letters.count,
-          thoughts: thoughts.count,
-        },
+        cutoff: result.cutoff.toISOString(),
+        deleted: result.deleted,
       },
       { status: 200 },
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

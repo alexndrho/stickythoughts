@@ -1,6 +1,8 @@
+import "client-only";
+
 import { queryOptions } from "@tanstack/react-query";
 
-import { adminOptions } from "../options";
+import { adminKeys } from "@/lib/query-keys";
 import {
   getDeletedThoughts,
   getDeletedLetters,
@@ -11,53 +13,53 @@ import {
 } from "@/services/moderate/deleted";
 
 export const adminDeletedOptions = queryOptions({
-  queryKey: [...adminOptions.queryKey, "deleted"],
+  queryKey: adminKeys.deleted(),
 });
 
 export const deletedThoughtsOptions = queryOptions({
-  queryKey: [...adminDeletedOptions.queryKey, "thoughts"],
+  queryKey: adminKeys.deletedThoughts(),
 });
 
 export const deletedLettersOptions = queryOptions({
-  queryKey: [...adminDeletedOptions.queryKey, "letters"],
+  queryKey: adminKeys.deletedLetters(),
 });
 
 export const deletedRepliesOptions = queryOptions({
-  queryKey: [...adminDeletedOptions.queryKey, "replies"],
+  queryKey: adminKeys.deletedReplies(),
 });
 
 export const deletedThoughtsPageOptions = (page: number) =>
   queryOptions({
-    queryKey: [...deletedThoughtsOptions.queryKey, page],
+    queryKey: adminKeys.deletedThoughtsPage(page),
     queryFn: () => getDeletedThoughts({ page }),
   });
 
 export const deletedThoughtsCountOptions = () =>
   queryOptions({
-    queryKey: [...deletedThoughtsOptions.queryKey, "count"],
+    queryKey: adminKeys.deletedThoughtsCount(),
     queryFn: () => getDeletedThoughtsCount(),
   });
 
 export const deletedLettersPageOptions = (page: number) =>
   queryOptions({
-    queryKey: [...deletedLettersOptions.queryKey, page],
+    queryKey: adminKeys.deletedLettersPage(page),
     queryFn: () => getDeletedLetters({ page }),
   });
 
 export const deletedLettersCountOptions = () =>
   queryOptions({
-    queryKey: [...deletedLettersOptions.queryKey, "count"],
+    queryKey: adminKeys.deletedLettersCount(),
     queryFn: () => getDeletedLettersCount(),
   });
 
 export const deletedRepliesPageOptions = (page: number) =>
   queryOptions({
-    queryKey: [...deletedRepliesOptions.queryKey, page],
+    queryKey: adminKeys.deletedRepliesPage(page),
     queryFn: () => getDeletedLetterReplies({ page }),
   });
 
 export const deletedRepliesCountOptions = () =>
   queryOptions({
-    queryKey: [...deletedRepliesOptions.queryKey, "count"],
+    queryKey: adminKeys.deletedRepliesCount(),
     queryFn: () => getDeletedRepliesCount(),
   });

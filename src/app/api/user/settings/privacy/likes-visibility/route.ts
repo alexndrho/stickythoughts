@@ -2,10 +2,10 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-import { prisma } from "@/lib/db";
 import { updateUserLikesVisibilityInput } from "@/lib/validations/user";
-import IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
+import { unknownErrorResponse, zodInvalidInput } from "@/lib/http";
+import { updateUserLikesVisibility } from "@/server/user";
 
 export async function PUT(request: Request) {
   try {
@@ -18,53 +18,17 @@ export async function PUT(request: Request) {
       return session;
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
-      data: {
-        settings: {
-          upsert: {
-            update: {
-              privacySettings: {
-                upsert: {
-                  update: { likesVisibility: visibility },
-                  create: { likesVisibility: visibility },
-                },
-              },
-            },
-            create: {
-              privacySettings: {
-                create: { likesVisibility: visibility },
-              },
-            },
-          },
-        },
-      },
-      select: {
-        settings: {
-          select: {
-            privacySettings: {
-              select: {
-                likesVisibility: true,
-              },
-            },
-          },
-        },
-      },
+    const privacySettings = await updateUserLikesVisibility({
+      userId: session.user.id,
+      visibility,
     });
 
-    return NextResponse.json(updatedUser.settings?.privacySettings, {
+    return NextResponse.json(privacySettings, {
       status: 200,
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
-
-      return NextResponse.json(zodError, { status: 400 });
+      return zodInvalidInput(error);
     }
     if (error instanceof Error) {
       console.error(
@@ -73,16 +37,6 @@ export async function PUT(request: Request) {
       );
     }
 
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

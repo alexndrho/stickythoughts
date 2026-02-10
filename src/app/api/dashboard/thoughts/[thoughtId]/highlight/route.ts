@@ -5,12 +5,16 @@ import {
   HIGHLIGHT_LOCK_DURATION_MS,
   HIGHLIGHT_LOCK_HOURS,
 } from "@/config/thought";
-import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
 import { isHighlightLocked } from "@/utils/thought";
 import { formatDuration, intervalToDuration } from "date-fns";
 import type { PrivateThoughtPayload } from "@/types/thought";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import {
+  findCurrentHighlight,
+  getThoughtHighlightStatus,
+  updateHighlight,
+} from "@/server/thought";
 
 const formatRemaining = (remainingMs: number) => {
   const safeMs = Math.max(60_000, remainingMs);
@@ -29,67 +33,17 @@ const formatRemaining = (remainingMs: number) => {
 };
 
 const highlightLockedResponse = (remainingMs: number) =>
-  NextResponse.json(
-    {
-      issues: [
-        {
-          code: "thought/highlight-locked",
-          message: `Highlighted thoughts can only be changed after ${HIGHLIGHT_LOCK_HOURS} hours. Try again in ${formatRemaining(
-            remainingMs,
-          )}.`,
-        },
-      ],
-    } satisfies IError,
-    { status: 403 },
-  );
-
-async function updateHighlight({
-  highlighted,
-  thoughtId,
-  userId,
-}: {
-  highlighted: boolean;
-  thoughtId: string;
-  userId: string;
-}) {
-  return prisma.$transaction(async (tx) => {
-    if (highlighted) {
-      await tx.thought.updateMany({
-        where: {
-          highlightedAt: { not: null },
-          deletedAt: null,
-          id: { not: thoughtId },
-        },
-        data: {
-          highlightedAt: null,
-          highlightedById: null,
-        },
-      });
-    }
-
-    return tx.thought.update({
-      where: { id: thoughtId },
-      data: highlighted
-        ? { highlightedAt: new Date(), highlightedById: userId }
-        : { highlightedAt: null, highlightedById: null },
-      select: {
-        id: true,
-        author: true,
-        message: true,
-        color: true,
-        highlightedAt: true,
-        createdAt: true,
-        highlightedBy: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-          },
-        },
+  jsonError(
+    [
+      {
+        code: "thought/highlight-locked",
+        message: `Highlighted thoughts can only be changed after ${HIGHLIGHT_LOCK_HOURS} hours. Try again in ${formatRemaining(
+          remainingMs,
+        )}.`,
       },
-    });
-  });
-}
+    ],
+    403,
+  );
 
 export async function POST(
   request: Request,
@@ -110,19 +64,7 @@ export async function POST(
     const isAdmin = session.user.role === "admin";
 
     if (!isAdmin) {
-      const currentHighlight = await prisma.thought.findFirst({
-        where: {
-          highlightedAt: { not: null },
-          deletedAt: null,
-        },
-        select: {
-          id: true,
-          highlightedAt: true,
-        },
-        orderBy: {
-          highlightedAt: "desc",
-        },
-      });
+      const currentHighlight = await findCurrentHighlight();
 
       if (
         currentHighlight?.highlightedAt &&
@@ -145,18 +87,7 @@ export async function POST(
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }
 
@@ -179,10 +110,7 @@ export async function DELETE(
     const isAdmin = session.user.role === "admin";
 
     if (!isAdmin) {
-      const thought = await prisma.thought.findUnique({
-        where: { id: thoughtId },
-        select: { highlightedAt: true },
-      });
+      const thought = await getThoughtHighlightStatus({ thoughtId });
 
       if (thought?.highlightedAt && isHighlightLocked(thought.highlightedAt)) {
         const remainingMs =
@@ -202,17 +130,6 @@ export async function DELETE(
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

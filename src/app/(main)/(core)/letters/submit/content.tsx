@@ -15,17 +15,15 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import {
-  searchBaseOptions,
-  lettersInfiniteOptions,
-} from "@/app/(main)/(core)/letters/options";
+import { letterKeys } from "@/lib/query-keys";
+import { searchKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 import { sanitizeString } from "@/utils/text";
 import { submitLetter } from "@/services/letter";
 import { useEffect } from "react";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/text-editor";
 import ServerError from "@/utils/error/ServerError";
-import { userUsernameLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { LETTER_BODY_MAX_LENGTH } from "@/lib/validations/letter";
 import classes from "./letter-submit.module.css";
 
@@ -83,18 +81,17 @@ export default function Content() {
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: lettersInfiniteOptions.queryKey,
+        queryKey: letterKeys.infiniteList(),
       });
 
       if (session?.user.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameLettersInfiniteOptions(session.user.username)
-            .queryKey,
+          queryKey: userKeys.infiniteLetters(session.user.username),
         });
       }
 
       queryClient.invalidateQueries({
-        queryKey: searchBaseOptions.queryKey,
+        queryKey: searchKeys.all(),
       });
 
       router.push(`/letters/${id}`);

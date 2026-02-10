@@ -28,8 +28,8 @@ import {
 } from "./utils";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { deletedRepliesOptions } from "@/app/dashboard/deleted/options";
-import { letterBaseOptions } from "@/app/(main)/(core)/letters/options";
+import { adminKeys } from "@/lib/query-keys";
+import { letterKeys } from "@/lib/query-keys";
 import type { DeletedLetterReplyFromServer } from "@/types/deleted";
 import {
   permanentlyDeleteReply,
@@ -87,9 +87,9 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
   const handleInvalidate = () => {
     const queryClient = getQueryClient();
     queryClient.invalidateQueries({
-      queryKey: deletedRepliesOptions.queryKey,
+      queryKey: adminKeys.deletedReplies(),
     });
-    queryClient.invalidateQueries({ queryKey: letterBaseOptions.queryKey });
+    queryClient.invalidateQueries({ queryKey: letterKeys.all() });
   };
 
   const restoreMutation = useMutation({

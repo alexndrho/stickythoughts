@@ -1,28 +1,15 @@
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import IError from "@/types/error";
+import { unknownErrorResponse } from "@/lib/http";
+import { countPublicThoughts } from "@/server/thought";
 
 export async function GET() {
   try {
-    const count = await prisma.thought.count({
-      where: { deletedAt: null },
-    });
+    const count = await countPublicThoughts();
 
     return NextResponse.json({ count }, { status: 200 });
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

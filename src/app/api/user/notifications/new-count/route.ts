@@ -1,10 +1,14 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
 import { userNotificationOpenedInput } from "@/lib/validations/user";
-import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import {
+  countNewUserNotifications,
+  setNotificationsOpened,
+} from "@/server/user";
+import { UserNotFoundError } from "@/server/user";
 
 export async function GET() {
   try {
@@ -14,49 +18,18 @@ export async function GET() {
       return session;
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-      select: {
-        _count: {
-          select: {
-            notifications: {
-              where: {
-                isCountDecremented: false,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: "User not found",
-            },
-          ],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
+    const count = await countNewUserNotifications({ userId: session.user.id });
 
     return NextResponse.json({
-      count: user._count.notifications,
+      count,
     });
   } catch (error) {
-    console.error(error);
+    if (error instanceof UserNotFoundError) {
+      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+    }
 
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    console.error(error);
+    return unknownErrorResponse("Something went wrong");
   }
 }
 
@@ -70,29 +43,11 @@ export async function PUT(req: Request) {
 
     const { opened } = userNotificationOpenedInput.parse(await req.json());
 
-    await prisma.user.update({
-      where: {
-        id: session.user.id,
-      },
-      data: {
-        notifications: {
-          updateMany: {
-            where: { isCountDecremented: false },
-            data: { isCountDecremented: opened },
-          },
-        },
-      },
-    });
+    await setNotificationsOpened({ userId: session.user.id, opened });
 
     return NextResponse.json({ message: "Notifications updated successfully" });
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }

@@ -27,8 +27,8 @@ import {
 } from "./utils";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { deletedThoughtsOptions } from "@/app/dashboard/deleted/options";
-import { thoughtsOptions } from "@/app/(main)/options";
+import { adminKeys } from "@/lib/query-keys";
+import { thoughtKeys } from "@/lib/query-keys";
 import type { DeletedThought } from "@/types/deleted";
 import {
   permanentlyDeleteThought,
@@ -92,9 +92,9 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const handleInvalidate = () => {
     const queryClient = getQueryClient();
     queryClient.invalidateQueries({
-      queryKey: deletedThoughtsOptions.queryKey,
+      queryKey: adminKeys.deletedThoughts(),
     });
-    queryClient.invalidateQueries({ queryKey: thoughtsOptions.queryKey });
+    queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
   };
 
   const restoreMutation = useMutation({

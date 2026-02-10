@@ -1,10 +1,12 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Modal, Text } from "@mantine/core";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import { lettersInfiniteOptions } from "@/app/(main)/(core)/letters/options";
-import { userUsernameLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
-import { deletedLettersOptions } from "@/app/dashboard/deleted/options";
+import { letterKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
+import { adminKeys } from "@/lib/query-keys";
 import { deleteLetter } from "@/services/letter";
 
 export interface DeleteLetterModalProps {
@@ -31,16 +33,16 @@ export default function DeleteLetterModal({
 
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
-        queryKey: lettersInfiniteOptions.queryKey,
+        queryKey: letterKeys.infiniteList(),
       });
 
       queryClient.invalidateQueries({
-        queryKey: deletedLettersOptions.queryKey,
+        queryKey: adminKeys.deletedLetters(),
       });
 
       if (authorUsername) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameLettersInfiniteOptions(authorUsername).queryKey,
+          queryKey: userKeys.infiniteLetters(authorUsername),
         });
       }
 

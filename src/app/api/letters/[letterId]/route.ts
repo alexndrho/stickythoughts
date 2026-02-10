@@ -2,14 +2,18 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { ZodError } from "zod";
 
-import { Prisma } from "@/generated/prisma/client";
-import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { guardSession } from "@/lib/session-guard";
-import IError from "@/types/error";
 import { updateLetterServerInput } from "@/lib/validations/letter";
 import { getLetterPublic, LetterNotFoundError } from "@/lib/queries/letter";
 import { formatLetters } from "@/utils/letter";
+import {
+  jsonError,
+  unknownErrorResponse,
+  zodInvalidInput,
+} from "@/lib/http";
+import { isRecordNotFoundError } from "@/server/db";
+import { softDeleteLetter, updateLetter } from "@/server/letter";
 
 export async function GET(
   request: Request,
@@ -29,29 +33,14 @@ export async function GET(
     return NextResponse.json(letter);
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: "Letter post not found",
-            },
-          ],
-        } satisfies IError,
-        {
-          status: 404,
-        },
+      return jsonError(
+        [{ code: "not-found", message: "Letter post not found" }],
+        404,
       );
     }
 
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }
 
@@ -69,42 +58,10 @@ export async function PUT(
       return session;
     }
 
-    const updatedLetter = await prisma.letter.update({
-      where: {
-        id: letterId,
-        authorId: session.user.id,
-        deletedAt: null,
-      },
-      data: {
-        body,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: {
-          where: {
-            userId: session.user.id,
-          },
-          select: {
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            replies: {
-              where: {
-                deletedAt: null,
-              },
-            },
-          },
-        },
-      },
+    const updatedLetter = await updateLetter({
+      letterId,
+      authorId: session.user.id,
+      body,
     });
 
     const formattedLetter = formatLetters({
@@ -115,37 +72,16 @@ export async function PUT(
     return NextResponse.json(formattedLetter);
   } catch (error) {
     if (error instanceof ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
-
-      return NextResponse.json(zodError, { status: 400 });
-    } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          {
-            issues: [
-              {
-                code: "not-found",
-                message: "Letter post not found",
-              },
-            ],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+      return zodInvalidInput(error);
+    } else if (isRecordNotFoundError(error)) {
+      return jsonError(
+        [{ code: "not-found", message: "Letter post not found" }],
+        404,
+      );
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }
 
@@ -171,16 +107,10 @@ export async function DELETE(
       },
     });
 
-    await prisma.letter.update({
-      where: {
-        id: letterId,
-        deletedAt: null,
-        ...(hasPermission.success ? {} : { authorId: session.user.id }),
-      },
-      data: {
-        deletedAt: new Date(),
-        deletedById: session.user.id,
-      },
+    await softDeleteLetter({
+      letterId,
+      deletedById: session.user.id,
+      ...(hasPermission.success ? {} : { authorId: session.user.id }),
     });
 
     return NextResponse.json(
@@ -190,28 +120,14 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          {
-            issues: [
-              {
-                code: "not-found",
-                message: "Letter post not found",
-              },
-            ],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+    if (isRecordNotFoundError(error)) {
+      return jsonError(
+        [{ code: "not-found", message: "Letter post not found" }],
+        404,
+      );
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }

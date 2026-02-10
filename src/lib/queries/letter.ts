@@ -1,12 +1,11 @@
 import "server-only";
 
 import { prisma } from "@/lib/db";
+import { LetterNotFoundError } from "@/server/letter";
 import type { LetterType } from "@/types/letter";
 import { formatLetters } from "@/utils/letter";
 
-export class LetterNotFoundError extends Error {
-  name = "LetterNotFoundError";
-}
+export { LetterNotFoundError };
 
 export async function getLetterPublic(args: {
   letterId: string;
@@ -56,4 +55,3 @@ export async function getLetterPublic(args: {
     letters: letter,
   });
 }
-

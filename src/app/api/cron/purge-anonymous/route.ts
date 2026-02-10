@@ -1,145 +1,47 @@
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
-import { hasActiveSession } from "@/lib/has-active-session";
-import { deleteFile, isUrlStorage } from "@/lib/storage";
-import { ONE_WEEK_MS } from "@/config/cron";
-import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
-import type IError from "@/types/error";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { purgeAnonymousUsers } from "@/server/cron";
 
 export async function GET(request: Request) {
   try {
     const cronSecret = process.env.CRON_SECRET;
     if (!cronSecret) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "config/missing-cron-secret",
-              message: "CRON_SECRET is not configured",
-            },
-          ],
-        } satisfies IError,
-        { status: 500 },
+      return jsonError(
+        [
+          {
+            code: "config/missing-cron-secret",
+            message: "CRON_SECRET is not configured",
+          },
+        ],
+        500,
       );
     }
 
     const authHeader = request.headers.get("authorization");
     if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json(
-        {
-          issues: [{ code: "auth/unauthorized", message: "Unauthorized" }],
-        } satisfies IError,
-        { status: 401 },
+      return jsonError(
+        [{ code: "auth/unauthorized", message: "Unauthorized" }],
+        401,
       );
     }
 
-    const now = new Date();
-    const cutoff = new Date(now.getTime() - ONE_WEEK_MS);
-
-    // 1) Fetch anonymous users with no active (non-deleted) content
-    //    and older than the hiccup buffer.
-    const candidates = await prisma.user.findMany({
-      where: {
-        isAnonymous: true,
-        createdAt: { lte: cutoff },
-        letters: { none: { deletedAt: null } },
-        letterReplies: { none: { deletedAt: null } },
-      },
-      select: { id: true, image: true, createdAt: true },
+    const result = await purgeAnonymousUsers({
+      bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
     });
-
-    // 2) Check for active sessions. Any error => treat as active (safer).
-    const sessionChecks = await Promise.all(
-      candidates.map(async (user) => {
-        const sessionResult = await hasActiveSession(user.id, now);
-        return { user, sessionResult };
-      }),
-    );
-
-    const deletableUsers = [];
-    for (const { user, sessionResult } of sessionChecks) {
-      if (!sessionResult.hasActiveSession) {
-        deletableUsers.push(user);
-      }
-    }
-
-    const candidateIds = deletableUsers.map((user) => user.id);
-
-    // 3) Delete users and remove stored profile images.
-    const deleted =
-      candidateIds.length > 0
-        ? await prisma.user.deleteMany({
-            where: { id: { in: candidateIds } },
-          })
-        : { count: 0 };
-
-    const imageDeleteTargets = deletableUsers
-      .filter((user) => Boolean(user.image) && isUrlStorage(user.image!))
-      .map((user) => {
-        const key = extractUserProfileImageKeyFromUrl(user.image!, user.id);
-        if (!key) {
-          console.error(
-            "Refusing to delete profile image during purge: key does not match expected prefix.",
-            { userId: user.id },
-          );
-          return null;
-        }
-        return { userId: user.id, key };
-      })
-      .filter(
-        (target): target is { userId: string; key: string } => target !== null,
-      );
-
-    const imageDeleteResults = await Promise.allSettled(
-      imageDeleteTargets.map((t) =>
-        deleteFile({
-          params: {
-            Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
-            Key: t.key,
-          },
-        }),
-      ),
-    );
-
-    const profileImagesDeleted = imageDeleteResults.filter(
-      (result) => result.status === "fulfilled",
-    ).length;
-    const profileImagesFailed =
-      imageDeleteResults.length - profileImagesDeleted;
-
-    if (profileImagesFailed > 0) {
-      const failures = imageDeleteResults
-        .filter(
-          (result): result is PromiseRejectedResult =>
-            result.status === "rejected",
-        )
-        .map((result) => result.reason);
-      console.error("Failed to delete some profile images:", failures);
-    }
 
     return NextResponse.json(
       {
-        checkedAt: now.toISOString(),
-        cutoffAt: cutoff.toISOString(),
-        deleted: deleted.count,
-        profileImagesDeleted,
-        profileImagesFailed,
+        checkedAt: result.checkedAt.toISOString(),
+        cutoffAt: result.cutoffAt.toISOString(),
+        deleted: result.deletedUsers,
+        profileImagesDeleted: result.profileImagesDeleted,
+        profileImagesFailed: result.profileImagesFailed,
       },
       { status: 200 },
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [
-          {
-            code: "unknown-error",
-            message: "Something went wrong",
-          },
-        ],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { isNotEmpty, matchesField, useForm } from "@mantine/form";
 import { Button, Group, Modal, PasswordInput } from "@mantine/core";

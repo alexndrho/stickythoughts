@@ -1,9 +1,11 @@
+import "client-only";
+
 import { queryOptions } from "@tanstack/react-query";
 
-import { userOptions } from "../../user/options";
 import { getUserSettingsPrivacy } from "@/services/user";
+import { userKeys } from "@/lib/query-keys";
 
 export const userSettingsPrivacy = queryOptions({
-  queryKey: [...userOptions.queryKey, "privacy"],
+  queryKey: userKeys.privacy(),
   queryFn: getUserSettingsPrivacy,
 });

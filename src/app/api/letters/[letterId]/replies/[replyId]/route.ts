@@ -2,13 +2,20 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import { updateLetterReplyServerInput } from "@/lib/validations/letter";
 import { formatLetterReplies } from "@/utils/letter";
-import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
+import {
+  jsonError,
+  unknownErrorResponse,
+  zodInvalidInput,
+} from "@/lib/http";
+import { isRecordNotFoundError } from "@/server/db";
+import {
+  softDeleteLetterReply,
+  updateLetterReply,
+} from "@/server/letter";
 
 export async function PUT(
   request: Request,
@@ -24,48 +31,11 @@ export async function PUT(
     const { letterId, replyId } = await params;
     const { body } = updateLetterReplyServerInput.parse(await request.json());
 
-    const updatedReply = await prisma.letterReply.update({
-      where: {
-        id: replyId,
-        letterId,
-        deletedAt: null,
-        authorId: session.user.id,
-        letter: {
-          deletedAt: null,
-        },
-      },
-      data: {
-        body,
-      },
-      include: {
-        letter: {
-          select: {
-            authorId: true,
-            isAnonymous: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: {
-          where: {
-            userId: session.user.id,
-          },
-          select: {
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
-      },
+    const updatedReply = await updateLetterReply({
+      letterId,
+      replyId,
+      authorId: session.user.id,
+      body,
     });
 
     const formattedReply = formatLetterReplies(updatedReply, session.user.id);
@@ -73,37 +43,16 @@ export async function PUT(
     return NextResponse.json(formattedReply, { status: 200 });
   } catch (error) {
     if (error instanceof ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
-
-      return NextResponse.json(zodError, { status: 400 });
-    } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          {
-            issues: [
-              {
-                code: "not-found",
-                message: "Reply not found",
-              },
-            ],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+      return zodInvalidInput(error);
+    } else if (isRecordNotFoundError(error)) {
+      return jsonError(
+        [{ code: "not-found", message: "Reply not found" }],
+        404,
+      );
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }
 
@@ -129,35 +78,11 @@ export async function DELETE(
       },
     });
 
-    const deletedReply = await prisma.letterReply.update({
-      where: {
-        id: replyId,
-        letterId,
-        deletedAt: null,
-        ...(hasPermission.success ? {} : { authorId: session.user.id }),
-      },
-      data: {
-        deletedAt: new Date(),
-        deletedById: session.user.id,
-      },
-      select: {
-        authorId: true,
-        letter: {
-          select: {
-            authorId: true,
-          },
-        },
-      },
-    });
-
-    // Delete notifications for both the reply author and the letter author
-    await prisma.notification.deleteMany({
-      where: {
-        userId: {
-          in: [deletedReply.authorId, deletedReply.letter.authorId],
-        },
-        replyId,
-      },
+    await softDeleteLetterReply({
+      letterId,
+      replyId,
+      deletedById: session.user.id,
+      ...(hasPermission.success ? {} : { authorId: session.user.id }),
     });
 
     return NextResponse.json(
@@ -167,28 +92,14 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          {
-            issues: [
-              {
-                code: "not-found",
-                message: "Reply not found",
-              },
-            ],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+    if (isRecordNotFoundError(error)) {
+      return jsonError(
+        [{ code: "not-found", message: "Reply not found" }],
+        404,
+      );
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }

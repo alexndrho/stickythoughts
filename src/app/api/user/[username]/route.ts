@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import type { UserPublicAccount } from "@/types/user";
-import IError from "@/types/error";
 import { getUserPublicAccount, UserNotFoundError } from "@/lib/queries/user";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
 
 export async function GET(
   req: Request,
@@ -39,26 +39,10 @@ export async function GET(
     return NextResponse.json(user satisfies UserPublicAccount);
   } catch (error) {
     if (error instanceof UserNotFoundError) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: `User not found`,
-            },
-          ],
-        } satisfies IError,
-        { status: 404 },
-      );
+      return jsonError([{ code: "not-found", message: "User not found" }], 404);
     }
 
     console.error("Error fetching user:", error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Unknown error" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Unknown error");
   }
 }

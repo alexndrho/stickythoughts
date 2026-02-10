@@ -1,11 +1,12 @@
-import { apiUrl } from "@/utils/text";
+import "client-only";
+
 import type {
   SearchAllType,
   SearchSegmentType,
   SearchLetterType,
   SearchUserType,
 } from "@/types/search";
-import { toServerError } from "@/utils/error/ServerError";
+import { fetchJson } from "@/services/http";
 
 type SearchResultMap = {
   users: SearchUserType[];
@@ -31,13 +32,7 @@ export async function getSearchResults<T extends SearchSegmentType = "all">(
     params.append("type", type);
   }
 
-  const response = await fetch(apiUrl(`/api/search?${params.toString()}`));
-
-  const dataResponse = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to fetch search results", dataResponse.issues);
-  }
-
-  return dataResponse;
+  return fetchJson(`/api/search?${params.toString()}`, undefined, {
+    errorMessage: "Failed to fetch search results",
+  });
 }

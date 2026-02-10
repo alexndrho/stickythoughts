@@ -6,7 +6,7 @@ import { IconX } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { userSessionsOptions } from "./options";
+import { userKeys } from "@/lib/query-keys";
 import classes from "./session.module.css";
 
 export interface SessionItemProps {
@@ -26,7 +26,7 @@ export default function SessionItem({
     onSuccess: () => {
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({
-        queryKey: userSessionsOptions.queryKey,
+        queryKey: userKeys.sessions(),
       });
     },
   });

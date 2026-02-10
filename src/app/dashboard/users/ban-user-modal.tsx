@@ -15,8 +15,8 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminUsersOptions } from "./options";
-import { userUsernameOptions } from "../../(main)/(core)/user/options";
+import { adminKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 
 export interface BanUserModalProps {
   user: {
@@ -75,12 +75,12 @@ export default function BanUserModal({
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       if (user?.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
         });
       }
 

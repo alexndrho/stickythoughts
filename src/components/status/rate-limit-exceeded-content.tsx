@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Button, Group, Text, Title } from "@mantine/core";
 
@@ -24,9 +22,9 @@ export default function RateLimitExceededContent(props: {
         <Button variant="default" onClick={props.onRetry}>
           Try again
         </Button>
-        <Button component={Link} href="/" variant="default">
-          Return to home
-        </Button>
+        <Link href="/">
+          <Button variant="default">Return to home</Button>
+        </Link>
       </Group>
     </div>
   );

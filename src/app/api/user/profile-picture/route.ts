@@ -2,13 +2,17 @@ import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
-import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
-import IError from "@/types/error";
 import { deleteFile, isUrlStorage, uploadFile } from "@/lib/storage";
 import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
-import { prisma } from "@/lib/db";
 import { guardSession } from "@/lib/session-guard";
+import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { isPrismaKnownRequestErrorCode } from "@/server/db";
+import {
+  getUserProfileImage,
+} from "@/server/user";
+import { UserNotFoundError } from "@/server/user";
+import { removeUserProfilePicture } from "@/server/user";
 
 export async function PUT(req: Request) {
   const session = await guardSession({ headers: await headers() });
@@ -25,16 +29,14 @@ export async function PUT(req: Request) {
     const userImg = formData.get("user-image");
 
     if (!(userImg instanceof File)) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "validation/invalid-input",
-              message: "Invalid or missing file",
-            },
-          ],
-        } satisfies IError,
-        { status: 400 },
+      return jsonError(
+        [
+          {
+            code: "validation/invalid-input",
+            message: "Invalid or missing file",
+          },
+        ],
+        400,
       );
     }
 
@@ -42,27 +44,21 @@ export async function PUT(req: Request) {
     const maxSize = 2 * 1024 * 1024;
 
     if (!allowedTypes.includes(userImg.type)) {
-      return NextResponse.json(
-        {
-          issues: [
-            { code: "validation/invalid-input", message: "Invalid file type" },
-          ],
-        } satisfies IError,
-        { status: 400 },
+      return jsonError(
+        [{ code: "validation/invalid-input", message: "Invalid file type" }],
+        400,
       );
     }
 
     if (userImg.size > maxSize) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "validation/too-large",
-              message: "File size exceeds limit",
-            },
-          ],
-        } satisfies IError,
-        { status: 400 },
+      return jsonError(
+        [
+          {
+            code: "validation/too-large",
+            message: "File size exceeds limit",
+          },
+        ],
+        400,
       );
     }
 
@@ -142,27 +138,15 @@ export async function PUT(req: Request) {
       }
     }
 
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2015") {
-        return NextResponse.json(
-          {
-            issues: [{ code: "not-found", message: "User not found" }],
-          } satisfies IError,
-          { status: 404 },
-        );
-      }
+    if (isPrismaKnownRequestErrorCode(error, "P2015")) {
+      return jsonError([{ code: "not-found", message: "User not found" }], 404);
     } else if (error instanceof Error) {
       console.error("Error message:", error.stack);
     } else {
       console.error("Error updating profile picture:", error);
     }
 
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "An error occurred" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("An error occurred");
   }
 }
 
@@ -190,41 +174,31 @@ export async function DELETE(req: NextRequest) {
       });
 
       if (!hasPermission.success) {
-        return NextResponse.json(
-          {
-            issues: [{ code: "auth/forbidden", message: "Forbidden" }],
-          } satisfies IError,
-          { status: 403 },
+        return jsonError(
+          [{ code: "auth/forbidden", message: "Forbidden" }],
+          403,
         );
       }
 
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { image: true },
-      });
-
-      if (!user) {
-        return NextResponse.json(
-          {
-            issues: [{ code: "not-found", message: "User not found" }],
-          } satisfies IError,
-          { status: 404 },
-        );
+      try {
+        userImage = await getUserProfileImage({ userId });
+      } catch (error) {
+        if (error instanceof UserNotFoundError) {
+          return jsonError(
+            [{ code: "not-found", message: "User not found" }],
+            404,
+          );
+        }
+        throw error;
       }
-
-      userImage = user.image;
     } else {
       userImage = session.user.image;
     }
 
     if (!userImage) {
-      return NextResponse.json(
-        {
-          issues: [
-            { code: "validation/invalid-input", message: "No image to delete" },
-          ],
-        } satisfies IError,
-        { status: 400 },
+      return jsonError(
+        [{ code: "validation/invalid-input", message: "No image to delete" }],
+        400,
       );
     }
 
@@ -241,23 +215,26 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    try {
-      // Update database first
-      if (userId) {
-        // Moderator path: update the target user's image
-        await prisma.user.update({
-          where: { id: userId },
-          data: { image: null },
-        });
-      } else {
-        // Self path: update the session user's image through auth API
-        await auth.api.updateUser({
-          headers: await headers(),
-          body: {
-            image: null,
-          },
-        });
-      }
+	    try {
+	      // Update database first
+	      if (userId) {
+	        // Moderator path: clear DB + storage cleanup via server-only helper.
+	        await removeUserProfilePicture({
+	          userId,
+	          imageUrl: userImage,
+	          bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+	        });
+
+	        return NextResponse.json({ image: null }, { status: 200 });
+	      } else {
+	        // Self path: update the session user's image through auth API
+	        await auth.api.updateUser({
+	          headers: await headers(),
+	          body: {
+	            image: null,
+	          },
+	        });
+	      }
 
       // Delete from storage after successful database update
       if (imageKey) {
@@ -284,34 +261,20 @@ export async function DELETE(req: NextRequest) {
         { status: 200 },
       );
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === "P2015") {
-          return NextResponse.json(
-            {
-              issues: [{ code: "not-found", message: "User not found" }],
-            } satisfies IError,
-            { status: 404 },
-          );
-        }
+      if (isPrismaKnownRequestErrorCode(error, "P2015")) {
+        return jsonError(
+          [{ code: "not-found", message: "User not found" }],
+          404,
+        );
       } else if (error instanceof Error) {
         console.error("Error message:", error.stack);
       }
 
       console.error("Error deleting profile picture:", error);
-      return NextResponse.json(
-        {
-          issues: [{ code: "unknown-error", message: "An error occurred" }],
-        } satisfies IError,
-        { status: 500 },
-      );
+      return unknownErrorResponse("An error occurred");
     }
   } catch (error) {
     console.error("Error processing delete request:", error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "An error occurred" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("An error occurred");
   }
 }

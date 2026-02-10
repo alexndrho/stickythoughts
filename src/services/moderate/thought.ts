@@ -1,6 +1,7 @@
-import { apiUrl } from "@/utils/text";
-import { toServerError } from "@/utils/error/ServerError";
+import "client-only";
+
 import { parsePrivateThoughtFromServer } from "@/utils/thought";
+import { fetchJson } from "@/services/http";
 import {
   type PrivateThoughtFromServer,
   type PrivateThoughtPayload,
@@ -11,47 +12,35 @@ export const getAdminThoughts = async ({
 }: {
   page: number;
 }): Promise<PrivateThoughtPayload[]> => {
-  const response = await fetch(apiUrl(`/api/dashboard/thoughts?page=${page}`));
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to get dashboard thoughts", data.issues);
-  }
-
-  return (data as PrivateThoughtFromServer[]).map(
-    parsePrivateThoughtFromServer,
+  const data = await fetchJson<PrivateThoughtFromServer[]>(
+    `/api/dashboard/thoughts?page=${page}`,
+    undefined,
+    { errorMessage: "Failed to get dashboard thoughts" },
   );
+
+  return data.map(parsePrivateThoughtFromServer);
 };
 
 export const deleteThought = async (id: string) => {
-  const response = await fetch(apiUrl(`/api/thoughts/${id}`), {
-    method: "DELETE",
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to delete thought", data.issues);
-  }
-
-  return data;
+  return fetchJson(
+    `/api/thoughts/${id}`,
+    {
+      method: "DELETE",
+    },
+    { errorMessage: "Failed to delete thought" },
+  );
 };
 
 export const highlightThought = async (
   id: string,
 ): Promise<PrivateThoughtPayload> => {
-  const response = await fetch(
-    apiUrl(`/api/dashboard/thoughts/${id}/highlight`),
+  const data = await fetchJson<PrivateThoughtFromServer>(
+    `/api/dashboard/thoughts/${id}/highlight`,
     {
       method: "POST",
     },
+    { errorMessage: "Failed to highlight thought" },
   );
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to highlight thought", data.issues);
-  }
 
   return parsePrivateThoughtFromServer(data);
 };
@@ -59,18 +48,13 @@ export const highlightThought = async (
 export const removeThoughtHighlight = async (
   id: string,
 ): Promise<PrivateThoughtPayload> => {
-  const response = await fetch(
-    apiUrl(`/api/dashboard/thoughts/${id}/highlight`),
+  const data = await fetchJson<PrivateThoughtFromServer>(
+    `/api/dashboard/thoughts/${id}/highlight`,
     {
       method: "DELETE",
     },
+    { errorMessage: "Failed to remove highlight" },
   );
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw toServerError("Failed to remove highlight", data.issues);
-  }
 
   return parsePrivateThoughtFromServer(data);
 };

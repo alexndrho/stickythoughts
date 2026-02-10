@@ -3,13 +3,19 @@ import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
-import { NotificationType } from "@/generated/prisma/enums";
 import { createLetterReplyServerInput } from "@/lib/validations/letter";
-import { LETTER_REPLIES_PER_PAGE } from "@/config/letter";
 import { formatLetterReplies } from "@/utils/letter";
-import type IError from "@/types/error";
 import { guardSession } from "@/lib/session-guard";
+import {
+  jsonError,
+  unknownErrorResponse,
+  zodInvalidInput,
+} from "@/lib/http";
+import {
+  createLetterReply,
+  listLetterReplies,
+} from "@/server/letter";
+import { LetterNotFoundError } from "@/lib/queries/letter";
 
 export async function POST(
   request: Request,
@@ -23,114 +29,34 @@ export async function POST(
     }
 
     const { letterId } = await params;
-    const letterStatus = await prisma.letter.findUnique({
-      where: { id: letterId },
-      select: { deletedAt: true },
-    });
-
-    if (!letterStatus || letterStatus.deletedAt) {
-      return NextResponse.json(
-        {
-          issues: [
-            {
-              code: "not-found",
-              message: "Letter post not found",
-            },
-          ],
-        } satisfies IError,
-        { status: 404 },
-      );
-    }
-
     const { body, isAnonymous } = createLetterReplyServerInput.parse(
       await request.json(),
     );
 
-    const reply = await prisma.letterReply.create({
-      data: {
-        letter: {
-          connect: {
-            id: letterId,
-          },
-        },
-        author: {
-          connect: {
-            id: session.user.id,
-          },
-        },
-        body,
-        isAnonymous: isAnonymous,
-      },
-      include: {
-        letter: {
-          select: {
-            authorId: true,
-            isAnonymous: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: session
-          ? {
-              where: {
-                userId: session.user.id,
-              },
-              select: {
-                userId: true,
-              },
-            }
-          : false,
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
-      },
+    const reply = await createLetterReply({
+      letterId,
+      authorId: session.user.id,
+      body,
+      isAnonymous,
     });
 
     const formattedPost = formatLetterReplies(reply, session.user.id);
 
-    if (reply.letter.authorId !== reply.authorId) {
-      await prisma.notification.create({
-        data: {
-          user: { connect: { id: reply.letter.authorId } },
-          type: NotificationType.LETTER_REPLY,
-          actors: {
-            create: {
-              userId: reply.authorId,
-            },
-          },
-          reply: { connect: { id: reply.id } },
-        },
-      });
-    }
-
     return NextResponse.json(formattedPost, { status: 201 });
   } catch (error) {
-    if (error instanceof ZodError) {
-      const zodError: IError = {
-        issues: error.issues.map((issue) => ({
-          code: "validation/invalid-input",
-          message: issue.message,
-        })),
-      };
+    if (error instanceof LetterNotFoundError) {
+      return jsonError(
+        [{ code: "not-found", message: "Letter post not found" }],
+        404,
+      );
+    }
 
-      return NextResponse.json(zodError, { status: 400 });
+    if (error instanceof ZodError) {
+      return zodInvalidInput(error);
     }
 
     console.error(error);
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }
 
@@ -148,55 +74,10 @@ export async function GET(
 
     const { letterId } = await params;
 
-    const replies = await prisma.letterReply.findMany({
-      take: LETTER_REPLIES_PER_PAGE,
-      ...(lastId && {
-        skip: 1,
-        cursor: {
-          id: lastId,
-        },
-      }),
-      where: {
-        letterId,
-        deletedAt: null,
-        letter: {
-          deletedAt: null,
-        },
-      },
-      include: {
-        letter: {
-          select: {
-            authorId: true,
-            isAnonymous: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
-        likes: session
-          ? {
-              where: {
-                userId: session.user.id,
-              },
-              select: {
-                userId: true,
-              },
-            }
-          : false,
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const replies = await listLetterReplies({
+      letterId,
+      lastId,
+      viewerUserId: session?.user.id,
     });
 
     const formattedPosts = formatLetterReplies(replies, session?.user.id);
@@ -204,12 +85,6 @@ export async function GET(
     return NextResponse.json(formattedPosts);
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        issues: [{ code: "unknown-error", message: "Something went wrong" }],
-      } satisfies IError,
-      { status: 500 },
-    );
+    return unknownErrorResponse("Something went wrong");
   }
 }

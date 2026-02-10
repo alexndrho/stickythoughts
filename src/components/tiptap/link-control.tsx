@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 import { Button, Flex, Input, Popover } from "@mantine/core";

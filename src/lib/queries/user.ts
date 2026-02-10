@@ -1,11 +1,10 @@
 import "server-only";
 
 import { prisma } from "@/lib/db";
+import { UserNotFoundError } from "@/server/user";
 import type { UserPublicAccount } from "@/types/user";
 
-export class UserNotFoundError extends Error {
-  name = "UserNotFoundError";
-}
+export { UserNotFoundError };
 
 export async function getUserPublicAccount(args: {
   username: string;
@@ -49,4 +48,3 @@ export async function getUserPublicAccount(args: {
     isLikesPrivate: settings?.privacySettings?.likesVisibility === "PRIVATE",
   } satisfies UserPublicAccount;
 }
-

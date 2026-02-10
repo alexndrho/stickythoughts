@@ -9,8 +9,8 @@ import { IconEdit } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminUsersOptions } from "./options";
-import { userUsernameOptions } from "../../(main)/(core)/user/options";
+import { adminKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 import TextInputLabelModifiedIndicator from "@/components/text-input-label-modified-indicator";
 
 export interface EditUserModalProps {
@@ -82,7 +82,7 @@ export default function EditUserModal({
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       if (
@@ -91,14 +91,14 @@ export default function EditUserModal({
         form.values.username !== user.username
       ) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
           refetchType: "none",
         });
 
         onUsernameChange?.(form.values.username);
       } else if (user?.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
         });
       }
 

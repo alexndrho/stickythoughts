@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
-import { userUsernameOptions } from "@/app/(main)/(core)/user/options";
+import { userKeys } from "@/lib/query-keys";
 import { getQueryClient } from "@/lib/get-query-client";
 import {
   getUserServer,
@@ -57,7 +57,7 @@ export default async function UserPage({
 
   try {
     const user = await getUserServer(username);
-    queryClient.setQueryData(userUsernameOptions(username).queryKey, user);
+    queryClient.setQueryData(userKeys.byUsername(username), user);
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       notFound();

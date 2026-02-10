@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { NextRequest } from "next/server";
 
 function isEnvTruthy(value: string | undefined): boolean {

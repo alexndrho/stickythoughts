@@ -28,8 +28,8 @@ import {
 } from "./utils";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
-import { deletedLettersOptions } from "@/app/dashboard/deleted/options";
-import { letterBaseOptions } from "@/app/(main)/(core)/letters/options";
+import { adminKeys } from "@/lib/query-keys";
+import { letterKeys } from "@/lib/query-keys";
 import type { DeletedLetterFromServer } from "@/types/deleted";
 import {
   permanentlyDeleteLetter,
@@ -90,8 +90,8 @@ export default function LettersTab({ isActive }: LettersTabProps) {
 
   const handleInvalidate = () => {
     const queryClient = getQueryClient();
-    queryClient.invalidateQueries({ queryKey: deletedLettersOptions.queryKey });
-    queryClient.invalidateQueries({ queryKey: letterBaseOptions.queryKey });
+    queryClient.invalidateQueries({ queryKey: adminKeys.deletedLetters() });
+    queryClient.invalidateQueries({ queryKey: letterKeys.all() });
   };
 
   const restoreMutation = useMutation({

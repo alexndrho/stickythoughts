@@ -1,4 +1,5 @@
-import { headers } from "next/headers";
+import "server-only";
+
 import { after } from "next/server";
 import { betterAuth } from "better-auth";
 import {
@@ -23,12 +24,12 @@ import { prisma } from "./db";
 import { getRedisClient } from "./redis";
 import { ac, admin, moderator } from "./permissions";
 import { resend } from "./email";
-import { removeProfilePicture } from "@/services/user";
 import EmailOTPTemplate from "@/components/emails/email-otp-template";
 import EmailLinkTemplate from "@/components/emails/email-link-template";
 import reservedUsernames from "@/config/reserved-usernames.json";
 import { USERNAME_REGEX } from "@/config/text";
 import { matcher } from "./bad-words";
+import { removeUserProfilePicture } from "@/server/user";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -195,10 +196,11 @@ export const auth = betterAuth({
           const newUserId = newUser.user.id;
 
           if (anonymousUser.user.image) {
-            const headerList = await headers();
-            const cookie = headerList.get("cookie");
-
-            await removeProfilePicture({ cookie: cookie ?? undefined });
+            await removeUserProfilePicture({
+              userId: oldUserId,
+              imageUrl: anonymousUser.user.image,
+              bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+            });
           }
 
           await prisma.$transaction([

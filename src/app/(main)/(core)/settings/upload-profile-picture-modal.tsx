@@ -15,10 +15,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { uploadProfilePicture } from "@/services/user";
 import { getQueryClient } from "@/lib/get-query-client";
-import {
-  lettersInfiniteOptions,
-  letterBaseOptions,
-} from "@/app/(main)/(core)/letters/options";
+import { letterKeys } from "@/lib/query-keys";
 import ServerError from "@/utils/error/ServerError";
 import classes from "./account.module.css";
 
@@ -64,11 +61,11 @@ export default function UploadProfilePictureModal({
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: letterBaseOptions.queryKey,
+        queryKey: letterKeys.all(),
       });
 
       queryClient.invalidateQueries({
-        queryKey: lettersInfiniteOptions.queryKey,
+        queryKey: letterKeys.infiniteList(),
       });
     },
     onError: (err) => {

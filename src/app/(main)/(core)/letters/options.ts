@@ -1,24 +1,28 @@
+import "client-only";
+
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { getLetterReplies, getLetter, getLetters } from "@/services/letter";
 import type { SearchSegmentType } from "@/types/search";
 import { getSearchResults } from "@/services/search";
 import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from "@/config/letter";
+import { letterKeys } from "@/lib/query-keys";
+import { searchKeys } from "@/lib/query-keys";
 
 // letter
 export const letterBaseOptions = queryOptions({
-  queryKey: ["letter"],
+  queryKey: letterKeys.all(),
 });
 
 export const letterOptions = (id: string) => {
   return queryOptions({
-    queryKey: [...letterBaseOptions.queryKey, id],
+    queryKey: letterKeys.byId(id),
     queryFn: () => getLetter(id),
   });
 };
 
 export const lettersInfiniteOptions = infiniteQueryOptions({
-  queryKey: [...letterBaseOptions.queryKey, "infiniteLetter"],
+  queryKey: letterKeys.infiniteList(),
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getLetters({ lastId: pageParam }),
@@ -32,7 +36,7 @@ export const lettersInfiniteOptions = infiniteQueryOptions({
 // letter replies
 export const letterRepliesInfiniteOptions = (letterId: string) => {
   return infiniteQueryOptions({
-    queryKey: [...letterOptions(letterId).queryKey, "infiniteReplies"],
+    queryKey: letterKeys.infiniteReplies(letterId),
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       getLetterReplies({ id: letterId, lastId: pageParam }),
@@ -46,7 +50,7 @@ export const letterRepliesInfiniteOptions = (letterId: string) => {
 
 // search
 export const searchBaseOptions = queryOptions({
-  queryKey: ["search"],
+  queryKey: searchKeys.all(),
 });
 
 export const searchOptions = ({
@@ -57,7 +61,7 @@ export const searchOptions = ({
   type?: SearchSegmentType;
 }) => {
   return queryOptions({
-    queryKey: [...searchBaseOptions.queryKey, query, type],
+    queryKey: searchKeys.results({ query, type }),
     queryFn: () => getSearchResults(query, type),
   });
 };

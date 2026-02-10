@@ -1,8 +1,11 @@
+import "server-only";
+
 import { NextResponse, type NextRequest } from "next/server";
 import { RateLimiterRes } from "rate-limiter-flexible";
 
 import type IError from "@/types/error";
 import { getClientIp } from "@/lib/http/get-client-ip";
+import { jsonError } from "@/lib/http";
 import { buildRateLimitKey } from "./keys";
 import { getTierLimiters } from "./limiters";
 import { RATE_LIMITS, type RateLimitTier } from "./config";
@@ -91,17 +94,15 @@ function rateLimitExceededResponse(
   res: RateLimiterRes,
   limitPoints: number,
 ): NextResponse<IError> {
-  return NextResponse.json(
+  return jsonError(
+    [
+      {
+        code: "ratelimit/exceeded",
+        message: "Rate limit exceeded. Please try again later.",
+      },
+    ],
+    429,
     {
-      issues: [
-        {
-          code: "ratelimit/exceeded",
-          message: "Rate limit exceeded. Please try again later.",
-        },
-      ],
-    } satisfies IError,
-    {
-      status: 429,
       headers: {
         "Retry-After": Math.ceil(res.msBeforeNext / 1000).toString(),
         "X-RateLimit-Limit": limitPoints.toString(),
@@ -115,17 +116,15 @@ function rateLimitExceededResponse(
 function rateLimitFailClosedResponse(
   limitPoints: number,
 ): NextResponse<IError> {
-  return NextResponse.json(
+  return jsonError(
+    [
+      {
+        code: "ratelimit/exceeded",
+        message: "Rate limit exceeded. Please try again later.",
+      },
+    ],
+    429,
     {
-      issues: [
-        {
-          code: "ratelimit/exceeded",
-          message: "Rate limit exceeded. Please try again later.",
-        },
-      ],
-    } satisfies IError,
-    {
-      status: 429,
       headers: {
         "Retry-After": "1",
         "X-RateLimit-Limit": limitPoints.toString(),

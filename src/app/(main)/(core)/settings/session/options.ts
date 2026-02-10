@@ -1,9 +1,11 @@
+import "client-only";
+
 import { queryOptions } from "@tanstack/react-query";
 
 import { authClient } from "@/lib/auth-client";
-import { userOptions } from "../../user/options";
+import { userKeys } from "@/lib/query-keys";
 
 export const userSessionsOptions = queryOptions({
-  queryKey: [...userOptions.queryKey, "sessions"],
+  queryKey: userKeys.sessions(),
   queryFn: async () => authClient.listSessions(),
 });

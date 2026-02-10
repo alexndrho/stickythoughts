@@ -7,9 +7,9 @@ import { notifications } from "@mantine/notifications";
 import { IconHammerOff, IconX } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
-import { userUsernameOptions } from "../../(main)/(core)/user/options";
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminUsersOptions } from "./options";
+import { adminKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
 
 export interface UnbanUserModalProps {
   user: {
@@ -46,12 +46,12 @@ export default function UnbanUserModal({
       const queryClient = getQueryClient();
 
       queryClient.invalidateQueries({
-        queryKey: adminUsersOptions.queryKey,
+        queryKey: adminKeys.users(),
       });
 
       if (user?.username) {
         queryClient.invalidateQueries({
-          queryKey: userUsernameOptions(user.username).queryKey,
+          queryKey: userKeys.byUsername(user.username),
         });
       }
 

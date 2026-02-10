@@ -1,5 +1,5 @@
 import { getQueryClient } from "@/lib/get-query-client";
-import { userSettingsPrivacy } from "./options";
+import { userKeys } from "@/lib/query-keys";
 import type { UserSettingsPrivacy } from "@/types/user";
 
 export const setUserSettingsPrivacyQuery = ({
@@ -10,7 +10,7 @@ export const setUserSettingsPrivacyQuery = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<UserSettingsPrivacy>(
-    userSettingsPrivacy.queryKey,
+    userKeys.privacy(),
     (oldData) => {
       if (oldData === undefined) return oldData;
 
@@ -22,7 +22,7 @@ export const setUserSettingsPrivacyQuery = ({
   );
 
   queryClient.invalidateQueries({
-    queryKey: userSettingsPrivacy.queryKey,
+    queryKey: userKeys.privacy(),
     refetchType: "none",
   });
 };

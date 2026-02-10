@@ -18,7 +18,7 @@ import { IconMessage } from "@tabler/icons-react";
 import RandomButton from "@/components/random-button";
 import CheckColorSwatch from "@/components/check-color-swatch";
 import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtsInfiniteOptions, thoughtsOptions } from "@/app/(main)/options";
+import { thoughtKeys } from "@/lib/query-keys";
 import { submitThought } from "@/services/thought";
 import { createThoughtInput } from "@/lib/validations/thought";
 import {
@@ -92,11 +92,11 @@ export default function SendThoughtModal({
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: thoughtsInfiniteOptions.queryKey,
+        queryKey: thoughtKeys.infinite(),
       });
 
       getQueryClient().invalidateQueries({
-        queryKey: thoughtsOptions.queryKey,
+        queryKey: thoughtKeys.all(),
       });
 
       notifications.show({

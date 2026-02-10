@@ -1,15 +1,18 @@
+import "client-only";
+
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { getThoughts, getThoughtsCount } from "@/services/thought";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
+import { thoughtKeys } from "@/lib/query-keys";
 
 // query options
 export const thoughtsOptions = queryOptions({
-  queryKey: ["thoughts"],
+  queryKey: thoughtKeys.all(),
 });
 
 export const thoughtCountOptions = queryOptions({
-  queryKey: [...thoughtsOptions.queryKey, "count"],
+  queryKey: thoughtKeys.count(),
   queryFn: async () => {
     return await getThoughtsCount();
   },
@@ -17,7 +20,7 @@ export const thoughtCountOptions = queryOptions({
 
 // infinite query options
 export const thoughtsInfiniteOptions = infiniteQueryOptions({
-  queryKey: [...thoughtsOptions.queryKey, "infiniteThoughts"],
+  queryKey: thoughtKeys.infinite(),
   initialPageParam: undefined,
   queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
     getThoughts({ lastId: pageParam }),
@@ -30,7 +33,7 @@ export const thoughtsInfiniteOptions = infiniteQueryOptions({
 
 export const thoughtsSearchInfiniteOptions = (search: string) => {
   return infiniteQueryOptions({
-    queryKey: [...thoughtsInfiniteOptions.queryKey, "infiniteSearch", search],
+    queryKey: thoughtKeys.infiniteSearch(search),
     initialPageParam: undefined,
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!search) return [];

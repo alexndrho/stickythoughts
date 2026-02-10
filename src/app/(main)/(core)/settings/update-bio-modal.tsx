@@ -9,7 +9,7 @@ import { Button, Group, Modal, Text, Textarea } from "@mantine/core";
 import { updateUserBioInput } from "@/lib/validations/user";
 import { updateUserBio } from "@/services/user";
 import { getQueryClient } from "@/lib/get-query-client";
-import { userOptions } from "../user/options";
+import { userKeys } from "@/lib/query-keys";
 import ServerError from "@/utils/error/ServerError";
 import { USER_BIO_MAX_LENGTH } from "@/config/user";
 
@@ -44,7 +44,7 @@ export default function UpdateBioModal({
     mutationFn: updateUserBio,
     onSuccess: () => {
       const queryClient = getQueryClient();
-      queryClient.invalidateQueries({ queryKey: userOptions.queryKey });
+      queryClient.invalidateQueries({ queryKey: userKeys.all() });
 
       onClose();
       form.reset();

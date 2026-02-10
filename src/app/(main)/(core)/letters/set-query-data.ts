@@ -1,18 +1,9 @@
 import { type InfiniteData } from "@tanstack/react-query";
 
 import { getQueryClient } from "@/lib/get-query-client";
-import {
-  userUsernameLettersInfiniteOptions,
-  userOptions,
-  userUsernameLikedLettersInfiniteOptions,
-  userUsernameRepliesInfiniteOptions,
-} from "../user/options";
-import {
-  lettersInfiniteOptions,
-  letterRepliesInfiniteOptions,
-  letterOptions,
-} from "@/app/(main)/(core)/letters/options";
-import { deletedRepliesOptions } from "@/app/dashboard/deleted/options";
+import { letterKeys } from "@/lib/query-keys";
+import { userKeys } from "@/lib/query-keys";
+import { adminKeys } from "@/lib/query-keys";
 import type {
   LetterType,
   LetterReplyType,
@@ -31,7 +22,7 @@ export const setLikeLetterQueryData = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<LetterType>(
-    letterOptions(letterId).queryKey,
+    letterKeys.byId(letterId),
     (oldData) =>
       oldData
         ? ({
@@ -48,7 +39,7 @@ export const setLikeLetterQueryData = ({
   );
 
   queryClient.setQueryData<InfiniteData<LetterType[]>>(
-    lettersInfiniteOptions.queryKey,
+    letterKeys.infiniteList(),
     (oldData) => {
       if (!oldData) return oldData;
       return {
@@ -73,7 +64,7 @@ export const setLikeLetterQueryData = ({
 
   if (authorUsername) {
     queryClient.setQueryData<InfiniteData<LetterType[]>>(
-      userUsernameLettersInfiniteOptions(authorUsername).queryKey,
+      userKeys.infiniteLetters(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -97,7 +88,7 @@ export const setLikeLetterQueryData = ({
     );
 
     queryClient.setQueryData<InfiniteData<LetterType[]>>(
-      userUsernameLikedLettersInfiniteOptions(authorUsername).queryKey,
+      userKeys.infiniteLikes(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -121,28 +112,27 @@ export const setLikeLetterQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameLettersInfiniteOptions(authorUsername).queryKey,
+      queryKey: userKeys.infiniteLetters(authorUsername),
       refetchType: "none",
     });
 
     queryClient.invalidateQueries({
-      queryKey:
-        userUsernameLikedLettersInfiniteOptions(authorUsername).queryKey,
+      queryKey: userKeys.infiniteLikes(authorUsername),
       refetchType: "none",
     });
   } else {
     queryClient.invalidateQueries({
-      queryKey: userOptions.queryKey,
+      queryKey: userKeys.all(),
     });
   }
 
   queryClient.invalidateQueries({
-    queryKey: letterOptions(letterId).queryKey,
+    queryKey: letterKeys.byId(letterId),
     refetchType: "none",
   });
 
   queryClient.invalidateQueries({
-    queryKey: lettersInfiniteOptions.queryKey,
+    queryKey: letterKeys.infiniteList(),
     refetchType: "none",
   });
 };
@@ -159,7 +149,7 @@ export const setCreateLetterReplyQueryData = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
-    letterRepliesInfiniteOptions(id).queryKey,
+    letterKeys.infiniteReplies(id),
     (oldData) => {
       if (!oldData) return oldData;
 
@@ -177,7 +167,7 @@ export const setCreateLetterReplyQueryData = ({
     },
   );
 
-  queryClient.setQueryData<LetterType>(letterOptions(id).queryKey, (oldData) =>
+  queryClient.setQueryData<LetterType>(letterKeys.byId(id), (oldData) =>
     oldData
       ? ({
           ...oldData,
@@ -190,7 +180,7 @@ export const setCreateLetterReplyQueryData = ({
   );
 
   queryClient.setQueryData<InfiniteData<LetterType[]>>(
-    lettersInfiniteOptions.queryKey,
+    letterKeys.infiniteList(),
     (oldData) => {
       if (!oldData) return oldData;
       return {
@@ -214,27 +204,27 @@ export const setCreateLetterReplyQueryData = ({
 
   if (authorUsername) {
     queryClient.invalidateQueries({
-      queryKey: userUsernameRepliesInfiniteOptions(authorUsername).queryKey,
+      queryKey: userKeys.infiniteReplies(authorUsername),
       refetchType: "none",
     });
   } else {
     queryClient.invalidateQueries({
-      queryKey: userOptions.queryKey,
+      queryKey: userKeys.all(),
     });
   }
 
   queryClient.invalidateQueries({
-    queryKey: letterRepliesInfiniteOptions(id).queryKey,
+    queryKey: letterKeys.infiniteReplies(id),
     refetchType: "none",
   });
 
   queryClient.invalidateQueries({
-    queryKey: letterOptions(id).queryKey,
+    queryKey: letterKeys.byId(id),
     refetchType: "none",
   });
 
   queryClient.invalidateQueries({
-    queryKey: lettersInfiniteOptions.queryKey,
+    queryKey: letterKeys.infiniteList(),
     refetchType: "none",
   });
 };
@@ -251,7 +241,7 @@ export const setUpdateLetterReplyQueryData = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
-    letterRepliesInfiniteOptions(letterId).queryKey,
+    letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
 
@@ -272,7 +262,7 @@ export const setUpdateLetterReplyQueryData = ({
   );
 
   queryClient.invalidateQueries({
-    queryKey: letterRepliesInfiniteOptions(letterId).queryKey,
+    queryKey: letterKeys.infiniteReplies(letterId),
     refetchType: "none",
   });
 };
@@ -289,7 +279,7 @@ export const setDeleteLetterReplyQueryData = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
-    letterRepliesInfiniteOptions(letterId).queryKey,
+    letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
 
@@ -304,7 +294,7 @@ export const setDeleteLetterReplyQueryData = ({
 
   if (authorUsername) {
     queryClient.setQueryData<InfiniteData<UserLetterReplyType[]>>(
-      userUsernameRepliesInfiniteOptions(authorUsername).queryKey,
+      userKeys.infiniteReplies(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
 
@@ -318,22 +308,22 @@ export const setDeleteLetterReplyQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameRepliesInfiniteOptions(authorUsername).queryKey,
+      queryKey: userKeys.infiniteReplies(authorUsername),
       refetchType: "none",
     });
   } else {
     queryClient.invalidateQueries({
-      queryKey: userOptions.queryKey,
+      queryKey: userKeys.all(),
     });
   }
 
   queryClient.invalidateQueries({
-    queryKey: letterRepliesInfiniteOptions(letterId).queryKey,
+    queryKey: letterKeys.infiniteReplies(letterId),
     refetchType: "none",
   });
 
   queryClient.invalidateQueries({
-    queryKey: deletedRepliesOptions.queryKey,
+    queryKey: adminKeys.deletedReplies(),
   });
 };
 
@@ -352,7 +342,7 @@ export const setLikeLetterReplyQueryData = ({
   const queryClient = getQueryClient();
 
   queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
-    letterRepliesInfiniteOptions(letterId).queryKey,
+    letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
 
@@ -380,7 +370,7 @@ export const setLikeLetterReplyQueryData = ({
 
   if (authorUsername) {
     queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
-      userUsernameRepliesInfiniteOptions(authorUsername).queryKey,
+      userKeys.infiniteReplies(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
 
@@ -407,17 +397,17 @@ export const setLikeLetterReplyQueryData = ({
     );
 
     queryClient.invalidateQueries({
-      queryKey: userUsernameRepliesInfiniteOptions(authorUsername).queryKey,
+      queryKey: userKeys.infiniteReplies(authorUsername),
       refetchType: "none",
     });
   } else {
     queryClient.invalidateQueries({
-      queryKey: userOptions.queryKey,
+      queryKey: userKeys.all(),
     });
   }
 
   queryClient.invalidateQueries({
-    queryKey: letterRepliesInfiniteOptions(letterId).queryKey,
+    queryKey: letterKeys.infiniteReplies(letterId),
     refetchType: "none",
   });
 };
