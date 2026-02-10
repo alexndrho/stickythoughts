@@ -15,7 +15,7 @@ import {
   createLetterReply,
   listLetterReplies,
 } from "@/server/letter";
-import { LetterNotFoundError } from "@/lib/queries/letter";
+import { LetterNotFoundError } from "@/server/letter";
 
 export async function POST(
   request: Request,

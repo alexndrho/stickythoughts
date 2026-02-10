@@ -1,8 +1,13 @@
 import "server-only";
 
 export { LetterNotFoundError, ReplyNotFoundError } from "./letter-errors";
-
-export { createLetter, listLetters, softDeleteLetter, updateLetter } from "./letters-service";
+export {
+  createLetter,
+  getLetterPublic,
+  listLetters,
+  softDeleteLetter,
+  updateLetter,
+} from "./letters-service";
 
 export {
   createLetterReply,

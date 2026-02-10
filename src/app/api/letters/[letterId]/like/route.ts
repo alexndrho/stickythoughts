@@ -7,7 +7,7 @@ import {
   likeLetter,
   unlikeLetter,
 } from "@/server/letter";
-import { LetterNotFoundError } from "@/lib/queries/letter";
+import { LetterNotFoundError } from "@/server/letter";
 import {
   isRecordNotFoundError,
   isUniqueConstraintError,

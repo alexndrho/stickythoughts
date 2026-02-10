@@ -3,7 +3,7 @@ import "server-only";
 import { NotificationType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
-import { LetterNotFoundError } from "@/lib/queries/letter";
+import { LetterNotFoundError } from "@/server/letter";
 
 export async function likeLetter(args: {
   letterId: string;

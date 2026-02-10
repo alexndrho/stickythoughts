@@ -5,13 +5,9 @@ import { ZodError } from "zod";
 import { auth } from "@/lib/auth";
 import { guardSession } from "@/lib/session-guard";
 import { updateLetterServerInput } from "@/lib/validations/letter";
-import { getLetterPublic, LetterNotFoundError } from "@/lib/queries/letter";
+import { getLetterPublic, LetterNotFoundError } from "@/server/letter";
 import { formatLetters } from "@/utils/letter";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
+import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
 import { softDeleteLetter, updateLetter } from "@/server/letter";
 

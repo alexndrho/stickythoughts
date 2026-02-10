@@ -2,6 +2,9 @@ import "server-only";
 
 import { LETTERS_PER_PAGE } from "@/config/letter";
 import { prisma } from "@/lib/db";
+import { LetterNotFoundError } from "./letter-errors";
+import type { LetterType } from "@/types/letter";
+import { formatLetters } from "@/utils/letter";
 
 export async function createLetter(args: {
   authorId: string;
@@ -23,6 +26,55 @@ export async function createLetter(args: {
     select: {
       id: true,
     },
+  });
+}
+
+export async function getLetterPublic(args: {
+  letterId: string;
+  sessionUserId?: string | null;
+}): Promise<LetterType> {
+  const letter = await prisma.letter.findUnique({
+    where: {
+      id: args.letterId,
+    },
+    include: {
+      author: {
+        select: {
+          name: true,
+          username: true,
+          image: true,
+        },
+      },
+      likes: args.sessionUserId
+        ? {
+            where: {
+              userId: args.sessionUserId,
+            },
+            select: {
+              userId: true,
+            },
+          }
+        : false,
+      _count: {
+        select: {
+          likes: true,
+          replies: {
+            where: {
+              deletedAt: null,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!letter || letter.deletedAt) {
+    throw new LetterNotFoundError("Letter not found");
+  }
+
+  return formatLetters({
+    sessionUserId: args.sessionUserId ?? undefined,
+    letters: letter,
   });
 }
 

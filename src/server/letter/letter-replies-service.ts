@@ -3,7 +3,7 @@ import "server-only";
 import { NotificationType } from "@/generated/prisma/enums";
 import { LETTER_REPLIES_PER_PAGE } from "@/config/letter";
 import { prisma } from "@/lib/db";
-import { LetterNotFoundError } from "@/lib/queries/letter";
+import { LetterNotFoundError } from "@/server/letter";
 
 export async function createLetterReply(args: {
   letterId: string;

@@ -1,7 +1,6 @@
 import "server-only";
 
 export { UserNotFoundError } from "./user-errors";
-
 export {
   clearUserBio,
   getUserAccountSettings,
@@ -13,6 +12,7 @@ export {
 
 export {
   getUserLikesVisibility,
+  getUserPublicAccount,
   listUserLetters,
   listUserReplies,
   listUserLikedLetters,

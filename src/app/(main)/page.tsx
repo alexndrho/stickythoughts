@@ -1,7 +1,7 @@
 import { type Metadata } from "next";
 import { Paper, Text, Title } from "@mantine/core";
 
-import { getHighlightedThought } from "@/lib/queries/thought";
+import { getHighlightedThought } from "@/server/thought";
 import Thoughts from "./thoughts";
 import ThoughtCount from "./thought-count";
 import HeaderCarousel from "./header-carousel";

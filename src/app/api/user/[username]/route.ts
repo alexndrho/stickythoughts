@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import type { UserPublicAccount } from "@/types/user";
-import { getUserPublicAccount, UserNotFoundError } from "@/lib/queries/user";
+import { getUserPublicAccount, UserNotFoundError } from "@/server/user";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 
 export async function GET(

@@ -6,7 +6,7 @@ import { cache } from "react";
 import { auth } from "@/lib/auth";
 import type { LetterType } from "@/types/letter";
 import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
-import { getLetterPublic, LetterNotFoundError } from "@/lib/queries/letter";
+import { getLetterPublic, LetterNotFoundError } from "@/server/letter";
 
 export { LetterNotFoundError };
 

@@ -5,7 +5,7 @@ import { Card, Text } from "@mantine/core";
 
 import classes from "./home.module.css";
 import Thought from "./thought";
-import type { HighlightedThought } from "@/lib/queries/thought";
+import type { HighlightedThought } from "@/server/thought";
 
 export type HeaderCarouselProps = {
   highlightedThought?: HighlightedThought;
