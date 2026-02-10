@@ -1,13 +1,13 @@
 import { type Metadata } from "next";
-import { subDays } from "date-fns";
 import { Paper, Text, Title } from "@mantine/core";
 
 import { getHighlightedThought } from "@/lib/queries/thought";
 import Thoughts from "./thoughts";
 import ThoughtCount from "./thought-count";
 import HeaderCarousel from "./header-carousel";
-import { HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
 import classes from "./home.module.css";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   alternates: {
@@ -15,12 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 86400; // 24 hours in seconds
-
 export default async function HomePage() {
-  const highlightCutoff = subDays(new Date(), HIGHLIGHT_MAX_AGE_DAYS);
-
-  const highlightedThought = await getHighlightedThought({ highlightCutoff });
+  const highlightedThought = await getHighlightedThought();
 
   return (
     <div className={classes.container}>

@@ -1,7 +1,10 @@
 import "server-only";
 
+import { subDays } from "date-fns";
+
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
 
 export type HighlightedThought = Prisma.ThoughtGetPayload<{
   select: {
@@ -13,13 +16,13 @@ export type HighlightedThought = Prisma.ThoughtGetPayload<{
   };
 }>;
 
-export async function getHighlightedThought(args: {
-  highlightCutoff: Date;
-}): Promise<HighlightedThought | null> {
+export async function getHighlightedThought(): Promise<HighlightedThought | null> {
+  const highlightCutoff = subDays(new Date(), THOUGHT_HIGHLIGHT_MAX_AGE_DAYS);
+
   return prisma.thought.findFirst({
     where: {
       deletedAt: null,
-      highlightedAt: { not: null, gte: args.highlightCutoff },
+      highlightedAt: { not: null, gte: highlightCutoff },
     },
     orderBy: {
       highlightedAt: "desc",

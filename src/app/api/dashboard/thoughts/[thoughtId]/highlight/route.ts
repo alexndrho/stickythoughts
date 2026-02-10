@@ -1,9 +1,8 @@
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import {
-  HIGHLIGHT_LOCK_DURATION_MS,
-  HIGHLIGHT_LOCK_HOURS,
+  THOUGHT_HIGHLIGHT_LOCK_DURATION_MS,
+  THOUGHT_HIGHLIGHT_LOCK_HOURS,
 } from "@/config/thought";
 import { guardSession } from "@/lib/session-guard";
 import { isHighlightLocked } from "@/utils/thought";
@@ -37,7 +36,7 @@ const highlightLockedResponse = (remainingMs: number) =>
     [
       {
         code: "thought/highlight-locked",
-        message: `Highlighted thoughts can only be changed after ${HIGHLIGHT_LOCK_HOURS} hours. Try again in ${formatRemaining(
+        message: `Highlighted thoughts can only be changed after ${THOUGHT_HIGHLIGHT_LOCK_HOURS} hours. Try again in ${formatRemaining(
           remainingMs,
         )}.`,
       },
@@ -71,7 +70,7 @@ export async function POST(
         isHighlightLocked(currentHighlight.highlightedAt)
       ) {
         const remainingMs =
-          HIGHLIGHT_LOCK_DURATION_MS -
+          THOUGHT_HIGHLIGHT_LOCK_DURATION_MS -
           (Date.now() - currentHighlight.highlightedAt.getTime());
         return highlightLockedResponse(remainingMs);
       }
@@ -83,7 +82,6 @@ export async function POST(
       userId: session.user.id,
     });
 
-    revalidatePath("/", "page");
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
     console.error(error);
@@ -114,7 +112,7 @@ export async function DELETE(
 
       if (thought?.highlightedAt && isHighlightLocked(thought.highlightedAt)) {
         const remainingMs =
-          HIGHLIGHT_LOCK_DURATION_MS -
+          THOUGHT_HIGHLIGHT_LOCK_DURATION_MS -
           (Date.now() - thought.highlightedAt.getTime());
         return highlightLockedResponse(remainingMs);
       }
@@ -126,7 +124,6 @@ export async function DELETE(
       userId: session.user.id,
     });
 
-    revalidatePath("/", "page");
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
     console.error(error);

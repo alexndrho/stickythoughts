@@ -5,7 +5,7 @@ import type {
   PublicThoughtPayload,
 } from "@/types/thought";
 import { getColorFallback } from "./color";
-import { HIGHLIGHT_LOCK_DURATION_MS } from "@/config/thought";
+import { THOUGHT_HIGHLIGHT_LOCK_DURATION_MS } from "@/config/thought";
 
 // Date data from the server HTTP response body is parsed as JSON,
 // so date fields are strings and need to be converted to Date objects
@@ -34,5 +34,7 @@ export const parsePrivateThoughtFromServer = (
 
 export const isHighlightLocked = (highlightedAt: Date | null) => {
   if (!highlightedAt) return false;
-  return Date.now() - highlightedAt.getTime() < HIGHLIGHT_LOCK_DURATION_MS;
+  return (
+    Date.now() - highlightedAt.getTime() < THOUGHT_HIGHLIGHT_LOCK_DURATION_MS
+  );
 };
