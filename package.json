@@ -11,7 +11,7 @@
     "postinstall": "prisma migrate deploy && prisma generate"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.968.0",
+    "@aws-sdk/client-s3": "^3.986.0",
     "@mantine/carousel": "^8.3.10",
     "@mantine/core": "^8.3.10",
     "@mantine/dates": "^8.3.10",
