@@ -45,7 +45,7 @@ export default function ReplyItem({
 }: ReplyItemProps) {
   const [isEditable, setIsEditable] = useState(false);
 
-  const isAuthor = session?.user.id === reply.author?.id;
+  const isSelf = reply.isSelf;
   const anonymousName = reply.anonymousLabel
     ? `Anonymous ${reply.anonymousLabel}`
     : "Anonymous";
@@ -118,7 +118,7 @@ export default function ReplyItem({
           </Text>
         </div>
 
-        {(isAuthor || hasPermission) && (
+        {(isSelf || hasPermission) && (
           <Menu>
             <Menu.Target>
               <ActionIcon
@@ -133,7 +133,7 @@ export default function ReplyItem({
             </Menu.Target>
 
             <Menu.Dropdown>
-              {isAuthor && (
+              {isSelf && (
                 <Menu.Item
                   leftSection={<IconEdit size="1em" />}
                   onClick={() => setIsEditable(true)}
