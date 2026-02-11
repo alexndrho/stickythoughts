@@ -6,7 +6,7 @@ import {
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtKeys } from "@/lib/query-keys";
-import { listPublicThoughts } from "@/server/thought";
+import { listPublicThoughts } from "./query";
 import { filterText } from "@/utils/text";
 import { getColorFallback } from "@/utils/color";
 import Thoughts from "./thoughts";
@@ -14,7 +14,7 @@ import Thoughts from "./thoughts";
 export default async function ThoughtsServer() {
   const queryClient = getQueryClient();
 
-  const thoughts = (await listPublicThoughts({})).map((thought) => ({
+  const thoughts = (await listPublicThoughts()).map((thought) => ({
     ...thought,
     message: filterText(thought.message),
     author: filterText(thought.author),

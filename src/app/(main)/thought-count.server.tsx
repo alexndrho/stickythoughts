@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtKeys } from "@/lib/query-keys";
-import { countPublicThoughts } from "@/server/thought";
+import { countPublicThoughts } from "./query";
 import ThoughtCountClient from "./thought-count.client";
 
 export default async function ThoughtCountServer() {

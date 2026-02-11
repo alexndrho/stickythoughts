@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 
+import { thoughtCacheTags } from "@/lib/cache-tags";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import {
@@ -32,6 +34,9 @@ export async function PATCH(
     }
 
     await restoreThought({ thoughtId });
+    revalidateTag(thoughtCacheTags.publicList, "max");
+    revalidateTag(thoughtCacheTags.publicCount, "max");
+    revalidateTag(thoughtCacheTags.publicHighlight, "max");
 
     return NextResponse.json(
       { message: "Thought restored successfully" },

@@ -1,7 +1,9 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 
 import { auth } from "@/lib/auth";
+import { thoughtCacheTags } from "@/lib/cache-tags";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
@@ -34,6 +36,9 @@ export async function DELETE(
     }
 
     await softDeleteThought({ thoughtId, deletedById: session.user.id });
+    revalidateTag(thoughtCacheTags.publicList, "max");
+    revalidateTag(thoughtCacheTags.publicCount, "max");
+    revalidateTag(thoughtCacheTags.publicHighlight, "max");
 
     return NextResponse.json(
       { message: "Thought deleted successfully" },

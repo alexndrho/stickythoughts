@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 
 import {
   THOUGHT_HIGHLIGHT_LOCK_DURATION_MS,
   THOUGHT_HIGHLIGHT_LOCK_HOURS,
 } from "@/config/thought";
+import { thoughtCacheTags } from "@/lib/cache-tags";
 import { guardSession } from "@/lib/session-guard";
 import { isHighlightLocked } from "@/utils/thought";
 import { formatDuration, intervalToDuration } from "date-fns";
@@ -81,6 +83,7 @@ export async function POST(
       thoughtId,
       userId: session.user.id,
     });
+    revalidateTag(thoughtCacheTags.publicHighlight, "max");
 
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
@@ -123,6 +126,7 @@ export async function DELETE(
       thoughtId,
       userId: session.user.id,
     });
+    revalidateTag(thoughtCacheTags.publicHighlight, "max");
 
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
