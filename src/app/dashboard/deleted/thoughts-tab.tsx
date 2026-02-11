@@ -95,6 +95,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
       queryKey: adminKeys.deletedThoughts(),
     });
     queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
+    queryClient.invalidateQueries({ queryKey: adminKeys.thoughts() });
   };
 
   const restoreMutation = useMutation({
