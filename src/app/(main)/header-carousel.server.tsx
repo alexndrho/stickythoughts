@@ -1,4 +1,4 @@
-import { getHighlightedThought } from "@/server/thought";
+import { getHighlightedThought } from "./query";
 import HeaderCarousel from "./header-carousel";
 
 export default async function HeaderCarouselServer() {

@@ -1,12 +1,19 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { thoughtCountOptions } from "./options";
 import ThoughtCount from "./thought-count";
 
-export default function ThoughtCountClient() {
-  const { data: thoughtsCountData } = useSuspenseQuery(thoughtCountOptions);
+export default function ThoughtCountClient({
+  initialCount,
+}: {
+  initialCount?: number;
+}) {
+  const { data: thoughtsCountData } = useQuery({
+    ...thoughtCountOptions,
+    initialData: initialCount,
+  });
 
   return <ThoughtCount count={thoughtsCountData} />;
 }

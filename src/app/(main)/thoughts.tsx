@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  useInfiniteQuery,
-  useSuspenseInfiniteQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Button, Input, Kbd, Tooltip } from "@mantine/core";
 import { useDebouncedState, useDisclosure, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -19,8 +16,13 @@ import SendThoughtModal from "./send-thought-modal";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./home.module.css";
 import ThoughtsLoader from "./thoughts-loader";
+import type { PublicThoughtPayload } from "@/types/thought";
 
-export default function HomeThoughts() {
+export default function HomeThoughts({
+  initialData,
+}: {
+  initialData?: PublicThoughtPayload[];
+}) {
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -33,7 +35,15 @@ export default function HomeThoughts() {
     isFetching: isThoughtsFetching,
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
-  } = useSuspenseInfiniteQuery(thoughtsInfiniteOptions);
+  } = useInfiniteQuery({
+    ...thoughtsInfiniteOptions,
+    initialData: initialData
+      ? {
+          pages: [initialData],
+          pageParams: [undefined],
+        }
+      : undefined,
+  });
 
   const {
     data: searchData,

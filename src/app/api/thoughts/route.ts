@@ -2,13 +2,10 @@ import { type NextRequest, NextResponse } from "next/server";
 import { checkBotId } from "botid/server";
 import { ZodError } from "zod";
 
+import { revalidateThoughts } from "@/lib/cache/thought-revalidation";
 import { createThoughtInput } from "@/lib/validations/thought";
 import type { PublicThoughtPayload } from "@/types/thought";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
+import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { createThought, listPublicThoughts } from "@/server/thought";
 
 export async function GET(req: NextRequest) {
@@ -44,6 +41,7 @@ export async function POST(req: NextRequest) {
     );
 
     await createThought({ author, message, color });
+    revalidateThoughts();
 
     return NextResponse.json(
       {

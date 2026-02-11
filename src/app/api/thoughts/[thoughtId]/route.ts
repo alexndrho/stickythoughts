@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
+import { revalidateAllThoughts } from "@/lib/cache/thought-revalidation";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
@@ -34,6 +35,7 @@ export async function DELETE(
     }
 
     await softDeleteThought({ thoughtId, deletedById: session.user.id });
+    revalidateAllThoughts();
 
     return NextResponse.json(
       { message: "Thought deleted successfully" },

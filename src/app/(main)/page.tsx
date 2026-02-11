@@ -10,8 +10,6 @@ import classes from "./home.module.css";
 import ThoughtsServer from "./thoughts.server";
 import ThoughtsLoader from "./thoughts-loader";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   alternates: {
     canonical: "/",

@@ -4,6 +4,7 @@ import {
   THOUGHT_HIGHLIGHT_LOCK_DURATION_MS,
   THOUGHT_HIGHLIGHT_LOCK_HOURS,
 } from "@/config/thought";
+import { revalidateThoughtHighlight } from "@/lib/cache/thought-revalidation";
 import { guardSession } from "@/lib/session-guard";
 import { isHighlightLocked } from "@/utils/thought";
 import { formatDuration, intervalToDuration } from "date-fns";
@@ -81,6 +82,7 @@ export async function POST(
       thoughtId,
       userId: session.user.id,
     });
+    revalidateThoughtHighlight();
 
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
@@ -123,6 +125,7 @@ export async function DELETE(
       thoughtId,
       userId: session.user.id,
     });
+    revalidateThoughtHighlight();
 
     return NextResponse.json(updated satisfies PrivateThoughtPayload);
   } catch (error) {
