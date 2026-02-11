@@ -9,10 +9,12 @@ import type { HighlightedThought } from "@/server/thought";
 
 export type HeaderCarouselProps = {
   highlightedThought?: HighlightedThought;
+  loading?: boolean;
 };
 
 export default function HeaderCarousel({
   highlightedThought,
+  loading = false,
 }: HeaderCarouselProps) {
   return (
     <Carousel
@@ -37,11 +39,13 @@ export default function HeaderCarousel({
                 author={highlightedThought.author}
                 color={highlightedThought.color}
                 createdAt={highlightedThought.createdAt}
+                loading={loading}
               />
             ) : (
               <Thought
                 message="No highlighted thought yet. Share something meaningful and it could land here."
                 author="The community"
+                loading={loading}
               />
             )}
           </div>

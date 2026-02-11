@@ -1,15 +1,23 @@
-import { Card, type CardProps, Text, Tooltip } from "@mantine/core";
+import {
+  Card,
+  type CardProps,
+  Group,
+  Skeleton,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 
 import { getFormattedDate } from "@/utils/date";
 import { filterText } from "@/utils/text";
 import classes from "./home.module.css";
 
 export interface ThoughtProps extends CardProps {
-  message: string;
-  author: string;
+  message?: string;
+  author?: string;
   color?: string;
   createdAt?: Date;
   fluid?: boolean;
+  loading?: boolean;
 }
 
 export default function Thought({
@@ -18,6 +26,7 @@ export default function Thought({
   color,
   createdAt,
   fluid = false,
+  loading = false,
   className,
   ...rest
 }: ThoughtProps) {
@@ -39,12 +48,31 @@ export default function Thought({
       withBorder={!color}
       {...rest}
     >
-      <Text lineClamp={9}>{filterText(message)}</Text>
+      {!loading ? (
+        <>
+          {message != null && <Text lineClamp={9}>{filterText(message)}</Text>}
 
-      <Text
-        lineClamp={1}
-        className={classes["thought__author"]}
-      >{`\u2013 ${filterText(author)}`}</Text>
+          {author != null && (
+            <Text
+              lineClamp={1}
+              className={classes["thought__author"]}
+            >{`\u2013 ${filterText(author)}`}</Text>
+          )}
+        </>
+      ) : (
+        <>
+          <div>
+            {Array.from({ length: 7 }).map((_, index) => (
+              <Skeleton key={index} mb={8} height={16} radius="sm" />
+            ))}
+            <Skeleton height={16} w="65%" radius="sm" />
+          </div>
+
+          <Group justify="end">
+            <Skeleton height={16} w="30%" radius="sm" />
+          </Group>
+        </>
+      )}
     </Card>
   );
 

@@ -1,11 +1,14 @@
+import { Suspense } from "react";
 import { type Metadata } from "next";
 import { Paper, Text, Title } from "@mantine/core";
 
-import { getHighlightedThought } from "@/server/thought";
-import Thoughts from "./thoughts";
 import ThoughtCount from "./thought-count";
 import HeaderCarousel from "./header-carousel";
+import ThoughtCountServer from "./thought-count.server";
+import HeaderCarouselServer from "./header-carousel.server";
 import classes from "./home.module.css";
+import ThoughtsServer from "./thoughts.server";
+import ThoughtsLoader from "./thoughts-loader";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const highlightedThought = await getHighlightedThought();
-
   return (
     <div className={classes.container}>
       <Paper component="header" withBorder className={classes.header}>
@@ -35,13 +36,19 @@ export default async function HomePage() {
             Everything begins with a line.
           </Text>
 
-          <ThoughtCount />
+          <Suspense fallback={<ThoughtCount loading={true} />}>
+            <ThoughtCountServer />
+          </Suspense>
         </div>
 
-        <HeaderCarousel highlightedThought={highlightedThought ?? undefined} />
+        <Suspense fallback={<HeaderCarousel loading={true} />}>
+          <HeaderCarouselServer />
+        </Suspense>
       </Paper>
 
-      <Thoughts />
+      <Suspense fallback={<ThoughtsLoader />}>
+        <ThoughtsServer />
+      </Suspense>
     </div>
   );
 }

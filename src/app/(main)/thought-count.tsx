@@ -1,19 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Card, Skeleton, Text } from "@mantine/core";
 import { IconMessage } from "@tabler/icons-react";
 
-import { thoughtCountOptions } from "@/app/(main)/options";
 import classes from "./home.module.css";
 
-export default function ThoughtCount() {
-  const { data: thoughtsCountData, isFetched: thoughtsCountIsFetched } =
-    useQuery(thoughtCountOptions);
+export interface ThoughtCountProps {
+  count?: number;
+  loading?: boolean;
+}
 
+export default function ThoughtCount({
+  count = 0,
+  loading = false,
+}: ThoughtCountProps) {
   return (
     <Skeleton
-      visible={!thoughtsCountIsFetched}
+      visible={loading}
       component={Card}
       className={classes["header__skeleton-wrapper-thought-counter"]}
     >
@@ -23,7 +26,7 @@ export default function ThoughtCount() {
       />
 
       <Text className={classes["header__thought-counter"]}>
-        {thoughtsCountData ? thoughtsCountData.toLocaleString() : 0}{" "}
+        {count.toLocaleString()}{" "}
         <Text c="blue" span inherit>
           thoughts
         </Text>{" "}

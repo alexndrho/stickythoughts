@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Group, Input, Kbd, Loader, Tooltip } from "@mantine/core";
+import {
+  useInfiniteQuery,
+  useSuspenseInfiniteQuery,
+} from "@tanstack/react-query";
+import { Button, Input, Kbd, Tooltip } from "@mantine/core";
 import { useDebouncedState, useDisclosure, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconMessage, IconSearch, IconX } from "@tabler/icons-react";
@@ -15,6 +18,7 @@ import Thought from "./thought";
 import SendThoughtModal from "./send-thought-modal";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./home.module.css";
+import ThoughtsLoader from "./thoughts-loader";
 
 export default function HomeThoughts() {
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
@@ -29,7 +33,7 @@ export default function HomeThoughts() {
     isFetching: isThoughtsFetching,
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
-  } = useInfiniteQuery(thoughtsInfiniteOptions);
+  } = useSuspenseInfiniteQuery(thoughtsInfiniteOptions);
 
   const {
     data: searchData,
@@ -131,11 +135,7 @@ export default function HomeThoughts() {
           searchBarValue.length > 0 ? hasSearchNextPage : hasThoughtsNextPage
         }
         loading={isThoughtsFetching || isSearchFetching}
-        loader={
-          <Group mt="xl" justify="center">
-            <Loader />
-          </Group>
-        }
+        loader={<ThoughtsLoader />}
       >
         <section className={classes.thoughts}>
           {searchBarValue.length > 0
