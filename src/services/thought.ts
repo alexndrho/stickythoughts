@@ -61,6 +61,19 @@ const getThoughtsCount = async (): Promise<number> => {
   return data.count;
 };
 
-export { getThoughts, getThoughtsCount, submitThought };
+const getHighlightedThought =
+  async (): Promise<PublicThoughtPayload | null> => {
+    const data = await fetchJson<PublicThoughtFromServer | null>(
+      "/api/thoughts/highlight",
+      undefined,
+      { errorMessage: "Failed to get highlighted thought" },
+    );
+
+    if (!data) return null;
+
+    return parsePublicThoughtFromServer(data);
+  };
+
+export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought };
 
 export type { PublicThoughtFromServer, PublicThoughtPayload };

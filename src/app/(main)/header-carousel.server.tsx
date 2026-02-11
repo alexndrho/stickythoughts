@@ -5,6 +5,8 @@ export default async function HeaderCarouselServer() {
   const highlightedThought = await getHighlightedThought();
 
   return (
-    <HeaderCarousel highlightedThought={highlightedThought ?? undefined} />
+    <HeaderCarousel
+      initialHighlightedThought={highlightedThought ?? undefined}
+    />
   );
 }

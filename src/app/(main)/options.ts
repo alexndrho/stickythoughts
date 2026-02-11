@@ -2,7 +2,11 @@ import "client-only";
 
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
-import { getThoughts, getThoughtsCount } from "@/services/thought";
+import {
+  getHighlightedThought,
+  getThoughts,
+  getThoughtsCount,
+} from "@/services/thought";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
 import { thoughtKeys } from "@/lib/query-keys";
 
@@ -15,6 +19,13 @@ export const thoughtCountOptions = queryOptions({
   queryKey: thoughtKeys.count(),
   queryFn: async () => {
     return await getThoughtsCount();
+  },
+});
+
+export const highlightedThoughtOptions = queryOptions({
+  queryKey: thoughtKeys.highlighted(),
+  queryFn: async () => {
+    return await getHighlightedThought();
   },
 });
 

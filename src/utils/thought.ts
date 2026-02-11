@@ -10,17 +10,20 @@ import { THOUGHT_HIGHLIGHT_LOCK_DURATION_MS } from "@/config/thought";
 // Date data from the server HTTP response body is parsed as JSON,
 // so date fields are strings and need to be converted to Date objects
 export const parsePublicThoughtFromServer = (
-  thought: PublicThoughtFromServer,
+  thought: PublicThoughtFromServer | PublicThoughtPayload,
 ): PublicThoughtPayload => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-    createdAt: new Date(thought.createdAt),
+    createdAt:
+      thought.createdAt instanceof Date
+        ? thought.createdAt
+        : new Date(thought.createdAt),
   } satisfies PublicThoughtPayload;
 };
 
 export const parsePrivateThoughtFromServer = (
-  thought: PrivateThoughtFromServer,
+  thought: PrivateThoughtFromServer | PrivateThoughtPayload,
 ): PrivateThoughtPayload => {
   return {
     ...thought,
@@ -28,7 +31,10 @@ export const parsePrivateThoughtFromServer = (
     highlightedAt: thought.highlightedAt
       ? new Date(thought.highlightedAt)
       : null,
-    createdAt: new Date(thought.createdAt),
+    createdAt:
+      thought.createdAt instanceof Date
+        ? thought.createdAt
+        : new Date(thought.createdAt),
   } satisfies PrivateThoughtPayload;
 };
 

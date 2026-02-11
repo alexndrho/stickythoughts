@@ -1,7 +1,6 @@
 import "server-only";
 
 export { getHighlightedThought } from "./thought-highlight-service";
-export type { HighlightedThought } from "./thought-highlight-service";
 
 export {
   countDeletedThoughts,

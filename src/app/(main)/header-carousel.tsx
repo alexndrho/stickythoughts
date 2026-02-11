@@ -1,21 +1,28 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Carousel } from "@mantine/carousel";
 import { Card, Text } from "@mantine/core";
 
-import classes from "./home.module.css";
 import Thought from "./thought";
-import type { HighlightedThought } from "@/server/thought";
+import { highlightedThoughtOptions } from "./options";
+import type { PublicThoughtPayload } from "@/types/thought";
+import classes from "./home.module.css";
 
 export type HeaderCarouselProps = {
-  highlightedThought?: HighlightedThought;
+  initialHighlightedThought?: PublicThoughtPayload;
   loading?: boolean;
 };
 
 export default function HeaderCarousel({
-  highlightedThought,
+  initialHighlightedThought,
   loading = false,
 }: HeaderCarouselProps) {
+  const { data: highlightedThought } = useQuery({
+    ...highlightedThoughtOptions,
+    initialData: initialHighlightedThought,
+  });
+
   return (
     <Carousel
       className={classes.header__carousel}

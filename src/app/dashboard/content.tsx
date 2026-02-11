@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import { IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 
+import { getQueryClient } from "@/lib/get-query-client";
+import { thoughtKeys } from "@/lib/query-keys";
 import { getFormattedDate } from "@/utils/date";
 import { formatUserDisplayName } from "@/utils/user";
 import { adminThoughtsPageOptions } from "@/app/dashboard/options";
@@ -62,6 +64,11 @@ export default function Content() {
         page,
       });
       setHighlightingThought(null);
+
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({
+        queryKey: thoughtKeys.highlighted(),
+      });
     },
   });
 
@@ -73,6 +80,11 @@ export default function Content() {
         page,
       });
       setUnhighlightingThought(null);
+
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({
+        queryKey: thoughtKeys.highlighted(),
+      });
     },
   });
 

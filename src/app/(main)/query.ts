@@ -8,13 +8,14 @@ import {
   countPublicThoughts as countPublicThoughtsService,
   listPublicThoughts as listPublicThoughtsService,
 } from "@/server/thought/thoughts-service";
-import {
-  getHighlightedThought as getHighlightedThoughtService,
-  type HighlightedThought,
-} from "@/server/thought/thought-highlight-service";
+import { getHighlightedThought as getHighlightedThoughtService } from "@/server/thought/thought-highlight-service";
+import { parsePublicThoughtFromServer } from "@/utils/thought";
 
 const listPublicThoughtsCached = unstable_cache(
-  async () => listPublicThoughtsService({}),
+  async () => {
+    const thoughts = await listPublicThoughtsService({});
+    return thoughts.map((thought) => parsePublicThoughtFromServer(thought));
+  },
   ["public-thought-list"],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT],
@@ -30,7 +31,17 @@ const countPublicThoughtsCached = unstable_cache(
 );
 
 const getHighlightedThoughtCached = unstable_cache(
-  async () => getHighlightedThoughtService(),
+  async () => {
+    let highlightedThought = await getHighlightedThoughtService();
+
+    if (!highlightedThought) {
+      return null;
+    }
+
+    highlightedThought = parsePublicThoughtFromServer(highlightedThought);
+
+    return highlightedThought;
+  },
   ["public-thought-highlight"],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT],
@@ -45,6 +56,6 @@ export async function countPublicThoughts(): Promise<number> {
   return countPublicThoughtsCached();
 }
 
-export async function getHighlightedThought(): Promise<HighlightedThought | null> {
+export async function getHighlightedThought(): Promise<PublicThoughtPayload | null> {
   return getHighlightedThoughtCached();
 }
