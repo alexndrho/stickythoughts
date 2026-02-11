@@ -23,7 +23,7 @@ export const getAdminThoughts = async ({
 
 export const deleteThought = async (id: string) => {
   return fetchJson(
-    `/api/thoughts/${id}`,
+    `/api/dashboard/thoughts/${id}`,
     {
       method: "DELETE",
     },

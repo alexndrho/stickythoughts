@@ -1,7 +1,5 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { revalidateAllThoughts } from "@/lib/cache/thought-revalidation";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
@@ -13,26 +11,17 @@ export async function DELETE(
   { params }: { params: Promise<{ thoughtId: string }> },
 ) {
   try {
-    const { thoughtId } = await params;
-
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({
+      permission: {
+        thought: ["delete"],
+      },
+    });
 
     if (session instanceof NextResponse) {
       return session;
     }
 
-    const hasPermission = await auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          thought: ["delete"],
-        },
-      },
-    });
-
-    if (!hasPermission.success) {
-      return jsonError([{ code: "auth/forbidden", message: "Forbidden" }], 403);
-    }
+    const { thoughtId } = await params;
 
     await softDeleteThought({ thoughtId, deletedById: session.user.id });
     revalidateAllThoughts();
