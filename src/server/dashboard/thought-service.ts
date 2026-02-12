@@ -1,6 +1,9 @@
 import "server-only";
 
-import { ADMIN_DELETED_PER_PAGE, ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
+import {
+  ADMIN_DELETED_PER_PAGE,
+  ADMIN_THOUGHTS_PER_PAGE,
+} from "@/config/admin";
 import { prisma } from "@/lib/db";
 
 export async function countDeletedThoughts() {
@@ -98,7 +101,12 @@ export async function softDeleteThought(args: {
       id: args.thoughtId,
       deletedAt: null,
     },
-    data: { deletedAt: new Date(), deletedById: args.deletedById },
+    data: {
+      deletedAt: new Date(),
+      deletedById: args.deletedById,
+      highlightedAt: null,
+      highlightedById: null,
+    },
   });
 }
 
