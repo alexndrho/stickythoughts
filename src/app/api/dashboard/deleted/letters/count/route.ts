@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { guardSession } from "@/lib/session-guard";
 import { unknownErrorResponse } from "@/lib/http";
-import { countDeletedLetters } from "@/server/admin";
+import { countDeletedLetters } from "@/server/dashboard";
 
 export async function GET() {
   try {

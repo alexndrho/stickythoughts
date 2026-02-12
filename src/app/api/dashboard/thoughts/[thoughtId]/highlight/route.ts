@@ -14,7 +14,7 @@ import {
   findCurrentHighlight,
   getThoughtHighlightStatus,
   updateHighlight,
-} from "@/server/thought";
+} from "@/server/dashboard";
 
 const formatRemaining = (remainingMs: number) => {
   const safeMs = Math.max(60_000, remainingMs);

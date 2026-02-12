@@ -1,11 +1,9 @@
 import "server-only";
 
+import { subDays } from "date-fns";
+
 import { prisma } from "@/lib/db";
-import { THOUGHTS_PER_PAGE } from "@/config/thought";
-import {
-  ADMIN_THOUGHTS_PER_PAGE,
-  ADMIN_DELETED_PER_PAGE,
-} from "@/config/admin";
+import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from "@/config/thought";
 
 export async function listPublicThoughts(args: {
   searchTerm?: string | null;
@@ -61,101 +59,23 @@ export async function countPublicThoughts() {
   });
 }
 
-export async function countDeletedThoughts() {
-  return prisma.thought.count({
-    where: {
-      deletedAt: {
-        not: null,
-      },
-    },
-  });
-}
+export async function getHighlightedThought() {
+  const highlightCutoff = subDays(new Date(), THOUGHT_HIGHLIGHT_MAX_AGE_DAYS);
 
-export async function listAdminThoughts(args: { page: number }) {
-  const page = Math.max(args.page, 1);
-  const skip = (page - 1) * ADMIN_THOUGHTS_PER_PAGE;
-
-  return prisma.thought.findMany({
-    take: ADMIN_THOUGHTS_PER_PAGE,
-    skip,
+  return prisma.thought.findFirst({
     where: {
       deletedAt: null,
+      highlightedAt: { not: null, gte: highlightCutoff },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: {
+      highlightedAt: "desc",
+    },
     select: {
       id: true,
       author: true,
       message: true,
       color: true,
-      highlightedAt: true,
       createdAt: true,
-      highlightedBy: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-        },
-      },
     },
-  });
-}
-
-export async function listDeletedThoughts(args: { page: number }) {
-  const page = Math.max(args.page, 1);
-  const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
-
-  return prisma.thought.findMany({
-    where: {
-      deletedAt: {
-        not: null,
-      },
-    },
-    orderBy: {
-      deletedAt: "desc",
-    },
-    take: ADMIN_DELETED_PER_PAGE,
-    skip,
-    include: {
-      deletedBy: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-        },
-      },
-    },
-  });
-}
-
-export async function getDeletedThoughtStatus(args: { thoughtId: string }) {
-  return prisma.thought.findUnique({
-    where: { id: args.thoughtId },
-    select: { deletedAt: true },
-  });
-}
-
-export async function restoreThought(args: { thoughtId: string }) {
-  await prisma.thought.update({
-    where: { id: args.thoughtId },
-    data: { deletedAt: null, deletedById: null },
-  });
-}
-
-export async function purgeThought(args: { thoughtId: string }) {
-  await prisma.thought.delete({
-    where: { id: args.thoughtId },
-  });
-}
-
-export async function softDeleteThought(args: {
-  thoughtId: string;
-  deletedById: string;
-}) {
-  await prisma.thought.update({
-    where: {
-      id: args.thoughtId,
-      deletedAt: null,
-    },
-    data: { deletedAt: new Date(), deletedById: args.deletedById },
   });
 }

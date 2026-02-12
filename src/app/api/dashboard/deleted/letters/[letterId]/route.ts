@@ -6,7 +6,7 @@ import {
   getDeletedLetterStatus,
   purgeLetter,
   restoreLetter,
-} from "@/server/admin";
+} from "@/server/dashboard";
 
 export async function PATCH(
   request: Request,

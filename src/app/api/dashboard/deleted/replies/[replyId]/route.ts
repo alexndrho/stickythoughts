@@ -6,7 +6,7 @@ import {
   getDeletedReplyStatus,
   purgeReply,
   restoreReply,
-} from "@/server/admin";
+} from "@/server/dashboard";
 
 export async function PATCH(
   request: Request,

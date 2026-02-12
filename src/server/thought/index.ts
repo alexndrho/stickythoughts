@@ -1,22 +1,8 @@
 import "server-only";
 
-export { getHighlightedThought } from "./thought-highlight-service";
-
 export {
-  countDeletedThoughts,
   countPublicThoughts,
   createThought,
-  getDeletedThoughtStatus,
-  listAdminThoughts,
-  listDeletedThoughts,
+  getHighlightedThought,
   listPublicThoughts,
-  purgeThought,
-  restoreThought,
-  softDeleteThought,
 } from "./thoughts-service";
-
-export {
-  findCurrentHighlight,
-  getThoughtHighlightStatus,
-  updateHighlight,
-} from "./thought-highlight-service";

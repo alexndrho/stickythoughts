@@ -4,7 +4,7 @@ import { revalidateAllThoughts } from "@/lib/cache/thought-revalidation";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
-import { softDeleteThought } from "@/server/thought";
+import { softDeleteThought } from "@/server/dashboard";
 
 export async function DELETE(
   request: Request,

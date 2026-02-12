@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { guardSession } from "@/lib/session-guard";
 import type { PrivateThoughtPayload } from "@/types/thought";
 import { unknownErrorResponse } from "@/lib/http";
-import { listAdminThoughts } from "@/server/thought";
+import { listAdminThoughts } from "@/server/dashboard";
 
 export async function GET(req: NextRequest) {
   try {

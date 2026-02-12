@@ -6,9 +6,9 @@ import { CACHE_TAGS } from "@/config/cache-tags";
 import type { PublicThoughtPayload } from "@/types/thought";
 import {
   countPublicThoughts as countPublicThoughtsService,
+  getHighlightedThought as getHighlightedThoughtService,
   listPublicThoughts as listPublicThoughtsService,
 } from "@/server/thought/thoughts-service";
-import { getHighlightedThought as getHighlightedThoughtService } from "@/server/thought/thought-highlight-service";
 import { parsePublicThoughtFromServer } from "@/utils/thought";
 
 const listPublicThoughtsCached = unstable_cache(

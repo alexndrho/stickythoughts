@@ -7,7 +7,7 @@ import {
   getDeletedThoughtStatus,
   purgeThought,
   restoreThought,
-} from "@/server/thought";
+} from "@/server/dashboard";
 
 export async function PATCH(
   request: Request,

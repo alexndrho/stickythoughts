@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { guardSession } from "@/lib/session-guard";
 import type { DeletedThoughtFromServer } from "@/types/deleted";
 import { unknownErrorResponse } from "@/lib/http";
-import { listDeletedThoughts } from "@/server/thought";
+import { listDeletedThoughts } from "@/server/dashboard";
 
 export async function GET(req: NextRequest) {
   try {
