@@ -17,7 +17,8 @@ function createPrisma() {
           }),
         });
 
-  return base.$extends(withAccelerate());
+  // Keep runtime Accelerate behavior without widening query result inference.
+  return base.$extends(withAccelerate()) as unknown as typeof base;
 }
 
 const globalForPrisma = globalThis as unknown as {

@@ -21,7 +21,7 @@ model Thought {
   deletedById     String?
   deletedBy       User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
 
-  @@index([deletedAt, createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
 }
 
 model User {
@@ -166,8 +166,8 @@ model Letter {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@index([deletedAt, createdAt(sort: Desc)])
-  @@index([authorId, deletedAt, createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
 }
 
 model LetterLike {
@@ -200,8 +200,8 @@ model LetterReply {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@index([deletedAt, createdAt(sort: Desc)])
-  @@index([letterId, deletedAt, createdAt(sort: Desc)])
+  @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([letterId, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
 }
 
 model LetterReplyLike {

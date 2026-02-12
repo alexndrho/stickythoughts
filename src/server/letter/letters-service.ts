@@ -120,9 +120,7 @@ export async function listLetters(args: {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }
 

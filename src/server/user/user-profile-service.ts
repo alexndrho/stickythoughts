@@ -129,9 +129,7 @@ export async function listUserLetters(args: {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }
 
@@ -191,9 +189,7 @@ export async function listUserReplies(args: {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }
 
@@ -249,8 +245,6 @@ export async function listUserLikedLetters(args: {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }

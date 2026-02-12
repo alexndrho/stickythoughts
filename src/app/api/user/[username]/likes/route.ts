@@ -5,10 +5,7 @@ import { auth } from "@/lib/auth";
 import { formatLetters } from "@/utils/letter";
 import type { LetterType } from "@/types/letter";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
-import {
-  getUserLikesVisibility,
-  listUserLikedLetters,
-} from "@/server/user";
+import { getUserLikesVisibility, listUserLikedLetters } from "@/server/user";
 import { UserNotFoundError } from "@/server/user";
 
 export async function GET(

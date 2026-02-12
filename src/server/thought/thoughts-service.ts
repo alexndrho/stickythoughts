@@ -2,7 +2,10 @@ import "server-only";
 
 import { prisma } from "@/lib/db";
 import { THOUGHTS_PER_PAGE } from "@/config/thought";
-import { ADMIN_THOUGHTS_PER_PAGE, ADMIN_DELETED_PER_PAGE } from "@/config/admin";
+import {
+  ADMIN_THOUGHTS_PER_PAGE,
+  ADMIN_DELETED_PER_PAGE,
+} from "@/config/admin";
 
 export async function listPublicThoughts(args: {
   searchTerm?: string | null;
@@ -34,9 +37,7 @@ export async function listPublicThoughts(args: {
       color: true,
       createdAt: true,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }
 
@@ -80,9 +81,7 @@ export async function listAdminThoughts(args: { page: number }) {
     where: {
       deletedAt: null,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     select: {
       id: true,
       author: true,

@@ -127,9 +127,7 @@ export async function listLetterReplies(args: {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 }
 
