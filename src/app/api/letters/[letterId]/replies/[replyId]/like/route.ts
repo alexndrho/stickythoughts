@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { guardSession } from "@/lib/session-guard";
@@ -18,7 +17,7 @@ export async function POST(
   { params }: { params: Promise<{ letterId: string; replyId: string }> },
 ) {
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -61,7 +60,7 @@ export async function DELETE(
   { params }: { params: Promise<{ letterId: string; replyId: string }> },
 ) {
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;

@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import type { UserAccountSettings } from "@/types/user";
@@ -7,8 +6,8 @@ import { jsonError, unknownErrorResponse } from "@/lib/http";
 import { getUserAccountSettings } from "@/server/user";
 import { UserNotFoundError } from "@/server/user";
 
-export async function GET() {
-  const session = await guardSession({ headers: await headers() });
+export async function GET(request: Request) {
+  const session = await guardSession({ headers: request.headers });
 
   if (session instanceof NextResponse) {
     return session;

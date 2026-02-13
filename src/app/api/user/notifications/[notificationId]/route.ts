@@ -1,6 +1,5 @@
 import { ZodError } from "zod";
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 
 import { userNotificationMarkReadInput } from "@/lib/validations/user";
 import { guardSession } from "@/lib/session-guard";
@@ -11,19 +10,19 @@ import {
 } from "@/server/user";
 
 export async function PUT(
-  req: Request,
+  request: Request,
   { params }: { params: Promise<{ notificationId: string }> },
 ) {
   try {
     const { notificationId } = await params;
 
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
     }
 
-    const { isRead } = userNotificationMarkReadInput.parse(await req.json());
+    const { isRead } = userNotificationMarkReadInput.parse(await request.json());
 
     await markNotificationRead({
       notificationId,
@@ -43,13 +42,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: Promise<{ notificationId: string }> },
 ) {
   try {
     const { notificationId } = await params;
 
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;

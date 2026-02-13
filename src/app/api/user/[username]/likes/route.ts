@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
@@ -9,10 +8,10 @@ import { getUserLikesVisibility, listUserLikedLetters } from "@/server/user";
 import { UserNotFoundError } from "@/server/user";
 
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ username: string }> },
 ) {
-  const searchParams = req.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   const lastId = searchParams.get("lastId");
 
   try {
@@ -21,7 +20,7 @@ export async function GET(
     const user = await getUserLikesVisibility({ username });
 
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
     if (

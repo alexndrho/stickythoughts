@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { updateUserBioInput } from "@/lib/validations/user";
@@ -13,7 +12,7 @@ import { clearUserBio, updateUserBio } from "@/server/user";
 
 export async function PUT(request: Request) {
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -58,7 +57,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const session = await guardSession({
-      headers: await headers(),
+      headers: request.headers,
       permission: { user: ["update"] },
     });
 

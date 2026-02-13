@@ -5,9 +5,10 @@ import type { DeletedLetterReplyFromServer } from "@/types/deleted";
 import { unknownErrorResponse } from "@/lib/http";
 import { listDeletedReplies } from "@/server/dashboard";
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         letterReply: ["list-deleted"],
       },
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
       return session;
     }
 
-    const searchParams = req.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams;
     const page = Math.max(Number(searchParams.get("page") || "1"), 1);
     const items = await listDeletedReplies({ page });
 

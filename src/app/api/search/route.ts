@@ -7,8 +7,8 @@ import {
   searchUsers,
 } from "@/server/search";
 
-export async function GET(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams;
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   const q = searchParams.get("q") ?? "";
   const type = searchParams.get("type"); // "all", "letters", "users"
 

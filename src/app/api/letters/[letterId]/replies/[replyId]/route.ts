@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -22,7 +21,7 @@ export async function PUT(
   { params }: { params: Promise<{ letterId: string; replyId: string }> },
 ) {
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -63,7 +62,7 @@ export async function DELETE(
   try {
     const { letterId, replyId } = await params;
 
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;

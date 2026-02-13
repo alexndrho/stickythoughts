@@ -8,8 +8,8 @@ import type { PublicThoughtPayload } from "@/types/thought";
 import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { createThought, listPublicThoughts } from "@/server/thought";
 
-export async function GET(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams;
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   const searchTerm = searchParams.get("searchTerm");
   const lastId = searchParams.get("lastId");
 
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const verification = await checkBotId();
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { author, message, color } = createThoughtInput.parse(
-      await req.json(),
+      await request.json(),
     );
 
     await createThought({ author, message, color });

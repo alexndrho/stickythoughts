@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { auth } from "@/lib/auth";
@@ -8,17 +7,17 @@ import { unknownErrorResponse } from "@/lib/http";
 import { listUserReplies } from "@/server/user";
 
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ username: string }> },
 ) {
-  const searchParams = req.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   const lastId = searchParams.get("lastId");
 
   try {
     const { username } = await params;
 
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
     const replies = await listUserReplies({

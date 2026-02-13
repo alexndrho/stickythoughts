@@ -4,9 +4,10 @@ import { guardSession } from "@/lib/session-guard";
 import { unknownErrorResponse } from "@/lib/http";
 import { countDeletedThoughts } from "@/server/dashboard";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         thought: ["list-deleted"],
       },

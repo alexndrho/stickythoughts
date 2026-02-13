@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -22,7 +21,7 @@ export async function POST(
   { params }: { params: Promise<{ letterId: string }> },
 ) {
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -61,15 +60,15 @@ export async function POST(
 }
 
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ letterId: string }> },
 ) {
-  const searchParams = req.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   const lastId = searchParams.get("lastId");
 
   try {
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
     const { letterId } = await params;

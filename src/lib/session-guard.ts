@@ -1,16 +1,19 @@
 import "server-only";
 
-import { headers as nextHeaders } from "next/headers";
 import type { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { jsonError } from "@/lib/http";
 import type IError from "@/types/error";
 
+type GetSessionArgs = NonNullable<Parameters<typeof auth.api.getSession>[0]>;
 type UserHasPermissionArgs = NonNullable<
   Parameters<typeof auth.api.userHasPermission>[0]
 >;
 
+type SessionHeaders = GetSessionArgs extends { headers?: infer H }
+  ? H
+  : Headers;
 type Permission = UserHasPermissionArgs extends { body?: infer Body }
   ? Body extends { permission: infer Perm }
     ? Perm
@@ -28,16 +31,14 @@ export const forbiddenResponse = () =>
 export const notFoundResponse = () =>
   jsonError([{ code: "not-found", message: "Not found" }], 404);
 
-export async function guardSession(
-  options: {
-    headers?: Headers;
-    permission?: Permission;
-    onUnauthenticated?: "unauthorized" | "not-found";
-    onForbidden?: "forbidden" | "not-found";
-  } = {},
-): Promise<NonNullable<Session> | NextResponse<IError>> {
+export async function guardSession(options: {
+  headers: SessionHeaders;
+  permission?: Permission;
+  onUnauthenticated?: "unauthorized" | "not-found";
+  onForbidden?: "forbidden" | "not-found";
+}): Promise<NonNullable<Session> | NextResponse<IError>> {
   const session = await auth.api.getSession({
-    headers: options.headers ?? (await nextHeaders()),
+    headers: options.headers,
   });
 
   if (!session?.user?.id) {

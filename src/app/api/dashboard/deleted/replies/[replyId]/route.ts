@@ -14,6 +14,7 @@ export async function PATCH(
 ) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         letterReply: ["restore"],
       },
@@ -49,6 +50,7 @@ export async function DELETE(
 ) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         letterReply: ["purge"],
       },

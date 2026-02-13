@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
@@ -7,7 +6,7 @@ import { getUserPublicAccount, UserNotFoundError } from "@/server/user";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 
 export async function GET(
-  req: Request,
+  request: Request,
   { params }: { params: Promise<{ username: string }> },
 ) {
   try {
@@ -15,7 +14,7 @@ export async function GET(
     const normalizedUsername = username.toLowerCase();
 
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
     const hasPermissionToBan = session

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { ZodError } from "zod";
 
 import { auth } from "@/lib/auth";
@@ -17,7 +16,7 @@ export async function GET(
 ) {
   try {
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
     const { letterId } = await params;
@@ -48,7 +47,7 @@ export async function PUT(
     const { letterId } = await params;
     const { body } = updateLetterServerInput.parse(await request.json());
 
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -88,7 +87,7 @@ export async function DELETE(
   try {
     const { letterId } = await params;
 
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;

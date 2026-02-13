@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -12,7 +11,7 @@ export async function PUT(request: Request) {
     const { visibility } = updateUserLikesVisibilityInput.parse(
       await request.json(),
     );
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;

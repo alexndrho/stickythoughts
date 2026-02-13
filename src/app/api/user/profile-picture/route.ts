@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
@@ -14,8 +13,8 @@ import {
 import { UserNotFoundError } from "@/server/user";
 import { removeUserProfilePicture } from "@/server/user";
 
-export async function PUT(req: Request) {
-  const session = await guardSession({ headers: await headers() });
+export async function PUT(request: Request) {
+  const session = await guardSession({ headers: request.headers });
 
   if (session instanceof NextResponse) {
     return session;
@@ -25,7 +24,7 @@ export async function PUT(req: Request) {
   let oldImageKey: string | null = null;
 
   try {
-    const formData = await req.formData();
+    const formData = await request.formData();
     const userImg = formData.get("user-image");
 
     if (!(userImg instanceof File)) {
@@ -96,7 +95,7 @@ export async function PUT(req: Request) {
 
     // Update database
     await auth.api.updateUser({
-      headers: await headers(),
+      headers: request.headers,
       body: {
         image: imageUrl,
       },
@@ -150,12 +149,12 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams;
+export async function DELETE(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   const userId = searchParams.get("userId");
 
   try {
-    const session = await guardSession({ headers: await headers() });
+    const session = await guardSession({ headers: request.headers });
 
     if (session instanceof NextResponse) {
       return session;
@@ -229,7 +228,7 @@ export async function DELETE(req: NextRequest) {
 	      } else {
 	        // Self path: update the session user's image through auth API
 	        await auth.api.updateUser({
-	          headers: await headers(),
+	          headers: request.headers,
 	          body: {
 	            image: null,
 	          },

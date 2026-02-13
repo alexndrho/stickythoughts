@@ -5,9 +5,10 @@ import { getHighlightedThought } from "@/server/dashboard/thought-service";
 import { unknownErrorResponse } from "@/lib/http";
 import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         thought: ["list"],
       },

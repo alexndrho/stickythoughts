@@ -34,6 +34,7 @@ export async function POST(
 ) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         thought: ["highlight"],
       },
@@ -87,6 +88,7 @@ export async function DELETE(
 ) {
   try {
     const session = await guardSession({
+      headers: request.headers,
       permission: {
         thought: ["highlight"],
       },
