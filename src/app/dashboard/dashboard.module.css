@@ -12,3 +12,25 @@
 .table-container {
   flex: 1;
 }
+
+.thought-highlighted-card {
+  margin-bottom: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.thought-highlighted-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.thought-highlighted-card__title {
+  font-size: var(--mantine-h5-font-size);
+}
+
+.thought-highlighted-card__details {
+  color: var(--mantine-color-dimmed);
+}

@@ -2,6 +2,7 @@ export const adminKeys = {
   all: () => ["admin"] as const,
 
   thoughts: () => [...adminKeys.all(), "thoughts"] as const,
+  highlightedThought: () => [...adminKeys.thoughts(), "highlighted"] as const,
   thoughtsPage: (page: number) => [...adminKeys.thoughts(), page] as const,
 
   deleted: () => [...adminKeys.all(), "deleted"] as const,
@@ -16,10 +17,8 @@ export const adminKeys = {
     [...adminKeys.deletedReplies(), page] as const,
   deletedThoughtsCount: () =>
     [...adminKeys.deletedThoughts(), "count"] as const,
-  deletedLettersCount: () =>
-    [...adminKeys.deletedLetters(), "count"] as const,
-  deletedRepliesCount: () =>
-    [...adminKeys.deletedReplies(), "count"] as const,
+  deletedLettersCount: () => [...adminKeys.deletedLetters(), "count"] as const,
+  deletedRepliesCount: () => [...adminKeys.deletedReplies(), "count"] as const,
 
   users: () => [...adminKeys.all(), "users"] as const,
   usersPage: (input: {
@@ -34,4 +33,3 @@ export const adminKeys = {
       input.sortDirection,
     ] as const,
 };
-

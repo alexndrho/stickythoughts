@@ -1,35 +1,31 @@
 import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import type { PrivateThoughtPayload } from "@/types/thought";
+import { adminKeys, thoughtKeys } from "@/lib/query-keys";
+import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
 
 export const setThoughtHighlighting = ({
   thought,
   page,
 }: {
-  thought: PrivateThoughtPayload;
+  thought: PrivateHighlightedThoughtPayload | null;
   page: number;
 }) => {
   const queryClient = getQueryClient();
-  const isHighlighted = !!thought.highlightedAt;
-
-  queryClient.setQueryData<PrivateThoughtPayload[]>(
-    adminKeys.thoughtsPage(page),
-    (oldData) =>
-      oldData?.map((oldThought) => {
-        if (oldThought.id === thought.id) {
-          return thought;
-        }
-
-        if (isHighlighted) {
-          return { ...oldThought, highlightedAt: null, highlightedBy: null };
-        }
-
-        return oldThought;
-      }),
+  queryClient.setQueryData<PrivateHighlightedThoughtPayload | null>(
+    adminKeys.highlightedThought(),
+    thought,
   );
 
   queryClient.invalidateQueries({
-    queryKey: adminKeys.thoughts(),
+    queryKey: adminKeys.thoughtsPage(page),
+  });
+
+  queryClient.invalidateQueries({
+    queryKey: adminKeys.highlightedThought(),
+    refetchType: "none",
+  });
+
+  queryClient.invalidateQueries({
+    queryKey: thoughtKeys.highlighted(),
     refetchType: "none",
   });
 };

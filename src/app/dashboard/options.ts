@@ -2,7 +2,10 @@ import "client-only";
 
 import { queryOptions } from "@tanstack/react-query";
 
-import { getAdminThoughts } from "@/services/moderate/thought";
+import {
+  getAdminThoughts,
+  getHighlightedThought,
+} from "@/services/moderate/thought";
 import { adminKeys } from "@/lib/query-keys";
 
 export const adminOptions = queryOptions({
@@ -18,3 +21,8 @@ export const adminThoughtsPageOptions = (page: number) =>
     queryKey: adminKeys.thoughtsPage(page),
     queryFn: () => getAdminThoughts({ page }),
   });
+
+export const highlightedThoughtOptions = queryOptions({
+  queryKey: adminKeys.highlightedThought(),
+  queryFn: () => getHighlightedThought(),
+});

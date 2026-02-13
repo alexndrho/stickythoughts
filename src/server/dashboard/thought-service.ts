@@ -5,6 +5,9 @@ import {
   ADMIN_THOUGHTS_PER_PAGE,
 } from "@/config/admin";
 import { prisma } from "@/lib/db";
+import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
+import { subDays } from "date-fns";
+import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
 
 export async function countDeletedThoughts() {
   return prisma.thought.count({
@@ -25,6 +28,8 @@ export async function listAdminThoughts(args: { page: number }) {
     skip,
     where: {
       deletedAt: null,
+      highlightedAt: null,
+      highlightedById: null,
     },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     select: {
@@ -34,13 +39,6 @@ export async function listAdminThoughts(args: { page: number }) {
       color: true,
       highlightedAt: true,
       createdAt: true,
-      highlightedBy: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-        },
-      },
     },
   });
 }
@@ -131,6 +129,50 @@ export async function getThoughtHighlightStatus(args: { thoughtId: string }) {
     where: { id: args.thoughtId },
     select: { highlightedAt: true },
   });
+}
+
+export async function getHighlightedThought(): Promise<PrivateHighlightedThoughtPayload | null> {
+  const highlightCutoff = subDays(new Date(), THOUGHT_HIGHLIGHT_MAX_AGE_DAYS);
+
+  const thought = await prisma.thought.findFirst({
+    where: {
+      highlightedAt: { not: null, gte: highlightCutoff },
+      highlightedById: { not: null },
+      deletedAt: null,
+    },
+    select: {
+      id: true,
+      author: true,
+      message: true,
+      color: true,
+      createdAt: true,
+      highlightedAt: true,
+      highlightedBy: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+        },
+      },
+    },
+    orderBy: {
+      highlightedAt: "desc",
+    },
+  });
+
+  if (!thought) {
+    return null;
+  }
+
+  if (!thought.highlightedAt || !thought.highlightedBy) {
+    return null;
+  }
+
+  return {
+    ...thought,
+    highlightedAt: thought.highlightedAt,
+    highlightedBy: thought.highlightedBy,
+  };
 }
 
 export async function updateHighlight(args: {

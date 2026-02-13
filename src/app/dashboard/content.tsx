@@ -6,20 +6,23 @@ import {
   ActionIcon,
   Loader,
   Pagination,
+  Paper,
+  Skeleton,
   Table,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 
-import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtKeys } from "@/lib/query-keys";
+import { authClient } from "@/lib/auth-client";
+import {
+  adminThoughtsPageOptions,
+  highlightedThoughtOptions,
+} from "@/app/dashboard/options";
 import { getFormattedDate } from "@/utils/date";
-import { formatUserDisplayName } from "@/utils/user";
-import { adminThoughtsPageOptions } from "@/app/dashboard/options";
-import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import { thoughtCountOptions } from "@/app/(main)/options";
-import dashboardClasses from "./dashboard.module.css";
+import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import DeleteThoughtModal from "./delete-thought-modal";
 import type { PrivateThoughtPayload } from "@/types/thought";
 import ServerError from "@/utils/error/ServerError";
@@ -27,9 +30,16 @@ import {
   highlightThought,
   removeThoughtHighlight,
 } from "@/services/moderate/thought";
+import {
+  formatHighlightedThoughtLockRemaining,
+  isHighlightedThoughtLocked,
+} from "@/utils/thought";
 import { setThoughtHighlighting } from "./set-query";
 import HighlightThoughtModal from "./highlight-thought-modal";
 import RemoveHighlightModal from "./remove-highlight-modal";
+import Thought from "../(main)/thought";
+import { formatUserDisplayName } from "@/utils/user";
+import dashboardClasses from "./dashboard.module.css";
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof ServerError && error.issues.length > 0) {
@@ -44,9 +54,15 @@ const getErrorMessage = (error: unknown) => {
 };
 
 export default function Content() {
+  const { data: session } = authClient.useSession();
+
   const [page, setPage] = useState(1);
 
-  const { data, isFetching } = useQuery(adminThoughtsPageOptions(page));
+  const { data: highlightedThought, isFetched: isHighlightedThoughtFetched } =
+    useQuery(highlightedThoughtOptions);
+  const { data: thoughts, isFetching: isThoughtsFetching } = useQuery(
+    adminThoughtsPageOptions(page),
+  );
 
   const { data: count } = useQuery(thoughtCountOptions);
 
@@ -63,32 +79,53 @@ export default function Content() {
         thought: data,
         page,
       });
-      setHighlightingThought(null);
 
-      const queryClient = getQueryClient();
-      queryClient.invalidateQueries({
-        queryKey: thoughtKeys.highlighted(),
-      });
+      setHighlightingThought(null);
     },
   });
 
   const removeHighlightMutation = useMutation({
     mutationFn: removeThoughtHighlight,
-    onSuccess: (data) => {
+    onSuccess: () => {
       setThoughtHighlighting({
-        thought: data,
+        thought: null,
         page,
       });
-      setUnhighlightingThought(null);
 
-      const queryClient = getQueryClient();
-      queryClient.invalidateQueries({
-        queryKey: thoughtKeys.highlighted(),
-      });
+      setUnhighlightingThought(null);
     },
   });
 
-  const handleOpenDeleteModal = (thought: PrivateThoughtPayload) => {
+  const hasHighlightedThought =
+    isHighlightedThoughtFetched && !!highlightedThought;
+
+  const isAdmin = session?.user.role === "admin";
+  const isHighlightLocked =
+    !!highlightedThought &&
+    isHighlightedThoughtLocked(highlightedThought.highlightedAt);
+  const allowHighlighting =
+    !!isAdmin || (isHighlightedThoughtFetched && !isHighlightLocked);
+
+  const highlightTooltipLabel = !isHighlightedThoughtFetched
+    ? "Loading..."
+    : allowHighlighting
+      ? "Highlight thought"
+      : `Highlighting is on cooldown for ${formatHighlightedThoughtLockRemaining(
+          highlightedThought?.highlightedAt ?? null,
+        )}`;
+  const unhighlightTooltipLabel = !isHighlightedThoughtFetched
+    ? "Loading..."
+    : !highlightedThought
+      ? "No highlighted thought to remove."
+      : allowHighlighting
+        ? "Remove current highlight"
+        : `Highlighting is on cooldown for ${formatHighlightedThoughtLockRemaining(
+            highlightedThought.highlightedAt,
+          )}`;
+
+  const handleOpenDeleteModal = (thought?: PrivateThoughtPayload | null) => {
+    if (!thought) return;
+
     setDeletingThought(thought);
   };
 
@@ -111,7 +148,11 @@ export default function Content() {
     highlightMutation.mutate(highlightingThought.id);
   };
 
-  const handleOpenUnhighlightModal = (thought: PrivateThoughtPayload) => {
+  const handleOpenUnhighlightModal = (
+    thought?: PrivateThoughtPayload | null,
+  ) => {
+    if (!thought) return;
+
     setUnhighlightingThought(thought);
   };
 
@@ -130,6 +171,94 @@ export default function Content() {
     <div className={dashboardClasses.container}>
       <Title className={dashboardClasses.title}>Thoughts</Title>
 
+      <Paper
+        withBorder
+        className={dashboardClasses["thought-highlighted-card"]}
+      >
+        <div className={dashboardClasses["thought-highlighted-card__header"]}>
+          <Title
+            order={2}
+            className={dashboardClasses["thought-highlighted-card__title"]}
+          >
+            Highlighted Thought
+          </Title>
+
+          <ActionIcon.Group>
+            <Tooltip label={unhighlightTooltipLabel}>
+              <ActionIcon
+                color="yellow"
+                disabled={!highlightedThought || !allowHighlighting}
+                aria-label="Remove Highlight"
+                onClick={() => {
+                  handleOpenUnhighlightModal(highlightedThought);
+                }}
+              >
+                <IconStarFilled size="1em" />
+              </ActionIcon>
+            </Tooltip>
+
+            <Tooltip
+              label={
+                highlightedThought
+                  ? "Delete highlighted thought"
+                  : "No highlighted thought to delete."
+              }
+            >
+              <ActionIcon
+                color="red"
+                disabled={!highlightedThought}
+                aria-label="Delete Highlighted Thought"
+                onClick={() => handleOpenDeleteModal(highlightedThought)}
+              >
+                <IconTrash size="1em" />
+              </ActionIcon>
+            </Tooltip>
+          </ActionIcon.Group>
+        </div>
+
+        <Thought
+          message={
+            hasHighlightedThought
+              ? highlightedThought?.message
+              : "No highlighted thought yet. Share something meaningful and it could land here."
+          }
+          author={
+            hasHighlightedThought ? highlightedThought?.author : "The community"
+          }
+          color={highlightedThought?.color}
+          fluid
+          loading={!isHighlightedThoughtFetched}
+        />
+
+        <Skeleton mt="xs" visible={!isHighlightedThoughtFetched}>
+          <Text
+            size="sm"
+            className={dashboardClasses["thought-highlighted-card__details"]}
+          >
+            Highlighted at:{" "}
+            {hasHighlightedThought
+              ? getFormattedDate(highlightedThought.highlightedAt)
+              : "-"}{" "}
+            {hasHighlightedThought &&
+              `(unlocks in ${formatHighlightedThoughtLockRemaining(
+                highlightedThought.highlightedAt,
+              )})`}
+          </Text>
+        </Skeleton>
+
+        <Skeleton visible={!isHighlightedThoughtFetched}>
+          <Text
+            size="sm"
+            className={dashboardClasses["thought-highlighted-card__details"]}
+          >
+            Highlighted by:{" "}
+            {hasHighlightedThought
+              ? formatUserDisplayName(highlightedThought.highlightedBy)
+              : "-"}
+          </Text>
+        </Skeleton>
+      </Paper>
+
       <div className={dashboardClasses["table-container"]}>
         <Table.ScrollContainer minWidth="100%" maxHeight="100%">
           <Table highlightOnHover withColumnBorders withRowBorders>
@@ -138,13 +267,12 @@ export default function Content() {
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Message</Table.Th>
                 <Table.Th>Created At</Table.Th>
-                <Table.Th>Highlighted By</Table.Th>
                 <Table.Th />
               </Table.Tr>
             </Table.Thead>
 
             <Table.Tbody>
-              {data?.map((thought) => (
+              {thoughts?.map((thought) => (
                 <Table.Tr key={thought.id}>
                   <Table.Td>{thought.author}</Table.Td>
 
@@ -155,63 +283,50 @@ export default function Content() {
                   <Table.Td>{getFormattedDate(thought.createdAt)}</Table.Td>
 
                   <Table.Td>
-                    {thought.highlightedAt && thought.highlightedBy
-                      ? formatUserDisplayName(thought.highlightedBy)
-                      : "—"}
-                  </Table.Td>
-
-                  <Table.Td>
                     <ActionIcon.Group>
-                      <ActionIcon
-                        aria-label="Highlight Thought"
-                        variant={thought.highlightedAt ? "light" : "default"}
-                        color={thought.highlightedAt ? "yellow" : undefined}
-                        onClick={() => {
-                          if (thought.highlightedAt) {
-                            handleOpenUnhighlightModal(thought);
-                            return;
+                      <Tooltip label={highlightTooltipLabel}>
+                        <ActionIcon
+                          aria-label="Highlight Thought"
+                          variant="default"
+                          onClick={() => handleOpenHighlightModal(thought)}
+                          loading={
+                            (highlightMutation.isPending &&
+                              highlightingThought?.id === thought.id) ||
+                            (removeHighlightMutation.isPending &&
+                              unhighlightingThought?.id === thought.id)
                           }
-
-                          handleOpenHighlightModal(thought);
-                        }}
-                        loading={
-                          (highlightMutation.isPending &&
-                            highlightingThought?.id === thought.id) ||
-                          (removeHighlightMutation.isPending &&
-                            unhighlightingThought?.id === thought.id)
-                        }
-                        disabled={
-                          highlightMutation.isPending ||
-                          removeHighlightMutation.isPending
-                        }
-                      >
-                        {thought.highlightedAt ? (
-                          <IconStarFilled size="1em" />
-                        ) : (
+                          disabled={
+                            !allowHighlighting ||
+                            highlightMutation.isPending ||
+                            removeHighlightMutation.isPending
+                          }
+                        >
                           <IconStar size="1em" />
-                        )}
-                      </ActionIcon>
+                        </ActionIcon>
+                      </Tooltip>
 
-                      <ActionIcon
-                        aria-label="Delete Thought"
-                        color="red"
-                        onClick={() => handleOpenDeleteModal(thought)}
-                      >
-                        <IconTrash size="1em" />
-                      </ActionIcon>
+                      <Tooltip label={"Delete thought"}>
+                        <ActionIcon
+                          aria-label="Delete Thought"
+                          color="red"
+                          onClick={() => handleOpenDeleteModal(thought)}
+                        >
+                          <IconTrash size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
                     </ActionIcon.Group>
                   </Table.Td>
                 </Table.Tr>
               ))}
 
-              {isFetching ? (
+              {isThoughtsFetching ? (
                 <Table.Tr>
                   <Table.Td colSpan={5} ta="center">
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
-                data?.length === 0 && (
+                thoughts?.length === 0 && (
                   <Table.Tr>
                     <Table.Td colSpan={5} ta="center">
                       No thoughts found.
