@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import { type Metadata } from "next";
 import { Paper, Text, Title } from "@mantine/core";
 
-import HeaderNote from "./header-note";
 import LettersActions from "./letters-actions";
-import LettersList from "./letters-list";
+import HeaderNote from "./header-note";
+import SignInCard from "./sign-in-card";
+import LettersListServer from "./letters-list.server";
+import { LettersSkeleton } from "./letters-skeleton";
 import classes from "./letters.module.css";
 
 export const metadata: Metadata = {
@@ -37,7 +40,11 @@ export default function LettersPage() {
         <HeaderNote />
       </Paper>
 
-      <LettersList />
+      <SignInCard />
+
+      <Suspense fallback={<LettersSkeleton />}>
+        <LettersListServer />
+      </Suspense>
     </div>
   );
 }
