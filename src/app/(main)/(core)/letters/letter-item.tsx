@@ -1,6 +1,6 @@
-import { Anchor, Group, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { Anchor, Group, Paper, Text, Title } from "@mantine/core";
 
 import { stripHtmlTags } from "@/utils/text";
 import AuthorAvatar from "@/components/author-avatar";

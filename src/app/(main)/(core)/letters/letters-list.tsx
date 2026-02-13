@@ -2,7 +2,6 @@
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useDisclosure } from "@mantine/hooks";
-import { Button, Card, Text } from "@mantine/core";
 
 import { authClient } from "@/lib/auth-client";
 import { likeLetter, unlikeLetter } from "@/services/letter";
@@ -13,8 +12,13 @@ import LetterItem from "./letter-item";
 import { LettersSkeleton } from "./letters-skeleton";
 import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
 import classes from "./letters.module.css";
+import type { LetterType } from "@/types/letter";
 
-export default function LettersList() {
+export default function LettersList({
+  initialData,
+}: {
+  initialData?: LetterType[];
+}) {
   const { data: session } = authClient.useSession();
   const [signInWarningModalOpened, signInWarningModalHandler] =
     useDisclosure(false);
@@ -24,7 +28,15 @@ export default function LettersList() {
     isFetching: isFetchingPosts,
     fetchNextPage: fetchNextPostsPage,
     hasNextPage: hasNextPostsPage,
-  } = useInfiniteQuery(lettersInfiniteOptions);
+  } = useInfiniteQuery({
+    ...lettersInfiniteOptions,
+    initialData: initialData
+      ? {
+          pages: [initialData],
+          pageParams: [undefined],
+        }
+      : undefined,
+  });
 
   const handleLikeMutation = useMutation({
     mutationFn: async ({
@@ -71,33 +83,6 @@ export default function LettersList() {
 
   return (
     <>
-      {!session && (
-        <Card withBorder className={classes["sign-in-card"]}>
-          <Text
-            size="xs"
-            c="blue"
-            className={classes["sign-in-prompt__eyebrow"]}
-          >
-            New here?
-          </Text>
-
-          <Text size="lg" className={classes["sign-in-prompt__title"]}>
-            Write a letter or respond to one
-          </Text>
-
-          <Text className={classes["sign-in-prompt__copy"]}>
-            Sign in to post or reply. You can also continue anonymously and
-            decide later whether to keep the account for creating.
-          </Text>
-
-          <div className={classes["sign-in-prompt__actions"]}>
-            <Button component="a" href="/sign-in" variant="default">
-              Sign in
-            </Button>
-          </div>
-        </Card>
-      )}
-
       <InfiniteScroll
         onLoadMore={fetchNextPostsPage}
         hasNext={hasNextPostsPage}

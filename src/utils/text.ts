@@ -48,8 +48,35 @@ export const extractUserProfileImageKeyFromUrl = (
 };
 
 export const stripHtmlTags = (text: string) => {
-  // Replace <p> and </p> tags with a space or newline
-  const sanitizedText = text.replace(/<\/?p>/g, " ");
-  const doc = new DOMParser().parseFromString(sanitizedText, "text/html");
-  return doc.body.textContent?.trim() || "";
+  // Keep paragraph-like separators readable before stripping tags.
+  const sanitizedText = text.replace(/<\/?p>/gi, " ");
+
+  if (typeof DOMParser !== "undefined") {
+    const doc = new DOMParser().parseFromString(sanitizedText, "text/html");
+    return doc.body.textContent?.trim() || "";
+  }
+
+  // Prefer cheerio on server for more reliable HTML text extraction.
+  if (typeof window === "undefined") {
+    try {
+      // In ESM server bundles, `require` may not be directly in scope.
+      const nodeRequire = (0, eval)("require") as NodeJS.Require;
+      const { load } = nodeRequire("cheerio") as typeof import("cheerio");
+      return load(sanitizedText).text().trim();
+    } catch {
+      // Fall through to lightweight regex fallback.
+    }
+  }
+  // Server/runtime fallback (Node): strip tags without browser DOM APIs.
+  return sanitizedText
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 };
