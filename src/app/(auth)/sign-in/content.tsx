@@ -23,7 +23,6 @@ import {
   IconAt,
   IconBrandGoogleFilled,
   IconLock,
-  IconUser,
   IconX,
 } from "@tabler/icons-react";
 
@@ -159,39 +158,6 @@ function SignInForm({
     },
   });
 
-  const signInAnonymouslyMutation = useMutation({
-    mutationFn: (token: string) =>
-      authClient.signIn.anonymous({
-        fetchOptions: {
-          headers: {
-            "x-captcha-response": token,
-          },
-          onSuccess: onSuccessSignIn,
-        },
-      }),
-    onSuccess: ({ error }) => {
-      if (error) {
-        notifications.show({
-          icon: <IconX size="1em" />,
-          title: "Error",
-          message: error.message,
-          color: "red",
-        });
-      } else {
-        signedInRedirect();
-      }
-    },
-    onError: (error) => {
-      console.error(error);
-      notifications.show({
-        icon: <IconX size="1em" />,
-        title: "Error",
-        message: "An error occurred. Please try again.",
-        color: "red",
-      });
-    },
-  });
-
   const signInWithGoogle = async () => {
     try {
       const data = await authClient.signIn.social({
@@ -277,29 +243,14 @@ function SignInForm({
 
       <Divider my="md" label="Or continue with email" />
 
-      <Group justify="space-between">
-        <Button
-          variant="default"
-          flex={1}
-          leftSection={<IconUser size="1em" />}
-          loading={signInAnonymouslyMutation.isPending}
-          disabled={form.values.turnstileToken === ""}
-          onClick={() =>
-            signInAnonymouslyMutation.mutate(form.values.turnstileToken)
-          }
-        >
-          Anonymous
-        </Button>
-
-        <Button
-          variant="default"
-          flex={1}
-          leftSection={<IconBrandGoogleFilled size="1em" />}
-          onClick={signInWithGoogle}
-        >
-          Google
-        </Button>
-      </Group>
+      <Button
+        variant="default"
+        fullWidth
+        leftSection={<IconBrandGoogleFilled size="1em" />}
+        onClick={signInWithGoogle}
+      >
+        Google
+      </Button>
     </>
   );
 }

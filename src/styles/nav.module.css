@@ -36,24 +36,3 @@
     display: block;
   }
 }
-
-.anonymous-bar-container {
-  padding-top: var(--mantine-spacing-xs);
-  padding-bottom: var(--mantine-spacing-xs);
-  background-color: var(--mantine-color-yellow-light);
-  color: var(--mantine-color-yellow-text);
-  border-bottom: rem(1) solid var(--mantine-color-default-border);
-}
-
-.anonymous-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.anonymous-bar__text {
-  display: flex;
-  align-items: center;
-  gap: var(--mantine-spacing-xs);
-}

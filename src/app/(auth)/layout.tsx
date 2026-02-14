@@ -14,7 +14,7 @@ export default async function AuthLayout({
     headers: await headers(),
   });
 
-  if (session && !session.user.isAnonymous) {
+  if (session) {
     redirect("/");
   }
 
