@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   ActionIcon,
-  Anchor,
   Avatar,
   Button,
   Container,
@@ -29,7 +28,6 @@ import {
   IconUser,
   IconBell,
   IconTools,
-  IconLink,
   IconMail,
 } from "@tabler/icons-react";
 import { useThrottledCallback } from "@mantine/hooks";
@@ -157,26 +155,6 @@ export default function Nav() {
           </Group>
         </Container>
       </div>
-
-      {session?.user.isAnonymous && (
-        <div className={classes["anonymous-bar-container"]}>
-          <Container size="lg" className={classes["anonymous-bar"]}>
-            <Text size="sm" className={classes["anonymous-bar__text"]}>
-              <IconLink size="1.25em" />
-              <Text span inherit>
-                <Text span inherit fw="bold">
-                  You are browsing anonymously.
-                </Text>{" "}
-                Sign in to save your data and sync across devices.
-              </Text>
-            </Text>
-
-            <Anchor component={Link} href="/sign-up" size="sm" c="yellow">
-              Create Account
-            </Anchor>
-          </Container>
-        </div>
-      )}
     </header>
   );
 }
