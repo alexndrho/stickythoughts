@@ -35,12 +35,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       prisma.user.findMany({
         take: USERS_IN_SITEMAP,
         // Only include public-ish profiles worth indexing:
-        // - not anonymous/system users
         // - not banned
         // - has at least one non-deleted letter
         where: {
           letters: { some: { deletedAt: null } },
-          NOT: [{ isAnonymous: true }, { banned: true }],
+          banned: { not: true },
         },
         orderBy: { updatedAt: "desc" },
         select: { username: true, updatedAt: true, createdAt: true },

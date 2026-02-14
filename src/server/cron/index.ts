@@ -1,3 +1,3 @@
 import "server-only";
 
-export { purgeAnonymousUsers, purgeSoftDeletedContent } from "./purge-service";
+export { purgeSoftDeletedContent } from "./purge-service";

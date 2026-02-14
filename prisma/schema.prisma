@@ -36,7 +36,6 @@ model User {
   displayUsername String?
   bio             String?
 
-  isAnonymous Boolean?  @default(false)
   role        String?
   banned      Boolean?  @default(false)
   banReason   String?

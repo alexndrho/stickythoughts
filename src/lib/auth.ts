@@ -11,7 +11,6 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
   admin as adminPlugin,
-  anonymous,
   captcha,
   emailOTP,
   twoFactor,
@@ -29,7 +28,6 @@ import EmailLinkTemplate from "@/components/emails/email-link-template";
 import reservedUsernames from "@/config/reserved-usernames.json";
 import { USERNAME_REGEX } from "@/config/text";
 import { matcher } from "./bad-words";
-import { removeUserProfilePicture } from "@/server/user";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -184,59 +182,9 @@ export const auth = betterAuth({
       endpoints: [
         "/sign-up/email",
         "/sign-in/email",
-        "/sign-in/anonymous",
         "/sign-in/username",
         "/email-otp/send-verification-otp",
       ],
-    }),
-    anonymous({
-      onLinkAccount: async ({ anonymousUser, newUser }) => {
-        try {
-          const oldUserId = anonymousUser.user.id;
-          const newUserId = newUser.user.id;
-
-          if (anonymousUser.user.image) {
-            await removeUserProfilePicture({
-              userId: oldUserId,
-              imageUrl: anonymousUser.user.image,
-              bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
-            });
-          }
-
-          await prisma.$transaction([
-            prisma.letter.updateMany({
-              where: { authorId: oldUserId },
-              data: { authorId: newUserId },
-            }),
-            prisma.letterLike.updateMany({
-              where: { userId: oldUserId },
-              data: { userId: newUserId },
-            }),
-            prisma.letterReply.updateMany({
-              where: { authorId: oldUserId },
-              data: { authorId: newUserId },
-            }),
-            prisma.letterReplyLike.updateMany({
-              where: { userId: oldUserId },
-              data: { userId: newUserId },
-            }),
-            prisma.notification.updateMany({
-              where: { userId: oldUserId },
-              data: { userId: newUserId },
-            }),
-            prisma.notificationActor.updateMany({
-              where: { userId: oldUserId },
-              data: { userId: newUserId },
-            }),
-          ]);
-        } catch (error) {
-          console.error("Error linking anonymous account:", error);
-
-          throw new APIError("INTERNAL_SERVER_ERROR", {
-            message: "Failed to link anonymous account. Please try again.",
-          });
-        }
-      },
     }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
