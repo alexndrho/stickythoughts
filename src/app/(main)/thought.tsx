@@ -30,10 +30,11 @@ export default function Thought({
   className,
   ...rest
 }: ThoughtProps) {
+  const resolvedColor = loading ? undefined : color;
   const resolvedLabel = createdAt ? getFormattedDate(createdAt) : null;
   const resolvedClassName = [
     classes.thought,
-    !color ? classes["thought--empty"] : null,
+    !resolvedColor ? classes["thought--empty"] : null,
     fluid ? classes["thought--fluid"] : null,
     className,
   ]
@@ -43,9 +44,9 @@ export default function Thought({
   const content = (
     <Card
       component="article"
-      bg={color ? `${color}.6` : undefined}
+      bg={resolvedColor ? `${resolvedColor}.6` : undefined}
       className={resolvedClassName}
-      withBorder={!color}
+      withBorder={!resolvedColor}
       {...rest}
     >
       {!loading ? (

@@ -18,10 +18,14 @@ export default function HeaderCarousel({
   initialHighlightedThought,
   loading = false,
 }: HeaderCarouselProps) {
-  const { data: highlightedThought } = useQuery({
-    ...highlightedThoughtOptions,
-    initialData: initialHighlightedThought,
-  });
+  const { data: highlightedThought, isPending: isHighlightedThoughPending } =
+    useQuery({
+      ...highlightedThoughtOptions,
+      initialData: initialHighlightedThought,
+      enabled: !loading,
+    });
+
+  const isLoading = loading || isHighlightedThoughPending;
 
   return (
     <Carousel
@@ -46,13 +50,13 @@ export default function HeaderCarousel({
                 author={highlightedThought.author}
                 color={highlightedThought.color}
                 createdAt={highlightedThought.createdAt}
-                loading={loading}
+                loading={isLoading}
               />
             ) : (
               <Thought
                 message="No highlighted thought yet. Share something meaningful and it could land here."
                 author="The community"
-                loading={loading}
+                loading={isLoading}
               />
             )}
           </div>
