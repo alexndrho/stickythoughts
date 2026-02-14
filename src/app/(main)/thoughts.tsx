@@ -32,12 +32,13 @@ export default function HomeThoughts({
     data: thoughtsData,
     fetchNextPage: fetchThoughtsNextPage,
     hasNextPage: hasThoughtsNextPage,
+    isPending: isThoughtsPending,
     isFetching: isThoughtsFetching,
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
   } = useInfiniteQuery({
     ...thoughtsInfiniteOptions,
-    initialData: initialData
+    initialData: initialData !== undefined
       ? {
           pages: [initialData],
           pageParams: [undefined],
@@ -49,6 +50,7 @@ export default function HomeThoughts({
     data: searchData,
     fetchNextPage: fetchSearchNextPage,
     hasNextPage: hasSearchNextPage,
+    isPending: isSearchPending,
     isFetching: isSearchFetching,
     isRefetching: isSearchRefetching,
     isRefetchError: isSearchRefetchError,
@@ -114,6 +116,12 @@ export default function HomeThoughts({
     };
   }, []);
 
+  const hasSearch = searchBarValue.length > 0;
+  const isInitialLoading = hasSearch ? isSearchPending : isThoughtsPending;
+  const visibleThoughts = hasSearch
+    ? searchData?.pages.reduce((acc, page) => acc.concat(page), [])
+    : thoughtsData?.pages.reduce((acc, page) => acc.concat(page), []);
+
   return (
     <>
       <div className={classes["actions-bar"]}>
@@ -135,43 +143,31 @@ export default function HomeThoughts({
 
       <InfiniteScroll
         onLoadMore={() => {
-          if (searchBarValue.length > 0) {
+          if (hasSearch) {
             fetchSearchNextPage();
           } else {
             fetchThoughtsNextPage();
           }
         }}
-        hasNext={
-          searchBarValue.length > 0 ? hasSearchNextPage : hasThoughtsNextPage
-        }
+        hasNext={hasSearch ? hasSearchNextPage : hasThoughtsNextPage}
         loading={isThoughtsFetching || isSearchFetching}
         loader={<ThoughtsLoader />}
       >
-        <section className={classes.thoughts}>
-          {searchBarValue.length > 0
-            ? searchData?.pages
-                .reduce((acc, page) => acc.concat(page), [])
-                .map((thought) => (
-                  <Thought
-                    key={thought.id}
-                    message={thought.message}
-                    author={thought.author}
-                    color={thought.color}
-                    createdAt={thought.createdAt}
-                  />
-                ))
-            : thoughtsData?.pages
-                .reduce((acc, page) => acc.concat(page), [])
-                .map((thought) => (
-                  <Thought
-                    key={thought.id}
-                    message={thought.message}
-                    author={thought.author}
-                    color={thought.color}
-                    createdAt={thought.createdAt}
-                  />
-                ))}
-        </section>
+        {isInitialLoading ? (
+          <ThoughtsLoader />
+        ) : (
+          <section className={classes.thoughts}>
+            {visibleThoughts?.map((thought) => (
+              <Thought
+                key={thought.id}
+                message={thought.message}
+                author={thought.author}
+                color={thought.color}
+                createdAt={thought.createdAt}
+              />
+            ))}
+          </section>
+        )}
       </InfiniteScroll>
 
       <SendThoughtModal open={messageOpen} onClose={close} />
