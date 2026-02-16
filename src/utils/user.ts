@@ -53,7 +53,7 @@ export function formatUserNotifications(
       replyId: notification.reply?.id,
       body,
       isRead: notification.isRead,
-      updatedAt: notification.updatedAt.toISOString(),
+      updatedAt: notification.updatedAt,
     };
   });
 }

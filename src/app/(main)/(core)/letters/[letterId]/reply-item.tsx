@@ -110,11 +110,13 @@ export default function ReplyItem({
           </div>
 
           <Text size="xs" className={classes["reply-item__created-at"]}>
-            {formatDistanceToNow(new Date(reply.createdAt), {
+            {formatDistanceToNow(reply.createdAt, {
               addSuffix: true,
             })}
 
-            {reply.updatedAt !== reply.createdAt && <span> (edited)</span>}
+            {reply.updatedAt.getTime() !== reply.createdAt.getTime() && (
+              <span> (edited)</span>
+            )}
           </Text>
         </div>
 

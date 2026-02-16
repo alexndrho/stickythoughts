@@ -242,7 +242,7 @@ function NotificationItem({
               {formatNotificationBody({ notification, setClosed })}
             </Text>
             <Text size="xs">
-              {formatDistanceToNow(new Date(notification.updatedAt))}
+              {formatDistanceToNow(notification.updatedAt)}
             </Text>
           </div>
         </Flex>

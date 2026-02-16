@@ -58,7 +58,7 @@ export default function SessionItem({
           <Text span inherit className={classes["session-item__label"]}>
             Last Active:
           </Text>{" "}
-          {new Date(session.updatedAt).toLocaleString()}
+          {session.updatedAt.toLocaleString()}
         </Text>
       </div>
 

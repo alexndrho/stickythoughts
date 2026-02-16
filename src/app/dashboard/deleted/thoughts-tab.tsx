@@ -29,7 +29,7 @@ import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys } from "@/lib/query-keys";
 import { thoughtKeys } from "@/lib/query-keys";
-import type { DeletedThought } from "@/types/deleted";
+import type { DeletedThoughtFromServer } from "@/types/deleted";
 import {
   permanentlyDeleteThought,
   restoreDeletedThought,
@@ -47,9 +47,9 @@ export interface ThoughtsTabProps {
 export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingThought, setPermanentlyDeletingThought] =
-    useState<DeletedThought | null>(null);
+    useState<DeletedThoughtFromServer | null>(null);
   const [restoringThought, setRestoringThought] =
-    useState<DeletedThought | null>(null);
+    useState<DeletedThoughtFromServer | null>(null);
   const [restoringThoughtId, setRestoringThoughtId] = useState<string | null>(
     null,
   );
@@ -123,7 +123,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
     },
   });
 
-  const handleConfirmPermanentDelete = (thought: DeletedThought) => {
+  const handleConfirmPermanentDelete = (thought: DeletedThoughtFromServer) => {
     deleteMutation.mutate(thought.id);
   };
 

@@ -67,7 +67,7 @@ export default function LetterItem({
                 </Anchor>
               )}{" "}
               •{" "}
-              {formatDistanceToNow(new Date(post.createdAt), {
+              {formatDistanceToNow(post.createdAt, {
                 addSuffix: true,
               })}
             </Text>

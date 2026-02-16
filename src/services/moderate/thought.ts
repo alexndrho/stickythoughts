@@ -6,9 +6,7 @@ import {
 } from "@/utils/thought";
 import { fetchJson } from "@/services/http";
 import {
-  PrivateHighlightedThoughtFromServer,
   PrivateHighlightedThoughtPayload,
-  type PrivateThoughtFromServer,
   type PrivateThoughtPayload,
 } from "@/types/thought";
 import type { MessageResponse } from "@/types/http";
@@ -18,7 +16,7 @@ export const getAdminThoughts = async ({
 }: {
   page: number;
 }): Promise<PrivateThoughtPayload[]> => {
-  const data = await fetchJson<PrivateThoughtFromServer[]>(
+  const data = await fetchJson<PrivateThoughtPayload[]>(
     `/api/dashboard/thoughts?page=${page}`,
     undefined,
     { errorMessage: "Failed to get dashboard thoughts" },
@@ -40,7 +38,7 @@ export const deleteThought = async (id: string) => {
 export const highlightThought = async (
   id: string,
 ): Promise<PrivateHighlightedThoughtPayload> => {
-  const data = await fetchJson<PrivateHighlightedThoughtFromServer>(
+  const data = await fetchJson<PrivateHighlightedThoughtPayload>(
     `/api/dashboard/thoughts/${id}/highlight`,
     {
       method: "POST",
@@ -53,7 +51,7 @@ export const highlightThought = async (
 
 export const getHighlightedThought =
   async (): Promise<PrivateHighlightedThoughtPayload | null> => {
-    const data = await fetchJson<PrivateHighlightedThoughtFromServer | null>(
+    const data = await fetchJson<PrivateHighlightedThoughtPayload | null>(
       `/api/dashboard/thoughts/highlight`,
       undefined,
       { errorMessage: "Failed to get highlighted thought" },

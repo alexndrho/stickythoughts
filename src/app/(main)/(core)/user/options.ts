@@ -32,7 +32,7 @@ export const userNotificationsOptions = queryOptions({
 export const userNotificationsInfiniteOptions = infiniteQueryOptions({
   queryKey: userKeys.notificationsInfinite(),
   initialPageParam: undefined,
-  queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
+  queryFn: async ({ pageParam }: { pageParam: Date | undefined }) =>
     getUserNotifications(pageParam),
   getNextPageParam: (notifications) => {
     if (notifications.length < NOTIFICATION_PER_PAGE) return undefined;

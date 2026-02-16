@@ -1,5 +1,6 @@
 import "client-only";
 
+import { normalizeHttpDates } from "@/services/helpers/normalizeHttpDates";
 import type IError from "@/types/error";
 import { toServerError } from "@/utils/error/ServerError";
 
@@ -25,7 +26,7 @@ export async function fetchJson<T>(
 
   // Most of our API routes return `{ issues }` on error and JSON on success.
   // If a route ever returns non-JSON, we still want a coherent error.
-  const data = await res.json().catch(() => null);
+  const data = normalizeHttpDates(await res.json().catch(() => null));
 
   if (!res.ok) {
     throw toServerError(opts.errorMessage, coerceIssues(data));

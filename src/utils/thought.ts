@@ -7,59 +7,36 @@ import {
 
 import { THOUGHT_HIGHLIGHT_LOCK_DURATION_MS } from "@/config/thought";
 import type {
-  PrivateHighlightedThoughtFromServer,
   PrivateHighlightedThoughtPayload,
-  PrivateThoughtFromServer,
   PrivateThoughtPayload,
-  PublicThoughtFromServer,
   PublicThoughtPayload,
 } from "@/types/thought";
 import { getColorFallback } from "./color";
 
-// Date data from the server HTTP response body is parsed as JSON,
-// so date fields are strings and need to be converted to Date objects
 export const parsePublicThoughtFromServer = (
-  thought: PublicThoughtFromServer | PublicThoughtPayload,
+  thought: PublicThoughtPayload,
 ): PublicThoughtPayload => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-    createdAt:
-      thought.createdAt instanceof Date
-        ? thought.createdAt
-        : new Date(thought.createdAt),
   } satisfies PublicThoughtPayload;
 };
 
 export const parsePrivateThoughtFromServer = (
-  thought: PrivateThoughtFromServer | PrivateThoughtPayload,
+  thought: PrivateThoughtPayload,
 ): PrivateThoughtPayload => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-    createdAt:
-      thought.createdAt instanceof Date
-        ? thought.createdAt
-        : new Date(thought.createdAt),
   } satisfies PrivateThoughtPayload;
 };
 
 export const parsePrivateHighlightedThoughtFromServer = (
-  thought:
-    | PrivateHighlightedThoughtFromServer
-    | PrivateHighlightedThoughtPayload,
+  thought: PrivateHighlightedThoughtPayload,
 ): PrivateHighlightedThoughtPayload => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-    highlightedAt:
-      thought.highlightedAt instanceof Date
-        ? thought.highlightedAt
-        : new Date(thought.highlightedAt),
-    createdAt:
-      thought.createdAt instanceof Date
-        ? thought.createdAt
-        : new Date(thought.createdAt),
   } satisfies PrivateHighlightedThoughtPayload;
 };
 

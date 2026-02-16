@@ -15,14 +15,6 @@ export type DeletedThoughtFromServer = Omit<
   deletedBy: DeletedUserSummary | null;
 };
 
-export type DeletedThought = Omit<
-  DeletedThoughtFromServer,
-  "highlightedAt" | "highlightedById" | "createdAt" | "deletedAt"
-> & {
-  createdAt: Date;
-  deletedAt: Date | null;
-};
-
 export type DeletedLetterFromServer = Omit<
   Letter,
   "createdAt" | "updatedAt" | "deletedAt"

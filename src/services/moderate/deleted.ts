@@ -1,11 +1,9 @@
 import "client-only";
 
-import { parsePublicThoughtFromServer } from "@/utils/thought";
 import { fetchJson } from "@/services/http";
-import type { PublicThoughtFromServer } from "@/types/thought";
+import { getColorFallback } from "@/utils/color";
 import type {
   DeletedThoughtFromServer,
-  DeletedThought,
   DeletedLetterFromServer,
   DeletedLetterReplyFromServer,
 } from "@/types/deleted";
@@ -14,7 +12,7 @@ export const getDeletedThoughts = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedThought[]> => {
+}): Promise<DeletedThoughtFromServer[]> => {
   const data = await fetchJson<DeletedThoughtFromServer[]>(
     `/api/dashboard/deleted/thoughts?page=${page}`,
     undefined,
@@ -22,13 +20,9 @@ export const getDeletedThoughts = async ({
   );
 
   return data.map((thought) => ({
-    ...parsePublicThoughtFromServer(
-      thought as unknown as PublicThoughtFromServer,
-    ),
-    deletedAt: thought.deletedAt ? new Date(thought.deletedAt) : null,
-    deletedBy: thought.deletedBy,
-    deletedById: thought.deletedById,
-  })) satisfies DeletedThought[];
+    ...thought,
+    color: getColorFallback(thought.color),
+  }));
 };
 
 export const getDeletedLetters = async ({

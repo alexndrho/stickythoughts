@@ -103,5 +103,5 @@ export type UserNotificationType = Pick<
   letterId: string | undefined;
   replyId: string | undefined;
   body: string;
-  updatedAt: string;
+  updatedAt: Date;
 };

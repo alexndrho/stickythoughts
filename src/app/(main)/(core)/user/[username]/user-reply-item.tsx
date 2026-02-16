@@ -82,7 +82,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
               </Anchor>
             )}{" "}
             replied{" "}
-            {formatDistanceToNow(new Date(reply.createdAt), {
+            {formatDistanceToNow(reply.createdAt, {
               addSuffix: true,
             })}
           </Text>

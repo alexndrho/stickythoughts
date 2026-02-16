@@ -204,7 +204,7 @@ export default function Content() {
 
                   <Table.Td>
                     {user.banExpires
-                      ? new Date(user.banExpires).toLocaleString("en-US", {
+                      ? user.banExpires.toLocaleString("en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",

@@ -121,12 +121,12 @@ export const updateUserLikesVisibility = async (
 };
 
 export const getUserNotifications = async (
-  lastUpdatedAt?: string,
+  lastUpdatedAt?: Date,
 ): Promise<UserNotificationType[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastUpdatedAt) {
-    searchParams.append("lastUpdatedAt", lastUpdatedAt);
+    searchParams.append("lastUpdatedAt", lastUpdatedAt.toISOString());
   }
 
   return fetchJson(

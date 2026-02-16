@@ -10,13 +10,6 @@ export type PrivateThoughtPayload = Prisma.ThoughtGetPayload<{
   };
 }>;
 
-export type PrivateThoughtFromServer = Omit<
-  PrivateThoughtPayload,
-  "createdAt"
-> & {
-  createdAt: string;
-};
-
 type PrivateHighlightedThoughtPayloadBase = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
@@ -47,14 +40,6 @@ export type PrivateHighlightedThoughtPayload = Omit<
   >;
 };
 
-export type PrivateHighlightedThoughtFromServer = Omit<
-  PrivateHighlightedThoughtPayload,
-  "createdAt" | "highlightedAt"
-> & {
-  createdAt: string;
-  highlightedAt: string;
-};
-
 export type PublicThoughtPayload = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
@@ -64,11 +49,3 @@ export type PublicThoughtPayload = Prisma.ThoughtGetPayload<{
     createdAt: true;
   };
 }>;
-
-// Override date type to string from the API response
-export type PublicThoughtFromServer = Omit<
-  PublicThoughtPayload,
-  "createdAt"
-> & {
-  createdAt: string;
-};

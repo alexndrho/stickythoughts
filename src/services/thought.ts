@@ -3,10 +3,7 @@ import "client-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { parsePublicThoughtFromServer } from "@/utils/thought";
 import { fetchJson } from "@/services/http";
-import type {
-  PublicThoughtFromServer,
-  PublicThoughtPayload,
-} from "@/types/thought";
+import type { PublicThoughtPayload } from "@/types/thought";
 
 const getThoughts = async ({
   lastId,
@@ -24,7 +21,7 @@ const getThoughts = async ({
     params.append("searchTerm", searchTerm);
   }
 
-  const data = await fetchJson<PublicThoughtFromServer[]>(
+  const data = await fetchJson<PublicThoughtPayload[]>(
     `/api/thoughts${params.toString() ? `?${params.toString()}` : ""}`,
     undefined,
     { errorMessage: "Failed to get thoughts" },
@@ -63,7 +60,7 @@ const getThoughtsCount = async (): Promise<number> => {
 
 const getHighlightedThought =
   async (): Promise<PublicThoughtPayload | null> => {
-    const data = await fetchJson<PublicThoughtFromServer | null>(
+    const data = await fetchJson<PublicThoughtPayload | null>(
       "/api/thoughts/highlight",
       undefined,
       { errorMessage: "Failed to get highlighted thought" },
@@ -76,4 +73,4 @@ const getHighlightedThought =
 
 export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought };
 
-export type { PublicThoughtFromServer, PublicThoughtPayload };
+export type { PublicThoughtPayload };
