@@ -32,25 +32,24 @@ export default function HomeThoughts({
     data: thoughtsData,
     fetchNextPage: fetchThoughtsNextPage,
     hasNextPage: hasThoughtsNextPage,
-    isPending: isThoughtsPending,
     isFetching: isThoughtsFetching,
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
   } = useInfiniteQuery({
     ...thoughtsInfiniteOptions,
-    initialData: initialData !== undefined
-      ? {
-          pages: [initialData],
-          pageParams: [undefined],
-        }
-      : undefined,
+    initialData:
+      initialData !== undefined
+        ? {
+            pages: [initialData],
+            pageParams: [undefined],
+          }
+        : undefined,
   });
 
   const {
     data: searchData,
     fetchNextPage: fetchSearchNextPage,
     hasNextPage: hasSearchNextPage,
-    isPending: isSearchPending,
     isFetching: isSearchFetching,
     isRefetching: isSearchRefetching,
     isRefetchError: isSearchRefetchError,
@@ -117,10 +116,10 @@ export default function HomeThoughts({
   }, []);
 
   const hasSearch = searchBarValue.length > 0;
-  const isInitialLoading = hasSearch ? isSearchPending : isThoughtsPending;
   const visibleThoughts = hasSearch
     ? searchData?.pages.reduce((acc, page) => acc.concat(page), [])
     : thoughtsData?.pages.reduce((acc, page) => acc.concat(page), []);
+  const isActiveListLoading = hasSearch ? isSearchFetching : isThoughtsFetching;
 
   return (
     <>
@@ -150,24 +149,20 @@ export default function HomeThoughts({
           }
         }}
         hasNext={hasSearch ? hasSearchNextPage : hasThoughtsNextPage}
-        loading={isThoughtsFetching || isSearchFetching}
+        loading={isActiveListLoading}
         loader={<ThoughtsLoader />}
       >
-        {isInitialLoading ? (
-          <ThoughtsLoader />
-        ) : (
-          <section className={classes.thoughts}>
-            {visibleThoughts?.map((thought) => (
-              <Thought
-                key={thought.id}
-                message={thought.message}
-                author={thought.author}
-                color={thought.color}
-                createdAt={thought.createdAt}
-              />
-            ))}
-          </section>
-        )}
+        <section className={classes.thoughts}>
+          {visibleThoughts?.map((thought) => (
+            <Thought
+              key={thought.id}
+              message={thought.message}
+              author={thought.author}
+              color={thought.color}
+              createdAt={thought.createdAt}
+            />
+          ))}
+        </section>
       </InfiniteScroll>
 
       <SendThoughtModal open={messageOpen} onClose={close} />
