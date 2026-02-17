@@ -26,7 +26,7 @@ export type DeletedLetterFromServer = Omit<
     name: string | null;
     username: string;
     image: string | null;
-  };
+  } | null;
   deletedBy: DeletedUserSummary | null;
 };
 

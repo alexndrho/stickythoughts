@@ -55,6 +55,8 @@ export async function likeLetter(args: {
   });
 
   if (letterLike.letter.authorId === letterLike.userId) return;
+  const recipientUserId = letterLike.letter.authorId;
+  if (!recipientUserId) return;
 
   if (letterLike.letter.notifications.length > 0) {
     await prisma.notification.update({
@@ -74,7 +76,7 @@ export async function likeLetter(args: {
   } else {
     await prisma.notification.create({
       data: {
-        user: { connect: { id: letterLike.letter.authorId } },
+        user: { connect: { id: recipientUserId } },
         type: NotificationType.LETTER_LIKE,
         letter: { connect: { id: args.letterId } },
         actors: {

@@ -2,7 +2,7 @@ import "server-only";
 
 import { auth } from "@/lib/auth";
 import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
-import { listLetters as listLettersServer } from "@/server/letter";
+import { listLettersPublic } from "@/server/letter";
 import { headers } from "next/headers";
 import { formatLetters } from "@/utils/letter";
 
@@ -18,7 +18,7 @@ export async function listLetters() {
     headers: requestHeaders,
   });
 
-  const letters = await listLettersServer({
+  const letters = await listLettersPublic({
     viewerUserId: session?.user?.id,
   });
 

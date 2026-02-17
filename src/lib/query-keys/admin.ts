@@ -20,6 +20,18 @@ export const adminKeys = {
   deletedLettersCount: () => [...adminKeys.deletedLetters(), "count"] as const,
   deletedRepliesCount: () => [...adminKeys.deletedReplies(), "count"] as const,
 
+  submissions: () => [...adminKeys.all(), "submissions"] as const,
+  submittedLetters: () => [...adminKeys.submissions(), "submitted"] as const,
+  rejectedLetters: () => [...adminKeys.submissions(), "rejected"] as const,
+  submittedLettersPage: (page: number) =>
+    [...adminKeys.submittedLetters(), page] as const,
+  rejectedLettersPage: (page: number) =>
+    [...adminKeys.rejectedLetters(), page] as const,
+  submittedLettersCount: () =>
+    [...adminKeys.submittedLetters(), "count"] as const,
+  rejectedLettersCount: () =>
+    [...adminKeys.rejectedLetters(), "count"] as const,
+
   users: () => [...adminKeys.all(), "users"] as const,
   usersPage: (input: {
     page: number;

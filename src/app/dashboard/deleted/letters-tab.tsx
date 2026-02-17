@@ -76,10 +76,11 @@ export default function LettersTab({ isActive }: LettersTabProps) {
       })
     : false;
 
-  const { data, isFetching } = useQuery({
-    ...deletedLettersPageOptions(page),
-    enabled: isActive,
-  });
+  const { data: deletedLetters, isFetching: isDeletedLettersFetching } =
+    useQuery({
+      ...deletedLettersPageOptions(page),
+      enabled: isActive,
+    });
 
   const { data: totalCount } = useQuery({
     ...deletedLettersCountOptions(),
@@ -140,12 +141,18 @@ export default function LettersTab({ isActive }: LettersTabProps) {
               </Table.Thead>
 
               <Table.Tbody>
-                {data?.map((letter) => (
+                {deletedLetters?.map((letter) => (
                   <Table.Tr key={letter.id}>
                     <Table.Td>
                       <Text>{letter.title}</Text>
                     </Table.Td>
-                    <Table.Td>{formatUserDisplayName(letter.author)}</Table.Td>
+                    <Table.Td>
+                      {/* Show "Anonymous" if the letter was submitted anonymously
+                         or if the author information is missing (author can be null for deleted letters). */}
+                      {!letter.author || letter.isAnonymous
+                        ? "Anonymous"
+                        : formatUserDisplayName(letter.author)}
+                    </Table.Td>
                     <Table.Td>
                       {letter.deletedById === letter.authorId ? (
                         <Badge size="sm">Author</Badge>
@@ -206,14 +213,14 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                   </Table.Tr>
                 ))}
 
-                {isFetching ? (
+                {isDeletedLettersFetching ? (
                   <Table.Tr>
                     <Table.Td colSpan={5} ta="center">
                       <Loader />
                     </Table.Td>
                   </Table.Tr>
                 ) : (
-                  data?.length === 0 && (
+                  deletedLetters?.length === 0 && (
                     <Table.Tr>
                       <Table.Td colSpan={5} ta="center">
                         No deleted letters found.

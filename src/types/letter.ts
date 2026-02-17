@@ -7,6 +7,8 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
     body: true;
     authorId: true;
     isAnonymous: true;
+    postedAt: true;
+    contentUpdatedAt: true;
     createdAt: true;
     updatedAt: true;
     author: {

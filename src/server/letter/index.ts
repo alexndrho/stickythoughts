@@ -4,7 +4,7 @@ export { LetterNotFoundError, ReplyNotFoundError } from "./letter-errors";
 export {
   createLetter,
   getLetterPublic,
-  listLetters,
+  listLettersPublic,
   softDeleteLetter,
   updateLetter,
 } from "./letters-service";

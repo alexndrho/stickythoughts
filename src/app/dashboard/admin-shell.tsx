@@ -6,6 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Burger, Group, NavLink, Text } from "@mantine/core";
 import {
   IconHome,
+  IconInbox,
   IconMessage,
   IconTrash,
   IconUser,
@@ -35,6 +36,14 @@ const navLinks: NavLinkConfig[] = [
     href: "/dashboard",
     permissions: {
       thought: ["list"],
+    },
+  },
+  {
+    icon: <IconInbox size="1em" />,
+    label: "Submissions",
+    href: "/dashboard/submissions",
+    permissions: {
+      letter: ["list-submissions"],
     },
   },
   {

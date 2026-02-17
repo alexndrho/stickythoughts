@@ -4,7 +4,14 @@ import { defaultStatements, adminAc } from "better-auth/plugins/admin/access";
 const statement = {
   ...defaultStatements,
   thought: ["list", "highlight", "list-deleted", "delete", "restore", "purge"],
-  letter: ["list-deleted", "delete", "restore", "purge"],
+  letter: [
+    "list-submissions",
+    "review",
+    "list-deleted",
+    "delete",
+    "restore",
+    "purge",
+  ],
   letterReply: ["list-deleted", "delete", "restore", "purge"],
 } as const;
 
@@ -13,13 +20,20 @@ export const ac = createAccessControl(statement);
 export const admin = ac.newRole({
   ...adminAc.statements,
   thought: ["list", "highlight", "list-deleted", "delete", "restore", "purge"],
-  letter: ["list-deleted", "delete", "restore", "purge"],
+  letter: [
+    "list-submissions",
+    "review",
+    "list-deleted",
+    "delete",
+    "restore",
+    "purge",
+  ],
   letterReply: ["list-deleted", "delete", "restore", "purge"],
 });
 
 export const moderator = ac.newRole({
   user: ["ban"],
   thought: ["list", "highlight", "list-deleted", "delete"],
-  letter: ["list-deleted", "delete"],
+  letter: ["list-submissions", "review", "list-deleted", "delete"],
   letterReply: ["list-deleted", "delete"],
 });

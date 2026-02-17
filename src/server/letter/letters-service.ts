@@ -1,5 +1,6 @@
 import "server-only";
 
+import { auth } from "@/lib/auth";
 import { LETTERS_PER_PAGE } from "@/config/letter";
 import { prisma } from "@/lib/db";
 import { LetterNotFoundError } from "./letter-errors";
@@ -7,21 +8,28 @@ import type { LetterType } from "@/types/letter";
 import { formatLetters } from "@/utils/letter";
 
 export async function createLetter(args: {
-  authorId: string;
+  session?: Awaited<ReturnType<typeof auth.api.getSession>>;
   title: string;
   body: string;
   isAnonymous?: boolean;
 }) {
+  const isAuthenticated = Boolean(args.session);
+  const isAutoApproved = Boolean(args.session?.user.emailVerified);
+  const isAnonymous = isAuthenticated ? args.isAnonymous : true;
+
   return prisma.letter.create({
     data: {
       title: args.title,
       body: args.body,
-      isAnonymous: args.isAnonymous,
-      author: {
-        connect: {
-          id: args.authorId,
+      isAnonymous,
+      ...(args.session && {
+        author: {
+          connect: {
+            id: args.session.user.id,
+          },
         },
-      },
+      }),
+      ...(isAutoApproved && { status: "APPROVED", postedAt: new Date() }),
     },
     select: {
       id: true,
@@ -35,7 +43,9 @@ export async function getLetterPublic(args: {
 }): Promise<LetterType> {
   const letter = await prisma.letter.findUnique({
     where: {
+      deletedAt: null,
       id: args.letterId,
+      status: "APPROVED",
     },
     include: {
       author: {
@@ -78,7 +88,7 @@ export async function getLetterPublic(args: {
   });
 }
 
-export async function listLetters(args: {
+export async function listLettersPublic(args: {
   lastId?: string | null;
   viewerUserId?: string;
 }) {
@@ -90,7 +100,7 @@ export async function listLetters(args: {
         id: args.lastId,
       },
     }),
-    where: { deletedAt: null },
+    where: { deletedAt: null, status: "APPROVED" },
     include: {
       author: {
         select: {
@@ -120,7 +130,11 @@ export async function listLetters(args: {
         },
       },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [
+      { postedAt: { sort: "desc", nulls: "last" } },
+      { createdAt: "desc" },
+      { id: "desc" },
+    ],
   });
 }
 
@@ -137,6 +151,7 @@ export async function updateLetter(args: {
     },
     data: {
       body: args.body,
+      contentUpdatedAt: new Date(),
     },
     include: {
       author: {
