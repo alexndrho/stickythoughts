@@ -10,7 +10,7 @@ import type { PublicThoughtPayload } from "@/types/thought";
 import classes from "./home.module.css";
 
 export type HeaderCarouselProps = {
-  initialHighlightedThought?: PublicThoughtPayload;
+  initialHighlightedThought?: PublicThoughtPayload | null;
   loading?: boolean;
 };
 
