@@ -14,11 +14,16 @@ export {
 } from "./thought-service";
 
 export {
+  countSubmissionLetters,
   countDeletedLetters,
   getDeletedLetterStatus,
+  getSubmissionLetterStatus,
   listDeletedLetters,
+  listSubmissionLetters,
   purgeLetter,
+  reopenSubmissionLetter,
   restoreLetter,
+  setSubmissionLetterStatus,
 } from "./letter-service";
 
 export {

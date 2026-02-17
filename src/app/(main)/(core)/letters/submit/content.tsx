@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@mantine/form";
 import {
+  Alert,
   Button,
   Container,
   Group,
@@ -12,6 +13,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
@@ -20,23 +22,18 @@ import { searchKeys } from "@/lib/query-keys";
 import { userKeys } from "@/lib/query-keys";
 import { sanitizeString } from "@/utils/text";
 import { submitLetter } from "@/services/letter";
-import { useEffect } from "react";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import TextEditor from "@/components/text-editor";
 import ServerError from "@/utils/error/ServerError";
 import { LETTER_BODY_MAX_LENGTH } from "@/lib/validations/letter";
 import classes from "./letter-submit.module.css";
+import { notifications } from "@mantine/notifications";
 
 export default function Content() {
   const router = useRouter();
-  const { data: session, isPending: isSessionPending } =
-    authClient.useSession();
+  const { data: session } = authClient.useSession();
 
-  useEffect(() => {
-    if (!isSessionPending && !session) {
-      router.push("/");
-    }
-  }, [isSessionPending, session, router]);
+  const requiresReview = !session || !session.user.emailVerified;
 
   const form = useForm({
     initialValues: {
@@ -78,23 +75,34 @@ export default function Content() {
   const mutation = useMutation({
     mutationFn: submitLetter,
     onSuccess: ({ id }) => {
-      const queryClient = getQueryClient();
+      if (!requiresReview) {
+        const queryClient = getQueryClient();
 
-      queryClient.invalidateQueries({
-        queryKey: letterKeys.infiniteList(),
-      });
-
-      if (session?.user.username) {
         queryClient.invalidateQueries({
-          queryKey: userKeys.infiniteLetters(session.user.username),
+          queryKey: letterKeys.infiniteList(),
+        });
+
+        if (session.user.username) {
+          queryClient.invalidateQueries({
+            queryKey: userKeys.infiniteLetters(session.user.username),
+          });
+        }
+
+        queryClient.invalidateQueries({
+          queryKey: searchKeys.all(),
+        });
+
+        router.push(`/letters/${id}`);
+      } else {
+        router.push("/letters");
+
+        notifications.show({
+          icon: <IconAlertCircle size="1em" />,
+          title: "Letter submitted",
+          message:
+            "Your letter has been submitted and is awaiting review. It will be published once approved.",
         });
       }
-
-      queryClient.invalidateQueries({
-        queryKey: searchKeys.all(),
-      });
-
-      router.push(`/letters/${id}`);
     },
     onError: (error) => {
       if (error instanceof ServerError) {
@@ -113,6 +121,20 @@ export default function Content() {
     <Container size="sm" className={classes.container}>
       <Title className={classes.title}>Start a letter</Title>
 
+      {requiresReview && (
+        <Alert
+          mb="md"
+          color="yellow"
+          title="Review required"
+          icon={<IconAlertCircle />}
+        >
+          Your letter will be reviewed before it is published.{" "}
+          {session
+            ? "Verify your email to have future letters published without review."
+            : "Sign in and verify your email to have future letters published without review."}
+        </Alert>
+      )}
+
       <form onSubmit={form.onSubmit((value) => mutation.mutate(value))}>
         <TextInput
           label="Title"
@@ -129,11 +151,13 @@ export default function Content() {
           </Text>
         )}
 
-        <Switch
-          mt="md"
-          label="Post anonymously"
-          {...form.getInputProps("isAnonymous", { type: "checkbox" })}
-        />
+        {session && (
+          <Switch
+            mt="md"
+            label="Post anonymously"
+            {...form.getInputProps("isAnonymous", { type: "checkbox" })}
+          />
+        )}
 
         <Group mt="md" justify="end">
           <Button

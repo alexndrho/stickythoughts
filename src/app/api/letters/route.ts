@@ -2,31 +2,24 @@ import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { auth } from "@/lib/auth";
-import { guardSession } from "@/lib/session-guard";
 import { createLetterServerInput } from "@/lib/validations/letter";
 import { formatLetters } from "@/utils/letter";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
+import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { isUniqueConstraintError } from "@/server/db";
-import { createLetter, listLetters } from "@/server/letter";
+import { createLetter, listLettersPublic } from "@/server/letter";
 
 export async function POST(request: Request) {
   try {
-    const session = await guardSession({ headers: request.headers });
-
-    if (session instanceof NextResponse) {
-      return session;
-    }
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
 
     const { title, body, isAnonymous } = createLetterServerInput.parse(
       await request.json(),
     );
 
     const post = await createLetter({
-      authorId: session.user.id,
+      session,
       title,
       body,
       isAnonymous,
@@ -66,7 +59,7 @@ export async function GET(request: NextRequest) {
       headers: request.headers,
     });
 
-    const letters = await listLetters({
+    const letters = await listLettersPublic({
       lastId,
       viewerUserId: session?.user.id,
     });

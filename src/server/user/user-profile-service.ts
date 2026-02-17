@@ -99,6 +99,7 @@ export async function listUserLetters(args: {
       ...(args.viewerUsername !== args.username && {
         isAnonymous: false,
       }),
+      status: "APPROVED",
     },
     include: {
       author: {

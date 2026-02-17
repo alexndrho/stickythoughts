@@ -135,7 +135,16 @@ export const createLetterReplyServerInput = z.object({
   isAnonymous: z.boolean().optional(),
 });
 
-export const updateLetterReplyServerInput =
-  createLetterReplyServerInput.pick({
-    body: true,
-  });
+export const updateLetterReplyServerInput = createLetterReplyServerInput.pick({
+  body: true,
+});
+
+const letterStatusSchema = z.enum(["PENDING", "APPROVED", "REJECTED"]);
+
+export const reviewLetterServerInput = z.object({
+  status: letterStatusSchema.exclude(["PENDING"]),
+});
+
+export const letterSubmissionsStatusQueryInput = letterStatusSchema.exclude([
+  "APPROVED",
+]);

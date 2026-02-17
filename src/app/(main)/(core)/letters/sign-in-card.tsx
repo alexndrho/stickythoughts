@@ -26,8 +26,9 @@ export default function SignInCard() {
           </Text>
 
           <Text className={classes["sign-in-prompt__copy"]}>
-            Sign in to post or reply. You can also continue anonymously and
-            decide later whether to keep the account for creating.
+            You can post without an account, and guest letters are reviewed
+            before publishing. Sign in to reply and interact, and verify your
+            account to publish instantly.
           </Text>
 
           <div className={classes["sign-in-prompt__actions"]}>

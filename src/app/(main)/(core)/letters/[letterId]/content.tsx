@@ -118,13 +118,11 @@ export default function Content({ id }: ContentProps) {
             )}
 
             <Text size="xs" className={classes["header__created-at"]}>
-              {formatDistanceToNow(letter.createdAt, {
+              Posted{" "}
+              {formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
                 addSuffix: true,
               })}
-
-              {letter.updatedAt.getTime() !== letter.createdAt.getTime() && (
-                <span> (edited)</span>
-              )}
+              {letter.contentUpdatedAt && <span> (edited)</span>}
             </Text>
           </div>
         </div>

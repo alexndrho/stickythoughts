@@ -58,7 +58,7 @@ export async function createLetterReply(args: {
     },
   });
 
-  if (reply.letter.authorId !== reply.authorId) {
+  if (reply.letter.authorId && reply.letter.authorId !== reply.authorId) {
     await prisma.notification.create({
       data: {
         user: { connect: { id: reply.letter.authorId } },
@@ -209,13 +209,20 @@ export async function softDeleteLetterReply(args: {
     },
   });
 
+  const recipientIds = [
+    deletedReply.authorId,
+    deletedReply.letter.authorId,
+  ].filter((id): id is string => Boolean(id));
+
   // Delete notifications for both the reply author and the letter author
-  await prisma.notification.deleteMany({
-    where: {
-      userId: {
-        in: [deletedReply.authorId, deletedReply.letter.authorId],
+  if (recipientIds.length > 0) {
+    await prisma.notification.deleteMany({
+      where: {
+        userId: {
+          in: recipientIds,
+        },
+        replyId: args.replyId,
       },
-      replyId: args.replyId,
-    },
-  });
+    });
+  }
 }

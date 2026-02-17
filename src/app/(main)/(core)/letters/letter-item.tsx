@@ -66,8 +66,8 @@ export default function LetterItem({
                   {post.author.name || post.author.username}
                 </Anchor>
               )}{" "}
-              •{" "}
-              {formatDistanceToNow(post.createdAt, {
+              • Posted{" "}
+              {formatDistanceToNow(post.postedAt ?? post.createdAt, {
                 addSuffix: true,
               })}
             </Text>

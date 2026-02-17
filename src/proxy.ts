@@ -11,10 +11,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Auth checks...
-  if (
-    pathname.startsWith("/letters/submit") ||
-    pathname.startsWith("/settings")
-  ) {
+  if (pathname.startsWith("/settings")) {
     const sessionCookie = getSessionCookie(request);
     if (!sessionCookie) {
       return NextResponse.redirect(new URL("/", request.url));
@@ -28,7 +25,6 @@ export const config = {
     "/api/((?!auth|_next/static|_next/image|favicon.ico).*)",
 
     // Protected pages
-    "/letters/submit/:path*",
     "/settings/:path*",
   ],
 };
