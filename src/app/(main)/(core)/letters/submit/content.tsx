@@ -119,7 +119,7 @@ export default function Content() {
 
   return (
     <Container size="sm" className={classes.container}>
-      <Title className={classes.title}>Start a letter</Title>
+      <Title className={classes.title}>Write a letter</Title>
 
       {requiresReview && (
         <Alert
