@@ -267,7 +267,7 @@ export default function Content() {
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Message</Table.Th>
                 <Table.Th>Created At</Table.Th>
-                <Table.Th />
+                <Table.Th>Actions</Table.Th>
               </Table.Tr>
             </Table.Thead>
 

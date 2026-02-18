@@ -142,7 +142,7 @@ export default function Content() {
                 <Table.Th>Banned</Table.Th>
                 <Table.Th>Ban Reason</Table.Th>
                 <Table.Th>Ban Expires</Table.Th>
-                <Table.Th />
+                <Table.Th>Actions</Table.Th>
               </Table.Tr>
             </Table.Thead>
 
