@@ -105,3 +105,13 @@ export type UserNotificationType = Pick<
   body: string;
   updatedAt: Date;
 };
+
+export type UserSummary = {
+  id: string;
+  name: string | null;
+  username: string;
+};
+
+export type UserWithAvatarSummary = UserSummary & {
+  image: string | null;
+};

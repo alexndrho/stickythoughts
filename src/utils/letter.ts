@@ -34,7 +34,7 @@ export function formatLetters({
 
     return {
       ...rest,
-      author: rest.isAnonymous ? undefined : rest.author,
+      author: rest.isAnonymous || !rest.author ? undefined : rest.author,
       isOwner: sessionUserId === authorId,
       likes: {
         liked: !!(likes && likes.length),
@@ -76,7 +76,7 @@ export function formatLetterReplies(
 
     return {
       ...rest,
-      author: rest.isAnonymous ? undefined : rest.author,
+      author: rest.isAnonymous || !rest.author ? undefined : rest.author,
       isOP,
       isSelf,
       anonymousLabel,
@@ -109,7 +109,7 @@ export function formatUserLetterReplies(
 
     return {
       ...rest,
-      author: rest.isAnonymous ? undefined : rest.author,
+      author: rest.isAnonymous || !rest.author ? undefined : rest.author,
       likes: {
         liked: !!(likes && likes.length),
         count: _count.likes,

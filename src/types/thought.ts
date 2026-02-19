@@ -1,4 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
+import type { UserSummary } from "./user";
 
 export type PrivateThoughtPayload = Prisma.ThoughtGetPayload<{
   select: {
@@ -35,9 +36,7 @@ export type PrivateHighlightedThoughtPayload = Omit<
   highlightedAt: NonNullable<
     PrivateHighlightedThoughtPayloadBase["highlightedAt"]
   >;
-  highlightedBy: NonNullable<
-    PrivateHighlightedThoughtPayloadBase["highlightedBy"]
-  >;
+  highlightedBy: UserSummary;
 };
 
 export type PublicThoughtPayload = Prisma.ThoughtGetPayload<{

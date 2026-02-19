@@ -1,10 +1,5 @@
 import type { Letter, LetterReply, Thought } from "@/generated/prisma/client";
-
-export type DeletedUserSummary = {
-  id: string;
-  name: string | null;
-  username: string;
-};
+import type { UserSummary, UserWithAvatarSummary } from "./user";
 
 export type DeletedThoughtFromServer = Omit<
   Thought,
@@ -12,7 +7,7 @@ export type DeletedThoughtFromServer = Omit<
 > & {
   createdAt: Date;
   deletedAt: Date | null;
-  deletedBy: DeletedUserSummary | null;
+  deletedBy: UserSummary | null;
 };
 
 export type DeletedLetterFromServer = Omit<
@@ -22,12 +17,8 @@ export type DeletedLetterFromServer = Omit<
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  author: {
-    name: string | null;
-    username: string;
-    image: string | null;
-  } | null;
-  deletedBy: DeletedUserSummary | null;
+  author: UserWithAvatarSummary | null;
+  deletedBy: UserSummary | null;
 };
 
 export type DeletedLetterReplyFromServer = Omit<
@@ -37,13 +28,8 @@ export type DeletedLetterReplyFromServer = Omit<
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  author: {
-    id: string;
-    name: string | null;
-    username: string;
-    image: string | null;
-  };
-  deletedBy: DeletedUserSummary | null;
+  author: UserWithAvatarSummary;
+  deletedBy: UserSummary | null;
   letter: {
     id: string;
     title: string;

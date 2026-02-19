@@ -22,6 +22,7 @@ export async function listDeletedLetters(args: { page: number }) {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,
@@ -86,6 +87,7 @@ export async function listSubmissionLetters(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,

@@ -1,4 +1,5 @@
 import { type Prisma } from "@/generated/prisma/client";
+import type { UserWithAvatarSummary } from "./user";
 
 type PrismaBaseLetter = Prisma.LetterGetPayload<{
   select: {
@@ -13,6 +14,7 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
     updatedAt: true;
     author: {
       select: {
+        id: true;
         name: true;
         username: true;
         image: true;
@@ -41,7 +43,7 @@ export type LetterType = Omit<
   BaseLetterType,
   "authorId" | "author" | "likes" | "_count"
 > & {
-  author?: BaseLetterType["author"];
+  author?: UserWithAvatarSummary;
   isOwner: boolean;
   likes: {
     liked: boolean;
@@ -100,7 +102,7 @@ export type LetterReplyType = Omit<
   BaseLetterReplyType,
   "authorId" | "author" | "likes" | "_count"
 > & {
-  author?: BaseLetterReplyType["author"];
+  author?: UserWithAvatarSummary;
   isOP: boolean;
   isSelf: boolean;
   anonymousLabel?: string;
@@ -157,7 +159,7 @@ export type UserLetterReplyType = Omit<
   BaseUserLetterReplyType,
   "authorId" | "author" | "likes" | "_count"
 > & {
-  author?: BaseUserLetterReplyType["author"];
+  author?: UserWithAvatarSummary;
   likes: {
     liked: boolean;
     count: number;

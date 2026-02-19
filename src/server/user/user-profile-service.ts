@@ -104,6 +104,7 @@ export async function listUserLetters(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,
@@ -220,6 +221,7 @@ export async function listUserLikedLetters(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,

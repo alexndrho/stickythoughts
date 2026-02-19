@@ -50,6 +50,7 @@ export async function getLetterPublic(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,
@@ -104,6 +105,7 @@ export async function listLettersPublic(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,
@@ -156,6 +158,7 @@ export async function updateLetter(args: {
     include: {
       author: {
         select: {
+          id: true,
           name: true,
           username: true,
           image: true,
