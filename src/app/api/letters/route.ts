@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { ZodError } from "zod";
 
 import { auth } from "@/lib/auth";
@@ -12,6 +13,15 @@ import type { LetterDTO } from "@/types/letter";
 
 export async function POST(request: Request) {
   try {
+    const verification = await checkBotId();
+
+    if (verification.isBot) {
+      return jsonError(
+        [{ code: "botid/validation-failed", message: "Bot detected" }],
+        403,
+      );
+    }
+
     const session = await auth.api.getSession({
       headers: request.headers,
     });
