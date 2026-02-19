@@ -1,16 +1,16 @@
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys, thoughtKeys } from "@/lib/query-keys";
-import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
+import type { PrivateHighlightedThought } from "@/types/thought";
 
 export const setThoughtHighlighting = ({
   thought,
   page,
 }: {
-  thought: PrivateHighlightedThoughtPayload | null;
+  thought: PrivateHighlightedThought | null;
   page: number;
 }) => {
   const queryClient = getQueryClient();
-  queryClient.setQueryData<PrivateHighlightedThoughtPayload | null>(
+  queryClient.setQueryData<PrivateHighlightedThought | null>(
     adminKeys.highlightedThought(),
     thought,
   );

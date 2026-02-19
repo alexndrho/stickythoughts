@@ -8,10 +8,10 @@ import { thoughtKeys } from "@/lib/query-keys";
 import { adminKeys } from "@/lib/query-keys";
 import { deleteThought } from "@/services/moderate/thought";
 import Thought from "../(main)/thought";
-import type { PublicThoughtPayload } from "@/types/thought";
+import type { PublicThought } from "@/types/thought";
 
 export interface DeleteThoughtModalProps {
-  thought: PublicThoughtPayload | null;
+  thought: PublicThought | null;
   opened: boolean;
   onClose: () => void;
 }

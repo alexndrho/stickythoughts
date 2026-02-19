@@ -4,13 +4,13 @@ import { headers as nextHeaders } from "next/headers";
 import { cache } from "react";
 
 import { auth } from "@/lib/auth";
-import type { LetterType } from "@/types/letter";
 import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
 import { getLetterPublic, LetterNotFoundError } from "@/server/letter";
+import type { Letter } from "@/types/letter";
 
 export { LetterNotFoundError };
 
-async function getLetterServerUncached(letterId: string): Promise<LetterType> {
+async function getLetterServerUncached(letterId: string): Promise<Letter> {
   const headers = await nextHeaders();
   const session = await auth.api.getSession({ headers });
 

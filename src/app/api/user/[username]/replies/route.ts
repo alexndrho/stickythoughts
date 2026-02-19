@@ -2,9 +2,10 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { formatUserLetterReplies } from "@/utils/letter";
-import type { UserLetterReplyType } from "@/types/letter";
 import { unknownErrorResponse } from "@/lib/http";
 import { listUserReplies } from "@/server/user";
+import { toDTO } from "@/lib/http/to-dto";
+import type { UserLetterReplyDTO } from "@/types/letter";
 
 export async function GET(
   request: NextRequest,
@@ -27,10 +28,11 @@ export async function GET(
       viewerUserId: session?.user?.id,
     });
 
-    const formattedReplies =
-      formatUserLetterReplies(replies) satisfies UserLetterReplyType[];
+    const formattedReplies = formatUserLetterReplies(replies);
 
-    return NextResponse.json(formattedReplies);
+    return NextResponse.json(
+      toDTO(formattedReplies) satisfies UserLetterReplyDTO[],
+    );
   } catch (error) {
     console.error(error);
     return unknownErrorResponse("Something went wrong");

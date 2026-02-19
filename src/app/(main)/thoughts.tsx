@@ -16,12 +16,12 @@ import SendThoughtModal from "./send-thought-modal";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./home.module.css";
 import ThoughtsLoader from "./thoughts-loader";
-import type { PublicThoughtPayload } from "@/types/thought";
+import type { PublicThought } from "@/types/thought";
 
 export default function HomeThoughts({
   initialData,
 }: {
-  initialData?: PublicThoughtPayload[];
+  initialData?: PublicThought[];
 }) {
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
 

@@ -6,11 +6,11 @@ import { Card, Text } from "@mantine/core";
 
 import Thought from "./thought";
 import { highlightedThoughtOptions } from "./options";
-import type { PublicThoughtPayload } from "@/types/thought";
+import type { PublicThought } from "@/types/thought";
 import classes from "./home.module.css";
 
 export type HeaderCarouselProps = {
-  initialHighlightedThought?: PublicThoughtPayload | null;
+  initialHighlightedThought?: PublicThought | null;
   loading?: boolean;
 };
 

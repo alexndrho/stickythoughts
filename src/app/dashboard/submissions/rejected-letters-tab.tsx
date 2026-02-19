@@ -11,13 +11,13 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
 
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys, letterKeys } from "@/lib/query-keys";
 import { reopenSubmissionLetter } from "@/services/moderate/submissions";
-import type { SubmissionLetterFromServer } from "@/types/submission";
 import { getFormattedDate } from "@/utils/date";
 import { formatUserDisplayName } from "@/utils/user";
 import dashboardClasses from "../dashboard.module.css";
@@ -27,7 +27,7 @@ import {
   rejectedLettersPageOptions,
 } from "./options";
 import RejectedLetterPreviewModal from "./rejected-letter-preview-modal";
-import { IconEye } from "@tabler/icons-react";
+import type { SubmissionLetter } from "@/types/submission";
 
 export interface RejectedLettersTabProps {
   isActive: boolean;
@@ -37,8 +37,9 @@ export default function RejectedLettersTab({
   isActive,
 }: RejectedLettersTabProps) {
   const [page, setPage] = useState(1);
-  const [previewLetter, setPreviewLetter] =
-    useState<SubmissionLetterFromServer | null>(null);
+  const [previewLetter, setPreviewLetter] = useState<SubmissionLetter | null>(
+    null,
+  );
   const [updatingLetterId, setUpdatingLetterId] = useState<string | null>(null);
 
   const { data: session } = authClient.useSession();

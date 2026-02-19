@@ -1,14 +1,51 @@
-import type { Letter, LetterStatus } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
+import type { input } from "zod";
+import type { reviewLetterServerInput } from "@/lib/validations/letter";
+import type { SerializeDates } from "./serialization";
 import type { UserSummary, UserWithAvatarSummary } from "./user";
 
-export type SubmissionLetterFromServer = Omit<
-  Letter,
-  "createdAt" | "updatedAt" | "deletedAt" | "status"
+type BaseSubmissionLetter = Prisma.LetterGetPayload<{
+  select: {
+    id: true;
+    title: true;
+    body: true;
+    authorId: true;
+    status: true;
+    statusSetById: true;
+    isAnonymous: true;
+    postedAt: true;
+    contentUpdatedAt: true;
+    createdAt: true;
+    updatedAt: true;
+    deletedAt: true;
+    author: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+        image: true;
+      };
+    };
+    statusSetBy: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+      };
+    };
+  };
+}>;
+
+export type SubmissionLetter = Omit<
+  BaseSubmissionLetter,
+  "author" | "statusSetBy"
 > & {
-  status: LetterStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
   author: UserWithAvatarSummary | null;
   statusSetBy?: UserSummary | null;
 };
+
+export type SubmissionLetterDTO = SerializeDates<SubmissionLetter>;
+
+export type SetSubmissionLetterStatusBody = input<
+  typeof reviewLetterServerInput
+>;

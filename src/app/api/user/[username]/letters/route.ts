@@ -2,9 +2,10 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { formatLetters } from "@/utils/letter";
-import type { LetterType } from "@/types/letter";
 import { unknownErrorResponse } from "@/lib/http";
 import { listUserLetters } from "@/server/user";
+import { toDTO } from "@/lib/http/to-dto";
+import type { LetterDTO } from "@/types/letter";
 
 export const GET = async (
   request: NextRequest,
@@ -30,9 +31,9 @@ export const GET = async (
     const formattedLetters = formatLetters({
       sessionUserId: session?.user?.id,
       letters,
-    }) satisfies LetterType[];
+    });
 
-    return NextResponse.json(formattedLetters);
+    return NextResponse.json(toDTO(formattedLetters) satisfies LetterDTO[]);
   } catch (error) {
     console.error("Error fetching user letters:", error);
     return unknownErrorResponse("Unknown error");

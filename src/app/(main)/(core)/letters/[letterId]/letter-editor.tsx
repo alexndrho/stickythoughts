@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import type { Prisma } from "@/generated/prisma/client";
 import TextEditor from "@/components/text-editor";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { isNotEmptyHTML, useForm } from "@mantine/form";
@@ -12,7 +11,7 @@ import { updateLetter } from "@/services/letter";
 import { getQueryClient } from "@/lib/get-query-client";
 import ServerError from "@/utils/error/ServerError";
 import { letterKeys } from "@/lib/query-keys";
-import type { LetterType } from "@/types/letter";
+import type { Letter } from "@/types/letter";
 import classes from "./letter.module.css";
 
 export interface ForumEditorProps {
@@ -47,10 +46,10 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
   }, [editor]);
 
   const updateMutation = useMutation({
-    mutationFn: async ({ body }: { body: Prisma.LetterUpdateInput["body"] }) =>
+    mutationFn: async ({ body }: { body: string }) =>
       updateLetter({
         id,
-        body,
+        body: { body },
       }),
     onSuccess: (data) => {
       onClose();
@@ -62,7 +61,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
 
       getQueryClient().setQueryData(
         letterKeys.byId(id),
-        (oldData: LetterType | undefined) =>
+        (oldData: Letter | undefined) =>
           oldData
             ? {
                 ...oldData,

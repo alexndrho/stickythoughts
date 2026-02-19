@@ -11,13 +11,13 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
 
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
 import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys, letterKeys } from "@/lib/query-keys";
 import type { LetterStatus } from "@/generated/prisma/client";
-import type { SubmissionLetterFromServer } from "@/types/submission";
 import { getFormattedDate } from "@/utils/date";
 import { formatUserDisplayName } from "@/utils/user";
 import { setSubmissionLetterStatus } from "@/services/moderate/submissions";
@@ -28,7 +28,7 @@ import {
   submittedLettersPageOptions,
 } from "./options";
 import SubmittedLetterPreviewModal from "./submitted-letter-preview-modal";
-import { IconEye } from "@tabler/icons-react";
+import type { SubmissionLetter } from "@/types/submission";
 
 export interface SubmittedLettersTabProps {
   isActive: boolean;
@@ -38,8 +38,9 @@ export default function SubmittedLettersTab({
   isActive,
 }: SubmittedLettersTabProps) {
   const [page, setPage] = useState(1);
-  const [previewLetter, setPreviewLetter] =
-    useState<SubmissionLetterFromServer | null>(null);
+  const [previewLetter, setPreviewLetter] = useState<SubmissionLetter | null>(
+    null,
+  );
   const [updatingLetterId, setUpdatingLetterId] = useState<string | null>(null);
   const [actionStatus, setActionStatus] = useState<Extract<
     LetterStatus,
@@ -75,9 +76,9 @@ export default function SubmittedLettersTab({
 
   const mutation = useMutation({
     mutationFn: setSubmissionLetterStatus,
-    onMutate: ({ id, status }) => {
+    onMutate: ({ id, body }) => {
       setUpdatingLetterId(id);
-      setActionStatus(status);
+      setActionStatus(body.status);
     },
     onSuccess: () => {
       setPreviewLetter(null);
@@ -166,7 +167,7 @@ export default function SubmittedLettersTab({
         onClose={() => setPreviewLetter(null)}
         canSetStatus={canSetStatus}
         onSetStatus={(letter, status) => {
-          mutation.mutate({ id: letter.id, status });
+          mutation.mutate({ id: letter.id, body: { status } });
         }}
         loading={mutation.isPending && updatingLetterId === previewLetter?.id}
         actionStatus={actionStatus}

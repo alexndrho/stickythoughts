@@ -7,11 +7,11 @@ import AuthorAvatar from "@/components/author-avatar";
 import LikeButton from "@/app/(main)/(core)/letters/like-button";
 import ReplyButton from "@/app/(main)/(core)/letters/reply-button";
 import ShareButton from "@/app/(main)/(core)/letters/share-button";
-import type { LetterType } from "@/types/letter";
+import type { Letter } from "@/types/letter";
 import classes from "./letters.module.css";
 
 export interface LetterItemProps {
-  post: LetterType;
+  post: Letter;
   likeLoading?: boolean;
   onLike?: ({
     id,

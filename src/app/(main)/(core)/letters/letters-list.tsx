@@ -11,13 +11,13 @@ import SignInWarningModal from "@/components/sign-in-warning-modal";
 import LetterItem from "./letter-item";
 import { LettersSkeleton } from "./letters-skeleton";
 import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
+import type { Letter } from "@/types/letter";
 import classes from "./letters.module.css";
-import type { LetterType } from "@/types/letter";
 
 export default function LettersList({
   initialData,
 }: {
-  initialData?: LetterType[];
+  initialData?: Letter[];
 }) {
   const { data: session } = authClient.useSession();
   const [signInWarningModalOpened, signInWarningModalHandler] =

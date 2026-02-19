@@ -4,11 +4,7 @@ import { getQueryClient } from "@/lib/get-query-client";
 import { letterKeys } from "@/lib/query-keys";
 import { userKeys } from "@/lib/query-keys";
 import { adminKeys } from "@/lib/query-keys";
-import type {
-  LetterType,
-  LetterReplyType,
-  UserLetterReplyType,
-} from "@/types/letter";
+import type { Letter, LetterReply, UserLetterReply } from "@/types/letter";
 
 export const setLikeLetterQueryData = ({
   letterId,
@@ -21,24 +17,22 @@ export const setLikeLetterQueryData = ({
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<LetterType>(
-    letterKeys.byId(letterId),
-    (oldData) =>
-      oldData
-        ? ({
-            ...oldData,
-            likes: {
-              ...oldData.likes,
-              liked: like,
-              count: oldData.likes.liked
-                ? oldData.likes.count - 1
-                : oldData.likes.count + 1,
-            },
-          } satisfies LetterType)
-        : oldData,
+  queryClient.setQueryData<Letter>(letterKeys.byId(letterId), (oldData) =>
+    oldData
+      ? ({
+          ...oldData,
+          likes: {
+            ...oldData.likes,
+            liked: like,
+            count: oldData.likes.liked
+              ? oldData.likes.count - 1
+              : oldData.likes.count + 1,
+          },
+        } satisfies Letter)
+      : oldData,
   );
 
-  queryClient.setQueryData<InfiniteData<LetterType[]>>(
+  queryClient.setQueryData<InfiniteData<Letter[]>>(
     letterKeys.infiniteList(),
     (oldData) => {
       if (!oldData) return oldData;
@@ -54,7 +48,7 @@ export const setLikeLetterQueryData = ({
                     liked: like,
                     count: like ? post.likes.count + 1 : post.likes.count - 1,
                   },
-                } satisfies LetterType)
+                } satisfies Letter)
               : post,
           ),
         ),
@@ -63,7 +57,7 @@ export const setLikeLetterQueryData = ({
   );
 
   if (authorUsername) {
-    queryClient.setQueryData<InfiniteData<LetterType[]>>(
+    queryClient.setQueryData<InfiniteData<Letter[]>>(
       userKeys.infiniteLetters(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
@@ -79,7 +73,7 @@ export const setLikeLetterQueryData = ({
                       liked: like,
                       count: like ? post.likes.count + 1 : post.likes.count - 1,
                     },
-                  } satisfies LetterType)
+                  } satisfies Letter)
                 : post,
             ),
           ),
@@ -87,7 +81,7 @@ export const setLikeLetterQueryData = ({
       },
     );
 
-    queryClient.setQueryData<InfiniteData<LetterType[]>>(
+    queryClient.setQueryData<InfiniteData<Letter[]>>(
       userKeys.infiniteLikes(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
@@ -103,7 +97,7 @@ export const setLikeLetterQueryData = ({
                       liked: like,
                       count: like ? post.likes.count + 1 : post.likes.count - 1,
                     },
-                  } satisfies LetterType)
+                  } satisfies Letter)
                 : post,
             ),
           ),
@@ -143,12 +137,12 @@ export const setCreateLetterReplyQueryData = ({
   authorUsername,
 }: {
   id: string;
-  reply: LetterReplyType;
+  reply: LetterReply;
   authorUsername?: string;
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
+  queryClient.setQueryData<InfiniteData<LetterReply[]>>(
     letterKeys.infiniteReplies(id),
     (oldData) => {
       if (!oldData) return oldData;
@@ -159,7 +153,7 @@ export const setCreateLetterReplyQueryData = ({
           [
             {
               ...reply,
-            } satisfies LetterReplyType,
+            } satisfies LetterReply,
           ],
           ...oldData.pages,
         ],
@@ -167,7 +161,7 @@ export const setCreateLetterReplyQueryData = ({
     },
   );
 
-  queryClient.setQueryData<LetterType>(letterKeys.byId(id), (oldData) =>
+  queryClient.setQueryData<Letter>(letterKeys.byId(id), (oldData) =>
     oldData
       ? ({
           ...oldData,
@@ -175,11 +169,11 @@ export const setCreateLetterReplyQueryData = ({
             ...oldData.replies,
             count: oldData.replies.count + 1,
           },
-        } satisfies LetterType)
+        } satisfies Letter)
       : oldData,
   );
 
-  queryClient.setQueryData<InfiniteData<LetterType[]>>(
+  queryClient.setQueryData<InfiniteData<Letter[]>>(
     letterKeys.infiniteList(),
     (oldData) => {
       if (!oldData) return oldData;
@@ -194,7 +188,7 @@ export const setCreateLetterReplyQueryData = ({
                     ...post.replies,
                     count: post.replies.count + 1,
                   },
-                } satisfies LetterType)
+                } satisfies Letter)
               : post,
           ),
         ),
@@ -236,11 +230,11 @@ export const setUpdateLetterReplyQueryData = ({
 }: {
   letterId: string;
   replyId: string;
-  reply: LetterReplyType;
+  reply: LetterReply;
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
+  queryClient.setQueryData<InfiniteData<LetterReply[]>>(
     letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
@@ -253,7 +247,7 @@ export const setUpdateLetterReplyQueryData = ({
               ? ({
                   ...cmt,
                   ...reply,
-                } satisfies LetterReplyType)
+                } satisfies LetterReply)
               : cmt,
           ),
         ),
@@ -278,7 +272,7 @@ export const setDeleteLetterReplyQueryData = ({
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
+  queryClient.setQueryData<InfiniteData<LetterReply[]>>(
     letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
@@ -293,7 +287,7 @@ export const setDeleteLetterReplyQueryData = ({
   );
 
   if (authorUsername) {
-    queryClient.setQueryData<InfiniteData<UserLetterReplyType[]>>(
+    queryClient.setQueryData<InfiniteData<UserLetterReply[]>>(
       userKeys.infiniteReplies(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
@@ -341,7 +335,7 @@ export const setLikeLetterReplyQueryData = ({
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
+  queryClient.setQueryData<InfiniteData<LetterReply[]>>(
     letterKeys.infiniteReplies(letterId),
     (oldData) => {
       if (!oldData) return oldData;
@@ -356,11 +350,9 @@ export const setLikeLetterReplyQueryData = ({
                   likes: {
                     ...reply.likes,
                     liked: like,
-                    count: like
-                      ? reply.likes.count + 1
-                      : reply.likes.count - 1,
+                    count: like ? reply.likes.count + 1 : reply.likes.count - 1,
                   },
-                } satisfies LetterReplyType)
+                } satisfies LetterReply)
               : reply,
           ),
         ),
@@ -369,7 +361,7 @@ export const setLikeLetterReplyQueryData = ({
   );
 
   if (authorUsername) {
-    queryClient.setQueryData<InfiniteData<LetterReplyType[]>>(
+    queryClient.setQueryData<InfiniteData<LetterReply[]>>(
       userKeys.infiniteReplies(authorUsername),
       (oldData) => {
         if (!oldData) return oldData;
@@ -388,7 +380,7 @@ export const setLikeLetterReplyQueryData = ({
                         ? reply.likes.count + 1
                         : reply.likes.count - 1,
                     },
-                  } satisfies LetterReplyType)
+                  } satisfies LetterReply)
                 : reply,
             ),
           ),

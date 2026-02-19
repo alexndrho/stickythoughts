@@ -3,10 +3,10 @@
 import { Button, Group, Modal, Text } from "@mantine/core";
 
 import Thought from "../(main)/thought";
-import type { PublicThoughtPayload } from "@/types/thought";
+import type { PublicThought } from "@/types/thought";
 
 export interface RemoveHighlightModalProps {
-  thought: PublicThoughtPayload | null;
+  thought: PublicThought | null;
   opened: boolean;
   onClose: () => void;
   onConfirm: () => void;

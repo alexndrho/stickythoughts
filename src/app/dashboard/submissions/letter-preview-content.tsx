@@ -2,12 +2,12 @@
 
 import { Text, Title, Typography } from "@mantine/core";
 
-import type { SubmissionLetterFromServer } from "@/types/submission";
+import type { SubmissionLetter } from "@/types/submission";
 import { getFormattedDate } from "@/utils/date";
 import { formatUserDisplayName } from "@/utils/user";
 
 export interface LetterPreviewContentProps {
-  letter: SubmissionLetterFromServer | null;
+  letter: SubmissionLetter | null;
 }
 
 export default function LetterPreviewContent({

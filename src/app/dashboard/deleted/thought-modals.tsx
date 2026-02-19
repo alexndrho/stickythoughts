@@ -3,13 +3,13 @@
 import { Button, Group, Modal, Text } from "@mantine/core";
 
 import Thought from "@/app/(main)/thought";
-import type { DeletedThoughtFromServer } from "@/types/deleted";
+import type { DeletedThought } from "@/types/deleted";
 
 export interface PermanentlyDeleteThoughtModalProps {
-  thought: DeletedThoughtFromServer | null;
+  thought: DeletedThought | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (thought: DeletedThoughtFromServer) => void;
+  onConfirm: (thought: DeletedThought) => void;
   loading?: boolean;
 }
 
@@ -58,10 +58,10 @@ export const PermanentlyDeleteThoughtModal = ({
 };
 
 export interface RecoverThoughtModalProps {
-  thought: DeletedThoughtFromServer | null;
+  thought: DeletedThought | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (thought: DeletedThoughtFromServer) => void;
+  onConfirm: (thought: DeletedThought) => void;
   loading?: boolean;
 }
 

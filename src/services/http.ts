@@ -1,8 +1,9 @@
 import "client-only";
 
-import { normalizeHttpDates } from "@/services/helpers/normalizeHttpDates";
-import type IError from "@/types/error";
+import { parseDtoDates } from "@/services/helpers/normalizeHttpDates";
+import type { DeserializeDates } from "@/types/serialization";
 import { toServerError } from "@/utils/error/ServerError";
+import type IError from "@/types/error";
 
 function coerceIssues(data: unknown): IError["issues"] {
   if (
@@ -17,20 +18,20 @@ function coerceIssues(data: unknown): IError["issues"] {
   return [{ code: "unknown-error", message: "Something went wrong" }];
 }
 
-export async function fetchJson<T>(
+export async function fetchJson<TDTO>(
   input: RequestInfo | URL,
   init: RequestInit | undefined,
   opts: { errorMessage: string },
-): Promise<T> {
+): Promise<DeserializeDates<TDTO>> {
   const res = await fetch(input, init);
 
   // Most of our API routes return `{ issues }` on error and JSON on success.
   // If a route ever returns non-JSON, we still want a coherent error.
-  const data = normalizeHttpDates(await res.json().catch(() => null));
+  const data = parseDtoDates(await res.json().catch(() => null));
 
   if (!res.ok) {
     throw toServerError(opts.errorMessage, coerceIssues(data));
   }
 
-  return data as T;
+  return data as DeserializeDates<TDTO>;
 }

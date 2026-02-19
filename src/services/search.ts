@@ -1,29 +1,18 @@
 import "client-only";
 
-import type {
-  SearchAllType,
-  SearchSegmentType,
-  SearchLetterType,
-  SearchUserType,
-} from "@/types/search";
 import { fetchJson } from "@/services/http";
-
-type SearchResultMap = {
-  users: SearchUserType[];
-  letters: SearchLetterType[];
-  all: SearchAllType[];
-};
+import type {
+  SearchResultDTOMap,
+  SearchResultMap,
+  SearchSegmentType,
+} from "@/types/search";
 
 export async function getSearchResults<T extends SearchSegmentType = "all">(
   query: string,
   type?: T,
-): Promise<
-  T extends keyof SearchResultMap ? SearchResultMap[T] : SearchAllType[]
-> {
+): Promise<SearchResultMap[T]> {
   if (!query.trim()) {
-    return [] as unknown as T extends keyof SearchResultMap
-      ? SearchResultMap[T]
-      : SearchAllType[];
+    return [] as SearchResultMap[T];
   }
 
   const params = new URLSearchParams();
@@ -32,7 +21,13 @@ export async function getSearchResults<T extends SearchSegmentType = "all">(
     params.append("type", type);
   }
 
-  return fetchJson(`/api/search?${params.toString()}`, undefined, {
-    errorMessage: "Failed to fetch search results",
-  });
+  const data = await fetchJson<SearchResultDTOMap[T]>(
+    `/api/search?${params.toString()}`,
+    undefined,
+    {
+      errorMessage: "Failed to fetch search results",
+    },
+  );
+
+  return data as SearchResultMap[T];
 }

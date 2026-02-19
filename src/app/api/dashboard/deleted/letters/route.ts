@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { guardSession } from "@/lib/session-guard";
-import type { DeletedLetterFromServer } from "@/types/deleted";
 import { unknownErrorResponse } from "@/lib/http";
 import { listDeletedLetters } from "@/server/dashboard";
+import { toDTO } from "@/lib/http/to-dto";
+import type { DeletedLetterDTO } from "@/types/deleted";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     const page = Math.max(Number(searchParams.get("page") || "1"), 1);
     const items = await listDeletedLetters({ page });
 
-    return NextResponse.json(items satisfies DeletedLetterFromServer[], {
+    return NextResponse.json(toDTO(items) satisfies DeletedLetterDTO[], {
       status: 200,
     });
   } catch (error) {

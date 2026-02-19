@@ -1,4 +1,12 @@
 import { Prisma } from "@/generated/prisma/client";
+import type { input } from "zod";
+import type {
+  updateUserBioInput,
+  updateUserLikesVisibilityInput,
+  userNotificationMarkReadInput,
+  userNotificationOpenedInput,
+} from "@/lib/validations/user";
+import type { SerializeDates } from "./serialization";
 
 export type BaseUserPublicAccount = Prisma.UserGetPayload<{
   select: {
@@ -29,11 +37,15 @@ export type UserPublicAccount = Omit<
   banned?: BaseUserPublicAccount["banned"];
 };
 
+export type UserPublicAccountDTO = SerializeDates<UserPublicAccount>;
+
 export type UserAccountSettings = Prisma.UserGetPayload<{
   select: {
     bio: true;
   };
 }>;
+
+export type UserAccountSettingsDTO = SerializeDates<UserAccountSettings>;
 
 type BaseUserSettingsPrivacy = Prisma.UserSettingsGetPayload<{
   select: {
@@ -45,7 +57,9 @@ type BaseUserSettingsPrivacy = Prisma.UserSettingsGetPayload<{
 
 export type UserSettingsPrivacy = BaseUserSettingsPrivacy["privacySettings"];
 
-export type BaseUserNotificationType = Prisma.NotificationGetPayload<{
+export type UserSettingsPrivacyDTO = SerializeDates<UserSettingsPrivacy>;
+
+export type BaseUserNotification = Prisma.NotificationGetPayload<{
   select: {
     id: true;
     type: true;
@@ -89,8 +103,8 @@ export type BaseUserNotificationType = Prisma.NotificationGetPayload<{
   };
 }>;
 
-export type UserNotificationType = Pick<
-  BaseUserNotificationType,
+export type UserNotification = Pick<
+  BaseUserNotification,
   "id" | "type" | "isRead"
 > & {
   mainActor: {
@@ -106,6 +120,8 @@ export type UserNotificationType = Pick<
   updatedAt: Date;
 };
 
+export type UserNotificationDTO = SerializeDates<UserNotification>;
+
 export type UserSummary = {
   id: string;
   name: string | null;
@@ -115,3 +131,10 @@ export type UserSummary = {
 export type UserWithAvatarSummary = UserSummary & {
   image: string | null;
 };
+
+export type UpdateUserBioBody = input<typeof updateUserBioInput>;
+export type UpdateUserLikesVisibilityBody =
+  input<typeof updateUserLikesVisibilityInput>;
+export type UserNotificationOpenedBody = input<typeof userNotificationOpenedInput>;
+export type UserNotificationMarkReadBody =
+  input<typeof userNotificationMarkReadInput>;

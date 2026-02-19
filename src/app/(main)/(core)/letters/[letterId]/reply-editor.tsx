@@ -61,8 +61,10 @@ const ReplyEditor = forwardRef<ReplySectionRef, ReplyEditorProps>(
       mutationFn: (values: typeof form.values) =>
         submitLetterReply({
           id: letterId,
-          body: values.body,
-          isAnonymous: values.isAnonymous,
+          body: {
+            body: values.body,
+            isAnonymous: values.isAnonymous,
+          },
         }),
       onSuccess: (data) => {
         setCreateLetterReplyQueryData({ id: letterId, reply: data });

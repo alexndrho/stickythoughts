@@ -3,17 +3,20 @@ import "client-only";
 import { fetchJson } from "@/services/http";
 import { getColorFallback } from "@/utils/color";
 import type {
-  DeletedThoughtFromServer,
-  DeletedLetterFromServer,
-  DeletedLetterReplyFromServer,
+  DeletedThought,
+  DeletedThoughtDTO,
+  DeletedLetter,
+  DeletedLetterDTO,
+  DeletedLetterReply,
+  DeletedLetterReplyDTO,
 } from "@/types/deleted";
 
 export const getDeletedThoughts = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedThoughtFromServer[]> => {
-  const data = await fetchJson<DeletedThoughtFromServer[]>(
+}): Promise<DeletedThought[]> => {
+  const data = await fetchJson<DeletedThoughtDTO[]>(
     `/api/dashboard/deleted/thoughts?page=${page}`,
     undefined,
     { errorMessage: "Failed to get deleted thoughts" },
@@ -29,20 +32,28 @@ export const getDeletedLetters = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedLetterFromServer[]> => {
-  return fetchJson(`/api/dashboard/deleted/letters?page=${page}`, undefined, {
-    errorMessage: "Failed to get deleted letters",
-  });
+}): Promise<DeletedLetter[]> => {
+  return fetchJson<DeletedLetterDTO[]>(
+    `/api/dashboard/deleted/letters?page=${page}`,
+    undefined,
+    {
+      errorMessage: "Failed to get deleted letters",
+    },
+  );
 };
 
 export const getDeletedLetterReplies = async ({
   page,
 }: {
   page: number;
-}): Promise<DeletedLetterReplyFromServer[]> => {
-  return fetchJson(`/api/dashboard/deleted/replies?page=${page}`, undefined, {
-    errorMessage: "Failed to get deleted replies",
-  });
+}): Promise<DeletedLetterReply[]> => {
+  return fetchJson<DeletedLetterReplyDTO[]>(
+    `/api/dashboard/deleted/replies?page=${page}`,
+    undefined,
+    {
+      errorMessage: "Failed to get deleted replies",
+    },
+  );
 };
 
 export const getDeletedThoughtsCount = async (): Promise<number> => {

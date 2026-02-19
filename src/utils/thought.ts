@@ -4,40 +4,39 @@ import {
   formatDistanceToNowStrict,
   isAfter,
 } from "date-fns";
-
+import { getColorFallback } from "./color";
 import { THOUGHT_HIGHLIGHT_LOCK_DURATION_MS } from "@/config/thought";
 import type {
-  PrivateHighlightedThoughtPayload,
-  PrivateThoughtPayload,
-  PublicThoughtPayload,
+  PrivateHighlightedThought,
+  PrivateThought,
+  PublicThought,
 } from "@/types/thought";
-import { getColorFallback } from "./color";
 
 export const parsePublicThoughtFromServer = (
-  thought: PublicThoughtPayload,
-): PublicThoughtPayload => {
+  thought: PublicThought,
+): PublicThought => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-  } satisfies PublicThoughtPayload;
+  } satisfies PublicThought;
 };
 
 export const parsePrivateThoughtFromServer = (
-  thought: PrivateThoughtPayload,
-): PrivateThoughtPayload => {
+  thought: PrivateThought,
+): PrivateThought => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-  } satisfies PrivateThoughtPayload;
+  } satisfies PrivateThought;
 };
 
 export const parsePrivateHighlightedThoughtFromServer = (
-  thought: PrivateHighlightedThoughtPayload,
-): PrivateHighlightedThoughtPayload => {
+  thought: PrivateHighlightedThought,
+): PrivateHighlightedThought => {
   return {
     ...thought,
     color: getColorFallback(thought.color),
-  } satisfies PrivateHighlightedThoughtPayload;
+  } satisfies PrivateHighlightedThought;
 };
 
 export const getHighlightedThoughtLockRemainingMs = (

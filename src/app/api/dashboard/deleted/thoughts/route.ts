@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { guardSession } from "@/lib/session-guard";
-import type { DeletedThoughtFromServer } from "@/types/deleted";
 import { unknownErrorResponse } from "@/lib/http";
 import { listDeletedThoughts } from "@/server/dashboard";
+import type { DeletedThoughtDTO } from "@/types/deleted";
+import { toDTO } from "@/lib/http/to-dto";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     const page = Math.max(Number(searchParams.get("page") || "1"), 1);
     const items = await listDeletedThoughts({ page });
 
-    return NextResponse.json(items satisfies DeletedThoughtFromServer[], {
+    return NextResponse.json(toDTO(items) satisfies DeletedThoughtDTO[], {
       status: 200,
     });
   } catch (error) {

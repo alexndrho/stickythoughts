@@ -40,9 +40,9 @@ import {
   userNotificationOpened,
 } from "@/services/user";
 import InfiniteScroll from "./infinite-scroll";
-import { UserNotificationType } from "@/types/user";
 import classes from "@/styles/user-notification.module.css";
 import AuthorAvatar from "./author-avatar";
+import type { UserNotification } from "@/types/user";
 
 export interface UserNotificationProps {
   children: React.ReactElement;
@@ -81,7 +81,7 @@ export default function UserNotification({
     setOpened(opened);
 
     if (opened && newNotificationCount && newNotificationCount > 0) {
-      notificationOpenedMutation.mutate();
+      notificationOpenedMutation.mutate(undefined);
     }
   };
 
@@ -146,12 +146,15 @@ function NotificationItem({
   notification,
   setClosed,
 }: {
-  notification: UserNotificationType;
+  notification: UserNotification;
   setClosed: () => void;
 }) {
   const markReadMutation = useMutation({
     mutationFn: async (isRead: boolean) => {
-      await userNotificationMarkRead({ id: notification.id, isRead });
+      await userNotificationMarkRead({
+        id: notification.id,
+        body: { isRead },
+      });
 
       return { id: notification.id, isRead };
     },
@@ -241,9 +244,7 @@ function NotificationItem({
             <Text size="sm" lineClamp={3}>
               {formatNotificationBody({ notification, setClosed })}
             </Text>
-            <Text size="xs">
-              {formatDistanceToNow(notification.updatedAt)}
-            </Text>
+            <Text size="xs">{formatDistanceToNow(notification.updatedAt)}</Text>
           </div>
         </Flex>
 
@@ -284,7 +285,7 @@ function formatNotificationBody({
   notification,
   setClosed,
 }: {
-  notification: UserNotificationType;
+  notification: UserNotification;
   setClosed: () => void;
 }) {
   const actor = notification.mainActor.isAnonymous ? (

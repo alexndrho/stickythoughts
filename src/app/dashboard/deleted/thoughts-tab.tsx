@@ -29,7 +29,6 @@ import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys } from "@/lib/query-keys";
 import { thoughtKeys } from "@/lib/query-keys";
-import type { DeletedThoughtFromServer } from "@/types/deleted";
 import {
   permanentlyDeleteThought,
   restoreDeletedThought,
@@ -38,6 +37,7 @@ import {
   PermanentlyDeleteThoughtModal,
   RecoverThoughtModal,
 } from "./thought-modals";
+import type { DeletedThought } from "@/types/deleted";
 import dashboardClasses from "../dashboard.module.css";
 
 export interface ThoughtsTabProps {
@@ -47,9 +47,9 @@ export interface ThoughtsTabProps {
 export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingThought, setPermanentlyDeletingThought] =
-    useState<DeletedThoughtFromServer | null>(null);
+    useState<DeletedThought | null>(null);
   const [restoringThought, setRestoringThought] =
-    useState<DeletedThoughtFromServer | null>(null);
+    useState<DeletedThought | null>(null);
   const [restoringThoughtId, setRestoringThoughtId] = useState<string | null>(
     null,
   );
@@ -123,7 +123,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
     },
   });
 
-  const handleConfirmPermanentDelete = (thought: DeletedThoughtFromServer) => {
+  const handleConfirmPermanentDelete = (thought: DeletedThought) => {
     deleteMutation.mutate(thought.id);
   };
 

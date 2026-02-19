@@ -3,12 +3,12 @@ import { formatDistanceToNow } from "date-fns";
 import { Anchor, Paper, Text, Typography } from "@mantine/core";
 
 import LikeButton from "../../letters/like-button";
-import { type UserLetterReplyType } from "@/types/letter";
+import { type UserLetterReply } from "@/types/letter";
 import classes from "./user.module.css";
 import AuthorAvatar from "@/components/author-avatar";
 
 export interface UserReplyItemProps {
-  reply: UserLetterReplyType;
+  reply: UserLetterReply;
   onLike: ({
     letterId,
     replyId,

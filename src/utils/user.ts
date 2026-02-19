@@ -1,11 +1,8 @@
-import type {
-  BaseUserNotificationType,
-  UserNotificationType,
-} from "@/types/user";
+import type { BaseUserNotification, UserNotification } from "@/types/user";
 
 export function formatUserNotifications(
-  notifications: BaseUserNotificationType[],
-): UserNotificationType[] {
+  notifications: BaseUserNotification[],
+): UserNotification[] {
   return notifications.map((notification) => {
     const firstActor = notification.actors?.[0]?.user;
     let mainActor: {

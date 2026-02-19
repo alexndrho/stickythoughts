@@ -2,14 +2,14 @@
 
 import { Button, Group, Modal, Text } from "@mantine/core";
 
-import type { DeletedLetterReplyFromServer } from "@/types/deleted";
 import { stripHtmlTags } from "@/utils/text";
+import type { DeletedLetterReply } from "@/types/deleted";
 
 export interface PermanentlyDeleteReplyModalProps {
-  reply: DeletedLetterReplyFromServer | null;
+  reply: DeletedLetterReply | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (reply: DeletedLetterReplyFromServer) => void;
+  onConfirm: (reply: DeletedLetterReply) => void;
   loading?: boolean;
 }
 
@@ -53,10 +53,10 @@ export const PermanentlyDeleteReplyModal = ({
 };
 
 export interface RecoverReplyModalProps {
-  reply: DeletedLetterReplyFromServer | null;
+  reply: DeletedLetterReply | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (reply: DeletedLetterReplyFromServer) => void;
+  onConfirm: (reply: DeletedLetterReply) => void;
   loading?: boolean;
 }
 

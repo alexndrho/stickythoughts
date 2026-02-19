@@ -1,7 +1,10 @@
 import type { Prisma } from "@/generated/prisma/client";
+import type { input } from "zod";
+import type { createThoughtInput } from "@/lib/validations/thought";
+import type { SerializeDates } from "./serialization";
 import type { UserSummary } from "./user";
 
-export type PrivateThoughtPayload = Prisma.ThoughtGetPayload<{
+export type BasePrivateThought = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
     author: true;
@@ -11,7 +14,11 @@ export type PrivateThoughtPayload = Prisma.ThoughtGetPayload<{
   };
 }>;
 
-type PrivateHighlightedThoughtPayloadBase = Prisma.ThoughtGetPayload<{
+export type PrivateThought = BasePrivateThought;
+
+export type PrivateThoughtDTO = SerializeDates<PrivateThought>;
+
+export type BasePrivateHighlightedThought = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
     author: true;
@@ -29,17 +36,18 @@ type PrivateHighlightedThoughtPayloadBase = Prisma.ThoughtGetPayload<{
   };
 }>;
 
-export type PrivateHighlightedThoughtPayload = Omit<
-  PrivateHighlightedThoughtPayloadBase,
+export type PrivateHighlightedThought = Omit<
+  BasePrivateHighlightedThought,
   "highlightedAt" | "highlightedBy"
 > & {
-  highlightedAt: NonNullable<
-    PrivateHighlightedThoughtPayloadBase["highlightedAt"]
-  >;
+  highlightedAt: NonNullable<BasePrivateHighlightedThought["highlightedAt"]>;
   highlightedBy: UserSummary;
 };
 
-export type PublicThoughtPayload = Prisma.ThoughtGetPayload<{
+export type PrivateHighlightedThoughtDTO =
+  SerializeDates<PrivateHighlightedThought>;
+
+export type BasePublicThought = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
     author: true;
@@ -48,3 +56,9 @@ export type PublicThoughtPayload = Prisma.ThoughtGetPayload<{
     createdAt: true;
   };
 }>;
+
+export type PublicThought = BasePublicThought;
+
+export type PublicThoughtDTO = SerializeDates<PublicThought>;
+
+export type SubmitThoughtBody = input<typeof createThoughtInput>;

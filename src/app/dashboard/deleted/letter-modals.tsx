@@ -2,13 +2,13 @@
 
 import { Button, Group, Modal, Text } from "@mantine/core";
 
-import type { DeletedLetterFromServer } from "@/types/deleted";
+import type { DeletedLetter } from "@/types/deleted";
 
 export interface PermanentlyDeleteLetterModalProps {
-  letter: DeletedLetterFromServer | null;
+  letter: DeletedLetter | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (letter: DeletedLetterFromServer) => void;
+  onConfirm: (letter: DeletedLetter) => void;
   loading?: boolean;
 }
 
@@ -52,10 +52,10 @@ export const PermanentlyDeleteLetterModal = ({
 };
 
 export interface RecoverLetterModalProps {
-  letter: DeletedLetterFromServer | null;
+  letter: DeletedLetter | null;
   opened: boolean;
   onClose: () => void;
-  onConfirm: (letter: DeletedLetterFromServer) => void;
+  onConfirm: (letter: DeletedLetter) => void;
   loading?: boolean;
 }
 

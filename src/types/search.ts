@@ -1,4 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
+import type { SerializeDates } from "./serialization";
 
 export const searchSegments = [
   { label: "All", value: "all" },
@@ -12,6 +13,12 @@ export type SearchResultMap = {
   users: SearchUserType[];
   letters: SearchLetterType[];
   all: SearchAllType[];
+};
+
+export type SearchResultDTOMap = {
+  users: SearchUserDTO[];
+  letters: SearchLetterDTO[];
+  all: SearchAllDTO[];
 };
 
 export type SearchResult = {
@@ -37,3 +44,7 @@ export type SearchLetterType = Prisma.LetterGetPayload<{
   SearchResult;
 
 export type SearchAllType = SearchUserType | SearchLetterType;
+
+export type SearchUserDTO = SerializeDates<SearchUserType>;
+export type SearchLetterDTO = SerializeDates<SearchLetterType>;
+export type SearchAllDTO = SerializeDates<SearchAllType>;

@@ -4,6 +4,8 @@ import { formatUserNotifications } from "@/utils/user";
 import { guardSession } from "@/lib/session-guard";
 import { unknownErrorResponse } from "@/lib/http";
 import { listUserNotifications } from "@/server/user";
+import { toDTO } from "@/lib/http/to-dto";
+import type { UserNotificationDTO } from "@/types/user";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -23,7 +25,9 @@ export async function GET(request: NextRequest) {
 
     const formattedNotifications = formatUserNotifications(notifications);
 
-    return NextResponse.json(formattedNotifications);
+    return NextResponse.json(
+      toDTO(formattedNotifications) satisfies UserNotificationDTO[],
+    );
   } catch (error) {
     console.error(error);
     return unknownErrorResponse("Something went wrong");

@@ -1,37 +1,103 @@
-import type { Letter, LetterReply, Thought } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
+import type { SerializeDates } from "./serialization";
 import type { UserSummary, UserWithAvatarSummary } from "./user";
 
-export type DeletedThoughtFromServer = Omit<
-  Thought,
-  "highlightedAt" | "highlightedById" | "createdAt" | "deletedAt"
-> & {
-  createdAt: Date;
-  deletedAt: Date | null;
+export type DeletedThought = Prisma.ThoughtGetPayload<{
+  select: {
+    id: true;
+    author: true;
+    message: true;
+    color: true;
+    createdAt: true;
+    deletedAt: true;
+    deletedBy: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+      };
+    };
+  };
+}> & {
   deletedBy: UserSummary | null;
 };
 
-export type DeletedLetterFromServer = Omit<
-  Letter,
-  "createdAt" | "updatedAt" | "deletedAt"
-> & {
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
+export type DeletedThoughtDTO = SerializeDates<DeletedThought>;
+
+export type DeletedLetter = Prisma.LetterGetPayload<{
+  select: {
+    id: true;
+    title: true;
+    body: true;
+    authorId: true;
+    deletedById: true;
+    status: true;
+    statusSetById: true;
+    isAnonymous: true;
+    postedAt: true;
+    contentUpdatedAt: true;
+    createdAt: true;
+    updatedAt: true;
+    deletedAt: true;
+    author: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+        image: true;
+      };
+    };
+    deletedBy: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+      };
+    };
+  };
+}> & {
   author: UserWithAvatarSummary | null;
   deletedBy: UserSummary | null;
 };
 
-export type DeletedLetterReplyFromServer = Omit<
-  LetterReply,
-  "createdAt" | "updatedAt" | "deletedAt"
-> & {
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
+export type DeletedLetterDTO = SerializeDates<DeletedLetter>;
+
+export type DeletedLetterReply = Prisma.LetterReplyGetPayload<{
+  select: {
+    id: true;
+    body: true;
+    authorId: true;
+    deletedById: true;
+    isAnonymous: true;
+    letterId: true;
+    createdAt: true;
+    updatedAt: true;
+    deletedAt: true;
+    author: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+        image: true;
+      };
+    };
+    deletedBy: {
+      select: {
+        id: true;
+        name: true;
+        username: true;
+      };
+    };
+    letter: {
+      select: {
+        id: true;
+        title: true;
+      };
+    };
+  };
+}> & {
   author: UserWithAvatarSummary;
   deletedBy: UserSummary | null;
-  letter: {
-    id: string;
-    title: string;
-  };
 };
+
+export type DeletedLetterReplyDTO = SerializeDates<DeletedLetterReply>;

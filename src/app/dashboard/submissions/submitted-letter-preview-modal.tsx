@@ -3,15 +3,15 @@
 import { Button, Group, Modal } from "@mantine/core";
 import type { LetterStatus } from "@/generated/prisma/client";
 
-import type { SubmissionLetterFromServer } from "@/types/submission";
 import LetterPreviewContent from "./letter-preview-content";
+import type { SubmissionLetter } from "@/types/submission";
 
 export interface SubmittedLetterPreviewModalProps {
-  letter: SubmissionLetterFromServer | null;
+  letter: SubmissionLetter | null;
   opened: boolean;
   onClose: () => void;
   onSetStatus: (
-    letter: SubmissionLetterFromServer,
+    letter: SubmissionLetter,
     status: Extract<LetterStatus, "APPROVED" | "REJECTED">,
   ) => void;
   actionStatus?: Extract<LetterStatus, "APPROVED" | "REJECTED"> | null;

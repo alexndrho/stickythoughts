@@ -1,9 +1,12 @@
 import "client-only";
 
-import type { Prisma } from "@/generated/prisma/client";
 import { parsePublicThoughtFromServer } from "@/utils/thought";
 import { fetchJson } from "@/services/http";
-import type { PublicThoughtPayload } from "@/types/thought";
+import type {
+  PublicThought,
+  PublicThoughtDTO,
+  SubmitThoughtBody,
+} from "@/types/thought";
 
 const getThoughts = async ({
   lastId,
@@ -11,7 +14,7 @@ const getThoughts = async ({
 }: {
   lastId?: string;
   searchTerm?: string;
-}): Promise<PublicThoughtPayload[]> => {
+}): Promise<PublicThought[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
@@ -21,7 +24,7 @@ const getThoughts = async ({
     params.append("searchTerm", searchTerm);
   }
 
-  const data = await fetchJson<PublicThoughtPayload[]>(
+  const data = await fetchJson<PublicThoughtDTO[]>(
     `/api/thoughts${params.toString() ? `?${params.toString()}` : ""}`,
     undefined,
     { errorMessage: "Failed to get thoughts" },
@@ -30,9 +33,7 @@ const getThoughts = async ({
   return data.map(parsePublicThoughtFromServer);
 };
 
-const submitThought = async (
-  data: Prisma.ThoughtCreateInput,
-): Promise<{ message: string }> => {
+const submitThought = async (data: SubmitThoughtBody): Promise<{ message: string }> => {
   return fetchJson(
     "/api/thoughts",
     {
@@ -40,9 +41,7 @@ const submitThought = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...data,
-      }),
+      body: JSON.stringify(data),
     },
     { errorMessage: "Failed to submit thought" },
   );
@@ -58,19 +57,16 @@ const getThoughtsCount = async (): Promise<number> => {
   return data.count;
 };
 
-const getHighlightedThought =
-  async (): Promise<PublicThoughtPayload | null> => {
-    const data = await fetchJson<PublicThoughtPayload | null>(
-      "/api/thoughts/highlight",
-      undefined,
-      { errorMessage: "Failed to get highlighted thought" },
-    );
+const getHighlightedThought = async (): Promise<PublicThought | null> => {
+  const data = await fetchJson<PublicThoughtDTO | null>(
+    "/api/thoughts/highlight",
+    undefined,
+    { errorMessage: "Failed to get highlighted thought" },
+  );
 
-    if (!data) return null;
+  if (!data) return null;
 
-    return parsePublicThoughtFromServer(data);
-  };
+  return parsePublicThoughtFromServer(data);
+};
 
 export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought };
-
-export type { PublicThoughtPayload };

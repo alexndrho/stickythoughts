@@ -63,7 +63,7 @@ export default function UpdateBioModal({
 
   return (
     <Modal title="Update Bio" opened={opened} onClose={onClose} centered>
-      <form onSubmit={form.onSubmit((values) => mutation.mutate(values.bio))}>
+      <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
         <Textarea
           label="Bio"
           placeholder="Enter your bio"

@@ -2,14 +2,14 @@
 
 import { Button, Group, Modal } from "@mantine/core";
 
-import type { SubmissionLetterFromServer } from "@/types/submission";
+import type { SubmissionLetter } from "@/types/submission";
 import LetterPreviewContent from "./letter-preview-content";
 
 export interface RejectedLetterPreviewModalProps {
-  letter: SubmissionLetterFromServer | null;
+  letter: SubmissionLetter | null;
   opened: boolean;
   onClose: () => void;
-  onReopen: (letter: SubmissionLetterFromServer) => void;
+  onReopen: (letter: SubmissionLetter) => void;
   loading?: boolean;
   canSetStatus: boolean;
 }

@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { guardSession } from "@/lib/session-guard";
 import { getHighlightedThought } from "@/server/dashboard/thought-service";
 import { unknownErrorResponse } from "@/lib/http";
-import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
+import type { PrivateHighlightedThoughtDTO } from "@/types/thought";
+import { toDTO } from "@/lib/http/to-dto";
 
 export async function GET(request: Request) {
   try {
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
     const highlightedThought = await getHighlightedThought();
 
     return NextResponse.json(
-      highlightedThought satisfies PrivateHighlightedThoughtPayload | null,
+      toDTO(highlightedThought) satisfies PrivateHighlightedThoughtDTO | null,
     );
   } catch (error) {
     console.error(error);

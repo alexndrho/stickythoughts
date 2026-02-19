@@ -5,9 +5,9 @@ import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
 import { listLettersPublic } from "@/server/letter";
 import { headers } from "next/headers";
 import { formatLetters } from "@/utils/letter";
-import type { LetterType } from "@/types/letter";
+import type { Letter } from "@/types/letter";
 
-export async function listLetters(): Promise<LetterType[]> {
+export async function listLetters(): Promise<Letter[]> {
   const requestHeaders = await headers();
   const session = await auth.api.getSession({
     headers: requestHeaders,

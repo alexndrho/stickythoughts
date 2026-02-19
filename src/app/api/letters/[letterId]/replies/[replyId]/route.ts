@@ -5,16 +5,11 @@ import { auth } from "@/lib/auth";
 import { updateLetterReplyServerInput } from "@/lib/validations/letter";
 import { formatLetterReplies } from "@/utils/letter";
 import { guardSession } from "@/lib/session-guard";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
+import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
-import {
-  softDeleteLetterReply,
-  updateLetterReply,
-} from "@/server/letter";
+import { softDeleteLetterReply, updateLetterReply } from "@/server/letter";
+import { toDTO } from "@/lib/http/to-dto";
+import type { LetterReplyDTO } from "@/types/letter";
 
 export async function PUT(
   request: Request,
@@ -39,7 +34,9 @@ export async function PUT(
 
     const formattedReply = formatLetterReplies(updatedReply, session.user.id);
 
-    return NextResponse.json(formattedReply, { status: 200 });
+    return NextResponse.json(toDTO(formattedReply) satisfies LetterReplyDTO, {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);

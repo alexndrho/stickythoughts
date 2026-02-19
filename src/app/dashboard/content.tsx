@@ -24,7 +24,6 @@ import { getFormattedDate } from "@/utils/date";
 import { thoughtCountOptions } from "@/app/(main)/options";
 import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
 import DeleteThoughtModal from "./delete-thought-modal";
-import type { PrivateThoughtPayload } from "@/types/thought";
 import ServerError from "@/utils/error/ServerError";
 import {
   highlightThought,
@@ -39,6 +38,7 @@ import HighlightThoughtModal from "./highlight-thought-modal";
 import RemoveHighlightModal from "./remove-highlight-modal";
 import Thought from "../(main)/thought";
 import { formatUserDisplayName } from "@/utils/user";
+import type { PrivateThought } from "@/types/thought";
 import dashboardClasses from "./dashboard.module.css";
 
 const getErrorMessage = (error: unknown) => {
@@ -66,12 +66,13 @@ export default function Content() {
 
   const { data: count } = useQuery(thoughtCountOptions);
 
-  const [deletingThought, setDeletingThought] =
-    useState<PrivateThoughtPayload | null>(null);
+  const [deletingThought, setDeletingThought] = useState<PrivateThought | null>(
+    null,
+  );
   const [highlightingThought, setHighlightingThought] =
-    useState<PrivateThoughtPayload | null>(null);
+    useState<PrivateThought | null>(null);
   const [unhighlightingThought, setUnhighlightingThought] =
-    useState<PrivateThoughtPayload | null>(null);
+    useState<PrivateThought | null>(null);
   const highlightMutation = useMutation({
     mutationFn: highlightThought,
     onSuccess: (data) => {
@@ -123,7 +124,7 @@ export default function Content() {
             highlightedThought.highlightedAt,
           )}`;
 
-  const handleOpenDeleteModal = (thought?: PrivateThoughtPayload | null) => {
+  const handleOpenDeleteModal = (thought?: PrivateThought | null) => {
     if (!thought) return;
 
     setDeletingThought(thought);
@@ -133,7 +134,7 @@ export default function Content() {
     setDeletingThought(null);
   };
 
-  const handleOpenHighlightModal = (thought: PrivateThoughtPayload) => {
+  const handleOpenHighlightModal = (thought: PrivateThought) => {
     setHighlightingThought(thought);
   };
 
@@ -148,9 +149,7 @@ export default function Content() {
     highlightMutation.mutate(highlightingThought.id);
   };
 
-  const handleOpenUnhighlightModal = (
-    thought?: PrivateThoughtPayload | null,
-  ) => {
+  const handleOpenUnhighlightModal = (thought?: PrivateThought | null) => {
     if (!thought) return;
 
     setUnhighlightingThought(thought);

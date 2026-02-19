@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
-import type { UserPublicAccount } from "@/types/user";
 import { getUserPublicAccount, UserNotFoundError } from "@/server/user";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
+import type { UserPublicAccountDTO } from "@/types/user";
 
 export async function GET(
   request: Request,
@@ -35,7 +35,7 @@ export async function GET(
       canSeeBanned: hasPermissionToBan,
     });
 
-    return NextResponse.json(user satisfies UserPublicAccount);
+    return NextResponse.json(user satisfies UserPublicAccountDTO);
   } catch (error) {
     if (error instanceof UserNotFoundError) {
       return jsonError([{ code: "not-found", message: "User not found" }], 404);

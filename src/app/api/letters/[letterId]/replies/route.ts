@@ -5,16 +5,11 @@ import { auth } from "@/lib/auth";
 import { createLetterReplyServerInput } from "@/lib/validations/letter";
 import { formatLetterReplies } from "@/utils/letter";
 import { guardSession } from "@/lib/session-guard";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
-import {
-  createLetterReply,
-  listLetterReplies,
-} from "@/server/letter";
+import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
+import { createLetterReply, listLetterReplies } from "@/server/letter";
 import { LetterNotFoundError } from "@/server/letter";
+import { toDTO } from "@/lib/http/to-dto";
+import type { LetterReplyDTO } from "@/types/letter";
 
 export async function POST(
   request: Request,
@@ -41,7 +36,9 @@ export async function POST(
 
     const formattedPost = formatLetterReplies(reply, session.user.id);
 
-    return NextResponse.json(formattedPost, { status: 201 });
+    return NextResponse.json(toDTO(formattedPost) satisfies LetterReplyDTO, {
+      status: 201,
+    });
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
       return jsonError(
@@ -81,7 +78,7 @@ export async function GET(
 
     const formattedPosts = formatLetterReplies(replies, session?.user.id);
 
-    return NextResponse.json(formattedPosts);
+    return NextResponse.json(toDTO(formattedPosts) satisfies LetterReplyDTO[]);
   } catch (error) {
     console.error(error);
     return unknownErrorResponse("Something went wrong");

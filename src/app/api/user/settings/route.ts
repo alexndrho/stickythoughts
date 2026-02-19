@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
-import type { UserAccountSettings } from "@/types/user";
 import { guardSession } from "@/lib/session-guard";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import { getUserAccountSettings } from "@/server/user";
 import { UserNotFoundError } from "@/server/user";
+import type { UserAccountSettingsDTO } from "@/types/user";
 
 export async function GET(request: Request) {
   const session = await guardSession({ headers: request.headers });
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const userSettings: UserAccountSettings = await getUserAccountSettings({
+    const userSettings: UserAccountSettingsDTO = await getUserAccountSettings({
       userId: session.user.id,
     });
 

@@ -1,3 +1,5 @@
+import type { DeserializeDates } from "@/types/serialization";
+
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (value === null || typeof value !== "object") return false;
   if (Array.isArray(value) || value instanceof Date) return false;
@@ -47,6 +49,6 @@ function normalizeValue(value: unknown, key?: string): unknown {
   return normalized;
 }
 
-export function normalizeHttpDates<T>(input: T): T {
-  return normalizeValue(input) as T;
+export function parseDtoDates<T>(input: T): DeserializeDates<T> {
+  return normalizeValue(input) as DeserializeDates<T>;
 }

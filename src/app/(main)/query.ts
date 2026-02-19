@@ -3,13 +3,13 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "@/config/cache-tags";
-import type { PublicThoughtPayload } from "@/types/thought";
 import {
   countPublicThoughts as countPublicThoughtsService,
   getHighlightedThought as getHighlightedThoughtService,
   listPublicThoughts as listPublicThoughtsService,
 } from "@/server/thought/thoughts-service";
 import { parsePublicThoughtFromServer } from "@/utils/thought";
+import type { PublicThought } from "@/types/thought";
 
 const listPublicThoughtsCached = unstable_cache(
   async () => {
@@ -48,7 +48,7 @@ const getHighlightedThoughtCached = unstable_cache(
   },
 );
 
-export async function listPublicThoughts(): Promise<PublicThoughtPayload[]> {
+export async function listPublicThoughts(): Promise<PublicThought[]> {
   return listPublicThoughtsCached();
 }
 
@@ -56,6 +56,6 @@ export async function countPublicThoughts(): Promise<number> {
   return countPublicThoughtsCached();
 }
 
-export async function getHighlightedThought(): Promise<PublicThoughtPayload | null> {
+export async function getHighlightedThought(): Promise<PublicThought | null> {
   return getHighlightedThoughtCached();
 }

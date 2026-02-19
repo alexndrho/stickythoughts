@@ -2,14 +2,13 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { getQueryClient } from "@/lib/get-query-client";
 import { userKeys } from "@/lib/query-keys";
-import { UserNotificationType } from "@/types/user";
+import { UserNotification } from "@/types/user";
 
 export const setUserNotificationOpenedQueryData = () => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<number>(
-    userKeys.notificationCount(),
-    (oldCount) => (oldCount ? 0 : oldCount),
+  queryClient.setQueryData<number>(userKeys.notificationCount(), (oldCount) =>
+    oldCount ? 0 : oldCount,
   );
 };
 
@@ -22,7 +21,7 @@ export const setMarkReadNotificationQueryData = ({
 }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<UserNotificationType[]>>(
+  queryClient.setQueryData<InfiniteData<UserNotification[]>>(
     userKeys.notificationsInfinite(),
     (oldData) => {
       if (!oldData) return oldData;
@@ -35,7 +34,7 @@ export const setMarkReadNotificationQueryData = ({
               ? ({
                   ...notification,
                   isRead,
-                } satisfies UserNotificationType)
+                } satisfies UserNotification)
               : notification,
           ),
         ),
@@ -47,7 +46,7 @@ export const setMarkReadNotificationQueryData = ({
 export const setDeleteNotificationQueryData = ({ id }: { id: string }) => {
   const queryClient = getQueryClient();
 
-  queryClient.setQueryData<InfiniteData<UserNotificationType[]>>(
+  queryClient.setQueryData<InfiniteData<UserNotification[]>>(
     userKeys.notificationsInfinite(),
     (oldData) => {
       if (!oldData) return oldData;

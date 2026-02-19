@@ -7,6 +7,8 @@ import { formatLetters } from "@/utils/letter";
 import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { isUniqueConstraintError } from "@/server/db";
 import { createLetter, listLettersPublic } from "@/server/letter";
+import { toDTO } from "@/lib/http/to-dto";
+import type { LetterDTO } from "@/types/letter";
 
 export async function POST(request: Request) {
   try {
@@ -69,7 +71,9 @@ export async function GET(request: NextRequest) {
       letters,
     });
 
-    return NextResponse.json(formattedPosts, { status: 200 });
+    return NextResponse.json(toDTO(formattedPosts) satisfies LetterDTO[], {
+      status: 200,
+    });
   } catch (error) {
     console.error(error);
     return unknownErrorResponse("Something went wrong");

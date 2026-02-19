@@ -4,9 +4,10 @@ import { ZodError } from "zod";
 
 import { revalidateThoughts } from "@/lib/cache/thought-revalidation";
 import { createThoughtInput } from "@/lib/validations/thought";
-import type { PublicThoughtPayload } from "@/types/thought";
 import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { createThought, listPublicThoughts } from "@/server/thought";
+import { toDTO } from "@/lib/http/to-dto";
+import type { PublicThoughtDTO } from "@/types/thought";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     const thoughts = await listPublicThoughts({ searchTerm, lastId });
 
-    const typedThoughts = thoughts satisfies PublicThoughtPayload[];
+    const typedThoughts = toDTO(thoughts) satisfies PublicThoughtDTO[];
 
     return NextResponse.json(typedThoughts, { status: 200 });
   } catch (error) {

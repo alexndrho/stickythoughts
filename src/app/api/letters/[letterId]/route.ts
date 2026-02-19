@@ -9,6 +9,8 @@ import { formatLetters } from "@/utils/letter";
 import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
 import { isRecordNotFoundError } from "@/server/db";
 import { softDeleteLetter, updateLetter } from "@/server/letter";
+import { toDTO } from "@/lib/http/to-dto";
+import type { LetterDTO } from "@/types/letter";
 
 export async function GET(
   request: Request,
@@ -25,7 +27,7 @@ export async function GET(
       sessionUserId: session?.user?.id ?? null,
     });
 
-    return NextResponse.json(letter);
+    return NextResponse.json(toDTO(letter) satisfies LetterDTO);
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
       return jsonError(
@@ -64,7 +66,7 @@ export async function PUT(
       letters: updatedLetter,
     });
 
-    return NextResponse.json(formattedLetter);
+    return NextResponse.json(toDTO(formattedLetter) satisfies LetterDTO);
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);

@@ -25,12 +25,12 @@ import LikeButton from "@/app/(main)/(core)/letters/like-button";
 import { useTiptapEditor } from "@/hooks/use-tiptap";
 import { updateLetterReply } from "@/services/letter";
 import ServerError from "@/utils/error/ServerError";
-import type { LetterReplyType } from "@/types/letter";
+import type { LetterReply } from "@/types/letter";
 import classes from "./letter.module.css";
 
 export interface ReplyItemProps {
   session: ReturnType<typeof authClient.useSession>["data"];
-  reply: LetterReplyType;
+  reply: LetterReply;
   onLike: () => void;
   likeLoading?: boolean;
   onDelete: () => void;
@@ -184,7 +184,7 @@ function Editor({
   reply,
   onClose,
 }: {
-  reply: LetterReplyType;
+  reply: LetterReply;
   onClose: () => void;
 }) {
   const updateForm = useForm({
@@ -216,7 +216,9 @@ function Editor({
       updateLetterReply({
         letterId: reply.letterId,
         replyId: reply.id,
-        body: values.body,
+        body: {
+          body: values.body,
+        },
       }),
     onSuccess: (data) => {
       onClose();

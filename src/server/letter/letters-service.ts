@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { LETTERS_PER_PAGE } from "@/config/letter";
 import { prisma } from "@/lib/db";
 import { LetterNotFoundError } from "./letter-errors";
-import type { LetterType } from "@/types/letter";
 import { formatLetters } from "@/utils/letter";
+import type { Letter } from "@/types/letter";
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -40,7 +40,7 @@ export async function createLetter(args: {
 export async function getLetterPublic(args: {
   letterId: string;
   sessionUserId?: string | null;
-}): Promise<LetterType> {
+}): Promise<Letter> {
   const letter = await prisma.letter.findUnique({
     where: {
       deletedAt: null,

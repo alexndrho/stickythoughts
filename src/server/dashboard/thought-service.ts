@@ -1,13 +1,14 @@
 import "server-only";
 
+import { subDays } from "date-fns";
+
 import {
   ADMIN_DELETED_PER_PAGE,
   ADMIN_THOUGHTS_PER_PAGE,
 } from "@/config/admin";
 import { prisma } from "@/lib/db";
-import type { PrivateHighlightedThoughtPayload } from "@/types/thought";
-import { subDays } from "date-fns";
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
+import type { PrivateHighlightedThought } from "@/types/thought";
 
 export async function countDeletedThoughts() {
   return prisma.thought.count({
@@ -131,7 +132,7 @@ export async function getThoughtHighlightStatus(args: { thoughtId: string }) {
   });
 }
 
-export async function getHighlightedThought(): Promise<PrivateHighlightedThoughtPayload | null> {
+export async function getHighlightedThought(): Promise<PrivateHighlightedThought | null> {
   const highlightCutoff = subDays(new Date(), THOUGHT_HIGHLIGHT_MAX_AGE_DAYS);
 
   const thought = await prisma.thought.findFirst({

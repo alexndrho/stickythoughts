@@ -2,19 +2,31 @@ import "client-only";
 
 import { fetchJson } from "@/services/http";
 import type {
-  UserNotificationType,
+  UserNotification,
+  UserNotificationDTO,
   UserAccountSettings,
+  UserAccountSettingsDTO,
   UserPublicAccount,
+  UserPublicAccountDTO,
   UserSettingsPrivacy,
+  UserSettingsPrivacyDTO,
+  UpdateUserBioBody,
+  UpdateUserLikesVisibilityBody,
+  UserNotificationMarkReadBody,
+  UserNotificationOpenedBody,
 } from "@/types/user";
-import { VisibilityLevel } from "@/generated/prisma/enums";
-import type { LetterType, UserLetterReplyType } from "@/types/letter";
+import type {
+  Letter,
+  LetterDTO,
+  UserLetterReply,
+  UserLetterReplyDTO,
+} from "@/types/letter";
 
 export const getUser = async (
   username: string,
   cookie?: string,
 ): Promise<UserPublicAccount> => {
-  return fetchJson(
+  return fetchJson<UserPublicAccountDTO>(
     `/api/user/${username}`,
     {
       headers: {
@@ -27,12 +39,14 @@ export const getUser = async (
 
 export const getUserAccountSettings =
   async (): Promise<UserAccountSettings> => {
-    return fetchJson("/api/user/settings", undefined, {
+    return fetchJson<UserAccountSettingsDTO>("/api/user/settings", undefined, {
       errorMessage: "User profile fetch error",
     });
   };
 
-export const updateUserBio = async (bio: string): Promise<{ bio: string }> => {
+export const updateUserBio = async (
+  body: UpdateUserBioBody,
+): Promise<{ bio: string }> => {
   return fetchJson(
     "/api/user/bio",
     {
@@ -40,7 +54,7 @@ export const updateUserBio = async (bio: string): Promise<{ bio: string }> => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ bio }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "User bio update error" },
   );
@@ -99,22 +113,26 @@ export const removeProfilePicture = async ({
 
 export const getUserSettingsPrivacy =
   async (): Promise<UserSettingsPrivacy> => {
-    return fetchJson("/api/user/settings/privacy", undefined, {
-      errorMessage: "User settings privacy fetch error",
-    });
+    return fetchJson<UserSettingsPrivacyDTO>(
+      "/api/user/settings/privacy",
+      undefined,
+      {
+        errorMessage: "User settings privacy fetch error",
+      },
+    );
   };
 
 export const updateUserLikesVisibility = async (
-  visibility: VisibilityLevel,
+  body: UpdateUserLikesVisibilityBody,
 ): Promise<UserSettingsPrivacy> => {
-  return fetchJson(
+  return fetchJson<UserSettingsPrivacyDTO>(
     "/api/user/settings/privacy/likes-visibility",
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ visibility }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "User likes visibility update error" },
   );
@@ -122,21 +140,23 @@ export const updateUserLikesVisibility = async (
 
 export const getUserNotifications = async (
   lastUpdatedAt?: Date,
-): Promise<UserNotificationType[]> => {
+): Promise<UserNotification[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastUpdatedAt) {
     searchParams.append("lastUpdatedAt", lastUpdatedAt.toISOString());
   }
 
-  return fetchJson(
+  return fetchJson<UserNotificationDTO[]>(
     `/api/user/notifications?${searchParams.toString()}`,
     undefined,
     { errorMessage: "User notifications fetch error" },
   );
 };
 
-export const userNotificationOpened = async (): Promise<{
+export const userNotificationOpened = async (
+  body?: UserNotificationOpenedBody,
+): Promise<{
   message: string;
 }> => {
   return fetchJson(
@@ -146,7 +166,7 @@ export const userNotificationOpened = async (): Promise<{
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ opened: true }),
+      body: JSON.stringify(body ?? { opened: true }),
     },
     { errorMessage: "User notification opened error" },
   );
@@ -164,10 +184,10 @@ export const getUserNewNotificationCount = async (): Promise<number> => {
 
 export const userNotificationMarkRead = async ({
   id,
-  isRead,
+  body,
 }: {
   id: string;
-  isRead: boolean;
+  body: UserNotificationMarkReadBody;
 }): Promise<{ message: string }> => {
   return fetchJson(
     `/api/user/notifications/${id}`,
@@ -176,7 +196,7 @@ export const userNotificationMarkRead = async ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ isRead }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "User notification mark read error" },
   );
@@ -199,16 +219,20 @@ export const getUserLetters = async ({
 }: {
   username: string;
   lastId?: string;
-}): Promise<LetterType[]> => {
+}): Promise<Letter[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
     searchParams.append("lastId", lastId);
   }
 
-  return fetchJson(`/api/user/${username}/letters?${searchParams}`, undefined, {
-    errorMessage: "User letters fetch error",
-  });
+  return fetchJson<LetterDTO[]>(
+    `/api/user/${username}/letters?${searchParams}`,
+    undefined,
+    {
+      errorMessage: "User letters fetch error",
+    },
+  );
 };
 
 export const getUserReplies = async ({
@@ -217,16 +241,20 @@ export const getUserReplies = async ({
 }: {
   username: string;
   lastId?: string;
-}): Promise<UserLetterReplyType[]> => {
+}): Promise<UserLetterReply[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
     searchParams.append("lastId", lastId);
   }
 
-  return fetchJson(`/api/user/${username}/replies?${searchParams}`, undefined, {
-    errorMessage: "Failed to get replies",
-  });
+  return fetchJson<UserLetterReplyDTO[]>(
+    `/api/user/${username}/replies?${searchParams}`,
+    undefined,
+    {
+      errorMessage: "Failed to get replies",
+    },
+  );
 };
 
 export const getUserLikedLetters = async ({
@@ -235,14 +263,18 @@ export const getUserLikedLetters = async ({
 }: {
   username: string;
   lastId?: string;
-}): Promise<LetterType[]> => {
+}): Promise<Letter[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastId) {
     searchParams.append("lastId", lastId);
   }
 
-  return fetchJson(`/api/user/${username}/likes?${searchParams}`, undefined, {
-    errorMessage: "User liked letters fetch error",
-  });
+  return fetchJson<LetterDTO[]>(
+    `/api/user/${username}/likes?${searchParams}`,
+    undefined,
+    {
+      errorMessage: "User liked letters fetch error",
+    },
+  );
 };

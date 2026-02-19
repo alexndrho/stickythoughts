@@ -1,8 +1,11 @@
 import "client-only";
 
-import type { LetterStatus } from "@/generated/prisma/client";
 import { fetchJson } from "@/services/http";
-import type { SubmissionLetterFromServer } from "@/types/submission";
+import type {
+  SetSubmissionLetterStatusBody,
+  SubmissionLetter,
+  SubmissionLetterDTO,
+} from "@/types/submission";
 
 const getStatusParam = (status: "PENDING" | "REJECTED") => {
   return `status=${status}`;
@@ -14,8 +17,8 @@ export const getSubmissionLetters = async ({
 }: {
   page: number;
   status: "PENDING" | "REJECTED";
-}): Promise<SubmissionLetterFromServer[]> => {
-  return fetchJson(
+}): Promise<SubmissionLetter[]> => {
+  return fetchJson<SubmissionLetterDTO[]>(
     `/api/dashboard/submissions/letters?page=${page}&${getStatusParam(status)}`,
     undefined,
     { errorMessage: "Failed to get letters submissions" },
@@ -38,10 +41,10 @@ export const getSubmissionLettersCount = async ({
 
 export const setSubmissionLetterStatus = async ({
   id,
-  status,
+  body,
 }: {
   id: string;
-  status: Extract<LetterStatus, "APPROVED" | "REJECTED">;
+  body: SetSubmissionLetterStatusBody;
 }) => {
   return fetchJson(
     `/api/dashboard/submissions/letters/${id}/status`,
@@ -50,7 +53,7 @@ export const setSubmissionLetterStatus = async ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "Failed to update letter status" },
   );

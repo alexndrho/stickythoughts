@@ -7,15 +7,14 @@ import {
   formatHighlightedThoughtLockRemaining,
   isHighlightedThoughtLocked,
 } from "@/utils/thought";
-import type {
-  PrivateHighlightedThoughtPayload,
-} from "@/types/thought";
 import { jsonError, unknownErrorResponse } from "@/lib/http";
 import {
   findCurrentHighlight,
   getThoughtHighlightStatus,
   updateHighlight,
 } from "@/server/dashboard";
+import { toDTO } from "@/lib/http/to-dto";
+import type { PrivateHighlightedThoughtDTO } from "@/types/thought";
 
 const highlightLockedResponse = (highlightedAt: Date) =>
   jsonError(
@@ -73,9 +72,11 @@ export async function POST(
       ...updated,
       highlightedAt: updated.highlightedAt,
       highlightedBy: updated.highlightedBy,
-    } satisfies PrivateHighlightedThoughtPayload;
+    };
 
-    return NextResponse.json(highlightedThought);
+    return NextResponse.json(
+      toDTO(highlightedThought) satisfies PrivateHighlightedThoughtDTO,
+    );
   } catch (error) {
     console.error(error);
     return unknownErrorResponse("Something went wrong");

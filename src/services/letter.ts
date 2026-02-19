@@ -1,12 +1,20 @@
 import "client-only";
 
-import type { Prisma } from "@/generated/prisma/client";
-import type { LetterReplyType, LetterType } from "@/types/letter";
 import { fetchJson } from "@/services/http";
+import type {
+  Letter,
+  LetterDTO,
+  LetterReply,
+  LetterReplyDTO,
+  SubmitLetterBody,
+  SubmitLetterReplyBody,
+  UpdateLetterBody,
+  UpdateLetterReplyBody,
+} from "@/types/letter";
 
 // letter
 export const submitLetter = async (
-  data: Omit<Prisma.LetterCreateInput, "author">,
+  data: SubmitLetterBody,
 ): Promise<{ id: string }> => {
   return fetchJson(
     "/api/letters",
@@ -26,8 +34,8 @@ export const submitLetter = async (
 export const getLetter = async (
   id: string,
   cookie?: string,
-): Promise<LetterType> => {
-  return fetchJson(
+): Promise<Letter> => {
+  return fetchJson<LetterDTO>(
     `/api/letters/${id}`,
     {
       method: "GET",
@@ -44,14 +52,14 @@ export const getLetters = async ({
   lastId,
 }: {
   lastId?: string;
-}): Promise<LetterType[]> => {
+}): Promise<Letter[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
     params.append("lastId", lastId);
   }
 
-  return fetchJson(
+  return fetchJson<LetterDTO[]>(
     `/api/letters?${params}`,
     {
       method: "GET",
@@ -68,18 +76,16 @@ export const updateLetter = async ({
   body,
 }: {
   id: string;
-  body: Prisma.LetterUpdateInput["body"];
-}): Promise<LetterType> => {
-  return fetchJson(
+  body: UpdateLetterBody;
+}): Promise<Letter> => {
+  return fetchJson<LetterDTO>(
     `/api/letters/${id}`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        body: body,
-      }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "Failed to update letter post" },
   );
@@ -133,23 +139,18 @@ export const unlikeLetter = async (
 export const submitLetterReply = async ({
   id,
   body,
-  isAnonymous,
 }: {
   id: string;
-  body: Prisma.LetterCreateInput["body"];
-  isAnonymous?: boolean;
-}): Promise<LetterReplyType> => {
-  return fetchJson(
+  body: SubmitLetterReplyBody;
+}): Promise<LetterReply> => {
+  return fetchJson<LetterReplyDTO>(
     `/api/letters/${id}/replies`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        body,
-        isAnonymous,
-      }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "Failed to submit reply" },
   );
@@ -161,14 +162,14 @@ export const getLetterReplies = async ({
 }: {
   id: string;
   lastId?: string;
-}): Promise<LetterReplyType[]> => {
+}): Promise<LetterReply[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
     params.append("lastId", lastId);
   }
 
-  return fetchJson(
+  return fetchJson<LetterReplyDTO[]>(
     `/api/letters/${id}/replies?${params}`,
     {
       method: "GET",
@@ -187,18 +188,16 @@ export const updateLetterReply = async ({
 }: {
   letterId: string;
   replyId: string;
-  body: string;
-}): Promise<LetterReplyType> => {
-  return fetchJson(
+  body: UpdateLetterReplyBody;
+}): Promise<LetterReply> => {
+  return fetchJson<LetterReplyDTO>(
     `/api/letters/${letterId}/replies/${replyId}`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        body,
-      }),
+      body: JSON.stringify(body),
     },
     { errorMessage: "Failed to update reply" },
   );

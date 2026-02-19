@@ -42,7 +42,7 @@ export default function LikesVisibilityModal({
 
   const mutation = useMutation({
     mutationFn: (values: typeof form.values) =>
-      updateUserLikesVisibility(values.visibility),
+      updateUserLikesVisibility({ visibility: values.visibility }),
     onSuccess: (data) => {
       if (!data) return;
 

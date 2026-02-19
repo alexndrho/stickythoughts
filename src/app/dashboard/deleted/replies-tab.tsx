@@ -30,7 +30,6 @@ import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys } from "@/lib/query-keys";
 import { letterKeys } from "@/lib/query-keys";
-import type { DeletedLetterReplyFromServer } from "@/types/deleted";
 import {
   permanentlyDeleteReply,
   restoreDeletedReply,
@@ -38,6 +37,7 @@ import {
 import { stripHtmlTags } from "@/utils/text";
 import { formatUserDisplayName } from "@/utils/user";
 import { PermanentlyDeleteReplyModal, RecoverReplyModal } from "./reply-modals";
+import type { DeletedLetterReply } from "@/types/deleted";
 
 export interface RepliesTabProps {
   isActive: boolean;
@@ -46,9 +46,9 @@ export interface RepliesTabProps {
 export default function RepliesTab({ isActive }: RepliesTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingReply, setPermanentlyDeletingReply] =
-    useState<DeletedLetterReplyFromServer | null>(null);
+    useState<DeletedLetterReply | null>(null);
   const [restoringReply, setRestoringReply] =
-    useState<DeletedLetterReplyFromServer | null>(null);
+    useState<DeletedLetterReply | null>(null);
   const [restoringReplyId, setRestoringReplyId] = useState<string | null>(null);
   const [deletingReplyId, setDeletingReplyId] = useState<string | null>(null);
 
@@ -117,9 +117,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
     },
   });
 
-  const handleConfirmPermanentDelete = (
-    reply: DeletedLetterReplyFromServer,
-  ) => {
+  const handleConfirmPermanentDelete = (reply: DeletedLetterReply) => {
     deleteMutation.mutate(reply.id);
   };
 

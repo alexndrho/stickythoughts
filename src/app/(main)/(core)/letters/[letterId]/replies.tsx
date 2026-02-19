@@ -10,7 +10,7 @@ import { likeLetterReply, unlikeLetterReply } from "@/services/letter";
 import { setLikeLetterReplyQueryData } from "@/app/(main)/(core)/letters/set-query-data";
 import InfiniteScroll from "@/components/infinite-scroll";
 import ReplyItem from "./reply-item";
-import { type LetterReplyType } from "@/types/letter";
+import { type LetterReply } from "@/types/letter";
 import classes from "./letter.module.css";
 import DeleteReplyModal from "./delete-reply-modal";
 
@@ -34,9 +34,7 @@ export default function Replies({
     hasNextPage: hasNextRepliesPage,
   } = useInfiniteQuery(letterRepliesInfiniteOptions(letterId));
 
-  const [deletingReply, setDeletingReply] = useState<LetterReplyType | null>(
-    null,
-  );
+  const [deletingReply, setDeletingReply] = useState<LetterReply | null>(null);
 
   const replyLikeMutation = useMutation({
     mutationFn: async ({
@@ -97,7 +95,7 @@ export default function Replies({
     });
   };
 
-  const handleDeleteReplyModalOpen = (reply: LetterReplyType) => {
+  const handleDeleteReplyModalOpen = (reply: LetterReply) => {
     setDeletingReply(reply);
   };
 

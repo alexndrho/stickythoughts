@@ -3,9 +3,10 @@ import { ZodError } from "zod";
 
 import { guardSession } from "@/lib/session-guard";
 import { unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import type { SubmissionLetterFromServer } from "@/types/submission";
 import { listSubmissionLetters } from "@/server/dashboard";
 import { letterSubmissionsStatusQueryInput } from "@/lib/validations/letter";
+import { toDTO } from "@/lib/http/to-dto";
+import type { SubmissionLetterDTO } from "@/types/submission";
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
       status,
     });
 
-    return NextResponse.json(items satisfies SubmissionLetterFromServer[], {
+    return NextResponse.json(toDTO(items) satisfies SubmissionLetterDTO[], {
       status: 200,
     });
   } catch (error) {

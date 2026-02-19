@@ -1,4 +1,12 @@
 import { type Prisma } from "@/generated/prisma/client";
+import type { input } from "zod";
+import type {
+  createLetterReplyServerInput,
+  createLetterServerInput,
+  updateLetterReplyServerInput,
+  updateLetterServerInput,
+} from "@/lib/validations/letter";
+import type { SerializeDates } from "./serialization";
 import type { UserWithAvatarSummary } from "./user";
 
 type PrismaBaseLetter = Prisma.LetterGetPayload<{
@@ -34,13 +42,13 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
   };
 }>;
 
-export type BaseLetterType = Omit<PrismaBaseLetter, "likes" | "_count"> & {
+export type BaseLetter = Omit<PrismaBaseLetter, "likes" | "_count"> & {
   likes?: { userId: string }[];
   _count: { likes: number; replies: number };
 };
 
-export type LetterType = Omit<
-  BaseLetterType,
+export type Letter = Omit<
+  BaseLetter,
   "authorId" | "author" | "likes" | "_count"
 > & {
   author?: UserWithAvatarSummary;
@@ -53,6 +61,8 @@ export type LetterType = Omit<
     count: number;
   };
 };
+
+export type LetterDTO = SerializeDates<Letter>;
 
 type PrismaBaseLetterReply = Prisma.LetterReplyGetPayload<{
   select: {
@@ -90,7 +100,7 @@ type PrismaBaseLetterReply = Prisma.LetterReplyGetPayload<{
   };
 }>;
 
-export type BaseLetterReplyType = Omit<
+export type BaseLetterReply = Omit<
   PrismaBaseLetterReply,
   "likes" | "_count"
 > & {
@@ -98,8 +108,8 @@ export type BaseLetterReplyType = Omit<
   _count: { likes: number };
 };
 
-export type LetterReplyType = Omit<
-  BaseLetterReplyType,
+export type LetterReply = Omit<
+  BaseLetterReply,
   "authorId" | "author" | "likes" | "_count"
 > & {
   author?: UserWithAvatarSummary;
@@ -111,6 +121,8 @@ export type LetterReplyType = Omit<
     count: number;
   };
 };
+
+export type LetterReplyDTO = SerializeDates<LetterReply>;
 
 type PrismaBaseUserLetterReply = Prisma.LetterReplyGetPayload<{
   select: {
@@ -147,7 +159,7 @@ type PrismaBaseUserLetterReply = Prisma.LetterReplyGetPayload<{
   };
 }>;
 
-export type BaseUserLetterReplyType = Omit<
+export type BaseUserLetterReply = Omit<
   PrismaBaseUserLetterReply,
   "likes" | "_count"
 > & {
@@ -155,8 +167,8 @@ export type BaseUserLetterReplyType = Omit<
   _count: { likes: number };
 };
 
-export type UserLetterReplyType = Omit<
-  BaseUserLetterReplyType,
+export type UserLetterReply = Omit<
+  BaseUserLetterReply,
   "authorId" | "author" | "likes" | "_count"
 > & {
   author?: UserWithAvatarSummary;
@@ -165,3 +177,10 @@ export type UserLetterReplyType = Omit<
     count: number;
   };
 };
+
+export type UserLetterReplyDTO = SerializeDates<UserLetterReply>;
+
+export type SubmitLetterBody = input<typeof createLetterServerInput>;
+export type UpdateLetterBody = input<typeof updateLetterServerInput>;
+export type SubmitLetterReplyBody = input<typeof createLetterReplyServerInput>;
+export type UpdateLetterReplyBody = input<typeof updateLetterReplyServerInput>;

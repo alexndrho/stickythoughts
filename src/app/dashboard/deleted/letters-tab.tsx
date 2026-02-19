@@ -30,7 +30,7 @@ import { authClient } from "@/lib/auth-client";
 import { getQueryClient } from "@/lib/get-query-client";
 import { adminKeys } from "@/lib/query-keys";
 import { letterKeys } from "@/lib/query-keys";
-import type { DeletedLetterFromServer } from "@/types/deleted";
+import type { DeletedLetter } from "@/types/deleted";
 import {
   permanentlyDeleteLetter,
   restoreDeletedLetter,
@@ -48,9 +48,10 @@ export interface LettersTabProps {
 export default function LettersTab({ isActive }: LettersTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingLetter, setPermanentlyDeletingLetter] =
-    useState<DeletedLetterFromServer | null>(null);
-  const [restoringLetter, setRestoringLetter] =
-    useState<DeletedLetterFromServer | null>(null);
+    useState<DeletedLetter | null>(null);
+  const [restoringLetter, setRestoringLetter] = useState<DeletedLetter | null>(
+    null,
+  );
   const [restoringLetterId, setRestoringLetterId] = useState<string | null>(
     null,
   );
@@ -120,7 +121,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
     },
   });
 
-  const handleConfirmPermanentDelete = (letter: DeletedLetterFromServer) => {
+  const handleConfirmPermanentDelete = (letter: DeletedLetter) => {
     deleteMutation.mutate(letter.id);
   };
 
