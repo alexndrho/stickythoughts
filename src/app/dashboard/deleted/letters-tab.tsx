@@ -6,7 +6,6 @@ import {
   ActionIcon,
   Badge,
   Loader,
-  Pagination,
   Table,
   Tabs,
   Text,
@@ -19,7 +18,7 @@ import {
   deletedLettersPageOptions,
 } from "./options";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import dashboardClasses from "../dashboard.module.css";
+import PaginatedPanelLayout from "../paginated-panel-layout";
 import classes from "./deleted.module.css";
 import {
   formatDeletedByLabel,
@@ -127,115 +126,111 @@ export default function LettersTab({ isActive }: LettersTabProps) {
 
   return (
     <Tabs.Panel value="letters" className={classes.panel}>
-      <div className={dashboardClasses.container}>
-        <div className={dashboardClasses["table-container"]}>
-          <Table.ScrollContainer minWidth="100%" maxHeight="100%">
-            <Table highlightOnHover withColumnBorders withRowBorders>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Title</Table.Th>
-                  <Table.Th>Author</Table.Th>
-                  <Table.Th>Deleted By</Table.Th>
-                  <Table.Th>Deleted</Table.Th>
-                  <Table.Th>Actions</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
+      <PaginatedPanelLayout page={page} onPageChange={setPage} total={total}>
+        <Table.ScrollContainer minWidth="100%" maxHeight="100%">
+          <Table highlightOnHover withColumnBorders withRowBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Title</Table.Th>
+                <Table.Th>Author</Table.Th>
+                <Table.Th>Deleted By</Table.Th>
+                <Table.Th>Deleted</Table.Th>
+                <Table.Th>Actions</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
 
-              <Table.Tbody>
-                {deletedLetters?.map((letter) => (
-                  <Table.Tr key={letter.id}>
-                    <Table.Td>
-                      <Text>{letter.title}</Text>
-                    </Table.Td>
-                    <Table.Td>
-                      {/* Show "Anonymous" if the letter was submitted anonymously
+            <Table.Tbody>
+              {deletedLetters?.map((letter) => (
+                <Table.Tr key={letter.id}>
+                  <Table.Td>
+                    <Text>{letter.title}</Text>
+                  </Table.Td>
+                  <Table.Td>
+                    {/* Show "Anonymous" if the letter was submitted anonymously
                          or if the author information is missing (author can be null for deleted letters). */}
-                      {!letter.author || letter.isAnonymous
-                        ? "Anonymous"
-                        : formatUserDisplayName(letter.author)}
-                    </Table.Td>
-                    <Table.Td>
-                      {letter.deletedById === letter.authorId ? (
-                        <Badge size="sm">Author</Badge>
-                      ) : (
-                        formatDeletedByLabel(letter.deletedBy)
-                      )}
-                    </Table.Td>
-                    <Table.Td>{formatDeletedDate(letter.deletedAt)}</Table.Td>
-                    <Table.Td>
-                      <ActionIcon.Group>
-                        <Tooltip label="Recover letter">
-                          <ActionIcon
-                            aria-label="Recover letter"
-                            variant="default"
-                            onClick={() => {
-                              if (canRestoreLetter) {
-                                setRestoringLetter(letter);
-                              }
-                            }}
-                            loading={
-                              restoreMutation.isPending &&
-                              restoringLetterId === letter.id
+                    {!letter.author || letter.isAnonymous
+                      ? "Anonymous"
+                      : formatUserDisplayName(letter.author)}
+                  </Table.Td>
+                  <Table.Td>
+                    {letter.deletedById === letter.authorId ? (
+                      <Badge size="sm">Author</Badge>
+                    ) : (
+                      formatDeletedByLabel(letter.deletedBy)
+                    )}
+                  </Table.Td>
+                  <Table.Td>{formatDeletedDate(letter.deletedAt)}</Table.Td>
+                  <Table.Td>
+                    <ActionIcon.Group>
+                      <Tooltip label="Recover letter">
+                        <ActionIcon
+                          aria-label="Recover letter"
+                          variant="default"
+                          onClick={() => {
+                            if (canRestoreLetter) {
+                              setRestoringLetter(letter);
                             }
-                            disabled={
-                              !canRestoreLetter ||
-                              (restoreMutation.isPending &&
-                                restoringLetterId === letter.id)
-                            }
-                          >
-                            <IconArrowBackUp size="1em" />
-                          </ActionIcon>
-                        </Tooltip>
+                          }}
+                          loading={
+                            restoreMutation.isPending &&
+                            restoringLetterId === letter.id
+                          }
+                          disabled={
+                            !canRestoreLetter ||
+                            (restoreMutation.isPending &&
+                              restoringLetterId === letter.id)
+                          }
+                        >
+                          <IconArrowBackUp size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
 
-                        <Tooltip label="Permanently delete letter">
-                          <ActionIcon
-                            aria-label="Permanently delete letter"
-                            color="red"
-                            onClick={() => {
-                              if (canPermanentlyDeleteLetter) {
-                                setPermanentlyDeletingLetter(letter);
-                              }
-                            }}
-                            loading={
-                              deleteMutation.isPending &&
-                              deletingLetterId === letter.id
+                      <Tooltip label="Permanently delete letter">
+                        <ActionIcon
+                          aria-label="Permanently delete letter"
+                          color="red"
+                          onClick={() => {
+                            if (canPermanentlyDeleteLetter) {
+                              setPermanentlyDeletingLetter(letter);
                             }
-                            disabled={
-                              !canPermanentlyDeleteLetter ||
-                              (deleteMutation.isPending &&
-                                deletingLetterId === letter.id)
-                            }
-                          >
-                            <IconTrashX size="1em" />
-                          </ActionIcon>
-                        </Tooltip>
-                      </ActionIcon.Group>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
+                          }}
+                          loading={
+                            deleteMutation.isPending &&
+                            deletingLetterId === letter.id
+                          }
+                          disabled={
+                            !canPermanentlyDeleteLetter ||
+                            (deleteMutation.isPending &&
+                              deletingLetterId === letter.id)
+                          }
+                        >
+                          <IconTrashX size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
+                    </ActionIcon.Group>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
 
-                {isDeletedLettersFetching ? (
+              {isDeletedLettersFetching ? (
+                <Table.Tr>
+                  <Table.Td colSpan={5} ta="center">
+                    <Loader />
+                  </Table.Td>
+                </Table.Tr>
+              ) : (
+                deletedLetters?.length === 0 && (
                   <Table.Tr>
                     <Table.Td colSpan={5} ta="center">
-                      <Loader />
+                      No deleted letters found.
                     </Table.Td>
                   </Table.Tr>
-                ) : (
-                  deletedLetters?.length === 0 && (
-                    <Table.Tr>
-                      <Table.Td colSpan={5} ta="center">
-                        No deleted letters found.
-                      </Table.Td>
-                    </Table.Tr>
-                  )
-                )}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
-        </div>
-
-        <Pagination mt="md" value={page} onChange={setPage} total={total} />
-      </div>
+                )
+              )}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      </PaginatedPanelLayout>
 
       {canPermanentlyDeleteLetter && (
         <PermanentlyDeleteLetterModal

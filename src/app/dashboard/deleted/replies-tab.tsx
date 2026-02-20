@@ -6,7 +6,6 @@ import {
   ActionIcon,
   Badge,
   Loader,
-  Pagination,
   Table,
   Tabs,
   Text,
@@ -19,7 +18,7 @@ import {
   deletedRepliesPageOptions,
 } from "./options";
 import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import dashboardClasses from "../dashboard.module.css";
+import PaginatedPanelLayout from "../paginated-panel-layout";
 import classes from "./deleted.module.css";
 import {
   formatDeletedByLabel,
@@ -123,113 +122,109 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
 
   return (
     <Tabs.Panel value="replies" className={classes.panel}>
-      <div className={dashboardClasses.container}>
-        <div className={dashboardClasses["table-container"]}>
-          <Table.ScrollContainer minWidth="100%" maxHeight="100%">
-            <Table highlightOnHover withColumnBorders withRowBorders>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Reply</Table.Th>
-                  <Table.Th>Author</Table.Th>
-                  <Table.Th>Letter</Table.Th>
-                  <Table.Th>Deleted By</Table.Th>
-                  <Table.Th>Deleted</Table.Th>
-                  <Table.Th>Actions</Table.Th>
+      <PaginatedPanelLayout page={page} onPageChange={setPage} total={total}>
+        <Table.ScrollContainer minWidth="100%" maxHeight="100%">
+          <Table highlightOnHover withColumnBorders withRowBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Reply</Table.Th>
+                <Table.Th>Author</Table.Th>
+                <Table.Th>Letter</Table.Th>
+                <Table.Th>Deleted By</Table.Th>
+                <Table.Th>Deleted</Table.Th>
+                <Table.Th>Actions</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+
+            <Table.Tbody>
+              {data?.map((reply) => (
+                <Table.Tr key={reply.id}>
+                  <Table.Td>
+                    <Text lineClamp={2}>{stripHtmlTags(reply.body)}</Text>
+                  </Table.Td>
+                  <Table.Td>{formatUserDisplayName(reply.author)}</Table.Td>
+                  <Table.Td>
+                    <Text lineClamp={1}>{reply.letter.title}</Text>
+                  </Table.Td>
+                  <Table.Td>
+                    {reply.deletedById === reply.authorId ? (
+                      <Badge size="sm">Author</Badge>
+                    ) : (
+                      formatDeletedByLabel(reply.deletedBy)
+                    )}
+                  </Table.Td>
+                  <Table.Td>{formatDeletedDate(reply.deletedAt)}</Table.Td>
+                  <Table.Td>
+                    <ActionIcon.Group>
+                      <Tooltip label="Recover reply">
+                        <ActionIcon
+                          aria-label="Recover reply"
+                          variant="default"
+                          onClick={() => {
+                            if (canRestoreReply) {
+                              setRestoringReply(reply);
+                            }
+                          }}
+                          loading={
+                            restoreMutation.isPending &&
+                            restoringReplyId === reply.id
+                          }
+                          disabled={
+                            !canRestoreReply ||
+                            (restoreMutation.isPending &&
+                              restoringReplyId === reply.id)
+                          }
+                        >
+                          <IconArrowBackUp size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
+
+                      <Tooltip label="Permanently delete reply">
+                        <ActionIcon
+                          aria-label="Permanently delete reply"
+                          color="red"
+                          onClick={() => {
+                            if (canPermanentlyDeleteReply) {
+                              setPermanentlyDeletingReply(reply);
+                            }
+                          }}
+                          loading={
+                            deleteMutation.isPending &&
+                            deletingReplyId === reply.id
+                          }
+                          disabled={
+                            !canPermanentlyDeleteReply ||
+                            (deleteMutation.isPending &&
+                              deletingReplyId === reply.id)
+                          }
+                        >
+                          <IconTrashX size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
+                    </ActionIcon.Group>
+                  </Table.Td>
                 </Table.Tr>
-              </Table.Thead>
+              ))}
 
-              <Table.Tbody>
-                {data?.map((reply) => (
-                  <Table.Tr key={reply.id}>
-                    <Table.Td>
-                      <Text lineClamp={2}>{stripHtmlTags(reply.body)}</Text>
-                    </Table.Td>
-                    <Table.Td>{formatUserDisplayName(reply.author)}</Table.Td>
-                    <Table.Td>
-                      <Text lineClamp={1}>{reply.letter.title}</Text>
-                    </Table.Td>
-                    <Table.Td>
-                      {reply.deletedById === reply.authorId ? (
-                        <Badge size="sm">Author</Badge>
-                      ) : (
-                        formatDeletedByLabel(reply.deletedBy)
-                      )}
-                    </Table.Td>
-                    <Table.Td>{formatDeletedDate(reply.deletedAt)}</Table.Td>
-                    <Table.Td>
-                      <ActionIcon.Group>
-                        <Tooltip label="Recover reply">
-                          <ActionIcon
-                            aria-label="Recover reply"
-                            variant="default"
-                            onClick={() => {
-                              if (canRestoreReply) {
-                                setRestoringReply(reply);
-                              }
-                            }}
-                            loading={
-                              restoreMutation.isPending &&
-                              restoringReplyId === reply.id
-                            }
-                            disabled={
-                              !canRestoreReply ||
-                              (restoreMutation.isPending &&
-                                restoringReplyId === reply.id)
-                            }
-                          >
-                            <IconArrowBackUp size="1em" />
-                          </ActionIcon>
-                        </Tooltip>
-
-                        <Tooltip label="Permanently delete reply">
-                          <ActionIcon
-                            aria-label="Permanently delete reply"
-                            color="red"
-                            onClick={() => {
-                              if (canPermanentlyDeleteReply) {
-                                setPermanentlyDeletingReply(reply);
-                              }
-                            }}
-                            loading={
-                              deleteMutation.isPending &&
-                              deletingReplyId === reply.id
-                            }
-                            disabled={
-                              !canPermanentlyDeleteReply ||
-                              (deleteMutation.isPending &&
-                                deletingReplyId === reply.id)
-                            }
-                          >
-                            <IconTrashX size="1em" />
-                          </ActionIcon>
-                        </Tooltip>
-                      </ActionIcon.Group>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-
-                {isFetching ? (
+              {isFetching ? (
+                <Table.Tr>
+                  <Table.Td colSpan={6} ta="center">
+                    <Loader />
+                  </Table.Td>
+                </Table.Tr>
+              ) : (
+                data?.length === 0 && (
                   <Table.Tr>
                     <Table.Td colSpan={6} ta="center">
-                      <Loader />
+                      No deleted replies found.
                     </Table.Td>
                   </Table.Tr>
-                ) : (
-                  data?.length === 0 && (
-                    <Table.Tr>
-                      <Table.Td colSpan={6} ta="center">
-                        No deleted replies found.
-                      </Table.Td>
-                    </Table.Tr>
-                  )
-                )}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
-        </div>
-
-        <Pagination mt="md" value={page} onChange={setPage} total={total} />
-      </div>
+                )
+              )}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      </PaginatedPanelLayout>
 
       {canPermanentlyDeleteReply && (
         <PermanentlyDeleteReplyModal

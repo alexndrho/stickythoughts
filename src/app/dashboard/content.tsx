@@ -5,7 +5,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ActionIcon,
   Loader,
-  Pagination,
   Paper,
   Skeleton,
   Table,
@@ -40,6 +39,7 @@ import Thought from "../(main)/thought";
 import { formatUserDisplayName } from "@/utils/user";
 import type { PrivateThought } from "@/types/thought";
 import dashboardClasses from "./dashboard.module.css";
+import PaginatedPanelLayout from "./paginated-panel-layout";
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof ServerError && error.issues.length > 0) {
@@ -258,7 +258,11 @@ export default function Content() {
         </Skeleton>
       </Paper>
 
-      <div className={dashboardClasses["table-container"]}>
+      <PaginatedPanelLayout
+        page={page}
+        onPageChange={setPage}
+        total={Math.ceil((count || 0) / ADMIN_THOUGHTS_PER_PAGE)}
+      >
         <Table.ScrollContainer minWidth="100%" maxHeight="100%">
           <Table highlightOnHover withColumnBorders withRowBorders>
             <Table.Thead>
@@ -336,14 +340,7 @@ export default function Content() {
             </Table.Tbody>
           </Table>
         </Table.ScrollContainer>
-      </div>
-
-      <Pagination
-        mt="md"
-        value={page}
-        onChange={setPage}
-        total={Math.ceil((count || 0) / ADMIN_THOUGHTS_PER_PAGE)}
-      />
+      </PaginatedPanelLayout>
 
       <DeleteThoughtModal
         thought={deletingThought}

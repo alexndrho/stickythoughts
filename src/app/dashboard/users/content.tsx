@@ -13,7 +13,6 @@ import {
   Input,
   Loader,
   Menu,
-  Pagination,
   Select,
   Table,
   Text,
@@ -43,6 +42,7 @@ import UnbanUserModal from "./unban-user-modal";
 import dashboardClasses from "../dashboard.module.css";
 import classes from "./user.module.css";
 import { useDebouncedValue } from "@mantine/hooks";
+import PaginatedPanelLayout from "../paginated-panel-layout";
 
 export default function Content() {
   const { data: session } = authClient.useSession();
@@ -131,7 +131,11 @@ export default function Content() {
         />
       </Group>
 
-      <div className={dashboardClasses["table-container"]}>
+      <PaginatedPanelLayout
+        page={page}
+        onPageChange={setPage}
+        total={Math.ceil((results?.data?.total || 0) / ADMIN_USERS_PER_PAGE)}
+      >
         <Table.ScrollContainer minWidth="100%" maxHeight="100%">
           <Table highlightOnHover withColumnBorders withRowBorders>
             <Table.Thead>
@@ -319,14 +323,7 @@ export default function Content() {
             </Table.Tbody>
           </Table>
         </Table.ScrollContainer>
-      </div>
-
-      <Pagination
-        mt="md"
-        value={page}
-        onChange={setPage}
-        total={Math.ceil((results?.data?.total || 0) / ADMIN_USERS_PER_PAGE)}
-      />
+      </PaginatedPanelLayout>
 
       <EditUserModal
         user={

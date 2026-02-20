@@ -9,8 +9,22 @@
   margin-bottom: var(--mantine-spacing-md);
 }
 
-.table-container {
+.paginated-panel__root {
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.paginated-panel__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.paginated-panel__pagination {
+  margin-top: var(--mantine-spacing-md);
+  flex-shrink: 0;
 }
 
 .thought-highlighted-card {
