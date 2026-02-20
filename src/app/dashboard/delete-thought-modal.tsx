@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal } from "@mantine/core";
+import { useMutation } from '@tanstack/react-query';
+import { Button, Group, Modal } from '@mantine/core';
 
-import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtKeys } from "@/lib/query-keys";
-import { adminKeys } from "@/lib/query-keys";
-import { deleteThought } from "@/services/moderate/thought";
-import Thought from "@/components/thought";
-import type { PublicThought } from "@/types/thought";
+import { getQueryClient } from '@/lib/get-query-client';
+import { thoughtKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys';
+import { deleteThought } from '@/services/moderate/thought';
+import Thought from '@/components/thought';
+import type { PublicThought } from '@/types/thought';
 
 export interface DeleteThoughtModalProps {
   thought: PublicThought | null;
@@ -16,11 +16,7 @@ export interface DeleteThoughtModalProps {
   onClose: () => void;
 }
 
-export default function DeleteThoughtModal({
-  thought,
-  opened,
-  onClose,
-}: DeleteThoughtModalProps) {
+export default function DeleteThoughtModal({ thought, opened, onClose }: DeleteThoughtModalProps) {
   const mutation = useMutation({
     mutationFn: deleteThought,
     onSuccess: () => {
@@ -47,8 +43,8 @@ export default function DeleteThoughtModal({
       centered
     >
       <Thought
-        message={thought?.message ?? "No thought selected yet."}
-        author={thought?.author ?? "Unknown"}
+        message={thought?.message ?? 'No thought selected yet.'}
+        author={thought?.author ?? 'Unknown'}
         color={thought?.color}
         fluid
       />

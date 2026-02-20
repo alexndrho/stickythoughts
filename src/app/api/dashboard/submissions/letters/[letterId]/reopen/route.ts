@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
 import {
   getSubmissionLetterStatus,
   reopenSubmissionLetter,
-} from "@/server/dashboard/letter-service";
+} from '@/server/dashboard/letter-service';
 
 export async function PATCH(
   request: Request,
@@ -15,7 +15,7 @@ export async function PATCH(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letter: ["review"],
+        letter: ['review'],
       },
     });
 
@@ -27,18 +27,15 @@ export async function PATCH(
     const letter = await getSubmissionLetterStatus({ letterId });
 
     if (!letter || letter.deletedAt) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter not found' }], 404);
     }
 
-    if (letter.status !== "REJECTED") {
+    if (letter.status !== 'REJECTED') {
       return jsonError(
         [
           {
-            code: "validation/invalid-request",
-            message: "Only rejected letters can be reopened",
+            code: 'validation/invalid-request',
+            message: 'Only rejected letters can be reopened',
           },
         ],
         400,
@@ -47,12 +44,9 @@ export async function PATCH(
 
     await reopenSubmissionLetter({ letterId });
 
-    return NextResponse.json(
-      { message: "Letter reopened successfully" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'Letter reopened successfully' }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

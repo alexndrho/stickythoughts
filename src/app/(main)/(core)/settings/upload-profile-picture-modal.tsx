@@ -1,23 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import {
-  Avatar,
-  Button,
-  FileButton,
-  Flex,
-  Group,
-  Modal,
-  Text,
-} from "@mantine/core";
+import { useEffect, useMemo, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { Avatar, Button, FileButton, Flex, Group, Modal, Text } from '@mantine/core';
 
-import { authClient } from "@/lib/auth-client";
-import { uploadProfilePicture } from "@/services/user";
-import { getQueryClient } from "@/lib/get-query-client";
-import { letterKeys } from "@/lib/query-keys";
-import ServerError from "@/utils/error/ServerError";
-import classes from "./account.module.css";
+import { authClient } from '@/lib/auth-client';
+import { uploadProfilePicture } from '@/services/user';
+import { getQueryClient } from '@/lib/get-query-client';
+import { letterKeys } from '@/lib/query-keys';
+import ServerError from '@/utils/error/ServerError';
+import classes from './account.module.css';
 
 export interface UploadProfilePictureModalProps {
   opened: boolean;
@@ -72,7 +64,7 @@ export default function UploadProfilePictureModal({
       if (err instanceof ServerError) {
         setError(err.issues[0].message);
       } else {
-        setError("An error occurred while uploading the image");
+        setError('An error occurred while uploading the image');
       }
     },
   });
@@ -83,41 +75,30 @@ export default function UploadProfilePictureModal({
     setError(null);
 
     const formData = new FormData();
-    formData.append("user-image", image);
+    formData.append('user-image', image);
 
     mutation.mutate(formData);
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title="Upload Profile Picture"
-      centered
-    >
+    <Modal opened={opened} onClose={onClose} title="Upload Profile Picture" centered>
       <Flex justify="center">
         <Avatar
           src={previewUrl || undefined}
-          className={classes["upload-profile-picture-modal__avatar"]}
+          className={classes['upload-profile-picture-modal__avatar']}
         />
       </Flex>
 
       {error && (
         <Group mt="md">
-          <Text
-            size="sm"
-            className={classes["upload-profile-picture-modal__error-message"]}
-          >
+          <Text size="sm" className={classes['upload-profile-picture-modal__error-message']}>
             {error}
           </Text>
         </Group>
       )}
 
       <Group mt="md" justify="end">
-        <FileButton
-          onChange={setImage}
-          accept="image/png,image/jpeg,image/jpg,image/webp"
-        >
+        <FileButton onChange={setImage} accept="image/png,image/jpeg,image/jpg,image/webp">
           {(props) => (
             <Button variant="default" {...props}>
               Change Picture
@@ -125,11 +106,7 @@ export default function UploadProfilePictureModal({
           )}
         </FileButton>
 
-        <Button
-          onClick={handleUpload}
-          loading={mutation.isPending}
-          disabled={!image}
-        >
+        <Button onClick={handleUpload} loading={mutation.isPending} disabled={!image}>
           Upload
         </Button>
       </Group>

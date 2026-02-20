@@ -5,9 +5,9 @@ import {
   englishDataset,
   englishRecommendedTransformers,
   pattern,
-} from "obscenity";
+} from 'obscenity';
 
-import badwords from "@/config/badwords.json";
+import badwords from '@/config/badwords.json';
 
 const englishData = englishDataset.build();
 
@@ -21,10 +21,7 @@ const customBlacklistedTerms = badwords.filipino.map((word, index) => ({
 
 export const matcher = new RegExpMatcher({
   ...englishData,
-  blacklistedTerms: [
-    ...englishData.blacklistedTerms,
-    ...customBlacklistedTerms,
-  ],
+  blacklistedTerms: [...englishData.blacklistedTerms, ...customBlacklistedTerms],
   ...englishRecommendedTransformers,
 });
 

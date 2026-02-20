@@ -1,21 +1,18 @@
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { auth } from "@/lib/auth";
-import { guardSession } from "@/lib/session-guard";
-import { updateLetterServerInput } from "@/lib/validations/letter";
-import { getLetterPublic, LetterNotFoundError } from "@/server/letter";
-import { formatLetters } from "@/utils/letter";
-import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import { isRecordNotFoundError } from "@/server/db";
-import { softDeleteLetter, updateLetter } from "@/server/letter";
-import { toDTO } from "@/lib/http/to-dto";
-import type { LetterDTO } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { guardSession } from '@/lib/session-guard';
+import { updateLetterServerInput } from '@/lib/validations/letter';
+import { getLetterPublic, LetterNotFoundError } from '@/server/letter';
+import { formatLetters } from '@/utils/letter';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { isRecordNotFoundError } from '@/server/db';
+import { softDeleteLetter, updateLetter } from '@/server/letter';
+import { toDTO } from '@/lib/http/to-dto';
+import type { LetterDTO } from '@/types/letter';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ letterId: string }> },
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ letterId: string }> }) {
   try {
     const session = await auth.api.getSession({
       headers: request.headers,
@@ -30,21 +27,15 @@ export async function GET(
     return NextResponse.json(toDTO(letter) satisfies LetterDTO);
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter post not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter post not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ letterId: string }> },
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ letterId: string }> }) {
   try {
     const { letterId } = await params;
     const { body } = updateLetterServerInput.parse(await request.json());
@@ -71,14 +62,11 @@ export async function PUT(
     if (error instanceof ZodError) {
       return zodInvalidInput(error);
     } else if (isRecordNotFoundError(error)) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter post not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter post not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }
 
@@ -99,7 +87,7 @@ export async function DELETE(
       body: {
         userId: session.user.id,
         permission: {
-          letter: ["delete"],
+          letter: ['delete'],
         },
       },
     });
@@ -112,19 +100,16 @@ export async function DELETE(
 
     return NextResponse.json(
       {
-        message: "Letter post deleted",
+        message: 'Letter post deleted',
       },
       { status: 200 },
     );
   } catch (error) {
     if (isRecordNotFoundError(error)) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter post not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter post not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }

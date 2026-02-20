@@ -1,7 +1,7 @@
-import "server-only";
+import 'server-only';
 
-import { prisma } from "@/lib/db";
-import { subMonths } from "date-fns";
+import { prisma } from '@/lib/db';
+import { subMonths } from 'date-fns';
 
 export async function purgeSoftDeletedContent() {
   const cutoff = subMonths(new Date(), 1);

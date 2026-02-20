@@ -1,12 +1,9 @@
-import "client-only";
+import 'client-only';
 
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions } from '@tanstack/react-query';
 
-import {
-  getAdminThoughts,
-  getHighlightedThought,
-} from "@/services/moderate/thought";
-import { adminKeys } from "@/lib/query-keys";
+import { getAdminThoughts, getHighlightedThought } from '@/services/moderate/thought';
+import { adminKeys } from '@/lib/query-keys';
 
 export const adminOptions = queryOptions({
   queryKey: adminKeys.all(),

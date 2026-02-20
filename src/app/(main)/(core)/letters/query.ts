@@ -1,11 +1,11 @@
-import "server-only";
+import 'server-only';
 
-import { auth } from "@/lib/auth";
-import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
-import { listLettersPublic } from "@/server/letter";
-import { headers } from "next/headers";
-import { formatLetters } from "@/utils/letter";
-import type { Letter } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { enforceRscRateLimit } from '@/lib/rate-limit/rsc';
+import { listLettersPublic } from '@/server/letter';
+import { headers } from 'next/headers';
+import { formatLetters } from '@/utils/letter';
+import type { Letter } from '@/types/letter';
 
 export async function listLetters(): Promise<Letter[]> {
   const requestHeaders = await headers();
@@ -14,7 +14,7 @@ export async function listLetters(): Promise<Letter[]> {
   });
 
   await enforceRscRateLimit({
-    tier: "get:standard",
+    tier: 'get:standard',
     userId: session?.user?.id ?? null,
     headers: requestHeaders,
   });

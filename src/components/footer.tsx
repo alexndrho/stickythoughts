@@ -1,23 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import {
-  Anchor,
-  Box,
-  Container,
-  Divider,
-  Group,
-  Text,
-  Title,
-} from "@mantine/core";
-import { IconCopyright } from "@tabler/icons-react";
+import Link from 'next/link';
+import { Anchor, Box, Container, Divider, Group, Text, Title } from '@mantine/core';
+import { IconCopyright } from '@tabler/icons-react';
 
-import classes from "@/styles/footer.module.css";
+import classes from '@/styles/footer.module.css';
 
 export default function Footer() {
   return (
-    <Box component="footer" className={classes["footer-container"]}>
-      <Container size="lg" className={classes["footer"]}>
+    <Box component="footer" className={classes['footer-container']}>
+      <Container size="lg" className={classes['footer']}>
         <section>
           <Title order={2} size="h3">
             Sticky
@@ -30,7 +22,7 @@ export default function Footer() {
             <IconCopyright size="1.25em" />
 
             <Text span size="sm">
-              2026{" "}
+              2026{' '}
               <Anchor component={Link} href="/" inherit>
                 StickyThoughts
               </Anchor>
@@ -62,10 +54,7 @@ export default function Footer() {
             Contact
           </Title>
 
-          <Anchor
-            href="mailto:ho.alexander.g@gmail.com"
-            className={classes.link}
-          >
+          <Anchor href="mailto:ho.alexander.g@gmail.com" className={classes.link}>
             ho.alexander.g@gmail.com
           </Anchor>
 

@@ -1,4 +1,4 @@
-import { getAnonymousLabel } from "@/utils/anonymous";
+import { getAnonymousLabel } from '@/utils/anonymous';
 import type {
   BaseLetterReply,
   BaseLetter,
@@ -6,7 +6,7 @@ import type {
   LetterReply,
   Letter,
   UserLetterReply,
-} from "@/types/letter";
+} from '@/types/letter';
 
 export function formatLetters({
   sessionUserId,
@@ -46,28 +46,21 @@ export function formatLetters({
     } satisfies Letter;
   };
 
-  return Array.isArray(letters)
-    ? letters.map(formatLetter)
-    : formatLetter(letters);
+  return Array.isArray(letters) ? letters.map(formatLetter) : formatLetter(letters);
 }
 
 export function formatLetterReplies(
   replies: BaseLetterReply[],
   sessionUserId?: string,
 ): LetterReply[];
-export function formatLetterReplies(
-  replies: BaseLetterReply,
-  sessionUserId?: string,
-): LetterReply;
+export function formatLetterReplies(replies: BaseLetterReply, sessionUserId?: string): LetterReply;
 export function formatLetterReplies(
   replies: BaseLetterReply[] | BaseLetterReply,
   sessionUserId?: string,
 ): LetterReply[] | LetterReply {
   const formatLetterReply = (reply: BaseLetterReply): LetterReply => {
     const { authorId, likes, _count, ...rest } = reply;
-    const isOP =
-      rest.letter.authorId === authorId &&
-      rest.letter.isAnonymous === rest.isAnonymous;
+    const isOP = rest.letter.authorId === authorId && rest.letter.isAnonymous === rest.isAnonymous;
     const isSelf = sessionUserId === authorId;
     const anonymousLabel =
       rest.isAnonymous && !isOP
@@ -87,23 +80,15 @@ export function formatLetterReplies(
     } satisfies LetterReply;
   };
 
-  return Array.isArray(replies)
-    ? replies.map(formatLetterReply)
-    : formatLetterReply(replies);
+  return Array.isArray(replies) ? replies.map(formatLetterReply) : formatLetterReply(replies);
 }
 
-export function formatUserLetterReplies(
-  replies: BaseUserLetterReply[],
-): UserLetterReply[];
-export function formatUserLetterReplies(
-  replies: BaseUserLetterReply,
-): UserLetterReply;
+export function formatUserLetterReplies(replies: BaseUserLetterReply[]): UserLetterReply[];
+export function formatUserLetterReplies(replies: BaseUserLetterReply): UserLetterReply;
 export function formatUserLetterReplies(
   replies: BaseUserLetterReply[] | BaseUserLetterReply,
 ): UserLetterReply[] | UserLetterReply {
-  const formatUserLetterReply = (
-    reply: BaseUserLetterReply,
-  ): UserLetterReply => {
+  const formatUserLetterReply = (reply: BaseUserLetterReply): UserLetterReply => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { authorId, likes, _count, ...rest } = reply;
 

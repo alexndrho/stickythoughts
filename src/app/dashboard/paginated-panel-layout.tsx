@@ -1,6 +1,6 @@
-import { Pagination } from "@mantine/core";
+import { Pagination } from '@mantine/core';
 
-import classes from "./dashboard.module.css";
+import classes from './dashboard.module.css';
 
 export interface PaginatedPanelLayoutProps {
   children: React.ReactNode;
@@ -22,18 +22,12 @@ export default function PaginatedPanelLayout({
   paginationClassName,
 }: PaginatedPanelLayoutProps) {
   return (
-    <section
-      className={`${classes["paginated-panel__root"]} ${className ?? ""}`}
-    >
-      <div
-        className={`${classes["paginated-panel__content"]} ${contentClassName ?? ""}`}
-      >
+    <section className={`${classes['paginated-panel__root']} ${className ?? ''}`}>
+      <div className={`${classes['paginated-panel__content']} ${contentClassName ?? ''}`}>
         {children}
       </div>
 
-      <div
-        className={`${classes["paginated-panel__pagination"]} ${paginationClassName ?? ""}`}
-      >
+      <div className={`${classes['paginated-panel__pagination']} ${paginationClassName ?? ''}`}>
         <Pagination value={page} onChange={onPageChange} total={total} />
       </div>
     </section>

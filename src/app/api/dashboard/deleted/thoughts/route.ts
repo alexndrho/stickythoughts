@@ -1,17 +1,17 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse } from "@/lib/http";
-import { listDeletedThoughts } from "@/server/dashboard";
-import type { DeletedThoughtDTO } from "@/types/deleted";
-import { toDTO } from "@/lib/http/to-dto";
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse } from '@/lib/http';
+import { listDeletedThoughts } from '@/server/dashboard';
+import type { DeletedThoughtDTO } from '@/types/deleted';
+import { toDTO } from '@/lib/http/to-dto';
 
 export async function GET(request: NextRequest) {
   try {
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        thought: ["list-deleted"],
+        thought: ['list-deleted'],
       },
     });
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const page = Math.max(Number(searchParams.get("page") || "1"), 1);
+    const page = Math.max(Number(searchParams.get('page') || '1'), 1);
     const items = await listDeletedThoughts({ page });
 
     return NextResponse.json(toDTO(items) satisfies DeletedThoughtDTO[], {
@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

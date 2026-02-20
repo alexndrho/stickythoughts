@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent } from "react";
-import { useForm } from "@mantine/form";
-import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal, Select } from "@mantine/core";
+import { useEffect, useEffectEvent } from 'react';
+import { useForm } from '@mantine/form';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Group, Modal, Select } from '@mantine/core';
 
-import { VisibilityLevel } from "@/generated/prisma/enums";
-import { updateUserLikesVisibility } from "@/services/user";
-import ServerError from "@/utils/error/ServerError";
-import { setUserSettingsPrivacyQuery } from "./set-query";
+import { VisibilityLevel } from '@/generated/prisma/enums';
+import { updateUserLikesVisibility } from '@/services/user';
+import ServerError from '@/utils/error/ServerError';
+import { setUserSettingsPrivacyQuery } from './set-query';
 
 export interface LikesVisibilityModalProps {
   initialVisibility?: VisibilityLevel;
@@ -54,9 +54,9 @@ export default function LikesVisibilityModal({
     },
     onError: (error) => {
       if (error instanceof ServerError && error.issues[0]?.message) {
-        form.setFieldError("visibility", error.issues[0].message);
+        form.setFieldError('visibility', error.issues[0].message);
       } else {
-        form.setFieldError("visibility", "An error occurred");
+        form.setFieldError('visibility', 'An error occurred');
       }
     },
   });
@@ -67,12 +67,12 @@ export default function LikesVisibilityModal({
         <Select
           label="Who can see your likes"
           data={[
-            { value: VisibilityLevel.PUBLIC, label: "Public" },
-            { value: VisibilityLevel.PRIVATE, label: "Private" },
+            { value: VisibilityLevel.PUBLIC, label: 'Public' },
+            { value: VisibilityLevel.PRIVATE, label: 'Private' },
           ]}
           allowDeselect={false}
           withAsterisk
-          {...form.getInputProps("visibility")}
+          {...form.getInputProps('visibility')}
         />
 
         <Group mt="md" justify="end">

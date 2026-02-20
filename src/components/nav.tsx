@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import {
   ActionIcon,
   Avatar,
@@ -14,7 +14,7 @@ import {
   Tooltip,
   UnstyledButton,
   useMantineColorScheme,
-} from "@mantine/core";
+} from '@mantine/core';
 import {
   IconSun,
   IconMoon,
@@ -29,35 +29,35 @@ import {
   IconBell,
   IconTools,
   IconMail,
-} from "@tabler/icons-react";
-import { useThrottledCallback } from "@mantine/hooks";
+} from '@tabler/icons-react';
+import { useThrottledCallback } from '@mantine/hooks';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { thoughtKeys } from "@/lib/query-keys";
-import UserNotification from "./user-notification";
-import classes from "@/styles/nav.module.css";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { thoughtKeys } from '@/lib/query-keys';
+import UserNotification from './user-notification';
+import classes from '@/styles/nav.module.css';
 
 const navLinks = [
   {
-    label: "Home",
+    label: 'Home',
     icon: IconHome,
-    href: "/",
+    href: '/',
   },
   {
-    label: "Letters",
+    label: 'Letters',
     icon: IconMail,
-    href: "/letters",
+    href: '/letters',
   },
   {
-    label: "About",
+    label: 'About',
     icon: IconInfoCircle,
-    href: "/about",
+    href: '/about',
   },
   {
-    label: "Contact",
+    label: 'Contact',
     icon: IconAddressBook,
-    href: "/contact",
+    href: '/contact',
   },
 ];
 
@@ -84,7 +84,7 @@ export default function Nav() {
 
   return (
     <header>
-      <div className={classes["nav-container"]}>
+      <div className={classes['nav-container']}>
         <Container size="lg" className={classes.nav}>
           <Text
             component={Link}
@@ -92,7 +92,7 @@ export default function Nav() {
             fz="xl"
             fw={700}
             onClick={(e) => {
-              if (pathname === "/") {
+              if (pathname === '/') {
                 e.preventDefault();
                 handleRefetch();
               }
@@ -106,7 +106,7 @@ export default function Nav() {
 
           <Group>
             <Group component="nav">
-              <Group className={classes["desktop-nav-links"]}>
+              <Group className={classes['desktop-nav-links']}>
                 {navLinks.map((link) => (
                   <Button
                     key={link.label}
@@ -120,7 +120,7 @@ export default function Nav() {
                 ))}
               </Group>
 
-              <div className={classes["mobile-menu"]}>
+              <div className={classes['mobile-menu']}>
                 <MobileMenu isAuthenticated={!!session} />
               </div>
             </Group>
@@ -135,15 +135,11 @@ export default function Nav() {
                   </ActionIcon>
                 </UserNotification>
 
-                <UserMenu
-                  session={session}
-                  signOut={signOut}
-                  setColorScheme={setColorScheme}
-                />
+                <UserMenu session={session} signOut={signOut} setColorScheme={setColorScheme} />
               </>
             ) : (
               <>
-                <div className={classes["desktop-unauthenticated-links"]}>
+                <div className={classes['desktop-unauthenticated-links']}>
                   <Button component={Link} href="/sign-in" size="compact-sm">
                     Sign in
                   </Button>
@@ -159,11 +155,7 @@ export default function Nav() {
   );
 }
 
-function MobileMenu({
-  isAuthenticated = false,
-}: {
-  isAuthenticated?: boolean;
-}) {
+function MobileMenu({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   return (
     <Menu>
       <Menu.Target>
@@ -175,11 +167,7 @@ function MobileMenu({
       <Menu.Dropdown>
         {!isAuthenticated && (
           <>
-            <Menu.Item
-              component={Link}
-              href="/sign-in"
-              leftSection={<IconLogin size="1em" />}
-            >
+            <Menu.Item component={Link} href="/sign-in" leftSection={<IconLogin size="1em" />}>
               Sign in
             </Menu.Item>
 
@@ -207,9 +195,9 @@ function UserMenu({
   signOut,
   setColorScheme,
 }: {
-  session: NonNullable<ReturnType<typeof authClient.useSession>["data"]>;
+  session: NonNullable<ReturnType<typeof authClient.useSession>['data']>;
   signOut: () => void;
-  setColorScheme: (value: "light" | "dark") => void;
+  setColorScheme: (value: 'light' | 'dark') => void;
 }) {
   return (
     <Menu>
@@ -220,8 +208,7 @@ function UserMenu({
       <Menu.Dropdown>
         {session.user && (
           <>
-            {(session.user.role === "admin" ||
-              session.user.role === "moderator") && (
+            {(session.user.role === 'admin' || session.user.role === 'moderator') && (
               <>
                 <Menu.Item
                   component={Link}
@@ -245,18 +232,14 @@ function UserMenu({
           </>
         )}
 
-        <Menu.Item
-          component={Link}
-          href="/settings"
-          leftSection={<IconSettings size="1em" />}
-        >
+        <Menu.Item component={Link} href="/settings" leftSection={<IconSettings size="1em" />}>
           Settings
         </Menu.Item>
 
         <Menu.Item
           leftSection={<IconMoon size="1em" />}
           className="darkHidden"
-          onClick={() => setColorScheme("dark")}
+          onClick={() => setColorScheme('dark')}
         >
           Dark mode
         </Menu.Item>
@@ -264,18 +247,14 @@ function UserMenu({
         <Menu.Item
           leftSection={<IconSun size="1em" />}
           className="lightHidden"
-          onClick={() => setColorScheme("light")}
+          onClick={() => setColorScheme('light')}
         >
           Light mode
         </Menu.Item>
 
         <Menu.Divider />
 
-        <Menu.Item
-          color="red"
-          leftSection={<IconLogout size="1em" />}
-          onClick={signOut}
-        >
+        <Menu.Item color="red" leftSection={<IconLogout size="1em" />} onClick={signOut}>
           Sign out
         </Menu.Item>
       </Menu.Dropdown>
@@ -283,18 +262,14 @@ function UserMenu({
   );
 }
 
-function ToggleTheme({
-  setColorScheme,
-}: {
-  setColorScheme: (value: "light" | "dark") => void;
-}) {
+function ToggleTheme({ setColorScheme }: { setColorScheme: (value: 'light' | 'dark') => void }) {
   return (
     <>
       <Tooltip label="Dark mode" position="bottom" className="darkHidden">
         <ActionIcon
           aria-label="Toggle color scheme"
           variant="default"
-          onClick={() => setColorScheme("dark")}
+          onClick={() => setColorScheme('dark')}
         >
           <IconMoon size="1em" />
         </ActionIcon>
@@ -304,7 +279,7 @@ function ToggleTheme({
         <ActionIcon
           aria-label="Toggle color scheme"
           variant="default"
-          onClick={() => setColorScheme("light")}
+          onClick={() => setColorScheme('light')}
         >
           <IconSun size="1em" />
         </ActionIcon>

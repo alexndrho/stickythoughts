@@ -1,13 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { userNotificationOpenedInput } from "@/lib/validations/user";
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import {
-  countNewUserNotifications,
-  setNotificationsOpened,
-} from "@/server/user";
-import { UserNotFoundError } from "@/server/user";
+import { userNotificationOpenedInput } from '@/lib/validations/user';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { countNewUserNotifications, setNotificationsOpened } from '@/server/user';
+import { UserNotFoundError } from '@/server/user';
 
 export async function GET(request: Request) {
   try {
@@ -24,11 +21,11 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     if (error instanceof UserNotFoundError) {
-      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'User not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }
 
@@ -44,9 +41,9 @@ export async function PUT(request: Request) {
 
     await setNotificationsOpened({ userId: session.user.id, opened });
 
-    return NextResponse.json({ message: "Notifications updated successfully" });
+    return NextResponse.json({ message: 'Notifications updated successfully' });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }

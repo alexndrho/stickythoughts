@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
-import { prisma } from "@/lib/db";
-import type { VisibilityLevel } from "@/generated/prisma/enums";
-import { UserNotFoundError } from "@/server/user/user-errors";
+import { prisma } from '@/lib/db';
+import type { VisibilityLevel } from '@/generated/prisma/enums';
+import { UserNotFoundError } from '@/server/user/user-errors';
 
 export async function updateUserBio(args: { userId: string; bio: string }) {
   await prisma.user.update({
@@ -25,7 +25,7 @@ export async function getUserAccountSettings(args: { userId: string }) {
   });
 
   if (!userSettings) {
-    throw new UserNotFoundError("User not found");
+    throw new UserNotFoundError('User not found');
   }
 
   return userSettings;
@@ -92,7 +92,7 @@ export async function getUserProfileImage(args: { userId: string }) {
   });
 
   if (!user) {
-    throw new UserNotFoundError("User not found");
+    throw new UserNotFoundError('User not found');
   }
 
   return user.image;

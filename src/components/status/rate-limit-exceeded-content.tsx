@@ -1,16 +1,13 @@
-import Link from "next/link";
-import { Button, Group, Text, Title } from "@mantine/core";
+import Link from 'next/link';
+import { Button, Group, Text, Title } from '@mantine/core';
 
-import classes from "@/styles/status/rate-limit-exceeded-content.module.css";
+import classes from '@/styles/status/rate-limit-exceeded-content.module.css';
 
-export default function RateLimitExceededContent(props: {
-  error?: unknown;
-  onRetry?: () => void;
-}) {
+export default function RateLimitExceededContent(props: { error?: unknown; onRetry?: () => void }) {
   return (
     <div className={classes.container}>
       <Title c="blue" className={classes.title}>
-        <span className={classes["title__status-code"]}>429</span>
+        <span className={classes['title__status-code']}>429</span>
         Too Many Requests
       </Title>
 

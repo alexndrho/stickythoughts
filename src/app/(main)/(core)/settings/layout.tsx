@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import classes from "./layout.module.css";
-import SettingsSidebar from "./settings-sidebar";
+import classes from './layout.module.css';
+import SettingsSidebar from './settings-sidebar';
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
@@ -11,4 +11,3 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
-

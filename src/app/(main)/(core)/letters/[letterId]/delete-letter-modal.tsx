@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Modal, Text } from "@mantine/core";
+import { useMutation } from '@tanstack/react-query';
+import { Button, Flex, Modal, Text } from '@mantine/core';
 
-import { getQueryClient } from "@/lib/get-query-client";
-import { letterKeys } from "@/lib/query-keys";
-import { userKeys } from "@/lib/query-keys";
-import { adminKeys } from "@/lib/query-keys";
-import { deleteLetter } from "@/services/letter";
+import { getQueryClient } from '@/lib/get-query-client';
+import { letterKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys';
+import { deleteLetter } from '@/services/letter';
 
 export interface DeleteLetterModalProps {
   id: string;
@@ -58,8 +58,7 @@ export default function DeleteLetterModal({
       centered
     >
       <Text mb="md">
-        This action cannot be undone. Please confirm that you want to delete
-        this post.
+        This action cannot be undone. Please confirm that you want to delete this post.
       </Text>
 
       <Flex justify="end" gap="md">

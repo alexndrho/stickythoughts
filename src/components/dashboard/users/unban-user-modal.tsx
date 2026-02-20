@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button, Group, Modal } from "@mantine/core";
-import { useMutation } from "@tanstack/react-query";
-import { notifications } from "@mantine/notifications";
-import { IconHammerOff, IconX } from "@tabler/icons-react";
+import { useState } from 'react';
+import { Button, Group, Modal } from '@mantine/core';
+import { useMutation } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
+import { IconHammerOff, IconX } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { userKeys } from "@/lib/query-keys";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys';
 
 export interface UnbanUserModalProps {
   user: {
@@ -20,11 +20,7 @@ export interface UnbanUserModalProps {
   onClose: () => void;
 }
 
-export default function UnbanUserModal({
-  user,
-  opened,
-  onClose,
-}: UnbanUserModalProps) {
+export default function UnbanUserModal({ user, opened, onClose }: UnbanUserModalProps) {
   const [areYouSure, setAreYouSure] = useState(false);
 
   const mutation = useMutation({
@@ -33,9 +29,9 @@ export default function UnbanUserModal({
       if (error) {
         if (error.message) {
           notifications.show({
-            title: "Error Unbanning User",
-            message: error.message || "An unknown error occurred.",
-            color: "red",
+            title: 'Error Unbanning User',
+            message: error.message || 'An unknown error occurred.',
+            color: 'red',
             icon: <IconX size="1em" />,
           });
         }
@@ -58,7 +54,7 @@ export default function UnbanUserModal({
       handleClose();
 
       notifications.show({
-        title: "User Unbanned",
+        title: 'User Unbanned',
         message: `@${user?.username} has been successfully unbanned.`,
         icon: <IconHammerOff size="1em" />,
       });
@@ -72,7 +68,7 @@ export default function UnbanUserModal({
 
   return (
     <Modal
-      title={`Unban @${user?.username || "User"}`}
+      title={`Unban @${user?.username || 'User'}`}
       opened={opened}
       onClose={handleClose}
       centered
@@ -93,7 +89,7 @@ export default function UnbanUserModal({
             mutation.mutate();
           }}
         >
-          {areYouSure ? "Are you sure?" : "Unban User"}
+          {areYouSure ? 'Are you sure?' : 'Unban User'}
         </Button>
       </Group>
     </Modal>

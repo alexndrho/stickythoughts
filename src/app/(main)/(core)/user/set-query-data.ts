@@ -1,8 +1,8 @@
-import { InfiniteData } from "@tanstack/react-query";
+import { InfiniteData } from '@tanstack/react-query';
 
-import { getQueryClient } from "@/lib/get-query-client";
-import { userKeys } from "@/lib/query-keys";
-import { UserNotification } from "@/types/user";
+import { getQueryClient } from '@/lib/get-query-client';
+import { userKeys } from '@/lib/query-keys';
+import { UserNotification } from '@/types/user';
 
 export const setUserNotificationOpenedQueryData = () => {
   const queryClient = getQueryClient();
@@ -53,9 +53,7 @@ export const setDeleteNotificationQueryData = ({ id }: { id: string }) => {
 
       return {
         ...oldData,
-        pages: oldData.pages.map((page) =>
-          page.filter((notification) => notification.id !== id),
-        ),
+        pages: oldData.pages.map((page) => page.filter((notification) => notification.id !== id)),
       };
     },
   );

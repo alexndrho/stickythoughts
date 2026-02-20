@@ -1,9 +1,9 @@
-import { RateLimiterRes } from "rate-limiter-flexible";
+import { RateLimiterRes } from 'rate-limiter-flexible';
 
-import type { TierLimiters } from "./limiters";
+import type { TierLimiters } from './limiters';
 
 export class RateLimitInternalError extends Error {
-  name = "RateLimitInternalError";
+  name = 'RateLimitInternalError';
   constructor(message: string, cause?: unknown) {
     super(message);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,11 +26,7 @@ export async function consumeWithFallback(
       return await limiters.fallback.consume(key);
     } catch (fallbackErr) {
       if (fallbackErr instanceof RateLimiterRes) throw fallbackErr; // exceeded on fallback
-      throw new RateLimitInternalError(
-        "Rate limiter unavailable (fail closed).",
-        fallbackErr,
-      );
+      throw new RateLimitInternalError('Rate limiter unavailable (fail closed).', fallbackErr);
     }
   }
 }
-

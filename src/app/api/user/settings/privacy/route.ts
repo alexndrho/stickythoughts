@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse } from "@/lib/http";
-import { getUserPrivacySettings } from "@/server/user";
-import type { UserSettingsPrivacyDTO } from "@/types/user";
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse } from '@/lib/http';
+import { getUserPrivacySettings } from '@/server/user';
+import type { UserSettingsPrivacyDTO } from '@/types/user';
 
 export async function GET(request: Request) {
   try {
@@ -17,12 +17,11 @@ export async function GET(request: Request) {
       userId: session.user.id,
     });
 
-    return NextResponse.json(
-      (privacySettings ?? null) satisfies UserSettingsPrivacyDTO,
-      { status: 200 },
-    );
+    return NextResponse.json((privacySettings ?? null) satisfies UserSettingsPrivacyDTO, {
+      status: 200,
+    });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

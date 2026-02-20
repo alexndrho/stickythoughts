@@ -1,9 +1,9 @@
-import "server-only";
+import 'server-only';
 
-import { subDays } from "date-fns";
+import { subDays } from 'date-fns';
 
-import { prisma } from "@/lib/db";
-import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from "@/config/thought";
+import { prisma } from '@/lib/db';
+import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
 
 export async function listPublicThoughts(args: {
   searchTerm?: string | null;
@@ -23,7 +23,7 @@ export async function listPublicThoughts(args: {
       ...(args.searchTerm && {
         author: {
           contains: args.searchTerm,
-          mode: "insensitive",
+          mode: 'insensitive',
         },
       }),
       deletedAt: null,
@@ -35,15 +35,11 @@ export async function listPublicThoughts(args: {
       color: true,
       createdAt: true,
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 
-export async function createThought(args: {
-  author: string;
-  message: string;
-  color: string;
-}) {
+export async function createThought(args: { author: string; message: string; color: string }) {
   await prisma.thought.create({
     data: {
       author: args.author,
@@ -68,7 +64,7 @@ export async function getHighlightedThought() {
       highlightedAt: { not: null, gte: highlightCutoff },
     },
     orderBy: {
-      highlightedAt: "desc",
+      highlightedAt: 'desc',
     },
     select: {
       id: true,

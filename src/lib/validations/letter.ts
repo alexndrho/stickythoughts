@@ -1,8 +1,8 @@
-import { z } from "zod";
-import sanitizeHtml, { type IOptions } from "sanitize-html";
-import * as cheerio from "cheerio";
+import { z } from 'zod';
+import sanitizeHtml, { type IOptions } from 'sanitize-html';
+import * as cheerio from 'cheerio';
 
-import { sanitizeString } from "@/utils/text";
+import { sanitizeString } from '@/utils/text';
 
 export const LETTER_TITLE_MIN_LENGTH = 1;
 export const LETTER_TITLE_MAX_LENGTH = 100;
@@ -13,31 +13,31 @@ export const LETTER_REPLY_MAX_LENGTH = 7500;
 
 const sanitizeBodyHtmlOptions: IOptions = {
   allowedTags: [
-    "p",
+    'p',
     // "h1",
-    "h2",
-    "strong",
-    "em",
-    "s",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "code",
-    "pre",
-    "a",
+    'h2',
+    'strong',
+    'em',
+    's',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'code',
+    'pre',
+    'a',
   ],
   allowedAttributes: {
-    a: ["href", "target", "rel"],
+    a: ['href', 'target', 'rel'],
   },
-  allowedSchemes: ["http", "https", "mailto"],
+  allowedSchemes: ['http', 'https', 'mailto'],
   transformTags: {
-    a: sanitizeHtml.simpleTransform("a", {
-      target: "_blank",
-      rel: "noopener noreferrer",
+    a: sanitizeHtml.simpleTransform('a', {
+      target: '_blank',
+      rel: 'noopener noreferrer',
     }),
   },
-  selfClosing: ["hr"],
+  selfClosing: ['hr'],
   // allowedStyles: {
   //   "*": {
   //     "text-align": [/^left$/, /^right$/, /^center$/, /^justify$/],
@@ -50,7 +50,7 @@ const sanitizeBodyHtmlOptions: IOptions = {
   },
   exclusiveFilter: (frame) => {
     // Preserve self-closing tags like <br> and <hr>
-    const selfClosingTags = ["hr"];
+    const selfClosingTags = ['hr'];
     if (frame.tag && selfClosingTags.includes(frame.tag)) {
       return false;
     }
@@ -61,24 +61,24 @@ const sanitizeBodyHtmlOptions: IOptions = {
 
 export const createLetterServerInput = z.object({
   title: z
-    .string("Title is required")
+    .string('Title is required')
     .transform(sanitizeString)
     .pipe(
       z
         .string()
-        .min(LETTER_TITLE_MIN_LENGTH, "Title is required")
+        .min(LETTER_TITLE_MIN_LENGTH, 'Title is required')
         .max(
           LETTER_TITLE_MAX_LENGTH,
           `Title must be at most ${LETTER_TITLE_MAX_LENGTH.toLocaleString()} characters long`,
         ),
     ),
   body: z
-    .string("Body is required")
+    .string('Body is required')
     .transform(sanitizeString)
     .pipe(
       z
         .string()
-        .min(LETTER_BODY_MIN_LENGTH, "Body is required")
+        .min(LETTER_BODY_MIN_LENGTH, 'Body is required')
         .max(
           LETTER_BODY_MAX_LENGTH,
           `Body must be at most ${LETTER_BODY_MAX_LENGTH.toLocaleString()} characters, including formatting and spaces.`,
@@ -94,7 +94,7 @@ export const createLetterServerInput = z.object({
       if (text.length < LETTER_BODY_MIN_LENGTH) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Body is required",
+          message: 'Body is required',
         });
       }
     }),
@@ -107,12 +107,12 @@ export const updateLetterServerInput = createLetterServerInput.pick({
 
 export const createLetterReplyServerInput = z.object({
   body: z
-    .string("Reply is required")
+    .string('Reply is required')
     .transform(sanitizeString)
     .pipe(
       z
         .string()
-        .min(LETTER_BODY_MIN_LENGTH, "Reply is required")
+        .min(LETTER_BODY_MIN_LENGTH, 'Reply is required')
         .max(
           LETTER_REPLY_MAX_LENGTH,
           `Reply must be at most ${LETTER_REPLY_MAX_LENGTH.toLocaleString()} characters long`,
@@ -127,7 +127,7 @@ export const createLetterReplyServerInput = z.object({
           if (text.length < LETTER_BODY_MIN_LENGTH) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Reply is required",
+              message: 'Reply is required',
             });
           }
         }),
@@ -139,12 +139,10 @@ export const updateLetterReplyServerInput = createLetterReplyServerInput.pick({
   body: true,
 });
 
-const letterStatusSchema = z.enum(["PENDING", "APPROVED", "REJECTED"]);
+const letterStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 
 export const reviewLetterServerInput = z.object({
-  status: letterStatusSchema.exclude(["PENDING"]),
+  status: letterStatusSchema.exclude(['PENDING']),
 });
 
-export const letterSubmissionsStatusQueryInput = letterStatusSchema.exclude([
-  "APPROVED",
-]);
+export const letterSubmissionsStatusQueryInput = letterStatusSchema.exclude(['APPROVED']);

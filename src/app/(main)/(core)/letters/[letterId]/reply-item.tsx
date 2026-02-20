@@ -1,35 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
-import { formatDistanceToNow } from "date-fns";
-import {
-  ActionIcon,
-  Anchor,
-  Avatar,
-  Button,
-  Group,
-  Menu,
-  Text,
-  Typography,
-} from "@mantine/core";
-import { isNotEmptyHTML, useForm } from "@mantine/form";
-import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useMutation } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { ActionIcon, Anchor, Avatar, Button, Group, Menu, Text, Typography } from '@mantine/core';
+import { isNotEmptyHTML, useForm } from '@mantine/form';
+import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { setUpdateLetterReplyQueryData } from "@/app/(main)/(core)/letters/set-query-data";
-import TextEditor from "@/components/text-editor";
-import AuthorAvatar from "@/components/author-avatar";
-import LikeButton from "@/app/(main)/(core)/letters/like-button";
-import { useTiptapEditor } from "@/hooks/use-tiptap";
-import { updateLetterReply } from "@/services/letter";
-import ServerError from "@/utils/error/ServerError";
-import type { LetterReply } from "@/types/letter";
-import classes from "./letter.module.css";
+import { authClient } from '@/lib/auth-client';
+import { setUpdateLetterReplyQueryData } from '@/app/(main)/(core)/letters/set-query-data';
+import TextEditor from '@/components/text-editor';
+import AuthorAvatar from '@/components/author-avatar';
+import LikeButton from '@/app/(main)/(core)/letters/like-button';
+import { useTiptapEditor } from '@/hooks/use-tiptap';
+import { updateLetterReply } from '@/services/letter';
+import ServerError from '@/utils/error/ServerError';
+import type { LetterReply } from '@/types/letter';
+import classes from './letter.module.css';
 
 export interface ReplyItemProps {
-  session: ReturnType<typeof authClient.useSession>["data"];
+  session: ReturnType<typeof authClient.useSession>['data'];
   reply: LetterReply;
   onLike: () => void;
   likeLoading?: boolean;
@@ -46,22 +37,20 @@ export default function ReplyItem({
   const [isEditable, setIsEditable] = useState(false);
 
   const isSelf = reply.isSelf;
-  const anonymousName = reply.anonymousLabel
-    ? `Anonymous ${reply.anonymousLabel}`
-    : "Anonymous";
+  const anonymousName = reply.anonymousLabel ? `Anonymous ${reply.anonymousLabel}` : 'Anonymous';
   const hasPermission =
-    session?.user?.role === "admin" || session?.user?.role === "moderator"
+    session?.user?.role === 'admin' || session?.user?.role === 'moderator'
       ? authClient.admin.checkRolePermission({
           role: session.user.role,
           permission: {
-            letterReply: ["delete"],
+            letterReply: ['delete'],
           },
         })
       : false;
 
   return (
     <article>
-      <header className={classes["reply-item__header"]}>
+      <header className={classes['reply-item__header']}>
         {reply.isAnonymous || !reply.author ? (
           <AuthorAvatar isAnonymous={!!reply.isAnonymous} />
         ) : (
@@ -74,49 +63,41 @@ export default function ReplyItem({
         )}
 
         <div>
-          <div className={classes["reply-item__author-container"]}>
+          <div className={classes['reply-item__author-container']}>
             {reply.isAnonymous || !reply.author ? (
-              <Text className={classes["reply-item__author-name"]}>
-                {reply.isOP ? "Anonymous" : anonymousName}
+              <Text className={classes['reply-item__author-name']}>
+                {reply.isOP ? 'Anonymous' : anonymousName}
               </Text>
             ) : (
               <Anchor
                 component={Link}
                 truncate
                 href={`/user/${reply.author.username}`}
-                className={classes["reply-item__author-name"]}
+                className={classes['reply-item__author-name']}
               >
                 {reply.author.name || reply.author.username}
               </Anchor>
             )}
 
             {reply.isSelf && (
-              <Text
-                size="xs"
-                className={classes["reply-item__author-self-badge"]}
-              >
+              <Text size="xs" className={classes['reply-item__author-self-badge']}>
                 You
               </Text>
             )}
 
             {reply.isOP && (
-              <Text
-                size="xs"
-                className={classes["reply-item__author-op-badge"]}
-              >
+              <Text size="xs" className={classes['reply-item__author-op-badge']}>
                 OP
               </Text>
             )}
           </div>
 
-          <Text size="xs" className={classes["reply-item__created-at"]}>
+          <Text size="xs" className={classes['reply-item__created-at']}>
             {formatDistanceToNow(reply.createdAt, {
               addSuffix: true,
             })}
 
-            {reply.updatedAt.getTime() !== reply.createdAt.getTime() && (
-              <span> (edited)</span>
-            )}
+            {reply.updatedAt.getTime() !== reply.createdAt.getTime() && <span> (edited)</span>}
           </Text>
         </div>
 
@@ -128,7 +109,7 @@ export default function ReplyItem({
                 color="gray"
                 size="lg"
                 aria-label="Reply more actions"
-                className={classes["reply-item__more-action-btn"]}
+                className={classes['reply-item__more-action-btn']}
               >
                 <IconDots size="1.25em" />
               </ActionIcon>
@@ -144,11 +125,7 @@ export default function ReplyItem({
                 </Menu.Item>
               )}
 
-              <Menu.Item
-                color="red"
-                leftSection={<IconTrash size="1em" />}
-                onClick={onDelete}
-              >
+              <Menu.Item color="red" leftSection={<IconTrash size="1em" />} onClick={onDelete}>
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
@@ -156,7 +133,7 @@ export default function ReplyItem({
         )}
       </header>
 
-      <div className={classes["reply-item__content"]}>
+      <div className={classes['reply-item__content']}>
         {isEditable ? (
           <Editor reply={reply} onClose={() => setIsEditable(false)} />
         ) : (
@@ -169,7 +146,7 @@ export default function ReplyItem({
               liked={reply.likes.liked}
               count={reply.likes.count}
               size="compact-sm"
-              className={classes["reply-item__like-btn"]}
+              className={classes['reply-item__like-btn']}
               loading={likeLoading}
               onLike={onLike}
             />
@@ -180,34 +157,28 @@ export default function ReplyItem({
   );
 }
 
-function Editor({
-  reply,
-  onClose,
-}: {
-  reply: LetterReply;
-  onClose: () => void;
-}) {
+function Editor({ reply, onClose }: { reply: LetterReply; onClose: () => void }) {
   const updateForm = useForm({
     initialValues: {
       body: reply.body,
     },
     validate: {
-      body: isNotEmptyHTML("Reply is required"),
+      body: isNotEmptyHTML('Reply is required'),
     },
   });
 
   const editor = useTiptapEditor({
     content: reply.body,
-    placeholder: "Write a reply...",
+    placeholder: 'Write a reply...',
     onUpdate: ({ editor }) => {
-      updateForm.setFieldValue("body", editor.getHTML());
+      updateForm.setFieldValue('body', editor.getHTML());
     },
     shouldRerenderOnTransaction: false,
   });
 
   useEffect(() => {
     if (editor) {
-      editor.commands.focus("end");
+      editor.commands.focus('end');
     }
   }, [editor]);
 
@@ -236,17 +207,15 @@ function Editor({
     },
     onError: (error) => {
       if (error instanceof ServerError) {
-        updateForm.setFieldError("body", error.issues[0].message);
+        updateForm.setFieldError('body', error.issues[0].message);
       } else {
-        updateForm.setFieldError("body", "Something went wrong");
+        updateForm.setFieldError('body', 'Something went wrong');
       }
     },
   });
 
   return (
-    <form
-      onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}
-    >
+    <form onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}>
       <TextEditor editor={editor} error={updateForm.errors.body} />
 
       <Group mt="md" justify="end">
@@ -254,11 +223,7 @@ function Editor({
           Cancel
         </Button>
 
-        <Button
-          type="submit"
-          disabled={!updateForm.isDirty()}
-          loading={updateMutation.isPending}
-        >
+        <Button type="submit" disabled={!updateForm.isDirty()} loading={updateMutation.isPending}>
           Save
         </Button>
       </Group>

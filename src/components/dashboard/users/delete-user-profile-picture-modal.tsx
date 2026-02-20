@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal } from "@mantine/core";
-import { IconPhoto, IconX } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
+import { Button, Group, Modal } from '@mantine/core';
+import { IconPhoto, IconX } from '@tabler/icons-react';
 
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { userKeys } from "@/lib/query-keys";
-import { removeProfilePicture } from "@/services/user";
-import ServerError from "@/utils/error/ServerError";
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys';
+import { removeProfilePicture } from '@/services/user';
+import ServerError from '@/utils/error/ServerError';
 
 export interface DeleteUserProfilePictureModalProps {
   user: {
@@ -31,7 +31,7 @@ export default function DeleteUserProfilePictureModal({
   const mutation = useMutation({
     mutationFn: () =>
       removeProfilePicture({
-        userId: user?.id || "",
+        userId: user?.id || '',
       }),
     onSuccess: () => {
       handleClose();
@@ -49,7 +49,7 @@ export default function DeleteUserProfilePictureModal({
       }
 
       notifications.show({
-        title: "Profile Picture Deleted",
+        title: 'Profile Picture Deleted',
         message: `Profile picture for @${user?.username} has been successfully deleted.`,
         icon: <IconPhoto size="1em" />,
       });
@@ -57,16 +57,16 @@ export default function DeleteUserProfilePictureModal({
     onError: (error) => {
       if (error instanceof ServerError) {
         notifications.show({
-          title: "Error Deleting Profile Picture",
-          message: error.issues[0].message || "An unknown error occurred.",
-          color: "red",
+          title: 'Error Deleting Profile Picture',
+          message: error.issues[0].message || 'An unknown error occurred.',
+          color: 'red',
           icon: <IconX size="1em" />,
         });
       } else {
         notifications.show({
-          title: "Error Deleting Profile Picture",
-          message: "An unknown error occurred.",
-          color: "red",
+          title: 'Error Deleting Profile Picture',
+          message: 'An unknown error occurred.',
+          color: 'red',
           icon: <IconX size="1em" />,
         });
       }
@@ -102,7 +102,7 @@ export default function DeleteUserProfilePictureModal({
             mutation.mutate();
           }}
         >
-          {areYouSure ? "Are you sure?" : "Delete Profile Picture"}
+          {areYouSure ? 'Are you sure?' : 'Delete Profile Picture'}
         </Button>
       </Group>
     </Modal>

@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { isEmail, useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal, TextInput } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import { useEffect, useEffectEvent } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { isEmail, useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { Button, Group, Modal, TextInput } from '@mantine/core';
+import { IconCheck } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { secondsToMinutesExtended } from "@/utils/date";
-import { useTimer } from "@/hooks/use-timer";
+import { authClient } from '@/lib/auth-client';
+import { secondsToMinutesExtended } from '@/utils/date';
+import { useTimer } from '@/hooks/use-timer';
 
 export interface UpdateEmailModalProps {
   opened: boolean;
   onClose: () => void;
   defaultValue?: string;
-  session: ReturnType<typeof authClient.useSession>["data"];
+  session: ReturnType<typeof authClient.useSession>['data'];
 }
 
 export default function UpdateEmailModal({
@@ -26,16 +26,16 @@ export default function UpdateEmailModal({
 }: UpdateEmailModalProps) {
   const form = useForm({
     initialValues: {
-      email: defaultValue || "",
+      email: defaultValue || '',
     },
     validate: {
-      email: isEmail("Invalid email address"),
+      email: isEmail('Invalid email address'),
     },
   });
 
   const setFormEmail = useEffectEvent((email?: string) => {
-    form.setInitialValues({ email: email || "" });
-    form.setValues({ email: email || "" });
+    form.setInitialValues({ email: email || '' });
+    form.setValues({ email: email || '' });
   });
 
   useEffect(() => {
@@ -68,23 +68,23 @@ export default function UpdateEmailModal({
       if (session?.user) {
         if (!session.user.emailVerified) {
           notifications.show({
-            title: "Email Updated",
-            message: "Your email has been successfully updated.",
-            color: "green",
+            title: 'Email Updated',
+            message: 'Your email has been successfully updated.',
+            color: 'green',
             icon: <IconCheck />,
           });
         } else {
           notifications.show({
-            title: "Email Update Requested",
-            message: "Please check your new email to approve the email change.",
-            color: "green",
+            title: 'Email Update Requested',
+            message: 'Please check your new email to approve the email change.',
+            color: 'green',
             icon: <IconCheck />,
           });
         }
       }
     },
     onError: (error) => {
-      form.setFieldError("email", error.message);
+      form.setFieldError('email', error.message);
     },
   });
 
@@ -95,9 +95,9 @@ export default function UpdateEmailModal({
           <TextInput
             flex={1}
             label="Email"
-            placeholder={defaultValue || "Enter your email"}
+            placeholder={defaultValue || 'Enter your email'}
             withAsterisk
-            {...form.getInputProps("email")}
+            {...form.getInputProps('email')}
           />
 
           <Button
@@ -105,9 +105,7 @@ export default function UpdateEmailModal({
             loading={mutation.isPending}
             disabled={!form.values.email || isEmailUpdateVerificationSent}
           >
-            {isEmailUpdateVerificationSent
-              ? secondsToMinutesExtended(timerLeft)
-              : "Update"}
+            {isEmailUpdateVerificationSent ? secondsToMinutesExtended(timerLeft) : 'Update'}
           </Button>
         </Group>
       </form>

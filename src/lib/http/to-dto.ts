@@ -1,4 +1,4 @@
-import type { SerializeDates } from "@/types/serialization";
+import type { SerializeDates } from '@/types/serialization';
 
 /**
  * Type-only marker for API response boundaries.

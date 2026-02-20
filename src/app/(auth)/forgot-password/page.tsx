@@ -1,11 +1,11 @@
-import { type Metadata } from "next";
+import { type Metadata } from 'next';
 
-import Content from "./content";
+import Content from './content';
 
 export const metadata: Metadata = {
-  title: "Forgot Password",
+  title: 'Forgot Password',
   alternates: {
-    canonical: "/forgot-password",
+    canonical: '/forgot-password',
   },
 };
 

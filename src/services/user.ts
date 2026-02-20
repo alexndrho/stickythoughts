@@ -1,6 +1,6 @@
-import "client-only";
+import 'client-only';
 
-import { fetchJson } from "@/services/http";
+import { fetchJson } from '@/services/http';
 import type {
   UserNotification,
   UserNotificationDTO,
@@ -14,18 +14,10 @@ import type {
   UpdateUserLikesVisibilityBody,
   UserNotificationMarkReadBody,
   UserNotificationOpenedBody,
-} from "@/types/user";
-import type {
-  Letter,
-  LetterDTO,
-  UserLetterReply,
-  UserLetterReplyDTO,
-} from "@/types/letter";
+} from '@/types/user';
+import type { Letter, LetterDTO, UserLetterReply, UserLetterReplyDTO } from '@/types/letter';
 
-export const getUser = async (
-  username: string,
-  cookie?: string,
-): Promise<UserPublicAccount> => {
+export const getUser = async (username: string, cookie?: string): Promise<UserPublicAccount> => {
   return fetchJson<UserPublicAccountDTO>(
     `/api/user/${username}`,
     {
@@ -33,60 +25,53 @@ export const getUser = async (
         ...(cookie ? { cookie } : {}),
       },
     },
-    { errorMessage: "User fetch error" },
+    { errorMessage: 'User fetch error' },
   );
 };
 
-export const getUserAccountSettings =
-  async (): Promise<UserAccountSettings> => {
-    return fetchJson<UserAccountSettingsDTO>("/api/user/settings", undefined, {
-      errorMessage: "User profile fetch error",
-    });
-  };
+export const getUserAccountSettings = async (): Promise<UserAccountSettings> => {
+  return fetchJson<UserAccountSettingsDTO>('/api/user/settings', undefined, {
+    errorMessage: 'User profile fetch error',
+  });
+};
 
-export const updateUserBio = async (
-  body: UpdateUserBioBody,
-): Promise<{ bio: string }> => {
+export const updateUserBio = async (body: UpdateUserBioBody): Promise<{ bio: string }> => {
   return fetchJson(
-    "/api/user/bio",
+    '/api/user/bio',
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "User bio update error" },
+    { errorMessage: 'User bio update error' },
   );
 };
 
 // allows admins to delete a user's bio. note: users can clear their own bio by setting it to an empty string.
-export const deleteUserBio = async (
-  id: string,
-): Promise<{ message: string }> => {
+export const deleteUserBio = async (id: string): Promise<{ message: string }> => {
   const searchParams = new URLSearchParams();
   // API expects `userId`
-  searchParams.append("userId", id);
+  searchParams.append('userId', id);
 
   return fetchJson(
     `/api/user/bio?${searchParams.toString()}`,
     {
-      method: "DELETE",
+      method: 'DELETE',
     },
-    { errorMessage: "User bio delete error" },
+    { errorMessage: 'User bio delete error' },
   );
 };
 
-export const uploadProfilePicture = async (
-  formData: FormData,
-): Promise<{ image: string }> => {
+export const uploadProfilePicture = async (formData: FormData): Promise<{ image: string }> => {
   return fetchJson(
-    "/api/user/profile-picture",
+    '/api/user/profile-picture',
     {
-      method: "PUT",
+      method: 'PUT',
       body: formData,
     },
-    { errorMessage: "Profile picture upload error" },
+    { errorMessage: 'Profile picture upload error' },
   );
 };
 
@@ -96,61 +81,54 @@ export const removeProfilePicture = async ({
 }: { userId?: string; cookie?: string } = {}): Promise<{ message: string }> => {
   const searchParams = new URLSearchParams();
   if (userId) {
-    searchParams.append("userId", userId);
+    searchParams.append('userId', userId);
   }
 
   return fetchJson(
     `/api/user/profile-picture?${searchParams.toString()}`,
     {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
         ...(cookie ? { cookie } : {}),
       },
     },
-    { errorMessage: "Profile picture delete error" },
+    { errorMessage: 'Profile picture delete error' },
   );
 };
 
-export const getUserSettingsPrivacy =
-  async (): Promise<UserSettingsPrivacy> => {
-    return fetchJson<UserSettingsPrivacyDTO>(
-      "/api/user/settings/privacy",
-      undefined,
-      {
-        errorMessage: "User settings privacy fetch error",
-      },
-    );
-  };
+export const getUserSettingsPrivacy = async (): Promise<UserSettingsPrivacy> => {
+  return fetchJson<UserSettingsPrivacyDTO>('/api/user/settings/privacy', undefined, {
+    errorMessage: 'User settings privacy fetch error',
+  });
+};
 
 export const updateUserLikesVisibility = async (
   body: UpdateUserLikesVisibilityBody,
 ): Promise<UserSettingsPrivacy> => {
   return fetchJson<UserSettingsPrivacyDTO>(
-    "/api/user/settings/privacy/likes-visibility",
+    '/api/user/settings/privacy/likes-visibility',
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "User likes visibility update error" },
+    { errorMessage: 'User likes visibility update error' },
   );
 };
 
-export const getUserNotifications = async (
-  lastUpdatedAt?: Date,
-): Promise<UserNotification[]> => {
+export const getUserNotifications = async (lastUpdatedAt?: Date): Promise<UserNotification[]> => {
   const searchParams = new URLSearchParams();
 
   if (lastUpdatedAt) {
-    searchParams.append("lastUpdatedAt", lastUpdatedAt.toISOString());
+    searchParams.append('lastUpdatedAt', lastUpdatedAt.toISOString());
   }
 
   return fetchJson<UserNotificationDTO[]>(
     `/api/user/notifications?${searchParams.toString()}`,
     undefined,
-    { errorMessage: "User notifications fetch error" },
+    { errorMessage: 'User notifications fetch error' },
   );
 };
 
@@ -162,22 +140,20 @@ export const userNotificationOpened = async (
   return fetchJson(
     `/api/user/notifications/new-count`,
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body ?? { opened: true }),
     },
-    { errorMessage: "User notification opened error" },
+    { errorMessage: 'User notification opened error' },
   );
 };
 
 export const getUserNewNotificationCount = async (): Promise<number> => {
-  const data = await fetchJson<{ count: number }>(
-    "/api/user/notifications/new-count",
-    undefined,
-    { errorMessage: "User new notification count fetch error" },
-  );
+  const data = await fetchJson<{ count: number }>('/api/user/notifications/new-count', undefined, {
+    errorMessage: 'User new notification count fetch error',
+  });
 
   return data.count;
 };
@@ -192,13 +168,13 @@ export const userNotificationMarkRead = async ({
   return fetchJson(
     `/api/user/notifications/${id}`,
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "User notification mark read error" },
+    { errorMessage: 'User notification mark read error' },
   );
 };
 
@@ -206,9 +182,9 @@ export const deleteUserNotification = async (id: string) => {
   return fetchJson(
     `/api/user/notifications/${id}`,
     {
-      method: "DELETE",
+      method: 'DELETE',
     },
-    { errorMessage: "User notification delete error" },
+    { errorMessage: 'User notification delete error' },
   );
 };
 
@@ -223,16 +199,12 @@ export const getUserLetters = async ({
   const searchParams = new URLSearchParams();
 
   if (lastId) {
-    searchParams.append("lastId", lastId);
+    searchParams.append('lastId', lastId);
   }
 
-  return fetchJson<LetterDTO[]>(
-    `/api/user/${username}/letters?${searchParams}`,
-    undefined,
-    {
-      errorMessage: "User letters fetch error",
-    },
-  );
+  return fetchJson<LetterDTO[]>(`/api/user/${username}/letters?${searchParams}`, undefined, {
+    errorMessage: 'User letters fetch error',
+  });
 };
 
 export const getUserReplies = async ({
@@ -245,14 +217,14 @@ export const getUserReplies = async ({
   const searchParams = new URLSearchParams();
 
   if (lastId) {
-    searchParams.append("lastId", lastId);
+    searchParams.append('lastId', lastId);
   }
 
   return fetchJson<UserLetterReplyDTO[]>(
     `/api/user/${username}/replies?${searchParams}`,
     undefined,
     {
-      errorMessage: "Failed to get replies",
+      errorMessage: 'Failed to get replies',
     },
   );
 };
@@ -267,14 +239,10 @@ export const getUserLikedLetters = async ({
   const searchParams = new URLSearchParams();
 
   if (lastId) {
-    searchParams.append("lastId", lastId);
+    searchParams.append('lastId', lastId);
   }
 
-  return fetchJson<LetterDTO[]>(
-    `/api/user/${username}/likes?${searchParams}`,
-    undefined,
-    {
-      errorMessage: "User liked letters fetch error",
-    },
-  );
+  return fetchJson<LetterDTO[]>(`/api/user/${username}/likes?${searchParams}`, undefined, {
+    errorMessage: 'User liked letters fetch error',
+  });
 };

@@ -1,21 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { notifications } from "@mantine/notifications";
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Menu,
-  Skeleton,
-  Text,
-  Title,
-  Tooltip,
-} from "@mantine/core";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
+import { Avatar, Box, Button, Divider, Menu, Skeleton, Text, Title, Tooltip } from '@mantine/core';
 import {
   IconCheck,
   IconEdit,
@@ -23,26 +13,26 @@ import {
   IconRosetteDiscountCheckFilled,
   IconTrash,
   IconX,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { secondsToMinutesExtended } from "@/utils/date";
-import { removeProfilePicture } from "@/services/user";
-import { useTimer } from "@/hooks/use-timer";
-import { userAccountListOptions, userAccountOptions } from "./options";
-import UploadProfilePictureModal from "./upload-profile-picture-modal";
-import UpdateNameModal from "./update-name-modal";
-import UpdateEmailModal from "./update-email-modal";
-import UpdateUsernameModal from "./update-username-modal";
-import UpdateBioModal from "./update-bio-modal";
-import UpdatePasswordModal from "./update-password-modal";
-import EnableTwoFactorModal from "./enable-two-factor-modal";
-import DisableTwoFactorModal from "./disable-two-factor-modal";
-import BackupCodesModal from "./backup-codes-modal";
-import AccountItem from "./account-item";
-import DisconnectGoogleModal from "./disconnect-google-modal";
-import classes from "./settings.module.css";
-import accountClasses from "./account.module.css";
+import { authClient } from '@/lib/auth-client';
+import { secondsToMinutesExtended } from '@/utils/date';
+import { removeProfilePicture } from '@/services/user';
+import { useTimer } from '@/hooks/use-timer';
+import { userAccountListOptions, userAccountOptions } from './options';
+import UploadProfilePictureModal from './upload-profile-picture-modal';
+import UpdateNameModal from './update-name-modal';
+import UpdateEmailModal from './update-email-modal';
+import UpdateUsernameModal from './update-username-modal';
+import UpdateBioModal from './update-bio-modal';
+import UpdatePasswordModal from './update-password-modal';
+import EnableTwoFactorModal from './enable-two-factor-modal';
+import DisableTwoFactorModal from './disable-two-factor-modal';
+import BackupCodesModal from './backup-codes-modal';
+import AccountItem from './account-item';
+import DisconnectGoogleModal from './disconnect-google-modal';
+import classes from './settings.module.css';
+import accountClasses from './account.module.css';
 
 export default function Content() {
   const router = useRouter();
@@ -53,25 +43,19 @@ export default function Content() {
     refetch: refetchSession,
   } = authClient.useSession();
 
-  const { data: userProfile, isLoading: isUserProfileLoading } =
-    useQuery(userAccountOptions);
+  const { data: userProfile, isLoading: isUserProfileLoading } = useQuery(userAccountOptions);
 
-  const { data: userAccounts, isPending: isUserAccountsPending } = useQuery(
-    userAccountListOptions,
-  );
+  const { data: userAccounts, isPending: isUserAccountsPending } = useQuery(userAccountListOptions);
 
   useEffect(() => {
     if (!isSessionPending && !session) {
-      router.push("/");
+      router.push('/');
     }
   }, [isSessionPending, session, router]);
 
   const [
     uploadProfilePictureModalOpened,
-    {
-      open: openUploadProfilePictureModal,
-      close: closeUploadProfilePictureModal,
-    },
+    { open: openUploadProfilePictureModal, close: closeUploadProfilePictureModal },
   ] = useDisclosure(false);
 
   const [timeLeftEmailVerification, startEmailVerificationTimer] = useTimer({
@@ -80,25 +64,19 @@ export default function Content() {
 
   const isEmailVerificationSent = timeLeftEmailVerification > 0;
 
-  const [
-    updateNameModalOpened,
-    { open: openUpdateNameModal, close: closeUpdateNameModal },
-  ] = useDisclosure(false);
+  const [updateNameModalOpened, { open: openUpdateNameModal, close: closeUpdateNameModal }] =
+    useDisclosure(false);
 
-  const [
-    updateEmailModalOpened,
-    { open: openUpdateEmailModal, close: closeUpdateEmailModal },
-  ] = useDisclosure(false);
+  const [updateEmailModalOpened, { open: openUpdateEmailModal, close: closeUpdateEmailModal }] =
+    useDisclosure(false);
 
   const [
     updateUsernameModalOpened,
     { open: openUpdateUsernameModal, close: closeUpdateUsernameModal },
   ] = useDisclosure(false);
 
-  const [
-    updateBioModalOpened,
-    { open: openUpdateBioModal, close: closeUpdateBioModal },
-  ] = useDisclosure(false);
+  const [updateBioModalOpened, { open: openUpdateBioModal, close: closeUpdateBioModal }] =
+    useDisclosure(false);
 
   const [
     updatePasswordModalOpened,
@@ -122,10 +100,7 @@ export default function Content() {
 
   const [
     generateBackupCodesModalOpened,
-    {
-      open: openGenerateBackupCodesModal,
-      close: closeGenerateBackupCodesModal,
-    },
+    { open: openGenerateBackupCodesModal, close: closeGenerateBackupCodesModal },
   ] = useDisclosure(false);
 
   const handleRemoveProfilePicture = async () => {
@@ -135,7 +110,7 @@ export default function Content() {
 
   const emailVerificationMutation = useMutation({
     mutationFn: async () => {
-      if (!session) throw new Error("No session found");
+      if (!session) throw new Error('No session found');
 
       const response = await authClient.sendVerificationEmail({
         email: session.user.email,
@@ -150,17 +125,17 @@ export default function Content() {
       startEmailVerificationTimer();
 
       notifications.show({
-        title: "Verification Email Sent",
-        message: "Please check your email to verify your email address.",
-        color: "green",
+        title: 'Verification Email Sent',
+        message: 'Please check your email to verify your email address.',
+        color: 'green',
         icon: <IconCheck />,
       });
     },
     onError: (error: Error) => {
       notifications.show({
-        title: "Error",
+        title: 'Error',
         message: error.message,
-        color: "red",
+        color: 'red',
         icon: <IconX />,
       });
     },
@@ -168,23 +143,19 @@ export default function Content() {
 
   const accountItems = [
     {
-      label: "Name",
+      label: 'Name',
       value: session?.user?.name,
       loading: isSessionPending,
       rightSection: (
-        <Button
-          variant="default"
-          size="compact-md"
-          onClick={openUpdateNameModal}
-        >
+        <Button variant="default" size="compact-md" onClick={openUpdateNameModal}>
           Edit
         </Button>
       ),
     },
     {
-      label: "Email",
+      label: 'Email',
       loading: isSessionPending,
-      description: "This will not be shown to other users",
+      description: 'This will not be shown to other users',
       value: (
         <>
           {session?.user?.email}
@@ -213,61 +184,51 @@ export default function Content() {
           {!session?.user.emailVerified && (
             <Button
               size="compact-md"
-              w={isEmailVerificationSent ? 53 : "auto"}
+              w={isEmailVerificationSent ? 53 : 'auto'}
               disabled={isEmailVerificationSent}
               loading={emailVerificationMutation.isPending}
               onClick={() => emailVerificationMutation.mutate()}
             >
               {isEmailVerificationSent
                 ? secondsToMinutesExtended(timeLeftEmailVerification)
-                : "Verify"}
+                : 'Verify'}
             </Button>
           )}
         </>
       ),
     },
     {
-      label: "Username",
+      label: 'Username',
       value: session?.user?.username,
       loading: isSessionPending,
       rightSection: (
-        <Button
-          variant="default"
-          size="compact-md"
-          onClick={openUpdateUsernameModal}
-        >
+        <Button variant="default" size="compact-md" onClick={openUpdateUsernameModal}>
           Edit
         </Button>
       ),
     },
     {
-      label: "Bio",
+      label: 'Bio',
       value: userProfile?.bio,
       loading: isUserProfileLoading,
       rightSection: (
-        <Button
-          variant="default"
-          size="compact-md"
-          onClick={openUpdateBioModal}
-        >
+        <Button variant="default" size="compact-md" onClick={openUpdateBioModal}>
           Edit
         </Button>
       ),
     },
   ];
 
-  const isGoogleConnected = userAccounts?.data?.some(
-    (account) => account.providerId === "google",
-  );
+  const isGoogleConnected = userAccounts?.data?.some((account) => account.providerId === 'google');
 
   const accountList = [
     {
-      title: "Google",
-      description: "Connect your Google account to enable Google login.",
+      title: 'Google',
+      description: 'Connect your Google account to enable Google login.',
       connect: () =>
         authClient.linkSocial({
-          provider: "google",
-          callbackURL: "/settings",
+          provider: 'google',
+          callbackURL: '/settings',
         }),
       disconnect: openDisconnectGoogleModal,
       connected: isGoogleConnected,
@@ -282,13 +243,10 @@ export default function Content() {
 
       <Divider mb="lg" />
 
-      <div className={`${classes.content} ${accountClasses["main-content"]}`}>
-        <div className={accountClasses["user-info"]}>
+      <div className={`${classes.content} ${accountClasses['main-content']}`}>
+        <div className={accountClasses['user-info']}>
           {accountItems.map((item, index) => (
-            <div
-              key={index}
-              className={accountClasses["user-info__account-item"]}
-            >
+            <div key={index} className={accountClasses['user-info__account-item']}>
               <div>
                 <Text size="lg" truncate className={classes.label}>
                   {item.label}
@@ -302,18 +260,16 @@ export default function Content() {
 
                 <Skeleton
                   visible={item.loading}
-                  className={
-                    accountClasses["account-item__skeleton-wrapper-value"]
-                  }
+                  className={accountClasses['account-item__skeleton-wrapper-value']}
                 >
-                  <Text className={accountClasses["account-item__value"]}>
-                    {item.value || "No value set"}
+                  <Text className={accountClasses['account-item__value']}>
+                    {item.value || 'No value set'}
                   </Text>
                 </Skeleton>
               </div>
 
               <Skeleton w="auto" visible={item.loading}>
-                <div className={accountClasses["account-item__right-section"]}>
+                <div className={accountClasses['account-item__right-section']}>
                   {item.rightSection}
                 </div>
               </Skeleton>
@@ -321,19 +277,14 @@ export default function Content() {
           ))}
         </div>
 
-        <div className={accountClasses["profile-picture-container"]}>
-          <Avatar
-            src={session?.user?.image}
-            className={accountClasses["profile-picture"]}
-          />
+        <div className={accountClasses['profile-picture-container']}>
+          <Avatar src={session?.user?.image} className={accountClasses['profile-picture']} />
 
           <Menu>
             <Menu.Target>
               <Button
                 variant="default"
-                className={
-                  accountClasses["profile-picture-container__edit-button"]
-                }
+                className={accountClasses['profile-picture-container__edit-button']}
                 size="compact-md"
                 leftSection={<IconEdit size="1em" />}
               >
@@ -391,20 +342,13 @@ export default function Content() {
         </Text>
 
         <Text size="md" className={classes.description}>
-          Add an extra layer of security to your account by requiring a second
-          form of authentication when logging in.
+          Add an extra layer of security to your account by requiring a second form of
+          authentication when logging in.
         </Text>
 
-        <Skeleton
-          mt="xs"
-          w="auto"
-          display="inline-block"
-          visible={isSessionPending}
-        >
+        <Skeleton mt="xs" w="auto" display="inline-block" visible={isSessionPending}>
           {!session?.user.twoFactorEnabled ? (
-            <Button onClick={openEnableTwoFactorModal}>
-              Enable Two-Factor Authentication
-            </Button>
+            <Button onClick={openEnableTwoFactorModal}>Enable Two-Factor Authentication</Button>
           ) : (
             <Button color="red" onClick={openDisableTwoFactorModal}>
               Disable Two-Factor Authentication
@@ -417,16 +361,11 @@ export default function Content() {
         </Text>
 
         <Text size="md" className={classes.description}>
-          Backup codes can be used to access your account if you lose access to
-          your primary two-factor authentication method.
+          Backup codes can be used to access your account if you lose access to your primary
+          two-factor authentication method.
         </Text>
 
-        <Skeleton
-          mt="xs"
-          w="auto"
-          display="inline-block"
-          visible={isSessionPending}
-        >
+        <Skeleton mt="xs" w="auto" display="inline-block" visible={isSessionPending}>
           <Tooltip
             label="You need to enable two-factor authentication to generate backup codes"
             disabled={!!session?.user.twoFactorEnabled}
@@ -473,10 +412,7 @@ export default function Content() {
         onClose={closeUpdateBioModal}
       />
 
-      <UpdatePasswordModal
-        opened={updatePasswordModalOpened}
-        onClose={closeUpdatePasswordModal}
-      />
+      <UpdatePasswordModal opened={updatePasswordModalOpened} onClose={closeUpdatePasswordModal} />
 
       {isGoogleConnected && (
         <DisconnectGoogleModal

@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { auth } from "@/lib/auth";
-import { updateLetterReplyServerInput } from "@/lib/validations/letter";
-import { formatLetterReplies } from "@/utils/letter";
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import { isRecordNotFoundError } from "@/server/db";
-import { softDeleteLetterReply, updateLetterReply } from "@/server/letter";
-import { toDTO } from "@/lib/http/to-dto";
-import type { LetterReplyDTO } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { updateLetterReplyServerInput } from '@/lib/validations/letter';
+import { formatLetterReplies } from '@/utils/letter';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { isRecordNotFoundError } from '@/server/db';
+import { softDeleteLetterReply, updateLetterReply } from '@/server/letter';
+import { toDTO } from '@/lib/http/to-dto';
+import type { LetterReplyDTO } from '@/types/letter';
 
 export async function PUT(
   request: Request,
@@ -41,14 +41,11 @@ export async function PUT(
     if (error instanceof ZodError) {
       return zodInvalidInput(error);
     } else if (isRecordNotFoundError(error)) {
-      return jsonError(
-        [{ code: "not-found", message: "Reply not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }
 
@@ -69,7 +66,7 @@ export async function DELETE(
       body: {
         userId: session.user.id,
         permission: {
-          letterReply: ["delete"],
+          letterReply: ['delete'],
         },
       },
     });
@@ -83,19 +80,16 @@ export async function DELETE(
 
     return NextResponse.json(
       {
-        message: "Reply deleted successfully",
+        message: 'Reply deleted successfully',
       },
       { status: 200 },
     );
   } catch (error) {
     if (isRecordNotFoundError(error)) {
-      return jsonError(
-        [{ code: "not-found", message: "Reply not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }

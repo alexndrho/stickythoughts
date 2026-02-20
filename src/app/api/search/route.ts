@@ -1,22 +1,18 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { unknownErrorResponse } from "@/lib/http";
-import {
-  searchAll,
-  searchLetters,
-  searchUsers,
-} from "@/server/search";
+import { unknownErrorResponse } from '@/lib/http';
+import { searchAll, searchLetters, searchUsers } from '@/server/search';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const q = searchParams.get("q") ?? "";
-  const type = searchParams.get("type"); // "all", "letters", "users"
+  const q = searchParams.get('q') ?? '';
+  const type = searchParams.get('type'); // "all", "letters", "users"
 
   try {
-    if (type === "users") {
+    if (type === 'users') {
       const users = await searchUsers({ q });
       return NextResponse.json(users, { status: 200 });
-    } else if (type === "letters") {
+    } else if (type === 'letters') {
       const letters = await searchLetters({ q });
       return NextResponse.json(letters, { status: 200 });
     }
@@ -25,6 +21,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(combinedResults, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

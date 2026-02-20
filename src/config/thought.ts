@@ -7,19 +7,10 @@ export const THOUGHT_MIN_MESSAGE_LENGTH = 5;
 export const THOUGHT_MAX_AUTHOR_LENGTH = 20;
 export const THOUGHT_MAX_MESSAGE_LENGTH = 250;
 
-export const THOUGHT_COLORS = [
-  "yellow",
-  "blue",
-  "red",
-  "violet",
-  "green",
-  "pink",
-] as const;
+export const THOUGHT_COLORS = ['yellow', 'blue', 'red', 'violet', 'green', 'pink'] as const;
 
 export const THOUGHT_HIGHLIGHT_LOCK_HOURS = 12;
-export const THOUGHT_HIGHLIGHT_LOCK_DURATION_MS =
-  THOUGHT_HIGHLIGHT_LOCK_HOURS * 60 * 60 * 1000;
+export const THOUGHT_HIGHLIGHT_LOCK_DURATION_MS = THOUGHT_HIGHLIGHT_LOCK_HOURS * 60 * 60 * 1000;
 
 export const THOUGHT_HIGHLIGHT_MAX_AGE_DAYS = 3;
-export const THOUGHT_HIGHLIGHT_MAX_AGE_MS =
-  THOUGHT_HIGHLIGHT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+export const THOUGHT_HIGHLIGHT_MAX_AGE_MS = THOUGHT_HIGHLIGHT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;

@@ -1,42 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  ActionIcon,
-  Badge,
-  Loader,
-  Table,
-  Tabs,
-  Text,
-  Tooltip,
-} from "@mantine/core";
-import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconArrowBackUp, IconTrashX } from '@tabler/icons-react';
 
-import {
-  deletedRepliesCountOptions,
-  deletedRepliesPageOptions,
-} from "./options";
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import PaginatedPanelLayout from "../paginated-panel-layout";
-import classes from "./deleted.module.css";
-import {
-  formatDeletedByLabel,
-  formatDeletedDate,
-  getPagedTotal,
-} from "./utils";
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { letterKeys } from "@/lib/query-keys";
-import {
-  permanentlyDeleteReply,
-  restoreDeletedReply,
-} from "@/services/moderate/deleted";
-import { stripHtmlTags } from "@/utils/text";
-import { formatUserDisplayName } from "@/utils/user";
-import { PermanentlyDeleteReplyModal, RecoverReplyModal } from "./reply-modals";
-import type { DeletedLetterReply } from "@/types/deleted";
+import { deletedRepliesCountOptions, deletedRepliesPageOptions } from './options';
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import PaginatedPanelLayout from '../paginated-panel-layout';
+import classes from './deleted.module.css';
+import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from './utils';
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys';
+import { permanentlyDeleteReply, restoreDeletedReply } from '@/services/moderate/deleted';
+import { stripHtmlTags } from '@/utils/text';
+import { formatUserDisplayName } from '@/utils/user';
+import { PermanentlyDeleteReplyModal, RecoverReplyModal } from './reply-modals';
+import type { DeletedLetterReply } from '@/types/deleted';
 
 export interface RepliesTabProps {
   isActive: boolean;
@@ -46,19 +28,18 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingReply, setPermanentlyDeletingReply] =
     useState<DeletedLetterReply | null>(null);
-  const [restoringReply, setRestoringReply] =
-    useState<DeletedLetterReply | null>(null);
+  const [restoringReply, setRestoringReply] = useState<DeletedLetterReply | null>(null);
   const [restoringReplyId, setRestoringReplyId] = useState<string | null>(null);
   const [deletingReplyId, setDeletingReplyId] = useState<string | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
-  const isStaff = role === "admin" || role === "moderator";
+  const isStaff = role === 'admin' || role === 'moderator';
   const canRestoreReply = isStaff
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          letterReply: ["restore"],
+          letterReply: ['restore'],
         },
       })
     : false;
@@ -66,7 +47,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          letterReply: ["purge"],
+          letterReply: ['purge'],
         },
       })
     : false;
@@ -165,14 +146,10 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                               setRestoringReply(reply);
                             }
                           }}
-                          loading={
-                            restoreMutation.isPending &&
-                            restoringReplyId === reply.id
-                          }
+                          loading={restoreMutation.isPending && restoringReplyId === reply.id}
                           disabled={
                             !canRestoreReply ||
-                            (restoreMutation.isPending &&
-                              restoringReplyId === reply.id)
+                            (restoreMutation.isPending && restoringReplyId === reply.id)
                           }
                         >
                           <IconArrowBackUp size="1em" />
@@ -188,14 +165,10 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                               setPermanentlyDeletingReply(reply);
                             }
                           }}
-                          loading={
-                            deleteMutation.isPending &&
-                            deletingReplyId === reply.id
-                          }
+                          loading={deleteMutation.isPending && deletingReplyId === reply.id}
                           disabled={
                             !canPermanentlyDeleteReply ||
-                            (deleteMutation.isPending &&
-                              deletingReplyId === reply.id)
+                            (deleteMutation.isPending && deletingReplyId === reply.id)
                           }
                         >
                           <IconTrashX size="1em" />
@@ -245,9 +218,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
             restoreMutation.mutate(reply.id);
             setRestoringReply(null);
           }}
-          loading={
-            restoreMutation.isPending && restoringReplyId === restoringReply?.id
-          }
+          loading={restoreMutation.isPending && restoringReplyId === restoringReply?.id}
         />
       )}
     </Tabs.Panel>

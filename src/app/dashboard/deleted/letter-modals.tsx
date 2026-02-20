@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from '@mantine/core';
 
-import type { DeletedLetter } from "@/types/deleted";
+import type { DeletedLetter } from '@/types/deleted';
 
 export interface PermanentlyDeleteLetterModalProps {
   letter: DeletedLetter | null;
@@ -20,12 +20,7 @@ export const PermanentlyDeleteLetterModal = ({
   loading,
 }: PermanentlyDeleteLetterModalProps) => {
   return (
-    <Modal
-      title="Permanently delete this letter?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Permanently delete this letter?" opened={opened} onClose={onClose} centered>
       <Text>{letter?.title}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">
@@ -67,12 +62,7 @@ export const RecoverLetterModal = ({
   loading,
 }: RecoverLetterModalProps) => {
   return (
-    <Modal
-      title="Recover this letter?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Recover this letter?" opened={opened} onClose={onClose} centered>
       <Text>{letter?.title}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">

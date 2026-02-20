@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
 export {
   countPublicThoughts,
   createThought,
   getHighlightedThought,
   listPublicThoughts,
-} from "./thoughts-service";
+} from './thoughts-service';

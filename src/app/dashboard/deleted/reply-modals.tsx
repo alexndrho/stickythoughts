@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from '@mantine/core';
 
-import { stripHtmlTags } from "@/utils/text";
-import type { DeletedLetterReply } from "@/types/deleted";
+import { stripHtmlTags } from '@/utils/text';
+import type { DeletedLetterReply } from '@/types/deleted';
 
 export interface PermanentlyDeleteReplyModalProps {
   reply: DeletedLetterReply | null;
@@ -21,13 +21,8 @@ export const PermanentlyDeleteReplyModal = ({
   loading,
 }: PermanentlyDeleteReplyModalProps) => {
   return (
-    <Modal
-      title="Permanently delete this reply?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
-      <Text>{stripHtmlTags(reply?.body || "")}</Text>
+    <Modal title="Permanently delete this reply?" opened={opened} onClose={onClose} centered>
+      <Text>{stripHtmlTags(reply?.body || '')}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">
         This action cannot be undone.
@@ -68,13 +63,8 @@ export const RecoverReplyModal = ({
   loading,
 }: RecoverReplyModalProps) => {
   return (
-    <Modal
-      title="Recover this reply?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
-      <Text>{stripHtmlTags(reply?.body || "")}</Text>
+    <Modal title="Recover this reply?" opened={opened} onClose={onClose} centered>
+      <Text>{stripHtmlTags(reply?.body || '')}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">
         This will restore the reply and make it visible again.

@@ -1,16 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import {
-  likeReply,
-  ReplyNotFoundError,
-  unlikeReply,
-} from "@/server/letter";
-import {
-  isRecordNotFoundError,
-  isUniqueConstraintError,
-} from "@/server/db";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { likeReply, ReplyNotFoundError, unlikeReply } from '@/server/letter';
+import { isRecordNotFoundError, isUniqueConstraintError } from '@/server/db';
 
 export async function POST(
   request: Request,
@@ -28,21 +21,21 @@ export async function POST(
 
     return NextResponse.json(
       {
-        message: "Reply liked successfully",
+        message: 'Reply liked successfully',
       },
       { status: 200 },
     );
   } catch (error) {
     if (error instanceof ReplyNotFoundError) {
-      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     if (isUniqueConstraintError(error)) {
       return jsonError(
         [
           {
-            code: "validation/unique-constraint",
-            message: "You have already liked this reply",
+            code: 'validation/unique-constraint',
+            message: 'You have already liked this reply',
           },
         ],
         400,
@@ -50,7 +43,7 @@ export async function POST(
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }
 
@@ -71,21 +64,21 @@ export async function DELETE(
 
     return NextResponse.json(
       {
-        message: "Reply unliked successfully",
+        message: 'Reply unliked successfully',
       },
       { status: 200 },
     );
   } catch (error) {
     if (error instanceof ReplyNotFoundError) {
-      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     if (isRecordNotFoundError(error)) {
       return jsonError(
         [
           {
-            code: "validation/unique-constraint",
-            message: "You have not liked this reply",
+            code: 'validation/unique-constraint',
+            message: 'You have not liked this reply',
           },
         ],
         400,
@@ -93,6 +86,6 @@ export async function DELETE(
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }

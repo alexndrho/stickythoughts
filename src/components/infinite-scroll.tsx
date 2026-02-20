@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef } from 'react';
 
 export interface InfiniteScrollProps {
   children: React.ReactNode;

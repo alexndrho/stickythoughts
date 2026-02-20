@@ -1,22 +1,22 @@
-import "server-only";
+import 'server-only';
 
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from 'next/cache';
 
-import { CACHE_TAGS } from "@/config/cache-tags";
+import { CACHE_TAGS } from '@/config/cache-tags';
 import {
   countPublicThoughts as countPublicThoughtsService,
   getHighlightedThought as getHighlightedThoughtService,
   listPublicThoughts as listPublicThoughtsService,
-} from "@/server/thought/thoughts-service";
-import { parsePublicThoughtFromServer } from "@/utils/thought";
-import type { PublicThought } from "@/types/thought";
+} from '@/server/thought/thoughts-service';
+import { parsePublicThoughtFromServer } from '@/utils/thought';
+import type { PublicThought } from '@/types/thought';
 
 const listPublicThoughtsCached = unstable_cache(
   async () => {
     const thoughts = await listPublicThoughtsService({});
     return thoughts.map((thought) => parsePublicThoughtFromServer(thought));
   },
-  ["public-thought-list"],
+  ['public-thought-list'],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT],
   },
@@ -24,7 +24,7 @@ const listPublicThoughtsCached = unstable_cache(
 
 const countPublicThoughtsCached = unstable_cache(
   async () => countPublicThoughtsService(),
-  ["public-thought-count"],
+  ['public-thought-count'],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT_COUNT],
   },
@@ -42,7 +42,7 @@ const getHighlightedThoughtCached = unstable_cache(
 
     return highlightedThought;
   },
-  ["public-thought-highlight"],
+  ['public-thought-highlight'],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT],
   },

@@ -1,3 +1,3 @@
-import "server-only";
+import 'server-only';
 
-export { searchAll, searchLetters, searchUsers } from "./search-service";
+export { searchAll, searchLetters, searchUsers } from './search-service';

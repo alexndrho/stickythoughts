@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { Button, Center, Group, PasswordInput, Title } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
-import { useMutation } from "@tanstack/react-query";
-import { IconLock } from "@tabler/icons-react";
+import { useEffect } from 'react';
+import { Button, Center, Group, PasswordInput, Title } from '@mantine/core';
+import { isNotEmpty, useForm } from '@mantine/form';
+import { useMutation } from '@tanstack/react-query';
+import { IconLock } from '@tabler/icons-react';
 
-import { AuthContainer } from "../auth-container";
-import { authClient } from "@/lib/auth-client";
-import classes from "./forgot-password.module.css";
+import { AuthContainer } from '../auth-container';
+import { authClient } from '@/lib/auth-client';
+import classes from './forgot-password.module.css';
 
 interface StepThreeProps {
   email: string | null;
@@ -31,17 +31,17 @@ export default function StepThree({
 
   const newPasswordForm = useForm({
     initialValues: {
-      newPassword: "",
+      newPassword: '',
     },
     validate: {
-      newPassword: isNotEmpty("Password is required"),
+      newPassword: isNotEmpty('Password is required'),
     },
   });
 
   const newPasswordMutation = useMutation({
     mutationFn: async (password: string) => {
       if (!email || !verificationCode) {
-        newPasswordForm.setFieldError("newPassword", "Missing required info");
+        newPasswordForm.setFieldError('newPassword', 'Missing required info');
         return;
       }
 
@@ -54,23 +54,20 @@ export default function StepThree({
       if (data?.success) {
         nextStep();
       } else if (error) {
-        newPasswordForm.setFieldError("newPassword", error.message);
+        newPasswordForm.setFieldError('newPassword', error.message);
       } else {
-        newPasswordForm.setFieldError(
-          "newPassword",
-          "Failed to reset password",
-        );
+        newPasswordForm.setFieldError('newPassword', 'Failed to reset password');
       }
     },
     onError: () => {
-      newPasswordForm.setFieldError("newPassword", "Failed to reset password");
+      newPasswordForm.setFieldError('newPassword', 'Failed to reset password');
     },
   });
 
   return (
     <Center>
       <AuthContainer>
-        <Title order={2} className={classes["paper-title"]}>
+        <Title order={2} className={classes['paper-title']}>
           Enter your new password
         </Title>
 
@@ -84,7 +81,7 @@ export default function StepThree({
             placeholder="Enter your new password"
             withAsterisk
             leftSection={<IconLock size="1em" />}
-            {...newPasswordForm.getInputProps("newPassword")}
+            {...newPasswordForm.getInputProps('newPassword')}
           />
 
           <Group mt="md" justify="end">

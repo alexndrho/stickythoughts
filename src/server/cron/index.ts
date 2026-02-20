@@ -1,3 +1,3 @@
-import "server-only";
+import 'server-only';
 
-export { purgeSoftDeletedContent } from "./purge-service";
+export { purgeSoftDeletedContent } from './purge-service';

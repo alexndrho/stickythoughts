@@ -1,7 +1,7 @@
-import "server-only";
+import 'server-only';
 
-import { prisma } from "@/lib/db";
-import type { SearchAllType } from "@/types/search";
+import { prisma } from '@/lib/db';
+import type { SearchAllType } from '@/types/search';
 
 const MAX_RESULTS = 10;
 
@@ -12,8 +12,8 @@ export async function searchUsers(args: { q: string; take?: number }) {
     take,
     where: {
       OR: [
-        { name: { contains: args.q, mode: "insensitive" } },
-        { username: { contains: args.q, mode: "insensitive" } },
+        { name: { contains: args.q, mode: 'insensitive' } },
+        { username: { contains: args.q, mode: 'insensitive' } },
       ],
     },
     select: {
@@ -24,7 +24,7 @@ export async function searchUsers(args: { q: string; take?: number }) {
     },
   });
 
-  return users.map((user) => ({ ...user, type: "users" as const }));
+  return users.map((user) => ({ ...user, type: 'users' as const }));
 }
 
 export async function searchLetters(args: { q: string; take?: number }) {
@@ -33,7 +33,7 @@ export async function searchLetters(args: { q: string; take?: number }) {
   const letters = await prisma.letter.findMany({
     take,
     where: {
-      title: { contains: args.q, mode: "insensitive" },
+      title: { contains: args.q, mode: 'insensitive' },
       deletedAt: null,
     },
     select: {
@@ -42,7 +42,7 @@ export async function searchLetters(args: { q: string; take?: number }) {
     },
   });
 
-  return letters.map((letter) => ({ ...letter, type: "letters" as const }));
+  return letters.map((letter) => ({ ...letter, type: 'letters' as const }));
 }
 
 export async function searchAll(args: { q: string }) {
@@ -53,8 +53,8 @@ export async function searchAll(args: { q: string }) {
       take: takeEach,
       where: {
         OR: [
-          { name: { contains: args.q, mode: "insensitive" } },
-          { username: { contains: args.q, mode: "insensitive" } },
+          { name: { contains: args.q, mode: 'insensitive' } },
+          { username: { contains: args.q, mode: 'insensitive' } },
         ],
       },
       select: {
@@ -67,7 +67,7 @@ export async function searchAll(args: { q: string }) {
     prisma.letter.findMany({
       take: takeEach,
       where: {
-        title: { contains: args.q, mode: "insensitive" },
+        title: { contains: args.q, mode: 'insensitive' },
         deletedAt: null,
       },
       select: {
@@ -78,10 +78,9 @@ export async function searchAll(args: { q: string }) {
   ]);
 
   const combinedResults: SearchAllType[] = [
-    ...users.map((user) => ({ ...user, type: "users" as const })),
-    ...letters.map((letter) => ({ ...letter, type: "letters" as const })),
+    ...users.map((user) => ({ ...user, type: 'users' as const })),
+    ...letters.map((letter) => ({ ...letter, type: 'letters' as const })),
   ];
 
   return combinedResults;
 }
-

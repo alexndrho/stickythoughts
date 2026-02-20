@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { notifications } from "@mantine/notifications";
-import { useMutation } from "@tanstack/react-query";
-import { Button, Skeleton, Text } from "@mantine/core";
+import { notifications } from '@mantine/notifications';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Skeleton, Text } from '@mantine/core';
 
-import { type authClient } from "@/lib/auth-client";
-import classes from "./settings.module.css";
+import { type authClient } from '@/lib/auth-client';
+import classes from './settings.module.css';
 
 export interface AccountItemProps {
   title: string;
@@ -30,9 +30,9 @@ export default function AccountItem({
       console.error(`Failed to connect to ${title}:`, error);
 
       notifications.show({
-        title: "Error",
+        title: 'Error',
         message: `Failed to connect to ${title}. Please try again.`,
-        color: "red",
+        color: 'red',
       });
     },
   });
@@ -48,11 +48,8 @@ export default function AccountItem({
       </Text>
 
       <Skeleton mt="xs" w="auto" display="inline-block" visible={loading}>
-        <Button
-          variant="default"
-          onClick={connected ? disconnect : () => connectMutation.mutate()}
-        >
-          {connected ? "Disconnect" : "Connect"}
+        <Button variant="default" onClick={connected ? disconnect : () => connectMutation.mutate()}>
+          {connected ? 'Disconnect' : 'Connect'}
         </Button>
       </Skeleton>
     </div>

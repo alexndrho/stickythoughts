@@ -1,6 +1,6 @@
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys, thoughtKeys } from "@/lib/query-keys";
-import type { PrivateHighlightedThought } from "@/types/thought";
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys, thoughtKeys } from '@/lib/query-keys';
+import type { PrivateHighlightedThought } from '@/types/thought';
 
 export const setThoughtHighlighting = ({
   thought,
@@ -21,11 +21,11 @@ export const setThoughtHighlighting = ({
 
   queryClient.invalidateQueries({
     queryKey: adminKeys.highlightedThought(),
-    refetchType: "none",
+    refetchType: 'none',
   });
 
   queryClient.invalidateQueries({
     queryKey: thoughtKeys.highlighted(),
-    refetchType: "none",
+    refetchType: 'none',
   });
 };

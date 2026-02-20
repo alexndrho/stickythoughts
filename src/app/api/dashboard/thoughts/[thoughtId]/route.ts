@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { revalidateAllThoughts } from "@/lib/cache/thought-revalidation";
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import { isRecordNotFoundError } from "@/server/db";
-import { softDeleteThought } from "@/server/dashboard";
+import { revalidateAllThoughts } from '@/lib/cache/thought-revalidation';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { isRecordNotFoundError } from '@/server/db';
+import { softDeleteThought } from '@/server/dashboard';
 
 export async function DELETE(
   request: Request,
@@ -14,7 +14,7 @@ export async function DELETE(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        thought: ["delete"],
+        thought: ['delete'],
       },
     });
 
@@ -27,19 +27,13 @@ export async function DELETE(
     await softDeleteThought({ thoughtId, deletedById: session.user.id });
     revalidateAllThoughts();
 
-    return NextResponse.json(
-      { message: "Thought deleted successfully" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'Thought deleted successfully' }, { status: 200 });
   } catch (error) {
     if (isRecordNotFoundError(error)) {
-      return jsonError(
-        [{ code: "not-found", message: "Thought not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Thought not found' }], 404);
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

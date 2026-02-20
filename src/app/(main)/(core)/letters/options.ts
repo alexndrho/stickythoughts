@@ -1,13 +1,13 @@
-import "client-only";
+import 'client-only';
 
-import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
-import { getLetterReplies, getLetter, getLetters } from "@/services/letter";
-import type { SearchSegmentType } from "@/types/search";
-import { getSearchResults } from "@/services/search";
-import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from "@/config/letter";
-import { letterKeys } from "@/lib/query-keys";
-import { searchKeys } from "@/lib/query-keys";
+import { getLetterReplies, getLetter, getLetters } from '@/services/letter';
+import type { SearchSegmentType } from '@/types/search';
+import { getSearchResults } from '@/services/search';
+import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from '@/config/letter';
+import { letterKeys } from '@/lib/query-keys';
+import { searchKeys } from '@/lib/query-keys';
 
 // letter
 export const letterBaseOptions = queryOptions({
@@ -53,13 +53,7 @@ export const searchBaseOptions = queryOptions({
   queryKey: searchKeys.all(),
 });
 
-export const searchOptions = ({
-  query,
-  type,
-}: {
-  query: string;
-  type?: SearchSegmentType;
-}) => {
+export const searchOptions = ({ query, type }: { query: string; type?: SearchSegmentType }) => {
   return queryOptions({
     queryKey: searchKeys.results({ query, type }),
     queryFn: () => getSearchResults(query, type),

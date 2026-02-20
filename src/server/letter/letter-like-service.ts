@@ -1,21 +1,18 @@
-import "server-only";
+import 'server-only';
 
-import { NotificationType } from "@/generated/prisma/client";
-import { prisma } from "@/lib/db";
-import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
-import { LetterNotFoundError } from "@/server/letter";
+import { NotificationType } from '@/generated/prisma/client';
+import { prisma } from '@/lib/db';
+import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
+import { LetterNotFoundError } from '@/server/letter';
 
-export async function likeLetter(args: {
-  letterId: string;
-  userId: string;
-}): Promise<void> {
+export async function likeLetter(args: { letterId: string; userId: string }): Promise<void> {
   const letterStatus = await prisma.letter.findUnique({
     where: { id: args.letterId },
     select: { deletedAt: true },
   });
 
   if (!letterStatus || letterStatus.deletedAt) {
-    throw new LetterNotFoundError("Letter post not found");
+    throw new LetterNotFoundError('Letter post not found');
   }
 
   const letterLike = await prisma.letterLike.create({
@@ -46,7 +43,7 @@ export async function likeLetter(args: {
             },
             select: { id: true },
             orderBy: {
-              updatedAt: "desc",
+              updatedAt: 'desc',
             },
           },
         },
@@ -89,10 +86,7 @@ export async function likeLetter(args: {
   }
 }
 
-export async function unlikeLetter(args: {
-  letterId: string;
-  userId: string;
-}): Promise<void> {
+export async function unlikeLetter(args: { letterId: string; userId: string }): Promise<void> {
   const deletedLetterLike = await prisma.letterLike.delete({
     where: {
       userId_letterId: {

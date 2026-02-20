@@ -1,26 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { THOUGHT_HIGHLIGHT_LOCK_HOURS } from "@/config/thought";
-import { revalidateThoughtHighlight } from "@/lib/cache/thought-revalidation";
-import { guardSession } from "@/lib/session-guard";
-import {
-  formatHighlightedThoughtLockRemaining,
-  isHighlightedThoughtLocked,
-} from "@/utils/thought";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
+import { THOUGHT_HIGHLIGHT_LOCK_HOURS } from '@/config/thought';
+import { revalidateThoughtHighlight } from '@/lib/cache/thought-revalidation';
+import { guardSession } from '@/lib/session-guard';
+import { formatHighlightedThoughtLockRemaining, isHighlightedThoughtLocked } from '@/utils/thought';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
 import {
   findCurrentHighlight,
   getThoughtHighlightStatus,
   updateHighlight,
-} from "@/server/dashboard";
-import { toDTO } from "@/lib/http/to-dto";
-import type { PrivateHighlightedThoughtDTO } from "@/types/thought";
+} from '@/server/dashboard';
+import { toDTO } from '@/lib/http/to-dto';
+import type { PrivateHighlightedThoughtDTO } from '@/types/thought';
 
 const highlightLockedResponse = (highlightedAt: Date) =>
   jsonError(
     [
       {
-        code: "thought/highlight-locked",
+        code: 'thought/highlight-locked',
         message: `Highlighted thoughts can only be changed after ${THOUGHT_HIGHLIGHT_LOCK_HOURS} hours. Try again in ${formatHighlightedThoughtLockRemaining(highlightedAt)}.`,
       },
     ],
@@ -35,7 +32,7 @@ export async function POST(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        thought: ["highlight"],
+        thought: ['highlight'],
       },
     });
 
@@ -44,7 +41,7 @@ export async function POST(
     }
 
     const { thoughtId } = await params;
-    const isAdmin = session.user.role === "admin";
+    const isAdmin = session.user.role === 'admin';
 
     if (!isAdmin) {
       const currentHighlight = await findCurrentHighlight();
@@ -65,7 +62,7 @@ export async function POST(
     revalidateThoughtHighlight();
 
     if (!updated.highlightedAt || !updated.highlightedBy) {
-      return unknownErrorResponse("Failed to highlight thought");
+      return unknownErrorResponse('Failed to highlight thought');
     }
 
     const highlightedThought = {
@@ -74,12 +71,10 @@ export async function POST(
       highlightedBy: updated.highlightedBy,
     };
 
-    return NextResponse.json(
-      toDTO(highlightedThought) satisfies PrivateHighlightedThoughtDTO,
-    );
+    return NextResponse.json(toDTO(highlightedThought) satisfies PrivateHighlightedThoughtDTO);
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }
 
@@ -91,7 +86,7 @@ export async function DELETE(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        thought: ["highlight"],
+        thought: ['highlight'],
       },
     });
 
@@ -100,15 +95,12 @@ export async function DELETE(
     }
 
     const { thoughtId } = await params;
-    const isAdmin = session.user.role === "admin";
+    const isAdmin = session.user.role === 'admin';
 
     if (!isAdmin) {
       const thought = await getThoughtHighlightStatus({ thoughtId });
 
-      if (
-        thought?.highlightedAt &&
-        isHighlightedThoughtLocked(thought.highlightedAt)
-      ) {
+      if (thought?.highlightedAt && isHighlightedThoughtLocked(thought.highlightedAt)) {
         return highlightLockedResponse(thought.highlightedAt);
       }
     }
@@ -121,10 +113,10 @@ export async function DELETE(
     revalidateThoughtHighlight();
 
     return NextResponse.json({
-      message: "Thought highlight removed successfully",
+      message: 'Thought highlight removed successfully',
     });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

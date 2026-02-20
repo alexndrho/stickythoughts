@@ -1,4 +1,4 @@
-import { Group, Loader } from "@mantine/core";
+import { Group, Loader } from '@mantine/core';
 
 export default function ThoughtsLoader() {
   return (

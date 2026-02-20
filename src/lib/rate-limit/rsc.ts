@@ -1,16 +1,16 @@
-import "server-only";
+import 'server-only';
 
-import { RateLimiterRes } from "rate-limiter-flexible";
-import { headers as nextHeaders } from "next/headers";
+import { RateLimiterRes } from 'rate-limiter-flexible';
+import { headers as nextHeaders } from 'next/headers';
 
-import { getClientIp } from "@/lib/http/get-client-ip";
-import { buildRateLimitKey } from "./keys";
-import { getTierLimiters } from "./limiters";
-import { RATE_LIMITS, type RateLimitTier } from "./config";
-import { consumeWithFallback } from "./core";
+import { getClientIp } from '@/lib/http/get-client-ip';
+import { buildRateLimitKey } from './keys';
+import { getTierLimiters } from './limiters';
+import { RATE_LIMITS, type RateLimitTier } from './config';
+import { consumeWithFallback } from './core';
 
 export class RateLimitExceededError extends Error {
-  name = "RateLimitExceededError";
+  name = 'RateLimitExceededError';
   readonly tier: RateLimitTier;
   readonly retryAfterSeconds: number;
   readonly limit: number;
@@ -24,7 +24,7 @@ export class RateLimitExceededError extends Error {
     remaining: number;
     resetEpochSeconds: number;
   }) {
-    super("Rate limit exceeded.");
+    super('Rate limit exceeded.');
     this.tier = args.tier;
     this.retryAfterSeconds = args.retryAfterSeconds;
     this.limit = args.limit;

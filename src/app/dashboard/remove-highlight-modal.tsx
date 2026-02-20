@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from '@mantine/core';
 
-import Thought from "@/components/thought";
-import type { PublicThought } from "@/types/thought";
+import Thought from '@/components/thought';
+import type { PublicThought } from '@/types/thought';
 
 export interface RemoveHighlightModalProps {
   thought: PublicThought | null;
@@ -30,8 +30,8 @@ export default function RemoveHighlightModal({
 
       <Thought
         mt="sm"
-        message={thought?.message ?? "No thought selected yet."}
-        author={thought?.author ?? "Unknown"}
+        message={thought?.message ?? 'No thought selected yet.'}
+        author={thought?.author ?? 'Unknown'}
         color={thought?.color}
         fluid
       />
@@ -47,12 +47,7 @@ export default function RemoveHighlightModal({
           Cancel
         </Button>
 
-        <Button
-          loading={isPending}
-          onClick={onConfirm}
-          color="red"
-          disabled={!thought}
-        >
+        <Button loading={isPending} onClick={onConfirm} color="red" disabled={!thought}>
           Remove highlight
         </Button>
       </Group>

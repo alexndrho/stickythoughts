@@ -1,14 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { updateUserBioInput } from "@/lib/validations/user";
-import z from "zod";
-import { guardSession } from "@/lib/session-guard";
-import {
-  jsonError,
-  unknownErrorResponse,
-  zodInvalidInput,
-} from "@/lib/http";
-import { clearUserBio, updateUserBio } from "@/server/user";
+import { updateUserBioInput } from '@/lib/validations/user';
+import z from 'zod';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { clearUserBio, updateUserBio } from '@/server/user';
 
 export async function PUT(request: Request) {
   try {
@@ -24,7 +20,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(
       {
-        message: "User bio updated successfully",
+        message: 'User bio updated successfully',
       },
       { status: 200 },
     );
@@ -33,23 +29,23 @@ export async function PUT(request: Request) {
       return zodInvalidInput(error);
     }
 
-    console.error("Error updating user bio:", error);
-    return unknownErrorResponse("Unknown error");
+    console.error('Error updating user bio:', error);
+    return unknownErrorResponse('Unknown error');
   }
 }
 
 // allows admins to delete a user's bio. note: users can clear their own bio by setting it to an empty string.
 export async function DELETE(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const userId = searchParams.get("userId");
+  const userId = searchParams.get('userId');
 
   try {
     if (!userId) {
       return jsonError(
         [
           {
-            code: "validation/invalid-request",
-            message: "User ID is required",
+            code: 'validation/invalid-request',
+            message: 'User ID is required',
           },
         ],
         400,
@@ -58,7 +54,7 @@ export async function DELETE(request: NextRequest) {
 
     const session = await guardSession({
       headers: request.headers,
-      permission: { user: ["update"] },
+      permission: { user: ['update'] },
     });
 
     if (session instanceof NextResponse) {
@@ -69,12 +65,12 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "User bio deleted successfully",
+        message: 'User bio deleted successfully',
       },
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error deleting user bio:", error);
-    return unknownErrorResponse("Unknown error");
+    console.error('Error deleting user bio:', error);
+    return unknownErrorResponse('Unknown error');
   }
 }

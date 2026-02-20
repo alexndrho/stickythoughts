@@ -1,47 +1,40 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from "@mantine/core";
-import { IconEye } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconEye } from '@tabler/icons-react';
 
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys, letterKeys } from "@/lib/query-keys";
-import { reopenSubmissionLetter } from "@/services/moderate/submissions";
-import { getFormattedDate } from "@/utils/date";
-import { formatUserDisplayName } from "@/utils/user";
-import PaginatedPanelLayout from "../paginated-panel-layout";
-import classes from "./submissions.module.css";
-import {
-  rejectedLettersCountOptions,
-  rejectedLettersPageOptions,
-} from "./options";
-import RejectedLetterPreviewModal from "./rejected-letter-preview-modal";
-import type { SubmissionLetter } from "@/types/submission";
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys, letterKeys } from '@/lib/query-keys';
+import { reopenSubmissionLetter } from '@/services/moderate/submissions';
+import { getFormattedDate } from '@/utils/date';
+import { formatUserDisplayName } from '@/utils/user';
+import PaginatedPanelLayout from '../paginated-panel-layout';
+import classes from './submissions.module.css';
+import { rejectedLettersCountOptions, rejectedLettersPageOptions } from './options';
+import RejectedLetterPreviewModal from './rejected-letter-preview-modal';
+import type { SubmissionLetter } from '@/types/submission';
 
 export interface RejectedLettersTabProps {
   isActive: boolean;
 }
 
-export default function RejectedLettersTab({
-  isActive,
-}: RejectedLettersTabProps) {
+export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps) {
   const [page, setPage] = useState(1);
-  const [previewLetter, setPreviewLetter] = useState<SubmissionLetter | null>(
-    null,
-  );
+  const [previewLetter, setPreviewLetter] = useState<SubmissionLetter | null>(null);
   const [updatingLetterId, setUpdatingLetterId] = useState<string | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
-  const isStaff = role === "admin" || role === "moderator";
+  const isStaff = role === 'admin' || role === 'moderator';
   const canSetStatus = isStaff
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          letter: ["review"],
+          letter: ['review'],
         },
       })
     : false;
@@ -56,10 +49,7 @@ export default function RejectedLettersTab({
     enabled: isActive,
   });
 
-  const total = Math.max(
-    1,
-    Math.ceil((totalCount || 0) / ADMIN_DELETED_PER_PAGE),
-  );
+  const total = Math.max(1, Math.ceil((totalCount || 0) / ADMIN_DELETED_PER_PAGE));
 
   const mutation = useMutation({
     mutationFn: reopenSubmissionLetter,
@@ -100,18 +90,12 @@ export default function RejectedLettersTab({
                   </Table.Td>
                   <Table.Td>
                     {!letter.author || letter.isAnonymous
-                      ? "Anonymous"
+                      ? 'Anonymous'
                       : formatUserDisplayName(letter.author)}
                   </Table.Td>
+                  <Table.Td>{letter.createdAt ? getFormattedDate(letter.createdAt) : '-'}</Table.Td>
                   <Table.Td>
-                    {letter.createdAt
-                      ? getFormattedDate(letter.createdAt)
-                      : "-"}
-                  </Table.Td>
-                  <Table.Td>
-                    {letter.statusSetBy
-                      ? formatUserDisplayName(letter.statusSetBy)
-                      : "-"}
+                    {letter.statusSetBy ? formatUserDisplayName(letter.statusSetBy) : '-'}
                   </Table.Td>
                   <Table.Td>
                     <Tooltip label="Preview letter">

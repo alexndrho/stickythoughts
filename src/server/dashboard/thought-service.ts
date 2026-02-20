@@ -1,14 +1,11 @@
-import "server-only";
+import 'server-only';
 
-import { subDays } from "date-fns";
+import { subDays } from 'date-fns';
 
-import {
-  ADMIN_DELETED_PER_PAGE,
-  ADMIN_THOUGHTS_PER_PAGE,
-} from "@/config/admin";
-import { prisma } from "@/lib/db";
-import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from "@/config/thought";
-import type { PrivateHighlightedThought } from "@/types/thought";
+import { ADMIN_DELETED_PER_PAGE, ADMIN_THOUGHTS_PER_PAGE } from '@/config/admin';
+import { prisma } from '@/lib/db';
+import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from '@/config/thought';
+import type { PrivateHighlightedThought } from '@/types/thought';
 
 export async function countDeletedThoughts() {
   return prisma.thought.count({
@@ -32,7 +29,7 @@ export async function listAdminThoughts(args: { page: number }) {
       highlightedAt: null,
       highlightedById: null,
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     select: {
       id: true,
       author: true,
@@ -55,7 +52,7 @@ export async function listDeletedThoughts(args: { page: number }) {
       },
     },
     orderBy: {
-      deletedAt: "desc",
+      deletedAt: 'desc',
     },
     take: ADMIN_DELETED_PER_PAGE,
     skip,
@@ -91,10 +88,7 @@ export async function purgeThought(args: { thoughtId: string }) {
   });
 }
 
-export async function softDeleteThought(args: {
-  thoughtId: string;
-  deletedById: string;
-}) {
+export async function softDeleteThought(args: { thoughtId: string; deletedById: string }) {
   await prisma.thought.update({
     where: {
       id: args.thoughtId,
@@ -120,7 +114,7 @@ export async function findCurrentHighlight() {
       highlightedAt: true,
     },
     orderBy: {
-      highlightedAt: "desc",
+      highlightedAt: 'desc',
     },
   });
 }
@@ -157,7 +151,7 @@ export async function getHighlightedThought(): Promise<PrivateHighlightedThought
       },
     },
     orderBy: {
-      highlightedAt: "desc",
+      highlightedAt: 'desc',
     },
   });
 

@@ -1,14 +1,14 @@
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
-import { Anchor, Group, Paper, Text, Title } from "@mantine/core";
+import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
+import { Anchor, Group, Paper, Text, Title } from '@mantine/core';
 
-import { stripHtmlTags } from "@/utils/text";
-import AuthorAvatar from "@/components/author-avatar";
-import LikeButton from "@/app/(main)/(core)/letters/like-button";
-import ReplyButton from "@/app/(main)/(core)/letters/reply-button";
-import ShareButton from "@/app/(main)/(core)/letters/share-button";
-import type { Letter } from "@/types/letter";
-import classes from "@/styles/components/letter-item.module.css";
+import { stripHtmlTags } from '@/utils/text';
+import AuthorAvatar from '@/components/author-avatar';
+import LikeButton from '@/app/(main)/(core)/letters/like-button';
+import ReplyButton from '@/app/(main)/(core)/letters/reply-button';
+import ShareButton from '@/app/(main)/(core)/letters/share-button';
+import type { Letter } from '@/types/letter';
+import classes from '@/styles/components/letter-item.module.css';
 
 export interface LetterItemProps {
   post: Letter;
@@ -24,22 +24,18 @@ export interface LetterItemProps {
   }) => void;
 }
 
-export default function LetterItem({
-  post,
-  likeLoading,
-  onLike,
-}: LetterItemProps) {
+export default function LetterItem({ post, likeLoading, onLike }: LetterItemProps) {
   return (
-    <Paper component="article" withBorder className={classes["letter-item"]}>
+    <Paper component="article" withBorder className={classes['letter-item']}>
       <Link
         href={`/letters/${post.id}`}
         aria-label={`View letter titled ${post.title}`}
-        className={classes["letter-item__main-link"]}
+        className={classes['letter-item__main-link']}
       />
 
-      <div className={classes["letter-item__content"]}>
+      <div className={classes['letter-item__content']}>
         <header>
-          <div className={classes["letter-item__header"]}>
+          <div className={classes['letter-item__header']}>
             {post.isAnonymous || !post.author ? (
               <AuthorAvatar size="xs" isAnonymous={!!post.isAnonymous} />
             ) : (
@@ -49,24 +45,24 @@ export default function LetterItem({
                 src={post.author.image}
                 aria-label={`View profile of ${post.author.username}`}
                 href={`/user/${post.author.username}`}
-                className={classes["letter-item__avatar"]}
+                className={classes['letter-item__avatar']}
               />
             )}
 
             <Text size="sm">
               {post.isAnonymous || !post.author ? (
-                "Anonymous"
+                'Anonymous'
               ) : (
                 <Anchor
                   component={Link}
                   inherit
                   href={`/user/${post.author.username}`}
-                  className={classes["letter-item__user-link"]}
+                  className={classes['letter-item__user-link']}
                 >
                   {post.author.name || post.author.username}
                 </Anchor>
-              )}{" "}
-              • Posted{" "}
+              )}{' '}
+              • Posted{' '}
               {formatDistanceToNow(post.postedAt ?? post.createdAt, {
                 addSuffix: true,
               })}
@@ -80,12 +76,12 @@ export default function LetterItem({
 
         <Text lineClamp={5}>{stripHtmlTags(post.body)}</Text>
 
-        <Group className={classes["letter-item__group-actions"]}>
+        <Group className={classes['letter-item__group-actions']}>
           <LikeButton
             liked={post.likes.liked}
             count={post.likes.count}
             size="compact-sm"
-            className={classes["letter-item__action"]}
+            className={classes['letter-item__action']}
             loading={likeLoading}
             onLike={(e) => {
               e.preventDefault();
@@ -93,7 +89,7 @@ export default function LetterItem({
               onLike?.({
                 id: post.id,
                 like: !post.likes.liked,
-                authorUsername: post.author?.username || "",
+                authorUsername: post.author?.username || '',
               });
             }}
           />
@@ -103,13 +99,13 @@ export default function LetterItem({
             href={`/letters/${post.id}`}
             count={post.replies.count}
             size="compact-sm"
-            className={classes["letter-item__action"]}
+            className={classes['letter-item__action']}
           />
 
           <ShareButton
             size="compact-sm"
             link={`${process.env.NEXT_PUBLIC_BASE_URL}/letters/${post.id}`}
-            className={classes["letter-item__action"]}
+            className={classes['letter-item__action']}
           />
         </Group>
       </div>

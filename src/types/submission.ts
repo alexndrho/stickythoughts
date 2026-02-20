@@ -1,8 +1,8 @@
-import type { Prisma } from "@/generated/prisma/client";
-import type { input } from "zod";
-import type { reviewLetterServerInput } from "@/lib/validations/letter";
-import type { SerializeDates } from "./serialization";
-import type { UserSummary, UserWithAvatarSummary } from "./user";
+import type { Prisma } from '@/generated/prisma/client';
+import type { input } from 'zod';
+import type { reviewLetterServerInput } from '@/lib/validations/letter';
+import type { SerializeDates } from './serialization';
+import type { UserSummary, UserWithAvatarSummary } from './user';
 
 type BaseSubmissionLetter = Prisma.LetterGetPayload<{
   select: {
@@ -36,16 +36,11 @@ type BaseSubmissionLetter = Prisma.LetterGetPayload<{
   };
 }>;
 
-export type SubmissionLetter = Omit<
-  BaseSubmissionLetter,
-  "author" | "statusSetBy"
-> & {
+export type SubmissionLetter = Omit<BaseSubmissionLetter, 'author' | 'statusSetBy'> & {
   author: UserWithAvatarSummary | null;
   statusSetBy?: UserSummary | null;
 };
 
 export type SubmissionLetterDTO = SerializeDates<SubmissionLetter>;
 
-export type SetSubmissionLetterStatusBody = input<
-  typeof reviewLetterServerInput
->;
+export type SetSubmissionLetterStatusBody = input<typeof reviewLetterServerInput>;

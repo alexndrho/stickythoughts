@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Tabs } from "@mantine/core";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { Tabs } from '@mantine/core';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 
-import { authClient } from "@/lib/auth-client";
-import { userUsernameLikedLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
-import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
-import LetterItem from "@/components/letters/letter-item";
-import { LettersSkeleton } from "@/components/letters/letters-skeleton";
-import LikesPrompt from "./likes-prompt";
-import { likeLetter, unlikeLetter } from "@/services/letter";
-import InfiniteScroll from "@/components/infinite-scroll";
-import classes from "./user.module.css";
+import { authClient } from '@/lib/auth-client';
+import { userUsernameLikedLettersInfiniteOptions } from '@/app/(main)/(core)/user/options';
+import { setLikeLetterQueryData } from '@/app/(main)/(core)/letters/set-query-data';
+import LetterItem from '@/components/letters/letter-item';
+import { LettersSkeleton } from '@/components/letters/letters-skeleton';
+import LikesPrompt from './likes-prompt';
+import { likeLetter, unlikeLetter } from '@/services/letter';
+import InfiniteScroll from '@/components/infinite-scroll';
+import classes from './user.module.css';
 
 export interface LikesTabProps {
   username: string;
@@ -30,8 +30,7 @@ export default function LikesTab({
 }: LikesTabProps) {
   const { data: sessionData, isPending: isSessionPending } = session;
 
-  const canFetchLikedLetters =
-    !isPrivate || sessionData?.user.username === username;
+  const canFetchLikedLetters = !isPrivate || sessionData?.user.username === username;
 
   const {
     data: likedLetters,
@@ -73,13 +72,10 @@ export default function LikesTab({
   };
 
   return (
-    <Tabs.Panel value="likes" className={classes["tab-content"]}>
+    <Tabs.Panel value="likes" className={classes['tab-content']}>
       {(!canFetchLikedLetters && !isSessionPending) ||
       (!isLikedLettersFetching && likedLetters?.pages?.[0]?.length === 0) ? (
-        <LikesPrompt
-          isOwnProfile={sessionData?.user.username === username}
-          isPrivate={isPrivate}
-        />
+        <LikesPrompt isOwnProfile={sessionData?.user.username === username} isPrivate={isPrivate} />
       ) : (
         <InfiniteScroll
           onLoadMore={() => {
@@ -88,7 +84,7 @@ export default function LikesTab({
           hasNext={hasNextLikedLettersPage}
           loading={isLikedLettersFetching}
         >
-          <section className={classes["tab-content-container"]}>
+          <section className={classes['tab-content-container']}>
             {likedLetters?.pages.map((page) =>
               page.map((letter) => (
                 <LetterItem key={letter.id} post={letter} onLike={handleLike} />

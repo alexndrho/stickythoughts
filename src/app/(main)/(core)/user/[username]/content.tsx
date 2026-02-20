@@ -1,19 +1,10 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  ActionIcon,
-  Avatar,
-  Badge,
-  CopyButton,
-  Menu,
-  Tabs,
-  Text,
-  Title,
-} from "@mantine/core";
+import { useMemo } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
+import { ActionIcon, Avatar, Badge, CopyButton, Menu, Tabs, Text, Title } from '@mantine/core';
 import {
   IconClipboard,
   IconClock,
@@ -28,36 +19,34 @@ import {
   IconMail,
   IconMessageCircle,
   IconPhoto,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { userUsernameOptions } from "../options";
-import LettersTab from "./letters-tab";
-import LikesTab from "./likes-tab";
-import RepliesTab from "./replies-tab";
-import SignInWarningModal from "@/components/sign-in-warning-modal";
-import EditUserModal from "@/components/dashboard/users/edit-user-modal";
-import DeleteUserProfilePictureModal from "@/components/dashboard/users/delete-user-profile-picture-modal";
-import DeleteUserBioModal from "@/app/dashboard/users/delete-user-bio-modal";
-import RevokeUserSessionsModal from "@/components/dashboard/users/revoke-user-sessions-modal";
-import BanUserModal from "@/components/dashboard/users/ban-user-modal";
-import UnbanUserModal from "@/components/dashboard/users/unban-user-modal";
-import { notifications } from "@mantine/notifications";
-import classes from "./user.module.css";
+import { authClient } from '@/lib/auth-client';
+import { userUsernameOptions } from '../options';
+import LettersTab from './letters-tab';
+import LikesTab from './likes-tab';
+import RepliesTab from './replies-tab';
+import SignInWarningModal from '@/components/sign-in-warning-modal';
+import EditUserModal from '@/components/dashboard/users/edit-user-modal';
+import DeleteUserProfilePictureModal from '@/components/dashboard/users/delete-user-profile-picture-modal';
+import DeleteUserBioModal from '@/app/dashboard/users/delete-user-bio-modal';
+import RevokeUserSessionsModal from '@/components/dashboard/users/revoke-user-sessions-modal';
+import BanUserModal from '@/components/dashboard/users/ban-user-modal';
+import UnbanUserModal from '@/components/dashboard/users/unban-user-modal';
+import { notifications } from '@mantine/notifications';
+import classes from './user.module.css';
 
 export interface ContentProps {
   username: string;
 }
 
-type AdminCheckParams = Parameters<
-  typeof authClient.admin.checkRolePermission
->[0];
+type AdminCheckParams = Parameters<typeof authClient.admin.checkRolePermission>[0];
 type AdminPermissions = NonNullable<
-  Extract<AdminCheckParams, { permissions: unknown }>["permissions"]
+  Extract<AdminCheckParams, { permissions: unknown }>['permissions']
 >;
 
 const hasAdminPermission = (
-  role: AdminCheckParams["role"] | undefined,
+  role: AdminCheckParams['role'] | undefined,
   permissions: AdminPermissions,
 ) => {
   if (!role) return false;
@@ -70,54 +59,42 @@ export default function Content({ username }: ContentProps) {
   const searchParams = useSearchParams();
   const session = authClient.useSession();
 
-  const [signInWarningModalOpened, signInWarningModalHandler] =
-    useDisclosure(false);
+  const [signInWarningModalOpened, signInWarningModalHandler] = useDisclosure(false);
   const [editUserModalOpened, editUserModalHandler] = useDisclosure(false);
-  const [
-    deleteUserProfilePictureModalOpened,
-    deleteUserProfilePictureModalHandler,
-  ] = useDisclosure(false);
-  const [deleteUserBioModalOpened, deleteUserBioModalHandler] =
+  const [deleteUserProfilePictureModalOpened, deleteUserProfilePictureModalHandler] =
     useDisclosure(false);
-  const [revokeUserSessionsModalOpened, revokeUserSessionsModalHandler] =
-    useDisclosure(false);
+  const [deleteUserBioModalOpened, deleteUserBioModalHandler] = useDisclosure(false);
+  const [revokeUserSessionsModalOpened, revokeUserSessionsModalHandler] = useDisclosure(false);
   const [banUserModalOpened, banUserModalHandler] = useDisclosure(false);
   const [unbanUserModalOpened, unbanUserModalHandler] = useDisclosure(false);
 
   const { data: user } = useSuspenseQuery(userUsernameOptions(username));
 
   const currentTab = useMemo(() => {
-    const tab = searchParams.get("tab");
-    if (tab === "letters" || tab === "replies" || tab === "likes") return tab;
-    return "letters";
+    const tab = searchParams.get('tab');
+    if (tab === 'letters' || tab === 'replies' || tab === 'likes') return tab;
+    return 'letters';
   }, [searchParams]);
 
   const setTab = (value: string | null) => {
-    const next = value ?? "letters";
+    const next = value ?? 'letters';
     const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", next);
+    params.set('tab', next);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
   const role = session?.data?.user.role;
   const isOwner = session?.data?.user.username === user.username;
-  const isStaff = role === "admin" || role === "moderator";
+  const isStaff = role === 'admin' || role === 'moderator';
 
-  const canUpdateUser = isStaff
-    ? hasAdminPermission(role, { user: ["update"] })
-    : false;
-  const canBanUser = isStaff
-    ? hasAdminPermission(role, { user: ["ban"] })
-    : false;
-  const canRevokeSessions = isStaff
-    ? hasAdminPermission(role, { session: ["revoke"] })
-    : false;
+  const canUpdateUser = isStaff ? hasAdminPermission(role, { user: ['update'] }) : false;
+  const canBanUser = isStaff ? hasAdminPermission(role, { user: ['ban'] }) : false;
+  const canRevokeSessions = isStaff ? hasAdminPermission(role, { session: ['revoke'] }) : false;
 
   const canEditOtherUser = !isOwner && canUpdateUser;
   const canRevokeOtherUserSessions = !isOwner && canRevokeSessions;
   const canBanOtherUser = !isOwner && canBanUser;
-  const canManageUser =
-    canEditOtherUser || canBanOtherUser || canRevokeOtherUserSessions;
+  const canManageUser = canEditOtherUser || canBanOtherUser || canRevokeOtherUserSessions;
 
   return (
     <div className={classes.container}>
@@ -174,7 +151,7 @@ export default function Content({ username }: ContentProps) {
                     if (canEditOtherUser) {
                       editUserModalHandler.open();
                     } else {
-                      router.push("/settings");
+                      router.push('/settings');
                     }
                   }}
                 >
@@ -192,9 +169,8 @@ export default function Content({ username }: ContentProps) {
                           copy();
 
                           notifications.show({
-                            title: "User ID Copied",
-                            message:
-                              "The user ID has been copied to your clipboard.",
+                            title: 'User ID Copied',
+                            message: 'The user ID has been copied to your clipboard.',
                             icon: <IconClipboard size="1em" />,
                           });
                         }}
@@ -259,32 +235,20 @@ export default function Content({ username }: ContentProps) {
         )}
       </header>
 
-      <Tabs
-        variant="outline"
-        value={currentTab}
-        onChange={setTab}
-        className={classes["tab-root"]}
-      >
+      <Tabs variant="outline" value={currentTab} onChange={setTab} className={classes['tab-root']}>
         <Tabs.List>
           <Tabs.Tab value="letters" leftSection={<IconMail size="1em" />}>
             Letters
           </Tabs.Tab>
 
-          <Tabs.Tab
-            value="replies"
-            leftSection={<IconMessageCircle size="1em" />}
-          >
+          <Tabs.Tab value="replies" leftSection={<IconMessageCircle size="1em" />}>
             Replies
           </Tabs.Tab>
 
           <Tabs.Tab
             value="likes"
             leftSection={
-              user.isLikesPrivate ? (
-                <IconHeartOff size="1em" />
-              ) : (
-                <IconHeart size="1em" />
-              )
+              user.isLikesPrivate ? <IconHeartOff size="1em" /> : <IconHeart size="1em" />
             }
           >
             Likes
@@ -294,14 +258,14 @@ export default function Content({ username }: ContentProps) {
         <LettersTab
           username={user.username}
           session={session.data}
-          isActive={currentTab === "letters"}
+          isActive={currentTab === 'letters'}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
 
         <RepliesTab
           username={user.username}
           session={session.data}
-          isActive={currentTab === "replies"}
+          isActive={currentTab === 'replies'}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
 
@@ -309,7 +273,7 @@ export default function Content({ username }: ContentProps) {
           username={user.username}
           session={session}
           isPrivate={user.isLikesPrivate}
-          isActive={currentTab === "likes"}
+          isActive={currentTab === 'likes'}
           openSignInWarningModal={signInWarningModalHandler.open}
         />
       </Tabs>
@@ -329,9 +293,7 @@ export default function Content({ username }: ContentProps) {
               name: user.name,
               username: user.username,
             }}
-            onUsernameChange={(newUsername) =>
-              router.replace(`/user/${newUsername.toLowerCase()}`)
-            }
+            onUsernameChange={(newUsername) => router.replace(`/user/${newUsername.toLowerCase()}`)}
             opened={editUserModalOpened}
             onClose={editUserModalHandler.close}
           />

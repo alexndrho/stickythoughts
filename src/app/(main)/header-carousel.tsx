@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { Carousel } from "@mantine/carousel";
-import { Card, Text } from "@mantine/core";
+import { useQuery } from '@tanstack/react-query';
+import { Carousel } from '@mantine/carousel';
+import { Card, Text } from '@mantine/core';
 
-import Thought from "@/components/thought";
-import { highlightedThoughtOptions } from "./options";
-import type { PublicThought } from "@/types/thought";
-import classes from "./home.module.css";
+import Thought from '@/components/thought';
+import { highlightedThoughtOptions } from './options';
+import type { PublicThought } from '@/types/thought';
+import classes from './home.module.css';
 
 export type HeaderCarouselProps = {
   initialHighlightedThought?: PublicThought | null;
@@ -18,12 +18,11 @@ export default function HeaderCarousel({
   initialHighlightedThought,
   loading = false,
 }: HeaderCarouselProps) {
-  const { data: highlightedThought, isPending: isHighlightedThoughPending } =
-    useQuery({
-      ...highlightedThoughtOptions,
-      initialData: initialHighlightedThought,
-      enabled: !loading,
-    });
+  const { data: highlightedThought, isPending: isHighlightedThoughPending } = useQuery({
+    ...highlightedThoughtOptions,
+    initialData: initialHighlightedThought,
+    enabled: !loading,
+  });
 
   const isLoading = loading || isHighlightedThoughPending;
 
@@ -38,12 +37,10 @@ export default function HeaderCarousel({
         control: classes.header__carousel__control,
       }}
     >
-      <Carousel.Slide className={classes["header__carousel__slide"]}>
-        <div className={classes["header__notes"]}>
-          <Text className={classes["header__highlight-title"]}>
-            A thought worth keeping
-          </Text>
-          <div className={classes["header__highlight"]}>
+      <Carousel.Slide className={classes['header__carousel__slide']}>
+        <div className={classes['header__notes']}>
+          <Text className={classes['header__highlight-title']}>A thought worth keeping</Text>
+          <div className={classes['header__highlight']}>
             {highlightedThought ? (
               <Thought
                 message={highlightedThought.message}
@@ -66,23 +63,18 @@ export default function HeaderCarousel({
       <Carousel.Slide className={classes.header__slide}>
         <div className={classes.header__notes}>
           <Card withBorder className={classes.header__note}>
-            <Text className={classes["header__note-title"]}>
-              Highlights live here
-            </Text>
-            <Text size="sm" className={classes["header__note-description"]}>
-              When a thought feels worth keeping, it finds its way here. It is a
-              small spotlight for what resonates.
+            <Text className={classes['header__note-title']}>Highlights live here</Text>
+            <Text size="sm" className={classes['header__note-description']}>
+              When a thought feels worth keeping, it finds its way here. It is a small spotlight for
+              what resonates.
             </Text>
           </Card>
 
           <Card withBorder className={classes.header__note}>
-            <Text className={classes["header__note-title"]}>
-              Stick a thought
-            </Text>
-            <Text size="sm" className={classes["header__note-description"]}>
-              Share a feeling, a moment, or a quiet confession. Short or long,
-              it&apos;s welcome. It is your space to leave something honest,
-              useful, or simply curious.
+            <Text className={classes['header__note-title']}>Stick a thought</Text>
+            <Text size="sm" className={classes['header__note-description']}>
+              Share a feeling, a moment, or a quiet confession. Short or long, it&apos;s welcome. It
+              is your space to leave something honest, useful, or simply curious.
             </Text>
           </Card>
         </div>

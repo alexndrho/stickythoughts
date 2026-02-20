@@ -1,8 +1,6 @@
-import type { BaseUserNotification, UserNotification } from "@/types/user";
+import type { BaseUserNotification, UserNotification } from '@/types/user';
 
-export function formatUserNotifications(
-  notifications: BaseUserNotification[],
-): UserNotification[] {
+export function formatUserNotifications(notifications: BaseUserNotification[]): UserNotification[] {
   return notifications.map((notification) => {
     const firstActor = notification.actors?.[0]?.user;
     let mainActor: {
@@ -16,19 +14,19 @@ export function formatUserNotifications(
       username: firstActor?.username || null,
       isAnonymous: false,
     };
-    let body = "You have a new notification";
+    let body = 'You have a new notification';
 
     switch (notification.type) {
-      case "LETTER_LIKE": {
-        body = notification.letter?.title || "";
+      case 'LETTER_LIKE': {
+        body = notification.letter?.title || '';
         break;
       }
-      case "LETTER_REPLY_LIKE": {
-        body = notification.reply?.body || "";
+      case 'LETTER_REPLY_LIKE': {
+        body = notification.reply?.body || '';
         break;
       }
-      case "LETTER_REPLY": {
-        body = notification.reply?.body || "";
+      case 'LETTER_REPLY': {
+        body = notification.reply?.body || '';
         if (notification.reply?.isAnonymous) {
           mainActor = {
             image: null,
@@ -55,16 +53,13 @@ export function formatUserNotifications(
   });
 }
 
-export const formatUserDisplayName = (user: {
-  name?: string | null;
-  username: string;
-}) => {
-  const name = user.name?.trim() || "";
-  const username = user.username?.trim() || "";
+export const formatUserDisplayName = (user: { name?: string | null; username: string }) => {
+  const name = user.name?.trim() || '';
+  const username = user.username?.trim() || '';
 
   if (name && username) return `${name} (@${username})`;
   if (username) return `@${username}`;
   if (name) return name;
 
-  return "";
+  return '';
 };

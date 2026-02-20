@@ -1,18 +1,18 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from 'next/server';
 
-import { auth } from "@/lib/auth";
-import { formatUserLetterReplies } from "@/utils/letter";
-import { unknownErrorResponse } from "@/lib/http";
-import { listUserReplies } from "@/server/user";
-import { toDTO } from "@/lib/http/to-dto";
-import type { UserLetterReplyDTO } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { formatUserLetterReplies } from '@/utils/letter';
+import { unknownErrorResponse } from '@/lib/http';
+import { listUserReplies } from '@/server/user';
+import { toDTO } from '@/lib/http/to-dto';
+import type { UserLetterReplyDTO } from '@/types/letter';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> },
 ) {
   const searchParams = request.nextUrl.searchParams;
-  const lastId = searchParams.get("lastId");
+  const lastId = searchParams.get('lastId');
 
   try {
     const { username } = await params;
@@ -30,11 +30,9 @@ export async function GET(
 
     const formattedReplies = formatUserLetterReplies(replies);
 
-    return NextResponse.json(
-      toDTO(formattedReplies) satisfies UserLetterReplyDTO[],
-    );
+    return NextResponse.json(toDTO(formattedReplies) satisfies UserLetterReplyDTO[]);
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

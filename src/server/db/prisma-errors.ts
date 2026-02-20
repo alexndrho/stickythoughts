@@ -1,6 +1,6 @@
-import "server-only";
+import 'server-only';
 
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from '@/generated/prisma/client';
 
 export function isPrismaKnownRequestError(
   err: unknown,
@@ -15,18 +15,10 @@ export function isPrismaKnownRequestErrorCode<TCode extends string>(
   return isPrismaKnownRequestError(err) && err.code === code;
 }
 
-export function isUniqueConstraintError(
-  err: unknown,
-): err is Prisma.PrismaClientKnownRequestError {
-  return (
-    isPrismaKnownRequestError(err) && err.code === "P2002"
-  );
+export function isUniqueConstraintError(err: unknown): err is Prisma.PrismaClientKnownRequestError {
+  return isPrismaKnownRequestError(err) && err.code === 'P2002';
 }
 
-export function isRecordNotFoundError(
-  err: unknown,
-): err is Prisma.PrismaClientKnownRequestError {
-  return (
-    isPrismaKnownRequestError(err) && err.code === "P2025"
-  );
+export function isRecordNotFoundError(err: unknown): err is Prisma.PrismaClientKnownRequestError {
+  return isPrismaKnownRequestError(err) && err.code === 'P2025';
 }

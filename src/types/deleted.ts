@@ -1,6 +1,6 @@
-import type { Prisma } from "@/generated/prisma/client";
-import type { SerializeDates } from "./serialization";
-import type { UserSummary, UserWithAvatarSummary } from "./user";
+import type { Prisma } from '@/generated/prisma/client';
+import type { SerializeDates } from './serialization';
+import type { UserSummary, UserWithAvatarSummary } from './user';
 
 export type DeletedThought = Prisma.ThoughtGetPayload<{
   select: {

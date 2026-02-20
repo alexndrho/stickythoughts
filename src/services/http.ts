@@ -1,21 +1,21 @@
-import "client-only";
+import 'client-only';
 
-import { parseDtoDates } from "@/services/helpers/normalizeHttpDates";
-import type { DeserializeDates } from "@/types/serialization";
-import { toServerError } from "@/utils/error/ServerError";
-import type IError from "@/types/error";
+import { parseDtoDates } from '@/services/helpers/normalizeHttpDates';
+import type { DeserializeDates } from '@/types/serialization';
+import { toServerError } from '@/utils/error/ServerError';
+import type IError from '@/types/error';
 
-function coerceIssues(data: unknown): IError["issues"] {
+function coerceIssues(data: unknown): IError['issues'] {
   if (
-    typeof data === "object" &&
+    typeof data === 'object' &&
     data !== null &&
-    "issues" in data &&
+    'issues' in data &&
     Array.isArray((data as { issues?: unknown }).issues)
   ) {
-    return (data as { issues: IError["issues"] }).issues;
+    return (data as { issues: IError['issues'] }).issues;
   }
 
-  return [{ code: "unknown-error", message: "Something went wrong" }];
+  return [{ code: 'unknown-error', message: 'Something went wrong' }];
 }
 
 export async function fetchJson<TDTO>(

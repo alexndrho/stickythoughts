@@ -1,6 +1,6 @@
-import { CACHE_TAGS } from "@/config/cache-tags";
+import { CACHE_TAGS } from '@/config/cache-tags';
 
-import { revalidateTags } from "./revalidate";
+import { revalidateTags } from './revalidate';
 
 export function revalidateAllThoughts() {
   revalidateTags([

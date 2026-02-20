@@ -1,6 +1,6 @@
-import "client-only";
+import 'client-only';
 
-import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import {
   getUser,
@@ -9,10 +9,10 @@ import {
   getUserNewNotificationCount,
   getUserNotifications,
   getUserLetters,
-} from "@/services/user";
-import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from "@/config/letter";
-import { NOTIFICATION_PER_PAGE } from "@/config/user";
-import { userKeys } from "@/lib/query-keys";
+} from '@/services/user';
+import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from '@/config/letter';
+import { NOTIFICATION_PER_PAGE } from '@/config/user';
+import { userKeys } from '@/lib/query-keys';
 
 export const userOptions = queryOptions({
   queryKey: userKeys.all(),

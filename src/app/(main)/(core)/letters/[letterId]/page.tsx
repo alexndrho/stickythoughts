@@ -1,14 +1,14 @@
-import { type Metadata } from "next";
-import { notFound } from "next/navigation";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { type Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import Content from "./content";
-import { getQueryClient } from "@/lib/get-query-client";
-import { letterKeys } from "@/lib/query-keys";
+import Content from './content';
+import { getQueryClient } from '@/lib/get-query-client';
+import { letterKeys } from '@/lib/query-keys';
 import {
   getLetterServer,
   LetterNotFoundError,
-} from "@/app/(main)/(core)/letters/[letterId]/letter.server";
+} from '@/app/(main)/(core)/letters/[letterId]/letter.server';
 
 export async function generateMetadata({
   params,
@@ -33,11 +33,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: Promise<{ letterId: string }>;
-}) {
+export default async function PostPage({ params }: { params: Promise<{ letterId: string }> }) {
   const { letterId } = await params;
   const queryClient = getQueryClient();
 

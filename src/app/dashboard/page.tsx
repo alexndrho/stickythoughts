@@ -1,11 +1,11 @@
-import { type Metadata } from "next";
+import { type Metadata } from 'next';
 
-import Content from "./content";
+import Content from './content';
 
 export const metadata: Metadata = {
-  title: "Thoughts",
+  title: 'Thoughts',
   alternates: {
-    canonical: "/dashboard",
+    canonical: '/dashboard',
   },
 };
 

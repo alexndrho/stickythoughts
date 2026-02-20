@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
-import { prisma } from "@/lib/db";
-import { NOTIFICATION_PER_PAGE } from "@/config/user";
-import { UserNotFoundError } from "@/server/user/user-errors";
+import { prisma } from '@/lib/db';
+import { NOTIFICATION_PER_PAGE } from '@/config/user';
+import { UserNotFoundError } from '@/server/user/user-errors';
 
 export async function listUserNotifications(args: {
   userId: string;
@@ -58,7 +58,7 @@ export async function listUserNotifications(args: {
       },
     },
     orderBy: {
-      updatedAt: "desc",
+      updatedAt: 'desc',
     },
   });
 }
@@ -80,16 +80,13 @@ export async function countNewUserNotifications(args: { userId: string }) {
   });
 
   if (!user) {
-    throw new UserNotFoundError("User not found");
+    throw new UserNotFoundError('User not found');
   }
 
   return user._count.notifications;
 }
 
-export async function setNotificationsOpened(args: {
-  userId: string;
-  opened: boolean;
-}) {
+export async function setNotificationsOpened(args: { userId: string; opened: boolean }) {
   await prisma.user.update({
     where: { id: args.userId },
     data: {
@@ -114,12 +111,8 @@ export async function markNotificationRead(args: {
   });
 }
 
-export async function deleteNotification(args: {
-  notificationId: string;
-  userId: string;
-}) {
+export async function deleteNotification(args: { notificationId: string; userId: string }) {
   await prisma.notification.delete({
     where: { id: args.notificationId, userId: args.userId },
   });
 }
-

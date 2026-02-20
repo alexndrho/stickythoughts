@@ -1,9 +1,9 @@
-import "server-only";
+import 'server-only';
 
 export class LetterNotFoundError extends Error {
-  name = "LetterNotFoundError";
+  name = 'LetterNotFoundError';
 }
 
 export class ReplyNotFoundError extends Error {
-  name = "ReplyNotFoundError";
+  name = 'ReplyNotFoundError';
 }

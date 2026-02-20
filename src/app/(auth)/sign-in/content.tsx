@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { type SuccessContext } from "better-auth/react";
-import { useMutation } from "@tanstack/react-query";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { type SuccessContext } from 'better-auth/react';
+import { useMutation } from '@tanstack/react-query';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { hasLength, isEmail, isNotEmpty, useForm } from '@mantine/form';
 import {
   Anchor,
   Button,
@@ -17,19 +17,14 @@ import {
   Text,
   TextInput,
   Title,
-} from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import {
-  IconAt,
-  IconBrandGoogleFilled,
-  IconLock,
-  IconX,
-} from "@tabler/icons-react";
+} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconAt, IconBrandGoogleFilled, IconLock, IconX } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { AuthContainer } from "../auth-container";
-import classes from "../auth.module.css";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { AuthContainer } from '../auth-container';
+import classes from '../auth.module.css';
 
 export default function Content() {
   const router = useRouter();
@@ -38,7 +33,7 @@ export default function Content() {
   const signedInRedirect = () => {
     const queryClient = getQueryClient();
     queryClient.clear();
-    router.push("/");
+    router.push('/');
   };
 
   return (
@@ -46,7 +41,7 @@ export default function Content() {
       <Title className={classes.title}>Welcome back!</Title>
 
       <Text size="sm" className={classes.subtitle}>
-        Do not have an account yet?{" "}
+        Do not have an account yet?{' '}
         <Anchor component={Link} href="/sign-up" inherit>
           Create account
         </Anchor>
@@ -54,10 +49,7 @@ export default function Content() {
 
       <AuthContainer>
         {!is2FAEnabled ? (
-          <SignInForm
-            enable2FA={() => setIs2FAEnabled(true)}
-            signedInRedirect={signedInRedirect}
-          />
+          <SignInForm enable2FA={() => setIs2FAEnabled(true)} signedInRedirect={signedInRedirect} />
         ) : (
           <TwoFactorSetupForm signedInRedirect={signedInRedirect} />
         )}
@@ -77,14 +69,14 @@ function SignInForm({
 
   const form = useForm({
     initialValues: {
-      emailOrUsername: "",
-      password: "",
-      turnstileToken: "",
+      emailOrUsername: '',
+      password: '',
+      turnstileToken: '',
       rememberMe: false,
     },
     validate: {
-      emailOrUsername: isNotEmpty("Email or username is required"),
-      password: isNotEmpty("Password is required"),
+      emailOrUsername: isNotEmpty('Email or username is required'),
+      password: isNotEmpty('Password is required'),
     },
   });
 
@@ -106,7 +98,7 @@ function SignInForm({
           rememberMe: values.rememberMe,
           fetchOptions: {
             headers: {
-              "x-captcha-response": values.turnstileToken,
+              'x-captcha-response': values.turnstileToken,
             },
             onSuccess: onSuccessSignIn,
           },
@@ -118,7 +110,7 @@ function SignInForm({
           rememberMe: values.rememberMe,
           fetchOptions: {
             headers: {
-              "x-captcha-response": values.turnstileToken,
+              'x-captcha-response': values.turnstileToken,
             },
             onSuccess: onSuccessSignIn,
           },
@@ -128,57 +120,57 @@ function SignInForm({
     onSuccess: ({ error }) => {
       if (error) {
         if (
-          error.code === "INVALID_EMAIL_OR_PASSWORD" ||
-          error.code === "INVALID_USERNAME_OR_PASSWORD"
+          error.code === 'INVALID_EMAIL_OR_PASSWORD' ||
+          error.code === 'INVALID_USERNAME_OR_PASSWORD'
         ) {
           form.setErrors({
             emailOrUsername: error.message,
             password: error.message,
           });
         } else if (
-          error.code === "INVALID_USERNAME" ||
-          error.code === "THIS_USERNAME_IS_NOT_ALLOWED"
+          error.code === 'INVALID_USERNAME' ||
+          error.code === 'THIS_USERNAME_IS_NOT_ALLOWED'
         ) {
           form.setErrors({
             emailOrUsername: error.message,
           });
         } else {
           console.log(error);
-          form.setFieldError("root", error.message);
+          form.setFieldError('root', error.message);
         }
 
-        form.setFieldValue("turnstileToken", "");
+        form.setFieldValue('turnstileToken', '');
         turnstileRef.current?.reset();
         return;
       }
     },
     onError: (error) => {
       console.error(error);
-      form.setFieldError("root", "An error occurred. Please try again.");
+      form.setFieldError('root', 'An error occurred. Please try again.');
     },
   });
 
   const signInWithGoogle = async () => {
     try {
       const data = await authClient.signIn.social({
-        provider: "google",
+        provider: 'google',
       });
 
       if (data.error) {
         notifications.show({
           icon: <IconX size="1em" />,
-          title: "Error",
+          title: 'Error',
           message: data.error.message,
-          color: "red",
+          color: 'red',
         });
       }
     } catch (error) {
       console.error(error);
       notifications.show({
         icon: <IconX size="1em" />,
-        title: "Error",
-        message: "An error occurred. Please try again.",
-        color: "red",
+        title: 'Error',
+        message: 'An error occurred. Please try again.',
+        color: 'red',
       });
     }
   };
@@ -190,31 +182,29 @@ function SignInForm({
           label="Email or Username"
           withAsterisk
           leftSection={<IconAt size="1em" />}
-          {...form.getInputProps("emailOrUsername")}
-          className={classes["text-input"]}
+          {...form.getInputProps('emailOrUsername')}
+          className={classes['text-input']}
         />
 
         <PasswordInput
           label="Password"
           withAsterisk
           leftSection={<IconLock size="1em" />}
-          {...form.getInputProps("password")}
-          className={classes["text-input"]}
+          {...form.getInputProps('password')}
+          className={classes['text-input']}
         />
 
         <Turnstile
           ref={turnstileRef}
           siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_AUTH_KEY!}
           className={classes.captcha}
-          onSuccess={(token) => form.setFieldValue("turnstileToken", token)}
+          onSuccess={(token) => form.setFieldValue('turnstileToken', token)}
           onExpire={() => turnstileRef.current?.reset()}
-          onError={() =>
-            form.setFieldError("turnstileToken", "Captcha verification failed")
-          }
+          onError={() => form.setFieldError('turnstileToken', 'Captcha verification failed')}
         />
 
         {(form.errors.root || form.errors.turnstileToken) && (
-          <Text size="xs" className={classes["root-error-messsage"]}>
+          <Text size="xs" className={classes['root-error-messsage']}>
             {form.errors.root || form.errors.turnstileToken}
           </Text>
         )}
@@ -222,7 +212,7 @@ function SignInForm({
         <Group mt="md" justify="space-between">
           <Checkbox
             label="Remember me"
-            {...form.getInputProps("rememberMe", { type: "checkbox" })}
+            {...form.getInputProps('rememberMe', { type: 'checkbox' })}
           />
 
           <Anchor component={Link} href="/forgot-password" size="sm">
@@ -235,7 +225,7 @@ function SignInForm({
           mt="md"
           type="submit"
           loading={mutation.isPending}
-          disabled={form.values.turnstileToken === ""}
+          disabled={form.values.turnstileToken === ''}
         >
           Sign in
         </Button>
@@ -255,18 +245,14 @@ function SignInForm({
   );
 }
 
-function TwoFactorSetupForm({
-  signedInRedirect,
-}: {
-  signedInRedirect: () => void;
-}) {
+function TwoFactorSetupForm({ signedInRedirect }: { signedInRedirect: () => void }) {
   const twoFactorForm = useForm({
     initialValues: {
-      authenticatorCode: "",
+      authenticatorCode: '',
       trustDevice: false,
     },
     validate: {
-      authenticatorCode: hasLength(6, "Code must be 6 digits"),
+      authenticatorCode: hasLength(6, 'Code must be 6 digits'),
     },
   });
 
@@ -280,7 +266,7 @@ function TwoFactorSetupForm({
         twoFactorForm.setErrors({ authenticatorCode: error.message });
       } else if (error) {
         twoFactorForm.setErrors({
-          authenticatorCode: "Failed to verify the authenticator code.",
+          authenticatorCode: 'Failed to verify the authenticator code.',
         });
       } else {
         signedInRedirect();
@@ -290,11 +276,11 @@ function TwoFactorSetupForm({
 
   const backUpCodeForm = useForm({
     initialValues: {
-      code: "",
+      code: '',
       trustDevice: false,
     },
     validate: {
-      code: isNotEmpty("Backup code is required"),
+      code: isNotEmpty('Backup code is required'),
     },
   });
 
@@ -309,7 +295,7 @@ function TwoFactorSetupForm({
         backUpCodeForm.setErrors({ code: error.message });
       } else if (error) {
         backUpCodeForm.setErrors({
-          code: "Failed to verify the backup code.",
+          code: 'Failed to verify the backup code.',
         });
       } else {
         signedInRedirect();
@@ -319,22 +305,18 @@ function TwoFactorSetupForm({
 
   return (
     <>
-      <form
-        onSubmit={twoFactorForm.onSubmit((values) =>
-          twoFactormutation.mutate(values),
-        )}
-      >
+      <form onSubmit={twoFactorForm.onSubmit((values) => twoFactormutation.mutate(values))}>
         <TextInput
           label="Enter your authenticator code"
           description="Open your authenticator app and enter the 6-digit code."
           maxLength={6}
-          {...twoFactorForm.getInputProps("authenticatorCode")}
+          {...twoFactorForm.getInputProps('authenticatorCode')}
           withAsterisk
         />
         <Checkbox
           mt="md"
           label="Trust this device?"
-          {...twoFactorForm.getInputProps("trustDevice", { type: "checkbox" })}
+          {...twoFactorForm.getInputProps('trustDevice', { type: 'checkbox' })}
         />
         <Group justify="right" mt="md">
           <Button type="submit" loading={twoFactormutation.isPending}>
@@ -345,31 +327,23 @@ function TwoFactorSetupForm({
 
       <Divider label="Or use a backup code" my="md" />
 
-      <form
-        onSubmit={backUpCodeForm.onSubmit((values) =>
-          backUpCodeMutation.mutate(values),
-        )}
-      >
+      <form onSubmit={backUpCodeForm.onSubmit((values) => backUpCodeMutation.mutate(values))}>
         <TextInput
           label="Enter backup code"
           description="If you cannot access your authenticator app, you can use one of your backup codes. Each code can only be used once."
           maxLength={12}
           withAsterisk
-          {...backUpCodeForm.getInputProps("code")}
+          {...backUpCodeForm.getInputProps('code')}
         />
 
         <Checkbox
           mt="md"
           label="Trust this device?"
-          {...backUpCodeForm.getInputProps("trustDevice", { type: "checkbox" })}
+          {...backUpCodeForm.getInputProps('trustDevice', { type: 'checkbox' })}
         />
 
         <Group justify="right" mt="md">
-          <Button
-            variant="default"
-            type="submit"
-            loading={backUpCodeMutation.isPending}
-          >
+          <Button variant="default" type="submit" loading={backUpCodeMutation.isPending}>
             Use Backup Code
           </Button>
         </Group>

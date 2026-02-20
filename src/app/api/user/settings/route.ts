@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import { getUserAccountSettings } from "@/server/user";
-import { UserNotFoundError } from "@/server/user";
-import type { UserAccountSettingsDTO } from "@/types/user";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { getUserAccountSettings } from '@/server/user';
+import { UserNotFoundError } from '@/server/user';
+import type { UserAccountSettingsDTO } from '@/types/user';
 
 export async function GET(request: Request) {
   const session = await guardSession({ headers: request.headers });
@@ -21,10 +21,10 @@ export async function GET(request: Request) {
     return NextResponse.json(userSettings);
   } catch (error) {
     if (error instanceof UserNotFoundError) {
-      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'User not found' }], 404);
     }
 
-    console.error("Error fetching user:", error);
-    return unknownErrorResponse("Unknown error");
+    console.error('Error fetching user:', error);
+    return unknownErrorResponse('Unknown error');
   }
 }

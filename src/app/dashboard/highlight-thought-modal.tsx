@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from '@mantine/core';
 
-import Thought from "@/components/thought";
-import type { PublicThought } from "@/types/thought";
+import Thought from '@/components/thought';
+import type { PublicThought } from '@/types/thought';
 
 export interface HighlightThoughtModalProps {
   thought: PublicThought | null;
@@ -23,21 +23,15 @@ export default function HighlightThoughtModal({
   error,
 }: HighlightThoughtModalProps) {
   return (
-    <Modal
-      title="Highlight this thought?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Highlight this thought?" opened={opened} onClose={onClose} centered>
       <Text c="dimmed" size="sm">
-        Highlighted thoughts appear on the homepage spotlight and replace the
-        current highlight.
+        Highlighted thoughts appear on the homepage spotlight and replace the current highlight.
       </Text>
 
       <Thought
         mt="sm"
-        message={thought?.message ?? "No thought selected yet."}
-        author={thought?.author ?? "Unknown"}
+        message={thought?.message ?? 'No thought selected yet.'}
+        author={thought?.author ?? 'Unknown'}
         color={thought?.color}
         fluid
       />

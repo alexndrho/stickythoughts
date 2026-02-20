@@ -1,13 +1,13 @@
-import Link from "next/link";
-import { Button, Text, Title } from "@mantine/core";
+import Link from 'next/link';
+import { Button, Text, Title } from '@mantine/core';
 
-import classes from "@/styles/status/not-found-content.module.css";
+import classes from '@/styles/status/not-found-content.module.css';
 
 export default function NotFoundContent() {
   return (
     <div className={classes.container}>
       <Title c="blue" className={classes.title}>
-        <span className={classes["title__status-code"]}>404</span>
+        <span className={classes['title__status-code']}>404</span>
         Page Not Found
       </Title>
 

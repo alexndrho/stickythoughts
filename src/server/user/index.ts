@@ -1,6 +1,6 @@
-import "server-only";
+import 'server-only';
 
-export { UserNotFoundError } from "./user-errors";
+export { UserNotFoundError } from './user-errors';
 export {
   clearUserBio,
   getUserAccountSettings,
@@ -8,7 +8,7 @@ export {
   getUserProfileImage,
   updateUserBio,
   updateUserLikesVisibility,
-} from "./user-service";
+} from './user-service';
 
 export {
   getUserLikesVisibility,
@@ -16,7 +16,7 @@ export {
   listUserLetters,
   listUserReplies,
   listUserLikedLetters,
-} from "./user-profile-service";
+} from './user-profile-service';
 
 export {
   deleteNotification,
@@ -24,6 +24,6 @@ export {
   countNewUserNotifications,
   markNotificationRead,
   setNotificationsOpened,
-} from "./user-notifications-service";
+} from './user-notifications-service';
 
-export { removeUserProfilePicture } from "./profile-picture-service";
+export { removeUserProfilePicture } from './profile-picture-service';

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Button, Flex, Input, Popover } from "@mantine/core";
-import { RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
-import { IconLink } from "@tabler/icons-react";
+import { Button, Flex, Input, Popover } from '@mantine/core';
+import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
+import { IconLink } from '@tabler/icons-react';
 
 export default function LinkControl() {
   const { editor } = useRichTextEditorContext();
 
   const [opened, setOpened] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   const handleOpen = () => {
     setOpened(true);
-    if (editor?.isActive("link")) {
-      setValue(editor.getAttributes("link").href || "");
+    if (editor?.isActive('link')) {
+      setValue(editor.getAttributes('link').href || '');
     }
   };
 
   const handleClose = () => {
     setOpened(false);
-    setValue("");
+    setValue('');
   };
 
   return (
@@ -31,7 +31,7 @@ export default function LinkControl() {
           aria-label="Link"
           title="Link"
           onClick={handleOpen}
-          active={editor?.isActive("link")}
+          active={editor?.isActive('link')}
         >
           <IconLink size="1em" />
         </RichTextEditor.Control>
@@ -66,7 +66,7 @@ export default function LinkControl() {
                 editor?.chain().focus().setLink({ href: value }).run();
               }
               setOpened(false);
-              setValue("");
+              setValue('');
             }}
           >
             Save

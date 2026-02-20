@@ -1,25 +1,17 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import { AppShell, Burger, Group, NavLink, Text } from "@mantine/core";
-import {
-  IconHome,
-  IconInbox,
-  IconMessage,
-  IconTrash,
-  IconUser,
-} from "@tabler/icons-react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
+import { AppShell, Burger, Group, NavLink, Text } from '@mantine/core';
+import { IconHome, IconInbox, IconMessage, IconTrash, IconUser } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import classes from "./layout.module.css";
+import { authClient } from '@/lib/auth-client';
+import classes from './layout.module.css';
 
-type AdminCheckParams = Parameters<
-  typeof authClient.admin.checkRolePermission
->[0];
+type AdminCheckParams = Parameters<typeof authClient.admin.checkRolePermission>[0];
 type AdminPermissions = NonNullable<
-  Extract<AdminCheckParams, { permissions: unknown }>["permissions"]
+  Extract<AdminCheckParams, { permissions: unknown }>['permissions']
 >;
 
 type NavLinkConfig = {
@@ -32,48 +24,45 @@ type NavLinkConfig = {
 const navLinks: NavLinkConfig[] = [
   {
     icon: <IconMessage size="1em" />,
-    label: "Thoughts",
-    href: "/dashboard",
+    label: 'Thoughts',
+    href: '/dashboard',
     permissions: {
-      thought: ["list"],
+      thought: ['list'],
     },
   },
   {
     icon: <IconInbox size="1em" />,
-    label: "Submissions",
-    href: "/dashboard/submissions",
+    label: 'Submissions',
+    href: '/dashboard/submissions',
     permissions: {
-      letter: ["list-submissions"],
+      letter: ['list-submissions'],
     },
   },
   {
     icon: <IconUser size="1em" />,
-    label: "Users",
-    href: "/dashboard/users",
+    label: 'Users',
+    href: '/dashboard/users',
     permissions: {
-      user: ["list"],
+      user: ['list'],
     },
   },
   {
     icon: <IconTrash size="1em" />,
-    label: "Deleted",
-    href: "/dashboard/deleted",
+    label: 'Deleted',
+    href: '/dashboard/deleted',
     permissions: {
-      thought: ["list-deleted"],
-      letter: ["list-deleted"],
-      letterReply: ["list-deleted"],
+      thought: ['list-deleted'],
+      letter: ['list-deleted'],
+      letterReply: ['list-deleted'],
     },
   },
 ];
 
 export interface AdminShellProps {
-  role: "admin" | "moderator";
+  role: 'admin' | 'moderator';
 }
 
-export default function AdminShell({
-  children,
-  role,
-}: React.PropsWithChildren<AdminShellProps>) {
+export default function AdminShell({ children, role }: React.PropsWithChildren<AdminShellProps>) {
   const pathname = usePathname();
   const [opened, { toggle, close }] = useDisclosure();
 
@@ -83,7 +72,7 @@ export default function AdminShell({
       header={{ height: { base: 70 } }}
       navbar={{
         width: { base: 300 },
-        breakpoint: "sm",
+        breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
     >

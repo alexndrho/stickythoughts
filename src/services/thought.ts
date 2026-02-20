@@ -1,12 +1,8 @@
-import "client-only";
+import 'client-only';
 
-import { parsePublicThoughtFromServer } from "@/utils/thought";
-import { fetchJson } from "@/services/http";
-import type {
-  PublicThought,
-  PublicThoughtDTO,
-  SubmitThoughtBody,
-} from "@/types/thought";
+import { parsePublicThoughtFromServer } from '@/utils/thought';
+import { fetchJson } from '@/services/http';
+import type { PublicThought, PublicThoughtDTO, SubmitThoughtBody } from '@/types/thought';
 
 const getThoughts = async ({
   lastId,
@@ -18,16 +14,16 @@ const getThoughts = async ({
   const params = new URLSearchParams();
 
   if (lastId) {
-    params.append("lastId", lastId);
+    params.append('lastId', lastId);
   }
   if (searchTerm) {
-    params.append("searchTerm", searchTerm);
+    params.append('searchTerm', searchTerm);
   }
 
   const data = await fetchJson<PublicThoughtDTO[]>(
-    `/api/thoughts${params.toString() ? `?${params.toString()}` : ""}`,
+    `/api/thoughts${params.toString() ? `?${params.toString()}` : ''}`,
     undefined,
-    { errorMessage: "Failed to get thoughts" },
+    { errorMessage: 'Failed to get thoughts' },
   );
 
   return data.map(parsePublicThoughtFromServer);
@@ -35,34 +31,30 @@ const getThoughts = async ({
 
 const submitThought = async (data: SubmitThoughtBody): Promise<{ message: string }> => {
   return fetchJson(
-    "/api/thoughts",
+    '/api/thoughts',
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     },
-    { errorMessage: "Failed to submit thought" },
+    { errorMessage: 'Failed to submit thought' },
   );
 };
 
 const getThoughtsCount = async (): Promise<number> => {
-  const data = await fetchJson<{ count: number }>(
-    "/api/thoughts/count",
-    undefined,
-    { errorMessage: "Failed to get thoughts count" },
-  );
+  const data = await fetchJson<{ count: number }>('/api/thoughts/count', undefined, {
+    errorMessage: 'Failed to get thoughts count',
+  });
 
   return data.count;
 };
 
 const getHighlightedThought = async (): Promise<PublicThought | null> => {
-  const data = await fetchJson<PublicThoughtDTO | null>(
-    "/api/thoughts/highlight",
-    undefined,
-    { errorMessage: "Failed to get highlighted thought" },
-  );
+  const data = await fetchJson<PublicThoughtDTO | null>('/api/thoughts/highlight', undefined, {
+    errorMessage: 'Failed to get highlighted thought',
+  });
 
   if (!data) return null;
 

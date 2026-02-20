@@ -1,11 +1,7 @@
-import {
-  RateLimiterMemory,
-  RateLimiterRedis,
-  type RateLimiterRes,
-} from "rate-limiter-flexible";
+import { RateLimiterMemory, RateLimiterRedis, type RateLimiterRes } from 'rate-limiter-flexible';
 
-import { getRedisClient } from "@/lib/redis";
-import { RATE_LIMITS, RATE_LIMIT_TIERS, type RateLimitTier } from "./config";
+import { getRedisClient } from '@/lib/redis';
+import { RATE_LIMITS, RATE_LIMIT_TIERS, type RateLimitTier } from './config';
 
 export type Limiter = {
   consume: (key: string) => Promise<RateLimiterRes>;

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Affix, Button, Transition } from "@mantine/core";
-import { useWindowScroll } from "@mantine/hooks";
-import { IconArrowBigUpFilled } from "@tabler/icons-react";
-import classes from "../styles/scroll-up-button.module.css";
+import { Affix, Button, Transition } from '@mantine/core';
+import { useWindowScroll } from '@mantine/hooks';
+import { IconArrowBigUpFilled } from '@tabler/icons-react';
+import classes from '../styles/scroll-up-button.module.css';
 
 export default function ScrollUpButton() {
   const [scroll, scrollTo] = useWindowScroll();

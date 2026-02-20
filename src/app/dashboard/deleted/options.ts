@@ -1,8 +1,8 @@
-import "client-only";
+import 'client-only';
 
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions } from '@tanstack/react-query';
 
-import { adminKeys } from "@/lib/query-keys";
+import { adminKeys } from '@/lib/query-keys';
 import {
   getDeletedThoughts,
   getDeletedLetters,
@@ -10,7 +10,7 @@ import {
   getDeletedThoughtsCount,
   getDeletedLettersCount,
   getDeletedRepliesCount,
-} from "@/services/moderate/deleted";
+} from '@/services/moderate/deleted';
 
 export const adminDeletedOptions = queryOptions({
   queryKey: adminKeys.deleted(),

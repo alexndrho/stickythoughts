@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal } from "@mantine/core";
-import type { LetterStatus } from "@/generated/prisma/client";
+import { Button, Group, Modal } from '@mantine/core';
+import type { LetterStatus } from '@/generated/prisma/client';
 
-import LetterPreviewContent from "./letter-preview-content";
-import type { SubmissionLetter } from "@/types/submission";
+import LetterPreviewContent from './letter-preview-content';
+import type { SubmissionLetter } from '@/types/submission';
 
 export interface SubmittedLetterPreviewModalProps {
   letter: SubmissionLetter | null;
@@ -12,9 +12,9 @@ export interface SubmittedLetterPreviewModalProps {
   onClose: () => void;
   onSetStatus: (
     letter: SubmissionLetter,
-    status: Extract<LetterStatus, "APPROVED" | "REJECTED">,
+    status: Extract<LetterStatus, 'APPROVED' | 'REJECTED'>,
   ) => void;
-  actionStatus?: Extract<LetterStatus, "APPROVED" | "REJECTED"> | null;
+  actionStatus?: Extract<LetterStatus, 'APPROVED' | 'REJECTED'> | null;
   loading?: boolean;
   canSetStatus: boolean;
 }
@@ -28,17 +28,11 @@ export default function SubmittedLetterPreviewModal({
   loading,
   canSetStatus,
 }: SubmittedLetterPreviewModalProps) {
-  const isApproveLoading = loading && actionStatus === "APPROVED";
-  const isRejectLoading = loading && actionStatus === "REJECTED";
+  const isApproveLoading = loading && actionStatus === 'APPROVED';
+  const isRejectLoading = loading && actionStatus === 'REJECTED';
 
   return (
-    <Modal
-      title="Letter Preview"
-      opened={opened}
-      onClose={onClose}
-      centered
-      size="xl"
-    >
+    <Modal title="Letter Preview" opened={opened} onClose={onClose} centered size="xl">
       <LetterPreviewContent letter={letter} />
 
       <Group mt="md" justify="right">
@@ -48,7 +42,7 @@ export default function SubmittedLetterPreviewModal({
           disabled={!letter || !canSetStatus}
           onClick={() => {
             if (!letter || !canSetStatus) return;
-            onSetStatus(letter, "REJECTED");
+            onSetStatus(letter, 'REJECTED');
           }}
         >
           Reject
@@ -58,7 +52,7 @@ export default function SubmittedLetterPreviewModal({
           disabled={!letter || !canSetStatus}
           onClick={() => {
             if (!letter || !canSetStatus) return;
-            onSetStatus(letter, "APPROVED");
+            onSetStatus(letter, 'APPROVED');
           }}
         >
           Approve

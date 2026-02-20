@@ -1,19 +1,19 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { type NextRequest, NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import { listSubmissionLetters } from "@/server/dashboard";
-import { letterSubmissionsStatusQueryInput } from "@/lib/validations/letter";
-import { toDTO } from "@/lib/http/to-dto";
-import type { SubmissionLetterDTO } from "@/types/submission";
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { listSubmissionLetters } from '@/server/dashboard';
+import { letterSubmissionsStatusQueryInput } from '@/lib/validations/letter';
+import { toDTO } from '@/lib/http/to-dto';
+import type { SubmissionLetterDTO } from '@/types/submission';
 
 export async function GET(request: NextRequest) {
   try {
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letter: ["list-submissions"],
+        letter: ['list-submissions'],
       },
     });
 
@@ -22,10 +22,8 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const status = letterSubmissionsStatusQueryInput.parse(
-      searchParams.get("status"),
-    );
-    const page = Math.max(Number(searchParams.get("page") || "1"), 1);
+    const status = letterSubmissionsStatusQueryInput.parse(searchParams.get('status'));
+    const page = Math.max(Number(searchParams.get('page') || '1'), 1);
 
     const items = await listSubmissionLetters({
       page,
@@ -41,6 +39,6 @@ export async function GET(request: NextRequest) {
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

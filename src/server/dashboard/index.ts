@@ -1,4 +1,4 @@
-import "server-only";
+import 'server-only';
 
 export {
   countDeletedThoughts,
@@ -11,7 +11,7 @@ export {
   restoreThought,
   softDeleteThought,
   updateHighlight,
-} from "./thought-service";
+} from './thought-service';
 
 export {
   countSubmissionLetters,
@@ -24,7 +24,7 @@ export {
   reopenSubmissionLetter,
   restoreLetter,
   setSubmissionLetterStatus,
-} from "./letter-service";
+} from './letter-service';
 
 export {
   countDeletedReplies,
@@ -32,4 +32,4 @@ export {
   listDeletedReplies,
   purgeReply,
   restoreReply,
-} from "./letter-reply-service";
+} from './letter-reply-service';

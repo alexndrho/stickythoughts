@@ -1,36 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from "@mantine/core";
-import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconArrowBackUp, IconTrashX } from '@tabler/icons-react';
 
-import {
-  deletedThoughtsCountOptions,
-  deletedThoughtsPageOptions,
-} from "./options";
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import classes from "./deleted.module.css";
-import { getFormattedDate } from "@/utils/date";
-import {
-  formatDeletedByLabel,
-  formatDeletedDate,
-  getPagedTotal,
-} from "./utils";
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { thoughtKeys } from "@/lib/query-keys";
-import {
-  permanentlyDeleteThought,
-  restoreDeletedThought,
-} from "@/services/moderate/deleted";
-import {
-  PermanentlyDeleteThoughtModal,
-  RecoverThoughtModal,
-} from "./thought-modals";
-import type { DeletedThought } from "@/types/deleted";
-import PaginatedPanelLayout from "../paginated-panel-layout";
+import { deletedThoughtsCountOptions, deletedThoughtsPageOptions } from './options';
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import classes from './deleted.module.css';
+import { getFormattedDate } from '@/utils/date';
+import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from './utils';
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { thoughtKeys } from '@/lib/query-keys';
+import { permanentlyDeleteThought, restoreDeletedThought } from '@/services/moderate/deleted';
+import { PermanentlyDeleteThoughtModal, RecoverThoughtModal } from './thought-modals';
+import type { DeletedThought } from '@/types/deleted';
+import PaginatedPanelLayout from '../paginated-panel-layout';
 
 export interface ThoughtsTabProps {
   isActive: boolean;
@@ -40,23 +27,18 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const [page, setPage] = useState(1);
   const [permanentlyDeletingThought, setPermanentlyDeletingThought] =
     useState<DeletedThought | null>(null);
-  const [restoringThought, setRestoringThought] =
-    useState<DeletedThought | null>(null);
-  const [restoringThoughtId, setRestoringThoughtId] = useState<string | null>(
-    null,
-  );
-  const [deletingThoughtId, setDeletingThoughtId] = useState<string | null>(
-    null,
-  );
+  const [restoringThought, setRestoringThought] = useState<DeletedThought | null>(null);
+  const [restoringThoughtId, setRestoringThoughtId] = useState<string | null>(null);
+  const [deletingThoughtId, setDeletingThoughtId] = useState<string | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
-  const isStaff = role === "admin" || role === "moderator";
+  const isStaff = role === 'admin' || role === 'moderator';
   const canRestoreThought = isStaff
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          thought: ["restore"],
+          thought: ['restore'],
         },
       })
     : false;
@@ -64,7 +46,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          thought: ["purge"],
+          thought: ['purge'],
         },
       })
     : false;
@@ -156,14 +138,10 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                               setRestoringThought(thought);
                             }
                           }}
-                          loading={
-                            restoreMutation.isPending &&
-                            restoringThoughtId === thought.id
-                          }
+                          loading={restoreMutation.isPending && restoringThoughtId === thought.id}
                           disabled={
                             !canRestoreThought ||
-                            (restoreMutation.isPending &&
-                              restoringThoughtId === thought.id)
+                            (restoreMutation.isPending && restoringThoughtId === thought.id)
                           }
                         >
                           <IconArrowBackUp size="1em" />
@@ -179,14 +157,10 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
                               setPermanentlyDeletingThought(thought);
                             }
                           }}
-                          loading={
-                            deleteMutation.isPending &&
-                            deletingThoughtId === thought.id
-                          }
+                          loading={deleteMutation.isPending && deletingThoughtId === thought.id}
                           disabled={
                             !canPermanentlyDeleteThought ||
-                            (deleteMutation.isPending &&
-                              deletingThoughtId === thought.id)
+                            (deleteMutation.isPending && deletingThoughtId === thought.id)
                           }
                         >
                           <IconTrashX size="1em" />
@@ -236,10 +210,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
             restoreMutation.mutate(thought.id);
             setRestoringThought(null);
           }}
-          loading={
-            restoreMutation.isPending &&
-            restoringThoughtId === restoringThought?.id
-          }
+          loading={restoreMutation.isPending && restoringThoughtId === restoringThought?.id}
         />
       )}
     </Tabs.Panel>

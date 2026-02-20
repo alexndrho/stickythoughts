@@ -1,9 +1,9 @@
-import "server-only";
+import 'server-only';
 
-import { NotificationType } from "@/generated/prisma/enums";
-import { LETTER_REPLIES_PER_PAGE } from "@/config/letter";
-import { prisma } from "@/lib/db";
-import { LetterNotFoundError } from "@/server/letter";
+import { NotificationType } from '@/generated/prisma/enums';
+import { LETTER_REPLIES_PER_PAGE } from '@/config/letter';
+import { prisma } from '@/lib/db';
+import { LetterNotFoundError } from '@/server/letter';
 
 export async function createLetterReply(args: {
   letterId: string;
@@ -17,7 +17,7 @@ export async function createLetterReply(args: {
   });
 
   if (!letterStatus || letterStatus.deletedAt) {
-    throw new LetterNotFoundError("Letter post not found");
+    throw new LetterNotFoundError('Letter post not found');
   }
 
   const reply = await prisma.letterReply.create({
@@ -127,7 +127,7 @@ export async function listLetterReplies(args: {
         },
       },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 
@@ -209,10 +209,9 @@ export async function softDeleteLetterReply(args: {
     },
   });
 
-  const recipientIds = [
-    deletedReply.authorId,
-    deletedReply.letter.authorId,
-  ].filter((id): id is string => Boolean(id));
+  const recipientIds = [deletedReply.authorId, deletedReply.letter.authorId].filter(
+    (id): id is string => Boolean(id),
+  );
 
   // Delete notifications for both the reply author and the letter author
   if (recipientIds.length > 0) {

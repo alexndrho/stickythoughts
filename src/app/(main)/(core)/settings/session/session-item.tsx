@@ -1,23 +1,20 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { ActionIcon, Paper, Text } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
+import { useMutation } from '@tanstack/react-query';
+import { ActionIcon, Paper, Text } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { userKeys } from "@/lib/query-keys";
-import classes from "./session.module.css";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { userKeys } from '@/lib/query-keys';
+import classes from './session.module.css';
 
 export interface SessionItemProps {
   currentToken?: string;
-  session: ReturnType<typeof authClient.listSessions>["data"][number];
+  session: ReturnType<typeof authClient.listSessions>['data'][number];
 }
 
-export default function SessionItem({
-  currentToken,
-  session,
-}: SessionItemProps) {
+export default function SessionItem({ currentToken, session }: SessionItemProps) {
   const revokeMutation = useMutation({
     mutationFn: () =>
       authClient.revokeSession({
@@ -32,32 +29,30 @@ export default function SessionItem({
   });
 
   return (
-    <Paper component="article" withBorder className={classes["session-item"]}>
+    <Paper component="article" withBorder className={classes['session-item']}>
       <div>
         {session.token === currentToken && (
-          <Text className={classes["session-item__current-device-label"]}>
-            Current Device
-          </Text>
+          <Text className={classes['session-item__current-device-label']}>Current Device</Text>
         )}
 
         <Text>
-          <Text span inherit className={classes["session-item__label"]}>
+          <Text span inherit className={classes['session-item__label']}>
             User Agent:
-          </Text>{" "}
-          {session.userAgent || "Unknown Device"}
+          </Text>{' '}
+          {session.userAgent || 'Unknown Device'}
         </Text>
 
         <Text>
-          <Text span inherit className={classes["session-item__label"]}>
+          <Text span inherit className={classes['session-item__label']}>
             IP Address:
-          </Text>{" "}
-          {session.ipAddress || "Unknown IP"}
+          </Text>{' '}
+          {session.ipAddress || 'Unknown IP'}
         </Text>
 
         <Text>
-          <Text span inherit className={classes["session-item__label"]}>
+          <Text span inherit className={classes['session-item__label']}>
             Last Active:
-          </Text>{" "}
+          </Text>{' '}
           {session.updatedAt.toLocaleString()}
         </Text>
       </div>
@@ -67,7 +62,7 @@ export default function SessionItem({
           variant="transparent"
           size="lg"
           loading={revokeMutation.isPending}
-          className={classes["session-item__revoke"]}
+          className={classes['session-item__revoke']}
           onClick={() => revokeMutation.mutate()}
         >
           <IconX size="1.25em" />

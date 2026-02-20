@@ -1,18 +1,14 @@
-import "server-only";
+import 'server-only';
 
-import { NotificationType } from "@/generated/prisma/client";
-import { prisma } from "@/lib/db";
-import { NOTIFICATION_UPDATE_INTERVAL_MS } from "@/config/user";
+import { NotificationType } from '@/generated/prisma/client';
+import { prisma } from '@/lib/db';
+import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
 
-import { ReplyNotFoundError } from "@/server/letter/letter-errors";
+import { ReplyNotFoundError } from '@/server/letter/letter-errors';
 
 export { ReplyNotFoundError };
 
-export async function likeReply(input: {
-  letterId: string;
-  replyId: string;
-  userId: string;
-}) {
+export async function likeReply(input: { letterId: string; replyId: string; userId: string }) {
   const replyStatus = await prisma.letterReply.findUnique({
     where: { id: input.replyId },
     select: {
@@ -32,7 +28,7 @@ export async function likeReply(input: {
     replyStatus.deletedAt ||
     replyStatus.letter.deletedAt
   ) {
-    throw new ReplyNotFoundError("Reply not found");
+    throw new ReplyNotFoundError('Reply not found');
   }
 
   const replyLike = await prisma.letterReplyLike.create({
@@ -59,7 +55,7 @@ export async function likeReply(input: {
               },
             },
             select: { id: true },
-            orderBy: { updatedAt: "desc" },
+            orderBy: { updatedAt: 'desc' },
           },
         },
       },
@@ -94,11 +90,7 @@ export async function likeReply(input: {
   });
 }
 
-export async function unlikeReply(input: {
-  letterId: string;
-  replyId: string;
-  userId: string;
-}) {
+export async function unlikeReply(input: { letterId: string; replyId: string; userId: string }) {
   const replyStatus = await prisma.letterReply.findUnique({
     where: { id: input.replyId },
     select: {
@@ -118,7 +110,7 @@ export async function unlikeReply(input: {
     replyStatus.deletedAt ||
     replyStatus.letter.deletedAt
   ) {
-    throw new ReplyNotFoundError("Reply not found");
+    throw new ReplyNotFoundError('Reply not found');
   }
 
   const deletedLike = await prisma.letterReplyLike.delete({

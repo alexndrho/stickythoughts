@@ -1,6 +1,5 @@
-import "server-only";
+import 'server-only';
 
 export class UserNotFoundError extends Error {
-  name = "UserNotFoundError";
+  name = 'UserNotFoundError';
 }
-

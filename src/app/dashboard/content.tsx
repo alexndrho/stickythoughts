@@ -1,45 +1,27 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  ActionIcon,
-  Loader,
-  Paper,
-  Skeleton,
-  Table,
-  Text,
-  Title,
-  Tooltip,
-} from "@mantine/core";
-import { IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ActionIcon, Loader, Paper, Skeleton, Table, Text, Title, Tooltip } from '@mantine/core';
+import { IconStar, IconStarFilled, IconTrash } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import {
-  adminThoughtsPageOptions,
-  highlightedThoughtOptions,
-} from "@/app/dashboard/options";
-import { getFormattedDate } from "@/utils/date";
-import { thoughtCountOptions } from "@/app/(main)/options";
-import { ADMIN_THOUGHTS_PER_PAGE } from "@/config/admin";
-import DeleteThoughtModal from "./delete-thought-modal";
-import ServerError from "@/utils/error/ServerError";
-import {
-  highlightThought,
-  removeThoughtHighlight,
-} from "@/services/moderate/thought";
-import {
-  formatHighlightedThoughtLockRemaining,
-  isHighlightedThoughtLocked,
-} from "@/utils/thought";
-import { setThoughtHighlighting } from "./set-query";
-import HighlightThoughtModal from "./highlight-thought-modal";
-import RemoveHighlightModal from "./remove-highlight-modal";
-import Thought from "@/components/thought";
-import { formatUserDisplayName } from "@/utils/user";
-import type { PrivateThought } from "@/types/thought";
-import dashboardClasses from "./dashboard.module.css";
-import PaginatedPanelLayout from "./paginated-panel-layout";
+import { authClient } from '@/lib/auth-client';
+import { adminThoughtsPageOptions, highlightedThoughtOptions } from '@/app/dashboard/options';
+import { getFormattedDate } from '@/utils/date';
+import { thoughtCountOptions } from '@/app/(main)/options';
+import { ADMIN_THOUGHTS_PER_PAGE } from '@/config/admin';
+import DeleteThoughtModal from './delete-thought-modal';
+import ServerError from '@/utils/error/ServerError';
+import { highlightThought, removeThoughtHighlight } from '@/services/moderate/thought';
+import { formatHighlightedThoughtLockRemaining, isHighlightedThoughtLocked } from '@/utils/thought';
+import { setThoughtHighlighting } from './set-query';
+import HighlightThoughtModal from './highlight-thought-modal';
+import RemoveHighlightModal from './remove-highlight-modal';
+import Thought from '@/components/thought';
+import { formatUserDisplayName } from '@/utils/user';
+import type { PrivateThought } from '@/types/thought';
+import dashboardClasses from './dashboard.module.css';
+import PaginatedPanelLayout from './paginated-panel-layout';
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof ServerError && error.issues.length > 0) {
@@ -50,7 +32,7 @@ const getErrorMessage = (error: unknown) => {
     return error.message;
   }
 
-  return "Something went wrong.";
+  return 'Something went wrong.';
 };
 
 export default function Content() {
@@ -66,13 +48,9 @@ export default function Content() {
 
   const { data: count } = useQuery(thoughtCountOptions);
 
-  const [deletingThought, setDeletingThought] = useState<PrivateThought | null>(
-    null,
-  );
-  const [highlightingThought, setHighlightingThought] =
-    useState<PrivateThought | null>(null);
-  const [unhighlightingThought, setUnhighlightingThought] =
-    useState<PrivateThought | null>(null);
+  const [deletingThought, setDeletingThought] = useState<PrivateThought | null>(null);
+  const [highlightingThought, setHighlightingThought] = useState<PrivateThought | null>(null);
+  const [unhighlightingThought, setUnhighlightingThought] = useState<PrivateThought | null>(null);
   const highlightMutation = useMutation({
     mutationFn: highlightThought,
     onSuccess: (data) => {
@@ -97,29 +75,26 @@ export default function Content() {
     },
   });
 
-  const hasHighlightedThought =
-    isHighlightedThoughtFetched && !!highlightedThought;
+  const hasHighlightedThought = isHighlightedThoughtFetched && !!highlightedThought;
 
-  const isAdmin = session?.user.role === "admin";
+  const isAdmin = session?.user.role === 'admin';
   const isHighlightLocked =
-    !!highlightedThought &&
-    isHighlightedThoughtLocked(highlightedThought.highlightedAt);
-  const allowHighlighting =
-    !!isAdmin || (isHighlightedThoughtFetched && !isHighlightLocked);
+    !!highlightedThought && isHighlightedThoughtLocked(highlightedThought.highlightedAt);
+  const allowHighlighting = !!isAdmin || (isHighlightedThoughtFetched && !isHighlightLocked);
 
   const highlightTooltipLabel = !isHighlightedThoughtFetched
-    ? "Loading..."
+    ? 'Loading...'
     : allowHighlighting
-      ? "Highlight thought"
+      ? 'Highlight thought'
       : `Highlighting is on cooldown for ${formatHighlightedThoughtLockRemaining(
           highlightedThought?.highlightedAt ?? null,
         )}`;
   const unhighlightTooltipLabel = !isHighlightedThoughtFetched
-    ? "Loading..."
+    ? 'Loading...'
     : !highlightedThought
-      ? "No highlighted thought to remove."
+      ? 'No highlighted thought to remove.'
       : allowHighlighting
-        ? "Remove current highlight"
+        ? 'Remove current highlight'
         : `Highlighting is on cooldown for ${formatHighlightedThoughtLockRemaining(
             highlightedThought.highlightedAt,
           )}`;
@@ -170,15 +145,9 @@ export default function Content() {
     <div className={dashboardClasses.container}>
       <Title className={dashboardClasses.title}>Thoughts</Title>
 
-      <Paper
-        withBorder
-        className={dashboardClasses["thought-highlighted-card"]}
-      >
-        <div className={dashboardClasses["thought-highlighted-card__header"]}>
-          <Title
-            order={2}
-            className={dashboardClasses["thought-highlighted-card__title"]}
-          >
+      <Paper withBorder className={dashboardClasses['thought-highlighted-card']}>
+        <div className={dashboardClasses['thought-highlighted-card__header']}>
+          <Title order={2} className={dashboardClasses['thought-highlighted-card__title']}>
             Highlighted Thought
           </Title>
 
@@ -199,8 +168,8 @@ export default function Content() {
             <Tooltip
               label={
                 highlightedThought
-                  ? "Delete highlighted thought"
-                  : "No highlighted thought to delete."
+                  ? 'Delete highlighted thought'
+                  : 'No highlighted thought to delete.'
               }
             >
               <ActionIcon
@@ -219,25 +188,18 @@ export default function Content() {
           message={
             hasHighlightedThought
               ? highlightedThought?.message
-              : "No highlighted thought yet. Share something meaningful and it could land here."
+              : 'No highlighted thought yet. Share something meaningful and it could land here.'
           }
-          author={
-            hasHighlightedThought ? highlightedThought?.author : "The community"
-          }
+          author={hasHighlightedThought ? highlightedThought?.author : 'The community'}
           color={highlightedThought?.color}
           fluid
           loading={!isHighlightedThoughtFetched}
         />
 
         <Skeleton mt="xs" visible={!isHighlightedThoughtFetched}>
-          <Text
-            size="sm"
-            className={dashboardClasses["thought-highlighted-card__details"]}
-          >
-            Highlighted at:{" "}
-            {hasHighlightedThought
-              ? getFormattedDate(highlightedThought.highlightedAt)
-              : "-"}{" "}
+          <Text size="sm" className={dashboardClasses['thought-highlighted-card__details']}>
+            Highlighted at:{' '}
+            {hasHighlightedThought ? getFormattedDate(highlightedThought.highlightedAt) : '-'}{' '}
             {hasHighlightedThought &&
               `(unlocks in ${formatHighlightedThoughtLockRemaining(
                 highlightedThought.highlightedAt,
@@ -246,14 +208,9 @@ export default function Content() {
         </Skeleton>
 
         <Skeleton visible={!isHighlightedThoughtFetched}>
-          <Text
-            size="sm"
-            className={dashboardClasses["thought-highlighted-card__details"]}
-          >
-            Highlighted by:{" "}
-            {hasHighlightedThought
-              ? formatUserDisplayName(highlightedThought.highlightedBy)
-              : "-"}
+          <Text size="sm" className={dashboardClasses['thought-highlighted-card__details']}>
+            Highlighted by:{' '}
+            {hasHighlightedThought ? formatUserDisplayName(highlightedThought.highlightedBy) : '-'}
           </Text>
         </Skeleton>
       </Paper>
@@ -308,7 +265,7 @@ export default function Content() {
                         </ActionIcon>
                       </Tooltip>
 
-                      <Tooltip label={"Delete thought"}>
+                      <Tooltip label={'Delete thought'}>
                         <ActionIcon
                           aria-label="Delete Thought"
                           color="red"
@@ -354,11 +311,7 @@ export default function Content() {
         onClose={handleCloseHighlightModal}
         onConfirm={handleConfirmHighlight}
         isPending={highlightMutation.isPending}
-        error={
-          highlightMutation.isError
-            ? getErrorMessage(highlightMutation.error)
-            : undefined
-        }
+        error={highlightMutation.isError ? getErrorMessage(highlightMutation.error) : undefined}
       />
 
       <RemoveHighlightModal

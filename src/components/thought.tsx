@@ -1,15 +1,8 @@
-import {
-  Card,
-  type CardProps,
-  Group,
-  Skeleton,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Card, type CardProps, Group, Skeleton, Text, Tooltip } from '@mantine/core';
 
-import { getFormattedDate } from "@/utils/date";
-import { filterText } from "@/utils/text";
-import classes from "@/styles/components/thought.module.css";
+import { getFormattedDate } from '@/utils/date';
+import { filterText } from '@/utils/text';
+import classes from '@/styles/components/thought.module.css';
 
 export interface ThoughtProps extends CardProps {
   message?: string;
@@ -34,12 +27,12 @@ export default function Thought({
   const resolvedLabel = createdAt ? getFormattedDate(createdAt) : null;
   const resolvedClassName = [
     classes.thought,
-    !resolvedColor ? classes["thought--empty"] : null,
-    fluid ? classes["thought--fluid"] : null,
+    !resolvedColor ? classes['thought--empty'] : null,
+    fluid ? classes['thought--fluid'] : null,
     className,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   const content = (
     <Card
@@ -56,7 +49,7 @@ export default function Thought({
           {author != null && (
             <Text
               lineClamp={1}
-              className={classes["thought__author"]}
+              className={classes['thought__author']}
             >{`\u2013 ${filterText(author)}`}</Text>
           )}
         </>

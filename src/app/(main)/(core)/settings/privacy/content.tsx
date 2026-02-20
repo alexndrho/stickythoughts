@@ -1,29 +1,28 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import { useQuery } from "@tanstack/react-query";
-import { Button, Divider, Skeleton, Text, Title } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
+import { useQuery } from '@tanstack/react-query';
+import { Button, Divider, Skeleton, Text, Title } from '@mantine/core';
+import { IconChevronRight } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { userSettingsPrivacy } from "./options";
-import LikesVisibilityModal from "./likes-visibility-modal";
-import classes from "../settings.module.css";
-import privacyClasses from "./privacy.module.css";
+import { authClient } from '@/lib/auth-client';
+import { userSettingsPrivacy } from './options';
+import LikesVisibilityModal from './likes-visibility-modal';
+import classes from '../settings.module.css';
+import privacyClasses from './privacy.module.css';
 
 export default function Content() {
   const router = useRouter();
-  const { data: currentSession, isPending: isCurrentSessionPending } =
-    authClient.useSession();
+  const { data: currentSession, isPending: isCurrentSessionPending } = authClient.useSession();
   const [LikesVisibilityOpened, likesVisibilityHandler] = useDisclosure(false);
 
   const { data: settings, isFetching } = useQuery(userSettingsPrivacy);
 
   useEffect(() => {
     if (!isCurrentSessionPending && !currentSession) {
-      router.push("/");
+      router.push('/');
     }
   }, [isCurrentSessionPending, currentSession, router]);
 
@@ -51,10 +50,10 @@ export default function Content() {
         <Button
           variant="default"
           rightSection={<IconChevronRight size="1em" />}
-          className={privacyClasses["settings-visibility-button"]}
+          className={privacyClasses['settings-visibility-button']}
           onClick={likesVisibilityHandler.open}
         >
-          {(settings?.likesVisibility || "PUBLIC").toLowerCase()}
+          {(settings?.likesVisibility || 'PUBLIC').toLowerCase()}
         </Button>
       </Skeleton>
 

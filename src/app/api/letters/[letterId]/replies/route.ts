@@ -1,15 +1,15 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { type NextRequest, NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { auth } from "@/lib/auth";
-import { createLetterReplyServerInput } from "@/lib/validations/letter";
-import { formatLetterReplies } from "@/utils/letter";
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import { createLetterReply, listLetterReplies } from "@/server/letter";
-import { LetterNotFoundError } from "@/server/letter";
-import { toDTO } from "@/lib/http/to-dto";
-import type { LetterReplyDTO } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { createLetterReplyServerInput } from '@/lib/validations/letter';
+import { formatLetterReplies } from '@/utils/letter';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { createLetterReply, listLetterReplies } from '@/server/letter';
+import { LetterNotFoundError } from '@/server/letter';
+import { toDTO } from '@/lib/http/to-dto';
+import type { LetterReplyDTO } from '@/types/letter';
 
 export async function POST(
   request: Request,
@@ -23,9 +23,7 @@ export async function POST(
     }
 
     const { letterId } = await params;
-    const { body, isAnonymous } = createLetterReplyServerInput.parse(
-      await request.json(),
-    );
+    const { body, isAnonymous } = createLetterReplyServerInput.parse(await request.json());
 
     const reply = await createLetterReply({
       letterId,
@@ -41,10 +39,7 @@ export async function POST(
     });
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter post not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter post not found' }], 404);
     }
 
     if (error instanceof ZodError) {
@@ -52,7 +47,7 @@ export async function POST(
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }
 
@@ -61,7 +56,7 @@ export async function GET(
   { params }: { params: Promise<{ letterId: string }> },
 ) {
   const searchParams = request.nextUrl.searchParams;
-  const lastId = searchParams.get("lastId");
+  const lastId = searchParams.get('lastId');
 
   try {
     const session = await auth.api.getSession({
@@ -81,6 +76,6 @@ export async function GET(
     return NextResponse.json(toDTO(formattedPosts) satisfies LetterReplyDTO[]);
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

@@ -1,13 +1,13 @@
-import { type Prisma } from "@/generated/prisma/client";
-import type { input } from "zod";
+import { type Prisma } from '@/generated/prisma/client';
+import type { input } from 'zod';
 import type {
   createLetterReplyServerInput,
   createLetterServerInput,
   updateLetterReplyServerInput,
   updateLetterServerInput,
-} from "@/lib/validations/letter";
-import type { SerializeDates } from "./serialization";
-import type { UserWithAvatarSummary } from "./user";
+} from '@/lib/validations/letter';
+import type { SerializeDates } from './serialization';
+import type { UserWithAvatarSummary } from './user';
 
 type PrismaBaseLetter = Prisma.LetterGetPayload<{
   select: {
@@ -42,15 +42,12 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
   };
 }>;
 
-export type BaseLetter = Omit<PrismaBaseLetter, "likes" | "_count"> & {
+export type BaseLetter = Omit<PrismaBaseLetter, 'likes' | '_count'> & {
   likes?: { userId: string }[];
   _count: { likes: number; replies: number };
 };
 
-export type Letter = Omit<
-  BaseLetter,
-  "authorId" | "author" | "likes" | "_count"
-> & {
+export type Letter = Omit<BaseLetter, 'authorId' | 'author' | 'likes' | '_count'> & {
   author?: UserWithAvatarSummary;
   isOwner: boolean;
   likes: {
@@ -100,18 +97,12 @@ type PrismaBaseLetterReply = Prisma.LetterReplyGetPayload<{
   };
 }>;
 
-export type BaseLetterReply = Omit<
-  PrismaBaseLetterReply,
-  "likes" | "_count"
-> & {
+export type BaseLetterReply = Omit<PrismaBaseLetterReply, 'likes' | '_count'> & {
   likes?: { userId: string }[];
   _count: { likes: number };
 };
 
-export type LetterReply = Omit<
-  BaseLetterReply,
-  "authorId" | "author" | "likes" | "_count"
-> & {
+export type LetterReply = Omit<BaseLetterReply, 'authorId' | 'author' | 'likes' | '_count'> & {
   author?: UserWithAvatarSummary;
   isOP: boolean;
   isSelf: boolean;
@@ -159,17 +150,14 @@ type PrismaBaseUserLetterReply = Prisma.LetterReplyGetPayload<{
   };
 }>;
 
-export type BaseUserLetterReply = Omit<
-  PrismaBaseUserLetterReply,
-  "likes" | "_count"
-> & {
+export type BaseUserLetterReply = Omit<PrismaBaseUserLetterReply, 'likes' | '_count'> & {
   likes?: { userId: string }[];
   _count: { likes: number };
 };
 
 export type UserLetterReply = Omit<
   BaseUserLetterReply,
-  "authorId" | "author" | "likes" | "_count"
+  'authorId' | 'author' | 'likes' | '_count'
 > & {
   author?: UserWithAvatarSummary;
   likes: {

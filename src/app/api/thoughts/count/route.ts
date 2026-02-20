@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { unknownErrorResponse } from "@/lib/http";
-import { countPublicThoughts } from "@/server/thought";
+import { unknownErrorResponse } from '@/lib/http';
+import { countPublicThoughts } from '@/server/thought';
 
 export async function GET() {
   try {
@@ -10,6 +10,6 @@ export async function GET() {
     return NextResponse.json({ count }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal, TextInput } from "@mantine/core";
+import { useEffect, useEffectEvent } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Group, Modal, TextInput } from '@mantine/core';
 
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "@mantine/form";
+import { authClient } from '@/lib/auth-client';
+import { useForm } from '@mantine/form';
 
 export interface UpdateNameModalProps {
   opened: boolean;
@@ -13,11 +13,7 @@ export interface UpdateNameModalProps {
   defaultValue?: string;
 }
 
-export default function UpdateNameModal({
-  opened,
-  onClose,
-  defaultValue,
-}: UpdateNameModalProps) {
+export default function UpdateNameModal({ opened, onClose, defaultValue }: UpdateNameModalProps) {
   const form = useForm({
     initialValues: {
       name: defaultValue,
@@ -25,8 +21,8 @@ export default function UpdateNameModal({
   });
 
   const setFormName = useEffectEvent((name?: string) => {
-    form.setInitialValues({ name: name || "" });
-    form.setValues({ name: name || "" });
+    form.setInitialValues({ name: name || '' });
+    form.setValues({ name: name || '' });
   });
 
   useEffect(() => {
@@ -37,7 +33,7 @@ export default function UpdateNameModal({
     mutationFn: (values: typeof form.values) => authClient.updateUser(values),
     onSuccess: ({ error }) => {
       if (error) {
-        form.setFieldError("name", error.message);
+        form.setFieldError('name', error.message);
         return;
       }
 
@@ -45,7 +41,7 @@ export default function UpdateNameModal({
       onClose();
     },
     onError: (error) => {
-      form.setFieldError("name", error.message);
+      form.setFieldError('name', error.message);
     },
   });
 
@@ -56,8 +52,8 @@ export default function UpdateNameModal({
           <TextInput
             flex={1}
             label="Name"
-            placeholder={defaultValue || "Enter your name"}
-            {...form.getInputProps("name")}
+            placeholder={defaultValue || 'Enter your name'}
+            {...form.getInputProps('name')}
           />
 
           <Button type="submit" loading={mutation.isPending}>

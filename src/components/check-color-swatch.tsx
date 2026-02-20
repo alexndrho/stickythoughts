@@ -1,5 +1,5 @@
-import { THOUGHT_COLORS } from "@/config/thought";
-import { CheckIcon, ColorSwatch, useMantineTheme } from "@mantine/core";
+import { THOUGHT_COLORS } from '@/config/thought';
+import { CheckIcon, ColorSwatch, useMantineTheme } from '@mantine/core';
 
 export interface CheckColorSwatchProps {
   color: (typeof THOUGHT_COLORS)[number];
@@ -26,7 +26,7 @@ export default function CheckColorSwatch({
       onClick={onClick}
       styles={(theme) => ({
         root: {
-          cursor: "pointer",
+          cursor: 'pointer',
           color: theme.colors.gray[0],
         },
       })}

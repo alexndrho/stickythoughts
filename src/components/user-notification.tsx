@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
-import { formatDistanceToNow } from "date-fns";
-import { notifications } from "@mantine/notifications";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { notifications } from '@mantine/notifications';
 import {
   ActionIcon,
   Anchor,
@@ -15,44 +15,36 @@ import {
   Menu,
   ScrollArea,
   Text,
-} from "@mantine/core";
-import {
-  IconDots,
-  IconMessageDots,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
+} from '@mantine/core';
+import { IconDots, IconMessageDots, IconTrash, IconX } from '@tabler/icons-react';
 
-import { type authClient } from "@/lib/auth-client";
+import { type authClient } from '@/lib/auth-client';
 import {
   userNotificationCountOptions,
   userNotificationsInfiniteOptions,
-} from "@/app/(main)/(core)/user/options";
+} from '@/app/(main)/(core)/user/options';
 import {
   setDeleteNotificationQueryData,
   setMarkReadNotificationQueryData,
   setUserNotificationOpenedQueryData,
-} from "@/app/(main)/(core)/user/set-query-data";
-import { stripHtmlTags } from "@/utils/text";
+} from '@/app/(main)/(core)/user/set-query-data';
+import { stripHtmlTags } from '@/utils/text';
 import {
   deleteUserNotification,
   userNotificationMarkRead,
   userNotificationOpened,
-} from "@/services/user";
-import InfiniteScroll from "./infinite-scroll";
-import classes from "@/styles/user-notification.module.css";
-import AuthorAvatar from "./author-avatar";
-import type { UserNotification } from "@/types/user";
+} from '@/services/user';
+import InfiniteScroll from './infinite-scroll';
+import classes from '@/styles/user-notification.module.css';
+import AuthorAvatar from './author-avatar';
+import type { UserNotification } from '@/types/user';
 
 export interface UserNotificationProps {
   children: React.ReactElement;
-  session: NonNullable<ReturnType<typeof authClient.useSession>["data"]>;
+  session: NonNullable<ReturnType<typeof authClient.useSession>['data']>;
 }
 
-export default function UserNotification({
-  children,
-  session,
-}: UserNotificationProps) {
+export default function UserNotification({ children, session }: UserNotificationProps) {
   const [opened, setOpened] = useState(false);
 
   const {
@@ -89,11 +81,7 @@ export default function UserNotification({
     <Menu opened={opened} onChange={onChange}>
       <Menu.Target>
         <Indicator
-          label={
-            newNotificationCount && newNotificationCount > 99
-              ? "99+"
-              : newNotificationCount
-          }
+          label={newNotificationCount && newNotificationCount > 99 ? '99+' : newNotificationCount}
           color="red"
           inline
           size={16}
@@ -166,11 +154,9 @@ function NotificationItem({
     },
     onError: () => {
       notifications.show({
-        title: "Error",
-        message: `Failed to mark notification as ${
-          notification.isRead ? "unread" : "read"
-        }.`,
-        color: "red",
+        title: 'Error',
+        message: `Failed to mark notification as ${notification.isRead ? 'unread' : 'read'}.`,
+        color: 'red',
         icon: <IconX size="1em" />,
       });
     },
@@ -189,28 +175,28 @@ function NotificationItem({
     },
     onError: () => {
       notifications.show({
-        title: "Error",
-        message: "Failed to delete notification.",
-        color: "red",
+        title: 'Error',
+        message: 'Failed to delete notification.',
+        color: 'red',
         icon: <IconX size="1em" />,
       });
     },
   });
 
   const link =
-    notification.type === "LETTER_LIKE"
+    notification.type === 'LETTER_LIKE'
       ? `/letters/${notification.letterId}`
-      : notification.type === "LETTER_REPLY_LIKE"
+      : notification.type === 'LETTER_REPLY_LIKE'
         ? `/letters/${notification.letterId}`
-        : notification.type === "LETTER_REPLY"
+        : notification.type === 'LETTER_REPLY'
           ? `/letters/${notification.letterId}`
-          : "#";
+          : '#';
 
   return (
     <div
       key={notification.id}
-      className={`${classes["notification-item"]} ${
-        !notification.isRead ? classes["notification-item--unread"] : ""
+      className={`${classes['notification-item']} ${
+        !notification.isRead ? classes['notification-item--unread'] : ''
       }`}
     >
       <Link
@@ -220,22 +206,19 @@ function NotificationItem({
           setClosed();
           markReadMutation.mutate(true);
         }}
-        className={classes["notification-item__link"]}
+        className={classes['notification-item__link']}
       />
 
-      <div className={classes["notification-item__content"]}>
+      <div className={classes['notification-item__content']}>
         <Flex gap="sm">
           {notification.mainActor.isAnonymous ? (
-            <AuthorAvatar
-              isAnonymous={true}
-              className={classes["notification-item__avatar"]}
-            />
+            <AuthorAvatar isAnonymous={true} className={classes['notification-item__avatar']} />
           ) : (
             <AuthorAvatar
               component={Link}
               src={notification.mainActor.image}
               href={`/user/${notification.mainActor.username}`}
-              className={classes["notification-item__avatar"]}
+              className={classes['notification-item__avatar']}
               onClick={() => setClosed()}
             />
           )}
@@ -253,7 +236,7 @@ function NotificationItem({
             <ActionIcon
               variant="transparent"
               onPointerDown={(e) => e.stopPropagation()}
-              className={classes["notification-item__more"]}
+              className={classes['notification-item__more']}
             >
               <IconDots size="1em" />
             </ActionIcon>
@@ -264,7 +247,7 @@ function NotificationItem({
               leftSection={<IconMessageDots size="1em" />}
               onClick={() => markReadMutation.mutate(!notification.isRead)}
             >
-              {notification.isRead ? "Mark as Unread" : "Mark as Read"}
+              {notification.isRead ? 'Mark as Unread' : 'Mark as Read'}
             </Menu.Item>
 
             <Menu.Item
@@ -289,7 +272,7 @@ function formatNotificationBody({
   setClosed: () => void;
 }) {
   const actor = notification.mainActor.isAnonymous ? (
-    <Text span inherit className={classes["notification-item__actor-link"]}>
+    <Text span inherit className={classes['notification-item__actor-link']}>
       Anonymous
     </Text>
   ) : (
@@ -298,7 +281,7 @@ function formatNotificationBody({
       inherit
       href={`/user/${notification.mainActor.username}`}
       onClick={() => setClosed()}
-      className={classes["notification-item__actor-link"]}
+      className={classes['notification-item__actor-link']}
     >
       {notification.mainActor.name || notification.mainActor.username}
     </Anchor>
@@ -307,42 +290,38 @@ function formatNotificationBody({
   const others =
     notification.otherActorCount && notification.otherActorCount > 0 ? (
       <>
-        {" and "}
-        <Text
-          span
-          inherit
-          className={classes["notification-item__other-actor"]}
-        >
+        {' and '}
+        <Text span inherit className={classes['notification-item__other-actor']}>
           {notification.otherActorCount} other
-          {notification.otherActorCount > 1 ? "s" : ""}
+          {notification.otherActorCount > 1 ? 's' : ''}
         </Text>
       </>
     ) : null;
 
   switch (notification.type) {
-    case "LETTER_LIKE":
+    case 'LETTER_LIKE':
       return (
         <>
           {actor}
           {others}
-          {" liked your letter: "}
+          {' liked your letter: '}
           {notification.body}
         </>
       );
-    case "LETTER_REPLY_LIKE":
+    case 'LETTER_REPLY_LIKE':
       return (
         <>
           {actor}
           {others}
-          {" liked your reply: "}
+          {' liked your reply: '}
           {stripHtmlTags(notification.body)}
         </>
       );
-    case "LETTER_REPLY":
+    case 'LETTER_REPLY':
       return (
         <>
           {actor}
-          {" replied to your letter: "}
+          {' replied to your letter: '}
           {stripHtmlTags(notification.body)}
         </>
       );

@@ -1,14 +1,10 @@
-import "client-only";
+import 'client-only';
 
-import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
-import {
-  getHighlightedThought,
-  getThoughts,
-  getThoughtsCount,
-} from "@/services/thought";
-import { THOUGHTS_PER_PAGE } from "@/config/thought";
-import { thoughtKeys } from "@/lib/query-keys";
+import { getHighlightedThought, getThoughts, getThoughtsCount } from '@/services/thought';
+import { THOUGHTS_PER_PAGE } from '@/config/thought';
+import { thoughtKeys } from '@/lib/query-keys';
 
 // query options
 export const thoughtsOptions = queryOptions({

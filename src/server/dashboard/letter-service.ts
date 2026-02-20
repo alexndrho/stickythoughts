@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
-import type { LetterStatus } from "@/generated/prisma/client";
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import { prisma } from "@/lib/db";
+import type { LetterStatus } from '@/generated/prisma/client';
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import { prisma } from '@/lib/db';
 
 export async function listDeletedLetters(args: { page: number }) {
   const page = Math.max(args.page, 1);
@@ -15,7 +15,7 @@ export async function listDeletedLetters(args: { page: number }) {
       },
     },
     orderBy: {
-      deletedAt: "desc",
+      deletedAt: 'desc',
     },
     take: ADMIN_DELETED_PER_PAGE,
     skip,
@@ -71,7 +71,7 @@ export async function purgeLetter(args: { letterId: string }) {
 
 export async function listSubmissionLetters(args: {
   page: number;
-  status: Extract<LetterStatus, "PENDING" | "REJECTED">;
+  status: Extract<LetterStatus, 'PENDING' | 'REJECTED'>;
 }) {
   const page = Math.max(args.page, 1);
   const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
@@ -81,7 +81,7 @@ export async function listSubmissionLetters(args: {
       deletedAt: null,
       status: args.status,
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: ADMIN_DELETED_PER_PAGE,
     skip,
     include: {
@@ -94,7 +94,7 @@ export async function listSubmissionLetters(args: {
         },
       },
       statusSetBy:
-        args.status === "REJECTED"
+        args.status === 'REJECTED'
           ? {
               select: {
                 id: true,
@@ -108,7 +108,7 @@ export async function listSubmissionLetters(args: {
 }
 
 export async function countSubmissionLetters(args: {
-  status: Extract<LetterStatus, "PENDING" | "REJECTED">;
+  status: Extract<LetterStatus, 'PENDING' | 'REJECTED'>;
 }) {
   return prisma.letter.count({
     where: {
@@ -127,7 +127,7 @@ export async function getSubmissionLetterStatus(args: { letterId: string }) {
 
 export async function setSubmissionLetterStatus(args: {
   letterId: string;
-  status: Extract<LetterStatus, "APPROVED" | "REJECTED">;
+  status: Extract<LetterStatus, 'APPROVED' | 'REJECTED'>;
   statusSetById: string;
 }) {
   await prisma.letter.update({
@@ -135,16 +135,16 @@ export async function setSubmissionLetterStatus(args: {
     data: {
       status: args.status,
       statusSetById: args.statusSetById,
-      postedAt: args.status === "APPROVED" ? new Date() : null,
+      postedAt: args.status === 'APPROVED' ? new Date() : null,
     },
   });
 }
 
 export async function reopenSubmissionLetter(args: { letterId: string }) {
   await prisma.letter.update({
-    where: { id: args.letterId, deletedAt: null, status: "REJECTED" },
+    where: { id: args.letterId, deletedAt: null, status: 'REJECTED' },
     data: {
-      status: "PENDING",
+      status: 'PENDING',
       statusSetById: null,
       postedAt: null,
     },

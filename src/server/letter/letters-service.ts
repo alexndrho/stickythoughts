@@ -1,11 +1,11 @@
-import "server-only";
+import 'server-only';
 
-import { auth } from "@/lib/auth";
-import { LETTERS_PER_PAGE } from "@/config/letter";
-import { prisma } from "@/lib/db";
-import { LetterNotFoundError } from "./letter-errors";
-import { formatLetters } from "@/utils/letter";
-import type { Letter } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { LETTERS_PER_PAGE } from '@/config/letter';
+import { prisma } from '@/lib/db';
+import { LetterNotFoundError } from './letter-errors';
+import { formatLetters } from '@/utils/letter';
+import type { Letter } from '@/types/letter';
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -29,7 +29,7 @@ export async function createLetter(args: {
           },
         },
       }),
-      ...(isAutoApproved && { status: "APPROVED", postedAt: new Date() }),
+      ...(isAutoApproved && { status: 'APPROVED', postedAt: new Date() }),
     },
     select: {
       id: true,
@@ -45,7 +45,7 @@ export async function getLetterPublic(args: {
     where: {
       deletedAt: null,
       id: args.letterId,
-      status: "APPROVED",
+      status: 'APPROVED',
     },
     include: {
       author: {
@@ -80,7 +80,7 @@ export async function getLetterPublic(args: {
   });
 
   if (!letter || letter.deletedAt) {
-    throw new LetterNotFoundError("Letter not found");
+    throw new LetterNotFoundError('Letter not found');
   }
 
   return formatLetters({
@@ -89,10 +89,7 @@ export async function getLetterPublic(args: {
   });
 }
 
-export async function listLettersPublic(args: {
-  lastId?: string | null;
-  viewerUserId?: string;
-}) {
+export async function listLettersPublic(args: { lastId?: string | null; viewerUserId?: string }) {
   return prisma.letter.findMany({
     take: LETTERS_PER_PAGE,
     ...(args.lastId && {
@@ -101,7 +98,7 @@ export async function listLettersPublic(args: {
         id: args.lastId,
       },
     }),
-    where: { deletedAt: null, status: "APPROVED" },
+    where: { deletedAt: null, status: 'APPROVED' },
     include: {
       author: {
         select: {
@@ -132,19 +129,11 @@ export async function listLettersPublic(args: {
         },
       },
     },
-    orderBy: [
-      { postedAt: { sort: "desc", nulls: "last" } },
-      { createdAt: "desc" },
-      { id: "desc" },
-    ],
+    orderBy: [{ postedAt: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 
-export async function updateLetter(args: {
-  letterId: string;
-  authorId: string;
-  body: string;
-}) {
+export async function updateLetter(args: { letterId: string; authorId: string; body: string }) {
   return prisma.letter.update({
     where: {
       id: args.letterId,

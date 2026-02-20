@@ -1,22 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "@mantine/form";
-import { DatePickerInput } from "@mantine/dates";
-import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal, Text, TextInput } from "@mantine/core";
-import { IconHammer } from "@tabler/icons-react";
-import {
-  addDays,
-  differenceInCalendarDays,
-  differenceInSeconds,
-} from "date-fns";
+import { useEffect, useEffectEvent, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from '@mantine/form';
+import { DatePickerInput } from '@mantine/dates';
+import { notifications } from '@mantine/notifications';
+import { Button, Group, Modal, Text, TextInput } from '@mantine/core';
+import { IconHammer } from '@tabler/icons-react';
+import { addDays, differenceInCalendarDays, differenceInSeconds } from 'date-fns';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { userKeys } from "@/lib/query-keys";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys';
 
 export interface BanUserModalProps {
   user: {
@@ -27,16 +23,12 @@ export interface BanUserModalProps {
   onClose: () => void;
 }
 
-export default function BanUserModal({
-  user,
-  opened,
-  onClose,
-}: BanUserModalProps) {
+export default function BanUserModal({ user, opened, onClose }: BanUserModalProps) {
   const [areYouSure, setAreYouSure] = useState(false);
 
   const form = useForm({
     initialValues: {
-      banReason: "",
+      banReason: '',
       banExpiresIn: null as Date | null,
     },
     onValuesChange: () => {
@@ -48,10 +40,7 @@ export default function BanUserModal({
     mutationFn: (values: typeof form.values) => {
       const now = new Date();
       const banExpiresIn = values.banExpiresIn
-        ? differenceInSeconds(
-            addDays(now, differenceInCalendarDays(values.banExpiresIn, now)),
-            now,
-          )
+        ? differenceInSeconds(addDays(now, differenceInCalendarDays(values.banExpiresIn, now)), now)
         : undefined;
 
       return authClient.admin.banUser({
@@ -63,10 +52,7 @@ export default function BanUserModal({
     onSuccess: ({ error }) => {
       if (error) {
         if (error.message) {
-          form.setFieldError(
-            "root",
-            error.message || "An unknown error occurred.",
-          );
+          form.setFieldError('root', error.message || 'An unknown error occurred.');
         }
 
         return;
@@ -87,7 +73,7 @@ export default function BanUserModal({
       handleClose();
 
       notifications.show({
-        title: "User Banned",
+        title: 'User Banned',
         message: `@${user?.username} has been successfully banned.`,
         icon: <IconHammer size="1em" />,
       });
@@ -108,18 +94,13 @@ export default function BanUserModal({
   };
 
   return (
-    <Modal
-      title={`Ban @${user?.username}?`}
-      opened={opened}
-      onClose={handleClose}
-      centered
-    >
+    <Modal title={`Ban @${user?.username}?`} opened={opened} onClose={handleClose} centered>
       <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
         <TextInput
           label="Ban Reason"
           description="Optional reason for banning this user"
           placeholder="Enter the reason for banning this user"
-          {...form.getInputProps("banReason")}
+          {...form.getInputProps('banReason')}
         />
 
         <DatePickerInput
@@ -129,7 +110,7 @@ export default function BanUserModal({
           placeholder="Select ban expiration date"
           clearable
           minDate={new Date()}
-          {...form.getInputProps("banExpiresIn")}
+          {...form.getInputProps('banExpiresIn')}
         />
 
         {form.errors.root && (
@@ -151,7 +132,7 @@ export default function BanUserModal({
             }}
             loading={mutation.isPending}
           >
-            {areYouSure ? "Are you sure?" : "Ban User"}
+            {areYouSure ? 'Are you sure?' : 'Ban User'}
           </Button>
         </Group>
       </form>

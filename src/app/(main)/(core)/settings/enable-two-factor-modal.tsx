@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import QRCode from "react-qr-code";
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { hasLength, isNotEmpty, useForm } from '@mantine/form';
+import QRCode from 'react-qr-code';
 import {
   Anchor,
   Button,
@@ -16,40 +16,31 @@ import {
   Stepper,
   Text,
   TextInput,
-} from "@mantine/core";
+} from '@mantine/core';
 
-import { authClient } from "@/lib/auth-client";
-import classes from "./account.module.css";
-import { notifications } from "@mantine/notifications";
+import { authClient } from '@/lib/auth-client';
+import classes from './account.module.css';
+import { notifications } from '@mantine/notifications';
 
 export interface UpdateNameModalProps {
   opened: boolean;
   onClose: () => void;
 }
 
-export default function EnableTwoFactorModal({
-  opened,
-  onClose,
-}: UpdateNameModalProps) {
+export default function EnableTwoFactorModal({ opened, onClose }: UpdateNameModalProps) {
   const [stepperActive, setStepperActive] = useState(0);
   const [totpUri, setTotpUri] = useState<string | null>(null);
 
-  const nextStep = () =>
-    setStepperActive((current) => (current < 1 ? current + 1 : current));
+  const nextStep = () => setStepperActive((current) => (current < 1 ? current + 1 : current));
 
   return (
-    <Modal
-      title="Enable Two-Factor Authentication"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Enable Two-Factor Authentication" opened={opened} onClose={onClose} centered>
       <Stepper
         active={stepperActive}
         allowNextStepsSelect={false}
         classNames={{
-          steps: classes["enable-two-factor-modal__steps"],
-          content: classes["enable-two-factor-modal__content"],
+          steps: classes['enable-two-factor-modal__steps'],
+          content: classes['enable-two-factor-modal__content'],
         }}
       >
         <Stepper.Step>
@@ -73,9 +64,9 @@ function StepOne({
 }) {
   const form = useForm({
     initialValues: {
-      password: "",
+      password: '',
     },
-    validate: { password: isNotEmpty("Password is required") },
+    validate: { password: isNotEmpty('Password is required') },
   });
 
   const mutation = useMutation({
@@ -110,13 +101,13 @@ function StepOne({
         form.reset();
       } else {
         form.setErrors({
-          password: "An unexpected error occurred. Please try again.",
+          password: 'An unexpected error occurred. Please try again.',
         });
       }
     },
     onError: () => {
       form.setErrors({
-        password: "An unexpected error occurred. Please try again.",
+        password: 'An unexpected error occurred. Please try again.',
       });
     },
   });
@@ -127,12 +118,7 @@ function StepOne({
         mutation.mutate(values);
       })}
     >
-      <PasswordInput
-        flex={1}
-        label="Password"
-        withAsterisk
-        {...form.getInputProps("password")}
-      />
+      <PasswordInput flex={1} label="Password" withAsterisk {...form.getInputProps('password')} />
 
       <Group mt="md" justify="end">
         <Button type="submit" loading={mutation.isPending}>
@@ -143,20 +129,14 @@ function StepOne({
   );
 }
 
-function StepTwo({
-  totpUri,
-  onClose,
-}: {
-  totpUri: string | null;
-  onClose: () => void;
-}) {
+function StepTwo({ totpUri, onClose }: { totpUri: string | null; onClose: () => void }) {
   const form = useForm({
     initialValues: {
-      authenticatorCode: "",
+      authenticatorCode: '',
       trustDevice: false,
     },
     validate: {
-      authenticatorCode: hasLength(6, "Code must be 6 digits"),
+      authenticatorCode: hasLength(6, 'Code must be 6 digits'),
     },
   });
 
@@ -171,16 +151,15 @@ function StepTwo({
         form.setErrors({ authenticatorCode: error.message });
       } else if (error) {
         form.setErrors({
-          authenticatorCode: "Failed to verify the authenticator code.",
+          authenticatorCode: 'Failed to verify the authenticator code.',
         });
       } else {
         onClose();
 
         notifications.show({
-          title: "Two-Factor Authentication Enabled",
-          message:
-            "Two-factor authentication has been successfully enabled for your account.",
-          color: "green",
+          title: 'Two-Factor Authentication Enabled',
+          message: 'Two-factor authentication has been successfully enabled for your account.',
+          color: 'green',
         });
       }
     },
@@ -188,22 +167,18 @@ function StepTwo({
 
   return (
     <>
-      <div className={classes["enable-two-factor-modal__qr-code-step__row"]}>
+      <div className={classes['enable-two-factor-modal__qr-code-step__row']}>
         <div>
-          <Text size="lg" className={classes["enable-two-factor-modal__title"]}>
+          <Text size="lg" className={classes['enable-two-factor-modal__title']}>
             Download an authenticator app
           </Text>
           <Text>
-            If you don&apos;t have one already, download an authenticator app
-            such as{" "}
+            If you don&apos;t have one already, download an authenticator app such as{' '}
             <Anchor href="https://www.authy.com/" target="_blank">
               Authy
-            </Anchor>{" "}
-            or{" "}
-            <Anchor
-              href="https://support.google.com/accounts/answer/1066447"
-              target="_blank"
-            >
+            </Anchor>{' '}
+            or{' '}
+            <Anchor href="https://support.google.com/accounts/answer/1066447" target="_blank">
               Google Authenticator
             </Anchor>
             .
@@ -213,31 +188,27 @@ function StepTwo({
 
       <Divider my="md" />
 
-      <div className={classes["enable-two-factor-modal__qr-code-step__row"]}>
+      <div className={classes['enable-two-factor-modal__qr-code-step__row']}>
         <div
-          className={`${classes["qr-code-container"]} ${classes["enable-two-factor-modal__qr-code-step__row__image"]}`}
+          className={`${classes['qr-code-container']} ${classes['enable-two-factor-modal__qr-code-step__row__image']}`}
         >
           <LoadingOverlay
             visible={totpUri === null}
             zIndex={1000}
-            overlayProps={{ radius: "sm", blur: 2 }}
+            overlayProps={{ radius: 'sm', blur: 2 }}
           />
 
-          <QRCode value={totpUri || ""} className={classes["qr-code"]} />
+          <QRCode value={totpUri || ''} className={classes['qr-code']} />
         </div>
 
-        <div
-          className={
-            classes["enable-two-factor-modal__qr-code-step__row__content"]
-          }
-        >
-          <Text size="lg" className={classes["enable-two-factor-modal__title"]}>
+        <div className={classes['enable-two-factor-modal__qr-code-step__row__content']}>
+          <Text size="lg" className={classes['enable-two-factor-modal__title']}>
             Scan the QR code
           </Text>
 
           <Text>
-            Use an authenticator app to scan the QR code and set up two-factor
-            authentication for your account.
+            Use an authenticator app to scan the QR code and set up two-factor authentication for
+            your account.
           </Text>
         </div>
       </div>
@@ -253,14 +224,14 @@ function StepTwo({
           label="Enter your authenticator code"
           description="After scanning the QR code, enter the 6-digit code generated by your authenticator app to verify and complete the setup."
           maxLength={6}
-          {...form.getInputProps("authenticatorCode")}
+          {...form.getInputProps('authenticatorCode')}
           withAsterisk
         />
 
         <Checkbox
           mt="md"
           label="Trust this device?"
-          {...form.getInputProps("trustDevice", { type: "checkbox" })}
+          {...form.getInputProps('trustDevice', { type: 'checkbox' })}
         />
 
         <Group justify="right" mt="md">

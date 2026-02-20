@@ -1,44 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  ActionIcon,
-  Badge,
-  Loader,
-  Table,
-  Tabs,
-  Text,
-  Tooltip,
-} from "@mantine/core";
-import { IconArrowBackUp, IconTrashX } from "@tabler/icons-react";
+import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconArrowBackUp, IconTrashX } from '@tabler/icons-react';
 
-import {
-  deletedLettersCountOptions,
-  deletedLettersPageOptions,
-} from "./options";
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import PaginatedPanelLayout from "../paginated-panel-layout";
-import classes from "./deleted.module.css";
-import {
-  formatDeletedByLabel,
-  formatDeletedDate,
-  getPagedTotal,
-} from "./utils";
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { letterKeys } from "@/lib/query-keys";
-import type { DeletedLetter } from "@/types/deleted";
-import {
-  permanentlyDeleteLetter,
-  restoreDeletedLetter,
-} from "@/services/moderate/deleted";
-import { formatUserDisplayName } from "@/utils/user";
-import {
-  PermanentlyDeleteLetterModal,
-  RecoverLetterModal,
-} from "./letter-modals";
+import { deletedLettersCountOptions, deletedLettersPageOptions } from './options';
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import PaginatedPanelLayout from '../paginated-panel-layout';
+import classes from './deleted.module.css';
+import { formatDeletedByLabel, formatDeletedDate, getPagedTotal } from './utils';
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys';
+import type { DeletedLetter } from '@/types/deleted';
+import { permanentlyDeleteLetter, restoreDeletedLetter } from '@/services/moderate/deleted';
+import { formatUserDisplayName } from '@/utils/user';
+import { PermanentlyDeleteLetterModal, RecoverLetterModal } from './letter-modals';
 
 export interface LettersTabProps {
   isActive: boolean;
@@ -46,24 +25,21 @@ export interface LettersTabProps {
 
 export default function LettersTab({ isActive }: LettersTabProps) {
   const [page, setPage] = useState(1);
-  const [permanentlyDeletingLetter, setPermanentlyDeletingLetter] =
-    useState<DeletedLetter | null>(null);
-  const [restoringLetter, setRestoringLetter] = useState<DeletedLetter | null>(
+  const [permanentlyDeletingLetter, setPermanentlyDeletingLetter] = useState<DeletedLetter | null>(
     null,
   );
-  const [restoringLetterId, setRestoringLetterId] = useState<string | null>(
-    null,
-  );
+  const [restoringLetter, setRestoringLetter] = useState<DeletedLetter | null>(null);
+  const [restoringLetterId, setRestoringLetterId] = useState<string | null>(null);
   const [deletingLetterId, setDeletingLetterId] = useState<string | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
-  const isStaff = role === "admin" || role === "moderator";
+  const isStaff = role === 'admin' || role === 'moderator';
   const canRestoreLetter = isStaff
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          letter: ["restore"],
+          letter: ['restore'],
         },
       })
     : false;
@@ -71,16 +47,15 @@ export default function LettersTab({ isActive }: LettersTabProps) {
     ? authClient.admin.checkRolePermission({
         role,
         permission: {
-          letter: ["purge"],
+          letter: ['purge'],
         },
       })
     : false;
 
-  const { data: deletedLetters, isFetching: isDeletedLettersFetching } =
-    useQuery({
-      ...deletedLettersPageOptions(page),
-      enabled: isActive,
-    });
+  const { data: deletedLetters, isFetching: isDeletedLettersFetching } = useQuery({
+    ...deletedLettersPageOptions(page),
+    enabled: isActive,
+  });
 
   const { data: totalCount } = useQuery({
     ...deletedLettersCountOptions(),
@@ -149,7 +124,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                     {/* Show "Anonymous" if the letter was submitted anonymously
                          or if the author information is missing (author can be null for deleted letters). */}
                     {!letter.author || letter.isAnonymous
-                      ? "Anonymous"
+                      ? 'Anonymous'
                       : formatUserDisplayName(letter.author)}
                   </Table.Td>
                   <Table.Td>
@@ -171,14 +146,10 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                               setRestoringLetter(letter);
                             }
                           }}
-                          loading={
-                            restoreMutation.isPending &&
-                            restoringLetterId === letter.id
-                          }
+                          loading={restoreMutation.isPending && restoringLetterId === letter.id}
                           disabled={
                             !canRestoreLetter ||
-                            (restoreMutation.isPending &&
-                              restoringLetterId === letter.id)
+                            (restoreMutation.isPending && restoringLetterId === letter.id)
                           }
                         >
                           <IconArrowBackUp size="1em" />
@@ -194,14 +165,10 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                               setPermanentlyDeletingLetter(letter);
                             }
                           }}
-                          loading={
-                            deleteMutation.isPending &&
-                            deletingLetterId === letter.id
-                          }
+                          loading={deleteMutation.isPending && deletingLetterId === letter.id}
                           disabled={
                             !canPermanentlyDeleteLetter ||
-                            (deleteMutation.isPending &&
-                              deletingLetterId === letter.id)
+                            (deleteMutation.isPending && deletingLetterId === letter.id)
                           }
                         >
                           <IconTrashX size="1em" />
@@ -251,10 +218,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
             restoreMutation.mutate(letter.id);
             setRestoringLetter(null);
           }}
-          loading={
-            restoreMutation.isPending &&
-            restoringLetterId === restoringLetter?.id
-          }
+          loading={restoreMutation.isPending && restoringLetterId === restoringLetter?.id}
         />
       )}
     </Tabs.Panel>

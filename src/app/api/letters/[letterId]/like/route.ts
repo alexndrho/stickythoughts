@@ -1,16 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import {
-  likeLetter,
-  unlikeLetter,
-} from "@/server/letter";
-import { LetterNotFoundError } from "@/server/letter";
-import {
-  isRecordNotFoundError,
-  isUniqueConstraintError,
-} from "@/server/db";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { likeLetter, unlikeLetter } from '@/server/letter';
+import { LetterNotFoundError } from '@/server/letter';
+import { isRecordNotFoundError, isUniqueConstraintError } from '@/server/db';
 
 export async function POST(
   request: Request,
@@ -28,24 +22,21 @@ export async function POST(
 
     return NextResponse.json(
       {
-        message: "Post liked successfully",
+        message: 'Post liked successfully',
       },
       { status: 200 },
     );
   } catch (error) {
     if (error instanceof LetterNotFoundError) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter post not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter post not found' }], 404);
     }
 
     if (isUniqueConstraintError(error)) {
       return jsonError(
         [
           {
-            code: "validation/unique-constraint",
-            message: "You have already liked this post",
+            code: 'validation/unique-constraint',
+            message: 'You have already liked this post',
           },
         ],
         409,
@@ -53,7 +44,7 @@ export async function POST(
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }
 
@@ -73,7 +64,7 @@ export async function DELETE(
 
     return NextResponse.json(
       {
-        message: "Post unliked successfully",
+        message: 'Post unliked successfully',
       },
       { status: 200 },
     );
@@ -82,8 +73,8 @@ export async function DELETE(
       return jsonError(
         [
           {
-            code: "validation/unique-constraint",
-            message: "You have not liked this post yet",
+            code: 'validation/unique-constraint',
+            message: 'You have not liked this post yet',
           },
         ],
         409,
@@ -91,6 +82,6 @@ export async function DELETE(
     }
 
     console.error(error);
-    return unknownErrorResponse("Unknown error");
+    return unknownErrorResponse('Unknown error');
   }
 }

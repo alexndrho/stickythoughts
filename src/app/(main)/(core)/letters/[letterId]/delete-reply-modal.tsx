@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { Button, Group, Modal, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons-react";
+import { useMutation } from '@tanstack/react-query';
+import { Button, Group, Modal, Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconTrash } from '@tabler/icons-react';
 
-import { deleteLetterReply } from "@/services/letter";
-import { setDeleteLetterReplyQueryData } from "../set-query-data";
-import { stripHtmlTags } from "@/utils/text";
-import { type LetterReply } from "@/types/letter";
+import { deleteLetterReply } from '@/services/letter';
+import { setDeleteLetterReplyQueryData } from '../set-query-data';
+import { stripHtmlTags } from '@/utils/text';
+import { type LetterReply } from '@/types/letter';
 
 export interface DeleteReplyModalProps {
   letterId: string;
@@ -46,8 +46,8 @@ export default function DeleteReplyModal({
       });
 
       notifications.show({
-        title: "Reply deleted",
-        message: "The reply has been successfully deleted.",
+        title: 'Reply deleted',
+        message: 'The reply has been successfully deleted.',
         icon: <IconTrash size="1em" />,
       });
 

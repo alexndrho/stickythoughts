@@ -7,8 +7,7 @@ body {
 :root {
   --surface-hover-translate: calc(-1 * var(--mantine-spacing-xs));
   --surface-hover-shadow: var(--mantine-shadow-sm);
-  --surface-hover-transition: transform 200ms ease, box-shadow 200ms ease,
-    border-color 200ms ease;
+  --surface-hover-transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
 .lightHidden {

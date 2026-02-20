@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "@mantine/form";
-import { Button, Group, Modal, TextInput } from "@mantine/core";
+import { useEffect, useEffectEvent } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from '@mantine/form';
+import { Button, Group, Modal, TextInput } from '@mantine/core';
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from '@/lib/auth-client';
 
 export interface UpdateUsernameModalProps {
   opened: boolean;
@@ -16,7 +16,7 @@ export interface UpdateUsernameModalProps {
 export default function UpdateUsernameModal({
   opened,
   onClose,
-  defaultValue = "",
+  defaultValue = '',
 }: UpdateUsernameModalProps) {
   const form = useForm({
     initialValues: {
@@ -25,8 +25,8 @@ export default function UpdateUsernameModal({
   });
 
   const setFormUsername = useEffectEvent((username?: string) => {
-    form.setInitialValues({ username: username || "" });
-    form.setValues({ username: username || "" });
+    form.setInitialValues({ username: username || '' });
+    form.setValues({ username: username || '' });
   });
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function UpdateUsernameModal({
     mutationFn: (values: typeof form.values) => authClient.updateUser(values),
     onSuccess: ({ error }) => {
       if (error) {
-        form.setFieldError("username", error.message);
+        form.setFieldError('username', error.message);
         return;
       }
 
@@ -45,7 +45,7 @@ export default function UpdateUsernameModal({
       onClose();
     },
     onError: (error) => {
-      form.setFieldError("username", error.message);
+      form.setFieldError('username', error.message);
     },
   });
 
@@ -56,16 +56,12 @@ export default function UpdateUsernameModal({
           <TextInput
             flex={1}
             label="Username"
-            placeholder={defaultValue || "Enter your username"}
+            placeholder={defaultValue || 'Enter your username'}
             withAsterisk
-            {...form.getInputProps("username")}
+            {...form.getInputProps('username')}
           />
 
-          <Button
-            type="submit"
-            loading={mutation.isPending}
-            disabled={!form.values.username}
-          >
+          <Button type="submit" loading={mutation.isPending} disabled={!form.values.username}>
             Update
           </Button>
         </Group>

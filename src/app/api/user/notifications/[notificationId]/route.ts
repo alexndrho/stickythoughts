@@ -1,13 +1,10 @@
-import { ZodError } from "zod";
-import { NextResponse } from "next/server";
+import { ZodError } from 'zod';
+import { NextResponse } from 'next/server';
 
-import { userNotificationMarkReadInput } from "@/lib/validations/user";
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import {
-  deleteNotification,
-  markNotificationRead,
-} from "@/server/user";
+import { userNotificationMarkReadInput } from '@/lib/validations/user';
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { deleteNotification, markNotificationRead } from '@/server/user';
 
 export async function PUT(
   request: Request,
@@ -30,14 +27,14 @@ export async function PUT(
       isRead,
     });
 
-    return NextResponse.json({ message: "Notification updated successfully" });
+    return NextResponse.json({ message: 'Notification updated successfully' });
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }
 
@@ -56,9 +53,9 @@ export async function DELETE(
 
     await deleteNotification({ notificationId, userId: session.user.id });
 
-    return NextResponse.json({ message: "Notification deleted successfully" });
+    return NextResponse.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

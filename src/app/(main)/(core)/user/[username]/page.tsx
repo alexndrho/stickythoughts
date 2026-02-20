@@ -1,15 +1,12 @@
-import { Metadata } from "next";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
+import { Metadata } from 'next';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { notFound } from 'next/navigation';
 
-import { userKeys } from "@/lib/query-keys";
-import { getQueryClient } from "@/lib/get-query-client";
-import {
-  getUserServer,
-  UserNotFoundError,
-} from "@/app/(main)/(core)/user/[username]/user.server";
-import { formatUserDisplayName } from "@/utils/user";
-import Content from "./content";
+import { userKeys } from '@/lib/query-keys';
+import { getQueryClient } from '@/lib/get-query-client';
+import { getUserServer, UserNotFoundError } from '@/app/(main)/(core)/user/[username]/user.server';
+import { formatUserDisplayName } from '@/utils/user';
+import Content from './content';
 
 export async function generateMetadata({
   params,
@@ -24,11 +21,11 @@ export async function generateMetadata({
   try {
     const user = await getUserServer(username);
 
-    const tabParam = resolvedSearchParams.tab || "";
+    const tabParam = resolvedSearchParams.tab || '';
     let canonical = `/user/${username}`;
-    if (tabParam === "replies") {
+    if (tabParam === 'replies') {
       canonical = `/user/${username}?tab=replies`;
-    } else if (tabParam === "likes") {
+    } else if (tabParam === 'likes') {
       canonical = `/user/${username}?tab=likes`;
     }
 
@@ -46,11 +43,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function UserPage({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}) {
+export default async function UserPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
 
   const queryClient = getQueryClient();

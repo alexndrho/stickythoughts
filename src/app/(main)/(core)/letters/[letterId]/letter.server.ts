@@ -1,12 +1,12 @@
-import "server-only";
+import 'server-only';
 
-import { headers as nextHeaders } from "next/headers";
-import { cache } from "react";
+import { headers as nextHeaders } from 'next/headers';
+import { cache } from 'react';
 
-import { auth } from "@/lib/auth";
-import { enforceRscRateLimit } from "@/lib/rate-limit/rsc";
-import { getLetterPublic, LetterNotFoundError } from "@/server/letter";
-import type { Letter } from "@/types/letter";
+import { auth } from '@/lib/auth';
+import { enforceRscRateLimit } from '@/lib/rate-limit/rsc';
+import { getLetterPublic, LetterNotFoundError } from '@/server/letter';
+import type { Letter } from '@/types/letter';
 
 export { LetterNotFoundError };
 
@@ -15,7 +15,7 @@ async function getLetterServerUncached(letterId: string): Promise<Letter> {
   const session = await auth.api.getSession({ headers });
 
   await enforceRscRateLimit({
-    tier: "get:standard",
+    tier: 'get:standard',
     userId: session?.user?.id ?? null,
     headers,
   });

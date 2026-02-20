@@ -1,25 +1,16 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import Link from "next/link";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import {
-  Anchor,
-  Box,
-  Button,
-  Center,
-  Group,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
-import { isEmail, useForm } from "@mantine/form";
-import { useMutation } from "@tanstack/react-query";
-import { IconArrowLeft, IconMail } from "@tabler/icons-react";
+import { useRef } from 'react';
+import Link from 'next/link';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { Anchor, Box, Button, Center, Group, Text, TextInput, Title } from '@mantine/core';
+import { isEmail, useForm } from '@mantine/form';
+import { useMutation } from '@tanstack/react-query';
+import { IconArrowLeft, IconMail } from '@tabler/icons-react';
 
-import { AuthContainer } from "../auth-container";
-import { authClient } from "@/lib/auth-client";
-import classes from "./forgot-password.module.css";
+import { AuthContainer } from '../auth-container';
+import { authClient } from '@/lib/auth-client';
+import classes from './forgot-password.module.css';
 
 export interface StepOneProps {
   setEmail: (email: string) => void;
@@ -31,11 +22,11 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
 
   const sendOTPForm = useForm({
     initialValues: {
-      email: "",
-      turnstileToken: "",
+      email: '',
+      turnstileToken: '',
     },
     validate: {
-      email: isEmail("Invalid email"),
+      email: isEmail('Invalid email'),
     },
   });
 
@@ -43,10 +34,10 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
     mutationFn: async (values: typeof sendOTPForm.values) => {
       const { data, error } = await authClient.emailOtp.sendVerificationOtp({
         email: values.email,
-        type: "forget-password",
+        type: 'forget-password',
         fetchOptions: {
           headers: {
-            "x-captcha-response": values.turnstileToken,
+            'x-captcha-response': values.turnstileToken,
           },
         },
       });
@@ -55,18 +46,18 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
         setEmail(values.email);
         nextStep();
       } else if (error) {
-        sendOTPForm.setFieldError("email", error.message);
-        sendOTPForm.setFieldValue("turnstileToken", "");
+        sendOTPForm.setFieldError('email', error.message);
+        sendOTPForm.setFieldValue('turnstileToken', '');
         turnstileRef.current?.reset();
       } else {
-        sendOTPForm.setFieldError("email", "Failed to send verification code");
-        sendOTPForm.setFieldValue("turnstileToken", "");
+        sendOTPForm.setFieldError('email', 'Failed to send verification code');
+        sendOTPForm.setFieldValue('turnstileToken', '');
         turnstileRef.current?.reset();
       }
     },
     onError: () => {
-      sendOTPForm.setFieldError("email", "Failed to send verification code");
-      sendOTPForm.setFieldValue("turnstileToken", "");
+      sendOTPForm.setFieldError('email', 'Failed to send verification code');
+      sendOTPForm.setFieldValue('turnstileToken', '');
       turnstileRef.current?.reset();
     },
   });
@@ -74,12 +65,8 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
   return (
     <Center>
       <AuthContainer>
-        <form
-          onSubmit={sendOTPForm.onSubmit((values) =>
-            sendOTPMutation.mutate(values),
-          )}
-        >
-          <Title order={2} className={classes["paper-title"]}>
+        <form onSubmit={sendOTPForm.onSubmit((values) => sendOTPMutation.mutate(values))}>
+          <Title order={2} className={classes['paper-title']}>
             Enter your email
           </Title>
 
@@ -88,29 +75,22 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
             placeholder="me@example.com"
             withAsterisk
             leftSection={<IconMail size="1em" />}
-            {...sendOTPForm.getInputProps("email")}
+            {...sendOTPForm.getInputProps('email')}
           />
 
           <Turnstile
             ref={turnstileRef}
-            siteKey={
-              process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_AUTH_KEY!
-            }
+            siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_AUTH_KEY!}
             className={classes.captcha}
-            onSuccess={(token) =>
-              sendOTPForm.setFieldValue("turnstileToken", token)
-            }
+            onSuccess={(token) => sendOTPForm.setFieldValue('turnstileToken', token)}
             onExpire={() => turnstileRef.current?.reset()}
             onError={() =>
-              sendOTPForm.setFieldError(
-                "turnstileToken",
-                "Captcha verification failed",
-              )
+              sendOTPForm.setFieldError('turnstileToken', 'Captcha verification failed')
             }
           />
 
           {(sendOTPForm.errors.root || sendOTPForm.errors.turnstileToken) && (
-            <Text size="xs" className={classes["root-error-messsage"]}>
+            <Text size="xs" className={classes['root-error-messsage']}>
               {sendOTPForm.errors.root || sendOTPForm.errors.turnstileToken}
             </Text>
           )}
@@ -126,7 +106,7 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
             <Button
               type="submit"
               loading={sendOTPMutation.isPending}
-              disabled={sendOTPForm.values.turnstileToken === ""}
+              disabled={sendOTPForm.values.turnstileToken === ''}
             >
               Reset password
             </Button>

@@ -1,7 +1,7 @@
-import type { DeserializeDates } from "@/types/serialization";
+import type { DeserializeDates } from '@/types/serialization';
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  if (value === null || typeof value !== "object") return false;
+  if (value === null || typeof value !== 'object') return false;
   if (Array.isArray(value) || value instanceof Date) return false;
 
   const prototype = Object.getPrototypeOf(value);
@@ -9,14 +9,14 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 const DATE_FIELD_KEYS = new Set<string>([
-  "createdAt",
-  "updatedAt",
-  "accessTokenExpiresAt",
-  "refreshTokenExpiresAt",
-  "banExpires",
-  "expiresAt",
-  "deletedAt",
-  "highlightedAt",
+  'createdAt',
+  'updatedAt',
+  'accessTokenExpiresAt',
+  'refreshTokenExpiresAt',
+  'banExpires',
+  'expiresAt',
+  'deletedAt',
+  'highlightedAt',
 ]);
 
 function shouldConvertDateKey(key: string): boolean {
@@ -26,7 +26,7 @@ function shouldConvertDateKey(key: string): boolean {
 function normalizeValue(value: unknown, key?: string): unknown {
   if (value instanceof Date) return value;
 
-  if (key && shouldConvertDateKey(key) && typeof value === "string") {
+  if (key && shouldConvertDateKey(key) && typeof value === 'string') {
     const date = new Date(value);
     if (!Number.isNaN(date.getTime())) {
       return date;

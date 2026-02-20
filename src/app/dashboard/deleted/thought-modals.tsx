@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Group, Modal, Text } from '@mantine/core';
 
-import Thought from "@/components/thought";
-import type { DeletedThought } from "@/types/deleted";
+import Thought from '@/components/thought';
+import type { DeletedThought } from '@/types/deleted';
 
 export interface PermanentlyDeleteThoughtModalProps {
   thought: DeletedThought | null;
@@ -21,15 +21,10 @@ export const PermanentlyDeleteThoughtModal = ({
   loading,
 }: PermanentlyDeleteThoughtModalProps) => {
   return (
-    <Modal
-      title="Permanently delete this thought?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Permanently delete this thought?" opened={opened} onClose={onClose} centered>
       <Thought
-        message={thought?.message ?? "No thought selected yet."}
-        author={thought?.author ?? "Unknown"}
+        message={thought?.message ?? 'No thought selected yet.'}
+        author={thought?.author ?? 'Unknown'}
         color={thought?.color}
         fluid
       />
@@ -73,15 +68,10 @@ export const RecoverThoughtModal = ({
   loading,
 }: RecoverThoughtModalProps) => {
   return (
-    <Modal
-      title="Recover this thought?"
-      opened={opened}
-      onClose={onClose}
-      centered
-    >
+    <Modal title="Recover this thought?" opened={opened} onClose={onClose} centered>
       <Thought
-        message={thought?.message ?? "No thought selected yet."}
-        author={thought?.author ?? "Unknown"}
+        message={thought?.message ?? 'No thought selected yet.'}
+        author={thought?.author ?? 'Unknown'}
         color={thought?.color}
         fluid
       />

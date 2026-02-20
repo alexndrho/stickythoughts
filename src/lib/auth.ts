@@ -1,52 +1,40 @@
-import "server-only";
+import 'server-only';
 
-import { after } from "next/server";
-import { betterAuth } from "better-auth";
-import {
-  APIError,
-  createAuthMiddleware,
-  getSessionFromCtx,
-} from "better-auth/api";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { nextCookies } from "better-auth/next-js";
-import {
-  admin as adminPlugin,
-  captcha,
-  emailOTP,
-  twoFactor,
-  username,
-} from "better-auth/plugins";
-import { render } from "@react-email/components";
-import { generateUsername } from "unique-username-generator";
+import { after } from 'next/server';
+import { betterAuth } from 'better-auth';
+import { APIError, createAuthMiddleware, getSessionFromCtx } from 'better-auth/api';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { nextCookies } from 'better-auth/next-js';
+import { admin as adminPlugin, captcha, emailOTP, twoFactor, username } from 'better-auth/plugins';
+import { render } from '@react-email/components';
+import { generateUsername } from 'unique-username-generator';
 
-import { prisma } from "./db";
-import { getRedisClient } from "./redis";
-import { ac, admin, moderator } from "./permissions";
-import { resend } from "./email";
-import EmailOTPTemplate from "@/components/emails/email-otp-template";
-import EmailLinkTemplate from "@/components/emails/email-link-template";
-import reservedUsernames from "@/config/reserved-usernames.json";
-import { USERNAME_REGEX } from "@/config/text";
-import { matcher } from "./bad-words";
+import { prisma } from './db';
+import { getRedisClient } from './redis';
+import { ac, admin, moderator } from './permissions';
+import { resend } from './email';
+import EmailOTPTemplate from '@/components/emails/email-otp-template';
+import EmailLinkTemplate from '@/components/emails/email-link-template';
+import reservedUsernames from '@/config/reserved-usernames.json';
+import { USERNAME_REGEX } from '@/config/text';
+import { matcher } from './bad-words';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: "postgresql",
+    provider: 'postgresql',
   }),
   emailAndPassword: {
     enabled: true,
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
-      const emailHtml = await render(
-        EmailLinkTemplate({ url, type: "email-verification" }),
-      );
+      const emailHtml = await render(EmailLinkTemplate({ url, type: 'email-verification' }));
 
       after(
         resend.emails.send({
-          from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
+          from: 'StickyThoughts <no-reply@mail.stickythoughts.app>',
           to: user.email,
-          subject: "Verify your email address",
+          subject: 'Verify your email address',
           html: emailHtml,
         }),
       );
@@ -56,15 +44,13 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ user, url }) => {
-        const emailHtml = await render(
-          EmailLinkTemplate({ url, type: "email-change" }),
-        );
+        const emailHtml = await render(EmailLinkTemplate({ url, type: 'email-change' }));
 
         after(
           resend.emails.send({
-            from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
+            from: 'StickyThoughts <no-reply@mail.stickythoughts.app>',
             to: user.email,
-            subject: "Approve your email change",
+            subject: 'Approve your email change',
             html: emailHtml,
           }),
         );
@@ -83,7 +69,7 @@ export const auth = betterAuth({
     },
     set: async (key, value, ttl) => {
       if (ttl) {
-        await getRedisClient().set(key, value, "EX", ttl);
+        await getRedisClient().set(key, value, 'EX', ttl);
       } else {
         await getRedisClient().set(key, value);
       }
@@ -96,22 +82,21 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async (user, ctx) => {
-          const username =
-            (user as unknown as { username: string }).username || "";
+          const username = (user as unknown as { username: string }).username || '';
 
           if (!username) {
             const maxAttempts = 10;
-            let generatedUsername = "";
+            let generatedUsername = '';
             let existingUser = null;
 
             for (let attempt = 0; attempt < maxAttempts; attempt++) {
-              generatedUsername = generateUsername("", 4);
+              generatedUsername = generateUsername('', 4);
 
               existingUser = await ctx?.context.adapter.findOne({
-                model: "user",
+                model: 'user',
                 where: [
                   {
-                    field: "username",
+                    field: 'username',
                     value: generatedUsername.toLowerCase(),
                   },
                 ],
@@ -123,9 +108,8 @@ export const auth = betterAuth({
             }
 
             if (existingUser) {
-              throw new APIError("INTERNAL_SERVER_ERROR", {
-                message:
-                  "Failed to generate a unique username. Please try again.",
+              throw new APIError('INTERNAL_SERVER_ERROR', {
+                message: 'Failed to generate a unique username. Please try again.',
               });
             }
 
@@ -150,17 +134,17 @@ export const auth = betterAuth({
     username({
       usernameValidator: (username) => {
         if (!USERNAME_REGEX.test(username)) {
-          throw new APIError("BAD_REQUEST", {
-            code: "INVALID_USERNAME",
+          throw new APIError('BAD_REQUEST', {
+            code: 'INVALID_USERNAME',
             message:
-              "Username can only contain letters, numbers, and single hyphens no leading, trailing, or consecutive hyphens.",
+              'Username can only contain letters, numbers, and single hyphens no leading, trailing, or consecutive hyphens.',
           });
         } else if (
           matcher.hasMatch(username) ||
           reservedUsernames.reserved_usernames.includes(username.toLowerCase())
         ) {
-          throw new APIError("BAD_REQUEST", {
-            message: "This username is not allowed.",
+          throw new APIError('BAD_REQUEST', {
+            message: 'This username is not allowed.',
           });
         }
 
@@ -168,8 +152,8 @@ export const auth = betterAuth({
       },
       displayUsernameValidator: (displayUsername) => {
         if (matcher.hasMatch(displayUsername)) {
-          throw new APIError("BAD_REQUEST", {
-            message: "This display name is not allowed.",
+          throw new APIError('BAD_REQUEST', {
+            message: 'This display name is not allowed.',
           });
         }
 
@@ -177,13 +161,13 @@ export const auth = betterAuth({
       },
     }),
     captcha({
-      provider: "cloudflare-turnstile",
+      provider: 'cloudflare-turnstile',
       secretKey: process.env.CLOUDFLARE_TURNSTILE_SECRET_AUTH_KEY!,
       endpoints: [
-        "/sign-up/email",
-        "/sign-in/email",
-        "/sign-in/username",
-        "/email-otp/send-verification-otp",
+        '/sign-up/email',
+        '/sign-in/email',
+        '/sign-in/username',
+        '/email-otp/send-verification-otp',
       ],
     }),
     emailOTP({
@@ -192,7 +176,7 @@ export const auth = betterAuth({
 
         after(
           resend.emails.send({
-            from: "StickyThoughts <no-reply@mail.stickythoughts.app>",
+            from: 'StickyThoughts <no-reply@mail.stickythoughts.app>',
             to: email,
             subject: `${otp} is your StickyThoughts verification code`,
             html: emailHtml,
@@ -205,19 +189,18 @@ export const auth = betterAuth({
     // current better-auth version doesn't support targeting specific roles
     // only admin can ban everyone, moderator can only ban user or null role
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path !== "/admin/ban-user" && ctx.path !== "/admin/unban-user") {
+      if (ctx.path !== '/admin/ban-user' && ctx.path !== '/admin/unban-user') {
         return;
       }
 
       const session = await getSessionFromCtx(ctx);
-      if (!session || session.user.role === "admin") {
+      if (!session || session.user.role === 'admin') {
         return;
       }
 
-      const targetUserId =
-        typeof ctx.body === "object" && ctx.body ? ctx.body.userId : undefined;
+      const targetUserId = typeof ctx.body === 'object' && ctx.body ? ctx.body.userId : undefined;
 
-      if (!targetUserId || typeof targetUserId !== "string") {
+      if (!targetUserId || typeof targetUserId !== 'string') {
         return;
       }
 
@@ -227,12 +210,12 @@ export const auth = betterAuth({
       });
 
       if (!targetUser) {
-        throw new APIError("NOT_FOUND", { message: "User not found" });
+        throw new APIError('NOT_FOUND', { message: 'User not found' });
       }
 
-      if (targetUser.role !== "user" && targetUser.role !== null) {
-        throw new APIError("FORBIDDEN", {
-          message: "You are not allowed to ban this user.",
+      if (targetUser.role !== 'user' && targetUser.role !== null) {
+        throw new APIError('FORBIDDEN', {
+          message: 'You are not allowed to ban this user.',
         });
       }
     }),

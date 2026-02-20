@@ -1,17 +1,17 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse } from "@/lib/http";
-import { listDeletedLetters } from "@/server/dashboard";
-import { toDTO } from "@/lib/http/to-dto";
-import type { DeletedLetterDTO } from "@/types/deleted";
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse } from '@/lib/http';
+import { listDeletedLetters } from '@/server/dashboard';
+import { toDTO } from '@/lib/http/to-dto';
+import type { DeletedLetterDTO } from '@/types/deleted';
 
 export async function GET(request: NextRequest) {
   try {
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letter: ["list-deleted"],
+        letter: ['list-deleted'],
       },
     });
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const page = Math.max(Number(searchParams.get("page") || "1"), 1);
+    const page = Math.max(Number(searchParams.get('page') || '1'), 1);
     const items = await listDeletedLetters({ page });
 
     return NextResponse.json(toDTO(items) satisfies DeletedLetterDTO[], {
@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

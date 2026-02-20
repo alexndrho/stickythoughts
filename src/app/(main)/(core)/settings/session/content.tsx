@@ -1,28 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Divider, Group, Loader, Title } from "@mantine/core";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button, Divider, Group, Loader, Title } from '@mantine/core';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { userSessionsOptions } from "./options";
-import { userKeys } from "@/lib/query-keys";
-import SessionItem from "./session-item";
-import classes from "../settings.module.css";
-import sessionClasses from "./session.module.css";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { userSessionsOptions } from './options';
+import { userKeys } from '@/lib/query-keys';
+import SessionItem from './session-item';
+import classes from '../settings.module.css';
+import sessionClasses from './session.module.css';
 
 export default function Content() {
   const router = useRouter();
-  const { data: currentSession, isPending: isCurrentSessionPending } =
-    authClient.useSession();
-  const { data: sessions, isLoading: isSessionsLoading } =
-    useQuery(userSessionsOptions);
+  const { data: currentSession, isPending: isCurrentSessionPending } = authClient.useSession();
+  const { data: sessions, isLoading: isSessionsLoading } = useQuery(userSessionsOptions);
 
   useEffect(() => {
     if (!isCurrentSessionPending && !currentSession) {
-      router.push("/");
+      router.push('/');
     }
   }, [isCurrentSessionPending, currentSession, router]);
 
@@ -69,11 +67,7 @@ export default function Content() {
       <section className={sessionClasses.sessions}>
         {sortedSessions
           ? sortedSessions.map((session) => (
-              <SessionItem
-                key={session.id}
-                currentToken={currentToken}
-                session={session}
-              />
+              <SessionItem key={session.id} currentToken={currentToken} session={session} />
             ))
           : isSessionsLoading && (
               <Group my="xl" w="100%" justify="center">

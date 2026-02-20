@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
 export {
   isPrismaKnownRequestError,
   isPrismaKnownRequestErrorCode,
   isRecordNotFoundError,
   isUniqueConstraintError,
-} from "./prisma-errors";
+} from './prisma-errors';

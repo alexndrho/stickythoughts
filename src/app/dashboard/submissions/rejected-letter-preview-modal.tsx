@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, Group, Modal } from "@mantine/core";
+import { Button, Group, Modal } from '@mantine/core';
 
-import type { SubmissionLetter } from "@/types/submission";
-import LetterPreviewContent from "./letter-preview-content";
+import type { SubmissionLetter } from '@/types/submission';
+import LetterPreviewContent from './letter-preview-content';
 
 export interface RejectedLetterPreviewModalProps {
   letter: SubmissionLetter | null;
@@ -23,19 +23,13 @@ export default function RejectedLetterPreviewModal({
   canSetStatus,
 }: RejectedLetterPreviewModalProps) {
   return (
-    <Modal
-      title="Letter Preview"
-      opened={opened}
-      onClose={onClose}
-      centered
-      size="xl"
-    >
+    <Modal title="Letter Preview" opened={opened} onClose={onClose} centered size="xl">
       <LetterPreviewContent letter={letter} />
 
       <Group mt="md" justify="right">
         <Button
           loading={loading}
-          disabled={!letter || !canSetStatus || letter.status !== "REJECTED"}
+          disabled={!letter || !canSetStatus || letter.status !== 'REJECTED'}
           onClick={() => {
             if (!letter || !canSetStatus) return;
             onReopen(letter);

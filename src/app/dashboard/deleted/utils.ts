@@ -1,15 +1,12 @@
-import { getFormattedDate } from "@/utils/date";
-import { formatUserDisplayName } from "@/utils/user";
+import { getFormattedDate } from '@/utils/date';
+import { formatUserDisplayName } from '@/utils/user';
 
 export const formatDeletedDate = (value: string | Date | null | undefined) => {
-  if (!value) return "-";
+  if (!value) return '-';
   return getFormattedDate(value);
 };
 
-export const getPagedTotal = (
-  totalCount: number | undefined,
-  pageSize: number,
-) => {
+export const getPagedTotal = (totalCount: number | undefined, pageSize: number) => {
   const totalPages = Math.ceil((totalCount || 0) / pageSize);
   return Math.max(1, totalPages);
 };
@@ -20,7 +17,7 @@ export const formatDeletedByLabel = (
     username: string;
   } | null,
 ) => {
-  if (!deletedBy) return "-";
+  if (!deletedBy) return '-';
 
   return formatUserDisplayName(deletedBy);
 };

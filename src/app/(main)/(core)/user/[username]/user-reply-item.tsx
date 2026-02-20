@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
-import { Anchor, Paper, Text, Typography } from "@mantine/core";
+import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
+import { Anchor, Paper, Text, Typography } from '@mantine/core';
 
-import LikeButton from "../../letters/like-button";
-import { type UserLetterReply } from "@/types/letter";
-import classes from "./user.module.css";
-import AuthorAvatar from "@/components/author-avatar";
+import LikeButton from '../../letters/like-button';
+import { type UserLetterReply } from '@/types/letter';
+import classes from './user.module.css';
+import AuthorAvatar from '@/components/author-avatar';
 
 export interface UserReplyItemProps {
   reply: UserLetterReply;
@@ -24,36 +24,32 @@ export interface UserReplyItemProps {
 
 export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
   return (
-    <Paper
-      component="article"
-      withBorder
-      className={classes["user-reply-item"]}
-    >
+    <Paper component="article" withBorder className={classes['user-reply-item']}>
       <Link
         href={`/letters/${reply.letterId}`}
-        className={classes["user-reply-item__main-link"]}
+        className={classes['user-reply-item__main-link']}
         aria-label={`View letter titled ${reply.letter.title}`}
       />
 
-      <div className={classes["user-reply-item__content"]}>
+      <div className={classes['user-reply-item__content']}>
         <Text>
-          Replied to{" "}
+          Replied to{' '}
           <Anchor
             component={Link}
             inherit
             href={`/letters/${reply.letterId}`}
-            className={classes["user-reply-item__link"]}
+            className={classes['user-reply-item__link']}
           >
             {reply.letter.title}
           </Anchor>
         </Text>
 
-        <header className={classes["user-reply-item__header"]}>
+        <header className={classes['user-reply-item__header']}>
           {reply.isAnonymous || !reply.author ? (
             <AuthorAvatar
               size="xs"
               isAnonymous={!!reply.isAnonymous}
-              className={classes["user-reply-item__anonymous-avatar"]}
+              className={classes['user-reply-item__anonymous-avatar']}
             />
           ) : (
             <AuthorAvatar
@@ -76,12 +72,12 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
                 component={Link}
                 inherit
                 href={`/user/${reply.author.username}`}
-                className={classes["user-reply-item__link"]}
+                className={classes['user-reply-item__link']}
               >
                 {reply.author.name || reply.author.username}
               </Anchor>
-            )}{" "}
-            replied{" "}
+            )}{' '}
+            replied{' '}
             {formatDistanceToNow(reply.createdAt, {
               addSuffix: true,
             })}
@@ -96,7 +92,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
           size="compact-sm"
           count={reply.likes.count}
           liked={reply.likes.liked}
-          className={classes["user-reply-item__like-btn"]}
+          className={classes['user-reply-item__like-btn']}
           onLike={() => {
             if (!reply.author) return;
 

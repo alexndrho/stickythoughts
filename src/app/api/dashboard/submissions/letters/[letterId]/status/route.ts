@@ -1,13 +1,10 @@
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse, zodInvalidInput } from "@/lib/http";
-import { reviewLetterServerInput } from "@/lib/validations/letter";
-import {
-  getSubmissionLetterStatus,
-  setSubmissionLetterStatus,
-} from "@/server/dashboard";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { reviewLetterServerInput } from '@/lib/validations/letter';
+import { getSubmissionLetterStatus, setSubmissionLetterStatus } from '@/server/dashboard';
 
 export async function PATCH(
   request: Request,
@@ -17,7 +14,7 @@ export async function PATCH(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letter: ["review"],
+        letter: ['review'],
       },
     });
 
@@ -31,10 +28,7 @@ export async function PATCH(
     const letter = await getSubmissionLetterStatus({ letterId });
 
     if (!letter || letter.deletedAt) {
-      return jsonError(
-        [{ code: "not-found", message: "Letter not found" }],
-        404,
-      );
+      return jsonError([{ code: 'not-found', message: 'Letter not found' }], 404);
     }
 
     if (letter.status === status) {
@@ -60,6 +54,6 @@ export async function PATCH(
     }
 
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

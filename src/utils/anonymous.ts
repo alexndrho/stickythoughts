@@ -1,4 +1,4 @@
-import { createHash } from "crypto";
+import { createHash } from 'crypto';
 
 export const getAnonymousLabel = ({
   letterId,
@@ -9,9 +9,9 @@ export const getAnonymousLabel = ({
   authorId: string;
   length?: number;
 }) => {
-  const hash = createHash("sha256")
+  const hash = createHash('sha256')
     .update(`${letterId}:${authorId}`)
-    .digest("hex")
+    .digest('hex')
     .slice(0, length)
     .toUpperCase();
 

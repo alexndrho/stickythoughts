@@ -1,9 +1,9 @@
-import "server-only";
+import 'server-only';
 
-import { prisma } from "@/lib/db";
-import { LETTERS_PER_PAGE, LETTER_REPLIES_PER_PAGE } from "@/config/letter";
-import { UserNotFoundError } from "@/server/user/user-errors";
-import type { UserPublicAccount } from "@/types/user";
+import { prisma } from '@/lib/db';
+import { LETTERS_PER_PAGE, LETTER_REPLIES_PER_PAGE } from '@/config/letter';
+import { UserNotFoundError } from '@/server/user/user-errors';
+import type { UserPublicAccount } from '@/types/user';
 
 export async function getUserLikesVisibility(args: { username: string }) {
   const user = await prisma.user.findUnique({
@@ -25,7 +25,7 @@ export async function getUserLikesVisibility(args: { username: string }) {
   });
 
   if (!user) {
-    throw new UserNotFoundError("User not found");
+    throw new UserNotFoundError('User not found');
   }
 
   return {
@@ -66,14 +66,14 @@ export async function getUserPublicAccount(args: {
   });
 
   if (!user) {
-    throw new UserNotFoundError("User not found");
+    throw new UserNotFoundError('User not found');
   }
 
   const { settings, ...userRest } = user;
 
   return {
     ...userRest,
-    isLikesPrivate: settings?.privacySettings?.likesVisibility === "PRIVATE",
+    isLikesPrivate: settings?.privacySettings?.likesVisibility === 'PRIVATE',
   } satisfies UserPublicAccount;
 }
 
@@ -99,7 +99,7 @@ export async function listUserLetters(args: {
       ...(args.viewerUsername !== args.username && {
         isAnonymous: false,
       }),
-      status: "APPROVED",
+      status: 'APPROVED',
     },
     include: {
       author: {
@@ -131,7 +131,7 @@ export async function listUserLetters(args: {
         },
       },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 
@@ -191,7 +191,7 @@ export async function listUserReplies(args: {
         },
       },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 
@@ -248,6 +248,6 @@ export async function listUserLikedLetters(args: {
         },
       },
     },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }

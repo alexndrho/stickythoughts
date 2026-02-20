@@ -1,6 +1,6 @@
-import "client-only";
+import 'client-only';
 
-import { fetchJson } from "@/services/http";
+import { fetchJson } from '@/services/http';
 import type {
   Letter,
   LetterDTO,
@@ -10,64 +10,55 @@ import type {
   SubmitLetterReplyBody,
   UpdateLetterBody,
   UpdateLetterReplyBody,
-} from "@/types/letter";
+} from '@/types/letter';
 
 // letter
-export const submitLetter = async (
-  data: SubmitLetterBody,
-): Promise<{ id: string }> => {
+export const submitLetter = async (data: SubmitLetterBody): Promise<{ id: string }> => {
   return fetchJson(
-    "/api/letters",
+    '/api/letters',
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         ...data,
       }),
     },
-    { errorMessage: "Failed to submit letter post" },
+    { errorMessage: 'Failed to submit letter post' },
   );
 };
 
-export const getLetter = async (
-  id: string,
-  cookie?: string,
-): Promise<Letter> => {
+export const getLetter = async (id: string, cookie?: string): Promise<Letter> => {
   return fetchJson<LetterDTO>(
     `/api/letters/${id}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...(cookie ? { Cookie: cookie } : {}),
       },
     },
-    { errorMessage: "Failed to get letter post" },
+    { errorMessage: 'Failed to get letter post' },
   );
 };
 
-export const getLetters = async ({
-  lastId,
-}: {
-  lastId?: string;
-}): Promise<Letter[]> => {
+export const getLetters = async ({ lastId }: { lastId?: string }): Promise<Letter[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
-    params.append("lastId", lastId);
+    params.append('lastId', lastId);
   }
 
   return fetchJson<LetterDTO[]>(
     `/api/letters?${params}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to get letter posts" },
+    { errorMessage: 'Failed to get letter posts' },
   );
 };
 
@@ -81,28 +72,26 @@ export const updateLetter = async ({
   return fetchJson<LetterDTO>(
     `/api/letters/${id}`,
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "Failed to update letter post" },
+    { errorMessage: 'Failed to update letter post' },
   );
 };
 
-export const deleteLetter = async (
-  id: string,
-): Promise<{ message: string }> => {
+export const deleteLetter = async (id: string): Promise<{ message: string }> => {
   return fetchJson(
     `/api/letters/${id}`,
     {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to delete letter post" },
+    { errorMessage: 'Failed to delete letter post' },
   );
 };
 
@@ -111,27 +100,25 @@ export const likeLetter = async (id: string): Promise<{ message: string }> => {
   return fetchJson(
     `/api/letters/${id}/like`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to like letter post" },
+    { errorMessage: 'Failed to like letter post' },
   );
 };
 
-export const unlikeLetter = async (
-  id: string,
-): Promise<{ message: string }> => {
+export const unlikeLetter = async (id: string): Promise<{ message: string }> => {
   return fetchJson(
     `/api/letters/${id}/like`,
     {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to unlike letter post" },
+    { errorMessage: 'Failed to unlike letter post' },
   );
 };
 
@@ -146,13 +133,13 @@ export const submitLetterReply = async ({
   return fetchJson<LetterReplyDTO>(
     `/api/letters/${id}/replies`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "Failed to submit reply" },
+    { errorMessage: 'Failed to submit reply' },
   );
 };
 
@@ -166,18 +153,18 @@ export const getLetterReplies = async ({
   const params = new URLSearchParams();
 
   if (lastId) {
-    params.append("lastId", lastId);
+    params.append('lastId', lastId);
   }
 
   return fetchJson<LetterReplyDTO[]>(
     `/api/letters/${id}/replies?${params}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to get replies" },
+    { errorMessage: 'Failed to get replies' },
   );
 };
 
@@ -193,13 +180,13 @@ export const updateLetterReply = async ({
   return fetchJson<LetterReplyDTO>(
     `/api/letters/${letterId}/replies/${replyId}`,
     {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     },
-    { errorMessage: "Failed to update reply" },
+    { errorMessage: 'Failed to update reply' },
   );
 };
 
@@ -213,12 +200,12 @@ export const deleteLetterReply = async ({
   return fetchJson(
     `/api/letters/${letterId}/replies/${replyId}`,
     {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to delete reply" },
+    { errorMessage: 'Failed to delete reply' },
   );
 };
 
@@ -233,12 +220,12 @@ export const likeLetterReply = async ({
   return fetchJson(
     `/api/letters/${letterId}/replies/${replyId}/like`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to like reply" },
+    { errorMessage: 'Failed to like reply' },
   );
 };
 
@@ -252,11 +239,11 @@ export const unlikeLetterReply = async ({
   return fetchJson(
     `/api/letters/${letterId}/replies/${replyId}/like`,
     {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
-    { errorMessage: "Failed to unlike reply" },
+    { errorMessage: 'Failed to unlike reply' },
   );
 };

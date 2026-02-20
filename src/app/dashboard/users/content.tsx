@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { type UserWithRole } from "better-auth/plugins";
-import { notifications } from "@mantine/notifications";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { type UserWithRole } from 'better-auth/plugins';
+import { notifications } from '@mantine/notifications';
 import {
   ActionIcon,
   Avatar,
@@ -17,7 +17,7 @@ import {
   Table,
   Text,
   Title,
-} from "@mantine/core";
+} from '@mantine/core';
 import {
   IconClipboard,
   IconClock,
@@ -29,44 +29,42 @@ import {
   IconPhoto,
   IconRosetteDiscountCheckFilled,
   IconSearch,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { ADMIN_USERS_PER_PAGE } from "@/config/admin";
-import { adminUsersPageOptions } from "./options";
-import EditUserModal from "@/components/dashboard/users/edit-user-modal";
-import DeleteUserProfilePictureModal from "@/components/dashboard/users/delete-user-profile-picture-modal";
-import RevokeUserSessionsModal from "@/components/dashboard/users/revoke-user-sessions-modal";
-import BanUserModal from "@/components/dashboard/users/ban-user-modal";
-import UnbanUserModal from "@/components/dashboard/users/unban-user-modal";
-import dashboardClasses from "../dashboard.module.css";
-import classes from "./user.module.css";
-import { useDebouncedValue } from "@mantine/hooks";
-import PaginatedPanelLayout from "../paginated-panel-layout";
+import { authClient } from '@/lib/auth-client';
+import { ADMIN_USERS_PER_PAGE } from '@/config/admin';
+import { adminUsersPageOptions } from './options';
+import EditUserModal from '@/components/dashboard/users/edit-user-modal';
+import DeleteUserProfilePictureModal from '@/components/dashboard/users/delete-user-profile-picture-modal';
+import RevokeUserSessionsModal from '@/components/dashboard/users/revoke-user-sessions-modal';
+import BanUserModal from '@/components/dashboard/users/ban-user-modal';
+import UnbanUserModal from '@/components/dashboard/users/unban-user-modal';
+import dashboardClasses from '../dashboard.module.css';
+import classes from './user.module.css';
+import { useDebouncedValue } from '@mantine/hooks';
+import PaginatedPanelLayout from '../paginated-panel-layout';
 
 export default function Content() {
   const { data: session } = authClient.useSession();
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sortDirection, setSortDirection] = useState<
-    "asc" | "desc" | "default"
-  >("default");
+  const [search, setSearch] = useState('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | 'default'>('default');
 
   const [debouncedSearch] = useDebouncedValue(search, 300);
 
   const [editingUser, setEditingUser] = useState<UserWithRole | null>(null);
-  const [deletingUserProfilePicture, setDeletingUserProfilePicture] =
-    useState<UserWithRole | null>(null);
+  const [deletingUserProfilePicture, setDeletingUserProfilePicture] = useState<UserWithRole | null>(
+    null,
+  );
   const [banningUser, setBanningUser] = useState<UserWithRole | null>(null);
-  const [revokingSessionsUser, setRevokingSessionsUser] =
-    useState<UserWithRole | null>(null);
+  const [revokingSessionsUser, setRevokingSessionsUser] = useState<UserWithRole | null>(null);
   const [unbanningUser, setUnbanningUser] = useState<UserWithRole | null>(null);
 
   const { data: results, isFetching } = useQuery(
     adminUsersPageOptions({
       page,
       search: debouncedSearch || undefined,
-      sortDirection: sortDirection === "default" ? undefined : sortDirection,
+      sortDirection: sortDirection === 'default' ? undefined : sortDirection,
     }),
   );
 
@@ -103,7 +101,7 @@ export default function Content() {
   };
 
   // permissions
-  const hasPermissionToUpdateUsers = session?.user.role === "admin";
+  const hasPermissionToUpdateUsers = session?.user.role === 'admin';
 
   return (
     <div className={dashboardClasses.container}>
@@ -119,15 +117,13 @@ export default function Content() {
 
         <Select
           data={[
-            { value: "default", label: "Default" },
-            { value: "desc", label: "Newest First" },
-            { value: "asc", label: "Oldest First" },
+            { value: 'default', label: 'Default' },
+            { value: 'desc', label: 'Newest First' },
+            { value: 'asc', label: 'Oldest First' },
           ]}
           defaultValue="default"
           value={sortDirection}
-          onChange={(value) =>
-            setSortDirection((value as "asc" | "desc" | "default") || "default")
-          }
+          onChange={(value) => setSortDirection((value as 'asc' | 'desc' | 'default') || 'default')}
         />
       </Group>
 
@@ -154,7 +150,7 @@ export default function Content() {
               {results?.data?.users.map((user) => (
                 <Table.Tr key={user.id}>
                   <Table.Td>
-                    <div className={classes["table__td-user-container"]}>
+                    <div className={classes['table__td-user-container']}>
                       <Avatar src={user.image} />
 
                       <div>
@@ -169,8 +165,8 @@ export default function Content() {
                           </>
                         ) : (
                           <Text fw="bold">
-                            {/* @ts-expect-error - username exists but not in UserWithRole type */}
-                            @{user.username}
+                            {/* @ts-expect-error - username exists but not in UserWithRole type */}@
+                            {user.username}
                           </Text>
                         )}
                       </div>
@@ -178,11 +174,11 @@ export default function Content() {
                   </Table.Td>
 
                   <Table.Td>
-                    <div className={classes["table__td-email-container"]}>
-                      {user.email}{" "}
+                    <div className={classes['table__td-email-container']}>
+                      {user.email}{' '}
                       {user.emailVerified && (
                         <IconRosetteDiscountCheckFilled
-                          className={classes["table__td-email-verified-icon"]}
+                          className={classes['table__td-email-verified-icon']}
                         />
                       )}
                     </div>
@@ -191,42 +187,39 @@ export default function Content() {
                   <Table.Td>
                     <Badge
                       color={
-                        user.role === "admin"
-                          ? "blue"
-                          : user.role === "moderator"
-                            ? "green"
-                            : "gray"
+                        user.role === 'admin'
+                          ? 'blue'
+                          : user.role === 'moderator'
+                            ? 'green'
+                            : 'gray'
                       }
                     >
-                      {user.role || "user"}
+                      {user.role || 'user'}
                     </Badge>
                   </Table.Td>
 
-                  <Table.Td>{user.banned ? "Yes" : "No"}</Table.Td>
+                  <Table.Td>{user.banned ? 'Yes' : 'No'}</Table.Td>
 
-                  <Table.Td>{user.banReason || "-"}</Table.Td>
+                  <Table.Td>{user.banReason || '-'}</Table.Td>
 
                   <Table.Td>
                     {user.banExpires
-                      ? user.banExpires.toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
+                      ? user.banExpires.toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: 'numeric',
                           hour12: true,
                         })
-                      : "-"}
+                      : '-'}
                   </Table.Td>
 
                   <Table.Td>
                     {session?.user?.id !== user.id && (
                       <Menu>
                         <Menu.Target>
-                          <ActionIcon
-                            variant="default"
-                            aria-label="Open user actions menu"
-                          >
+                          <ActionIcon variant="default" aria-label="Open user actions menu">
                             <IconDots size="1em" />
                           </ActionIcon>
                         </Menu.Target>
@@ -248,9 +241,8 @@ export default function Content() {
                                   copy();
 
                                   notifications.show({
-                                    title: "User ID Copied",
-                                    message:
-                                      "The user ID has been copied to your clipboard.",
+                                    title: 'User ID Copied',
+                                    message: 'The user ID has been copied to your clipboard.',
                                     icon: <IconClipboard size="1em" />,
                                   });
                                 }}
@@ -266,9 +258,7 @@ export default function Content() {
                             leftSection={<IconPhoto size="1em" />}
                             color="red"
                             disabled={!user.image}
-                            onClick={() =>
-                              handleOpenDeleteUserProfilePictureModal(user)
-                            }
+                            onClick={() => handleOpenDeleteUserProfilePictureModal(user)}
                           >
                             Delete Profile Picture
                           </Menu.Item>
@@ -307,14 +297,14 @@ export default function Content() {
 
               {isFetching ? (
                 <Table.Tr>
-                  <Table.Td colSpan={8} style={{ textAlign: "center" }}>
+                  <Table.Td colSpan={8} style={{ textAlign: 'center' }}>
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
                 results?.data?.users.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={8} style={{ textAlign: "center" }}>
+                    <Table.Td colSpan={8} style={{ textAlign: 'center' }}>
                       No users found.
                     </Table.Td>
                   </Table.Tr>

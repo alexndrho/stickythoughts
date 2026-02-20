@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect, useEffectEvent } from "react";
-import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal, Select, Text, TextInput } from "@mantine/core";
-import { useMutation } from "@tanstack/react-query";
-import { IconEdit } from "@tabler/icons-react";
+import { useEffect, useEffectEvent } from 'react';
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { Button, Group, Modal, Select, Text, TextInput } from '@mantine/core';
+import { useMutation } from '@tanstack/react-query';
+import { IconEdit } from '@tabler/icons-react';
 
-import { authClient } from "@/lib/auth-client";
-import { getQueryClient } from "@/lib/get-query-client";
-import { adminKeys } from "@/lib/query-keys";
-import { userKeys } from "@/lib/query-keys";
-import TextInputLabelModifiedIndicator from "@/components/text-input-label-modified-indicator";
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
+import { adminKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys';
+import TextInputLabelModifiedIndicator from '@/components/text-input-label-modified-indicator';
 
 export interface EditUserModalProps {
   user: {
@@ -41,7 +41,7 @@ export default function EditUserModal({
     },
   });
 
-  const setForm = useEffectEvent((user: EditUserModalProps["user"]) => {
+  const setForm = useEffectEvent((user: EditUserModalProps['user']) => {
     form.setInitialValues({
       name: user?.name,
       username: user?.username,
@@ -70,10 +70,7 @@ export default function EditUserModal({
     onSuccess: ({ error }) => {
       if (error) {
         if (error.message) {
-          form.setFieldError(
-            "root",
-            error.message || "An unknown error occurred.",
-          );
+          form.setFieldError('root', error.message || 'An unknown error occurred.');
         }
 
         return;
@@ -85,14 +82,10 @@ export default function EditUserModal({
         queryKey: adminKeys.users(),
       });
 
-      if (
-        form.values.username &&
-        user?.username &&
-        form.values.username !== user.username
-      ) {
+      if (form.values.username && user?.username && form.values.username !== user.username) {
         queryClient.invalidateQueries({
           queryKey: userKeys.byUsername(user.username),
-          refetchType: "none",
+          refetchType: 'none',
         });
 
         onUsernameChange?.(form.values.username);
@@ -104,8 +97,8 @@ export default function EditUserModal({
 
       onClose();
       notifications.show({
-        title: "User Updated",
-        message: "The user has been successfully updated.",
+        title: 'User Updated',
+        message: 'The user has been successfully updated.',
         icon: <IconEdit size="1em" />,
       });
     },
@@ -115,19 +108,12 @@ export default function EditUserModal({
     <Modal title="Edit User" opened={opened} onClose={onClose} centered>
       {user ? (
         <form
-          onSubmit={form.onSubmit((values) =>
-            editUserMutation.mutate({ id: user.id, values }),
-          )}
+          onSubmit={form.onSubmit((values) => editUserMutation.mutate({ id: user.id, values }))}
         >
           <TextInput
-            label={
-              <TextInputLabelModifiedIndicator
-                label="Name"
-                modified={form.isDirty("name")}
-              />
-            }
+            label={<TextInputLabelModifiedIndicator label="Name" modified={form.isDirty('name')} />}
             placeholder={user.name}
-            {...form.getInputProps("name")}
+            {...form.getInputProps('name')}
           />
 
           <TextInput
@@ -135,42 +121,34 @@ export default function EditUserModal({
             label={
               <TextInputLabelModifiedIndicator
                 label="Username"
-                modified={form.isDirty("username")}
+                modified={form.isDirty('username')}
               />
             }
             placeholder={user.username}
-            {...form.getInputProps("username")}
+            {...form.getInputProps('username')}
           />
 
           {user.email && (
             <TextInput
               mt="md"
               label={
-                <TextInputLabelModifiedIndicator
-                  label="Email"
-                  modified={form.isDirty("email")}
-                />
+                <TextInputLabelModifiedIndicator label="Email" modified={form.isDirty('email')} />
               }
               placeholder={user.email}
-              {...form.getInputProps("email")}
+              {...form.getInputProps('email')}
             />
           )}
 
           <Select
             mt="md"
             allowDeselect={false}
-            label={
-              <TextInputLabelModifiedIndicator
-                label="Role"
-                modified={form.isDirty("role")}
-              />
-            }
+            label={<TextInputLabelModifiedIndicator label="Role" modified={form.isDirty('role')} />}
             data={[
-              { value: "moderator", label: "Moderator" },
-              { value: "user", label: "User" },
+              { value: 'moderator', label: 'Moderator' },
+              { value: 'user', label: 'User' },
             ]}
             value={form.values.role}
-            onChange={(value) => form.setFieldValue("role", value || undefined)}
+            onChange={(value) => form.setFieldValue('role', value || undefined)}
           />
 
           {form.errors.root && (
@@ -180,11 +158,7 @@ export default function EditUserModal({
           )}
 
           <Group mt="md" justify="end">
-            <Button
-              type="submit"
-              disabled={!form.isDirty()}
-              loading={editUserMutation.isPending}
-            >
+            <Button type="submit" disabled={!form.isDirty()} loading={editUserMutation.isPending}>
               Save Changes
             </Button>
           </Group>

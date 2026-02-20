@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
-import { headers } from "next/headers";
-import type { Metadata } from "next";
+import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
+import type { Metadata } from 'next';
 
-import { auth } from "@/lib/auth";
-import AdminShell from "./admin-shell";
+import { auth } from '@/lib/auth';
+import AdminShell from './admin-shell';
 
 export const metadata: Metadata = {
   robots: {
@@ -12,16 +12,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (session?.user.role !== "admin" && session?.user.role !== "moderator") {
+  if (session?.user.role !== 'admin' && session?.user.role !== 'moderator') {
     notFound();
   }
 

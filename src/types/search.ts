@@ -1,13 +1,13 @@
-import type { Prisma } from "@/generated/prisma/client";
-import type { SerializeDates } from "./serialization";
+import type { Prisma } from '@/generated/prisma/client';
+import type { SerializeDates } from './serialization';
 
 export const searchSegments = [
-  { label: "All", value: "all" },
-  { label: "Letters", value: "letters" },
-  { label: "Users", value: "users" },
+  { label: 'All', value: 'all' },
+  { label: 'Letters', value: 'letters' },
+  { label: 'Users', value: 'users' },
 ] as const;
 
-export type SearchSegmentType = (typeof searchSegments)[number]["value"];
+export type SearchSegmentType = (typeof searchSegments)[number]['value'];
 
 export type SearchResultMap = {
   users: SearchUserType[];

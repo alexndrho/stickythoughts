@@ -1,9 +1,9 @@
-import { Text } from "@mantine/core";
-import { RichTextEditor } from "@mantine/tiptap";
-import { IconHeading } from "@tabler/icons-react";
-import type { Editor } from "@tiptap/react";
+import { Text } from '@mantine/core';
+import { RichTextEditor } from '@mantine/tiptap';
+import { IconHeading } from '@tabler/icons-react';
+import type { Editor } from '@tiptap/react';
 
-import classes from "@/styles/text-editor.module.css";
+import classes from '@/styles/text-editor.module.css';
 
 export interface TextEditorProps {
   editor: Editor | null;
@@ -20,20 +20,18 @@ export default function TextEditor({ editor, error }: TextEditorProps) {
       <RichTextEditor
         editor={editor}
         classNames={{
-          content: !editor.isEditable
-            ? classes["not-editable-content"]
-            : undefined,
+          content: !editor.isEditable ? classes['not-editable-content'] : undefined,
         }}
         styles={{
           root: {
             border: !editor.isEditable
-              ? "none"
+              ? 'none'
               : error
-                ? "calc(.0625rem * var(--mantine-scale)) solid var(--mantine-color-error)"
+                ? 'calc(.0625rem * var(--mantine-scale)) solid var(--mantine-color-error)'
                 : undefined,
           },
           toolbar: {
-            borderColor: error ? "var(--mantine-color-error)" : undefined,
+            borderColor: error ? 'var(--mantine-color-error)' : undefined,
           },
           content: {
             padding: 0,
@@ -51,9 +49,7 @@ export default function TextEditor({ editor, error }: TextEditorProps) {
               <RichTextEditor.Control
                 aria-label="Heading"
                 title="Heading"
-                onClick={() =>
-                  editor?.chain().focus().toggleHeading({ level: 2 }).run()
-                }
+                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
               >
                 <IconHeading size="1em" />
               </RichTextEditor.Control>
@@ -72,7 +68,7 @@ export default function TextEditor({ editor, error }: TextEditorProps) {
                     padding: 0,
                   },
                   linkEditorExternalControl: {
-                    display: "none",
+                    display: 'none',
                   },
                 }}
               />

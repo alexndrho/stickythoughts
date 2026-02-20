@@ -1,4 +1,4 @@
-type DateFieldKey = `${string}At` | "banExpires";
+type DateFieldKey = `${string}At` | 'banExpires';
 
 type DeserializeDateValue<Value, Key> = Key extends DateFieldKey
   ? Value extends string

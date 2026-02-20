@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { createTheme, Menu, NavLink, Tooltip, Typography } from "@mantine/core";
+import { createTheme, Menu, NavLink, Tooltip, Typography } from '@mantine/core';
 
 export const theme = createTheme({
-  cursorType: "pointer",
+  cursorType: 'pointer',
   components: {
     Menu: Menu.extend({
       defaultProps: {
@@ -18,13 +18,13 @@ export const theme = createTheme({
     Typography: Typography.extend({
       styles: () => ({
         root: {
-          overflowWrap: "break-word",
+          overflowWrap: 'break-word',
         },
       }),
     }),
     NavLink: NavLink.extend({
       defaultProps: {
-        bdrs: "sm",
+        bdrs: 'sm',
       },
     }),
   },

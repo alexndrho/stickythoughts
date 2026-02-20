@@ -1,17 +1,15 @@
-import { type NextRequest, NextResponse } from "next/server";
-import sharp from "sharp";
+import { type NextRequest, NextResponse } from 'next/server';
+import sharp from 'sharp';
 
-import { auth } from "@/lib/auth";
-import { deleteFile, isUrlStorage, uploadFile } from "@/lib/storage";
-import { extractUserProfileImageKeyFromUrl } from "@/utils/text";
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import { isPrismaKnownRequestErrorCode } from "@/server/db";
-import {
-  getUserProfileImage,
-} from "@/server/user";
-import { UserNotFoundError } from "@/server/user";
-import { removeUserProfilePicture } from "@/server/user";
+import { auth } from '@/lib/auth';
+import { deleteFile, isUrlStorage, uploadFile } from '@/lib/storage';
+import { extractUserProfileImageKeyFromUrl } from '@/utils/text';
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { isPrismaKnownRequestErrorCode } from '@/server/db';
+import { getUserProfileImage } from '@/server/user';
+import { UserNotFoundError } from '@/server/user';
+import { removeUserProfilePicture } from '@/server/user';
 
 export async function PUT(request: Request) {
   const session = await guardSession({ headers: request.headers });
@@ -25,36 +23,33 @@ export async function PUT(request: Request) {
 
   try {
     const formData = await request.formData();
-    const userImg = formData.get("user-image");
+    const userImg = formData.get('user-image');
 
     if (!(userImg instanceof File)) {
       return jsonError(
         [
           {
-            code: "validation/invalid-input",
-            message: "Invalid or missing file",
+            code: 'validation/invalid-input',
+            message: 'Invalid or missing file',
           },
         ],
         400,
       );
     }
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     const maxSize = 2 * 1024 * 1024;
 
     if (!allowedTypes.includes(userImg.type)) {
-      return jsonError(
-        [{ code: "validation/invalid-input", message: "Invalid file type" }],
-        400,
-      );
+      return jsonError([{ code: 'validation/invalid-input', message: 'Invalid file type' }], 400);
     }
 
     if (userImg.size > maxSize) {
       return jsonError(
         [
           {
-            code: "validation/too-large",
-            message: "File size exceeds limit",
+            code: 'validation/too-large',
+            message: 'File size exceeds limit',
           },
         ],
         400,
@@ -73,10 +68,7 @@ export async function PUT(request: Request) {
     // Store old image key for cleanup if needed
     if (session.user.image && isUrlStorage(session.user.image)) {
       // Only delete keys that belong to this user.
-      oldImageKey = extractUserProfileImageKeyFromUrl(
-        session.user.image,
-        session.user.id,
-      );
+      oldImageKey = extractUserProfileImageKeyFromUrl(session.user.image, session.user.id);
     }
 
     // Upload new file first
@@ -85,11 +77,11 @@ export async function PUT(request: Request) {
 
     const imageUrl = await uploadFile({
       params: {
-        Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME || "",
+        Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME || '',
         Key: fileName,
         Body: processedImage,
-        ContentType: "image/png",
-        CacheControl: "no-cache",
+        ContentType: 'image/png',
+        CacheControl: 'no-cache',
       },
     });
 
@@ -112,7 +104,7 @@ export async function PUT(request: Request) {
         });
       } catch (deleteError) {
         // Log but don't fail the request if old file deletion fails
-        console.error("Failed to delete old profile picture:", deleteError);
+        console.error('Failed to delete old profile picture:', deleteError);
       }
     }
 
@@ -133,25 +125,25 @@ export async function PUT(request: Request) {
           },
         });
       } catch (cleanupError) {
-        console.error("Failed to clean up uploaded file:", cleanupError);
+        console.error('Failed to clean up uploaded file:', cleanupError);
       }
     }
 
-    if (isPrismaKnownRequestErrorCode(error, "P2015")) {
-      return jsonError([{ code: "not-found", message: "User not found" }], 404);
+    if (isPrismaKnownRequestErrorCode(error, 'P2015')) {
+      return jsonError([{ code: 'not-found', message: 'User not found' }], 404);
     } else if (error instanceof Error) {
-      console.error("Error message:", error.stack);
+      console.error('Error message:', error.stack);
     } else {
-      console.error("Error updating profile picture:", error);
+      console.error('Error updating profile picture:', error);
     }
 
-    return unknownErrorResponse("An error occurred");
+    return unknownErrorResponse('An error occurred');
   }
 }
 
 export async function DELETE(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const userId = searchParams.get("userId");
+  const userId = searchParams.get('userId');
 
   try {
     const session = await guardSession({ headers: request.headers });
@@ -168,25 +160,19 @@ export async function DELETE(request: NextRequest) {
       const hasPermission = await auth.api.userHasPermission({
         body: {
           userId: session.user.id,
-          permission: { user: ["update"] },
+          permission: { user: ['update'] },
         },
       });
 
       if (!hasPermission.success) {
-        return jsonError(
-          [{ code: "auth/forbidden", message: "Forbidden" }],
-          403,
-        );
+        return jsonError([{ code: 'auth/forbidden', message: 'Forbidden' }], 403);
       }
 
       try {
         userImage = await getUserProfileImage({ userId });
       } catch (error) {
         if (error instanceof UserNotFoundError) {
-          return jsonError(
-            [{ code: "not-found", message: "User not found" }],
-            404,
-          );
+          return jsonError([{ code: 'not-found', message: 'User not found' }], 404);
         }
         throw error;
       }
@@ -195,10 +181,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (!userImage) {
-      return jsonError(
-        [{ code: "validation/invalid-input", message: "No image to delete" }],
-        400,
-      );
+      return jsonError([{ code: 'validation/invalid-input', message: 'No image to delete' }], 400);
     }
 
     const imageKey = isUrlStorage(userImage)
@@ -209,31 +192,31 @@ export async function DELETE(request: NextRequest) {
     // treat it as non-deletable to avoid arbitrary object deletion.
     if (isUrlStorage(userImage) && !imageKey) {
       console.error(
-        "Refusing to delete profile image: storage URL key does not match expected prefix.",
+        'Refusing to delete profile image: storage URL key does not match expected prefix.',
         { targetUserId },
       );
     }
 
-	    try {
-	      // Update database first
-	      if (userId) {
-	        // Moderator path: clear DB + storage cleanup via server-only helper.
-	        await removeUserProfilePicture({
-	          userId,
-	          imageUrl: userImage,
-	          bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
-	        });
+    try {
+      // Update database first
+      if (userId) {
+        // Moderator path: clear DB + storage cleanup via server-only helper.
+        await removeUserProfilePicture({
+          userId,
+          imageUrl: userImage,
+          bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+        });
 
-	        return NextResponse.json({ image: null }, { status: 200 });
-	      } else {
-	        // Self path: update the session user's image through auth API
-	        await auth.api.updateUser({
-	          headers: request.headers,
-	          body: {
-	            image: null,
-	          },
-	        });
-	      }
+        return NextResponse.json({ image: null }, { status: 200 });
+      } else {
+        // Self path: update the session user's image through auth API
+        await auth.api.updateUser({
+          headers: request.headers,
+          body: {
+            image: null,
+          },
+        });
+      }
 
       // Delete from storage after successful database update
       if (imageKey) {
@@ -246,10 +229,7 @@ export async function DELETE(request: NextRequest) {
           });
         } catch (deleteError) {
           // Log but don't fail the request if file deletion fails
-          console.error(
-            "Failed to delete profile picture from storage:",
-            deleteError,
-          );
+          console.error('Failed to delete profile picture from storage:', deleteError);
         }
       }
 
@@ -260,20 +240,17 @@ export async function DELETE(request: NextRequest) {
         { status: 200 },
       );
     } catch (error) {
-      if (isPrismaKnownRequestErrorCode(error, "P2015")) {
-        return jsonError(
-          [{ code: "not-found", message: "User not found" }],
-          404,
-        );
+      if (isPrismaKnownRequestErrorCode(error, 'P2015')) {
+        return jsonError([{ code: 'not-found', message: 'User not found' }], 404);
       } else if (error instanceof Error) {
-        console.error("Error message:", error.stack);
+        console.error('Error message:', error.stack);
       }
 
-      console.error("Error deleting profile picture:", error);
-      return unknownErrorResponse("An error occurred");
+      console.error('Error deleting profile picture:', error);
+      return unknownErrorResponse('An error occurred');
     }
   } catch (error) {
-    console.error("Error processing delete request:", error);
-    return unknownErrorResponse("An error occurred");
+    console.error('Error processing delete request:', error);
+    return unknownErrorResponse('An error occurred');
   }
 }

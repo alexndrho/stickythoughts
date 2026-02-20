@@ -1,8 +1,8 @@
-import { type Metadata } from "next";
-import Content from "./content";
+import { type Metadata } from 'next';
+import Content from './content';
 
 export const metadata: Metadata = {
-  title: "Session Settings",
+  title: 'Session Settings',
   alternates: {
     canonical: `/settings/session`,
   },

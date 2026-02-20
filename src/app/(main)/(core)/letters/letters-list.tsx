@@ -1,27 +1,22 @@
-"use client";
+'use client';
 
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { useDisclosure } from "@mantine/hooks";
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { useDisclosure } from '@mantine/hooks';
 
-import { authClient } from "@/lib/auth-client";
-import { likeLetter, unlikeLetter } from "@/services/letter";
-import { lettersInfiniteOptions } from "@/app/(main)/(core)/letters/options";
-import InfiniteScroll from "@/components/infinite-scroll";
-import SignInWarningModal from "@/components/sign-in-warning-modal";
-import LetterItem from "@/components/letters/letter-item";
-import { LettersSkeleton } from "@/components/letters/letters-skeleton";
-import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
-import type { Letter } from "@/types/letter";
-import classes from "./letters.module.css";
+import { authClient } from '@/lib/auth-client';
+import { likeLetter, unlikeLetter } from '@/services/letter';
+import { lettersInfiniteOptions } from '@/app/(main)/(core)/letters/options';
+import InfiniteScroll from '@/components/infinite-scroll';
+import SignInWarningModal from '@/components/sign-in-warning-modal';
+import LetterItem from '@/components/letters/letter-item';
+import { LettersSkeleton } from '@/components/letters/letters-skeleton';
+import { setLikeLetterQueryData } from '@/app/(main)/(core)/letters/set-query-data';
+import type { Letter } from '@/types/letter';
+import classes from './letters.module.css';
 
-export default function LettersList({
-  initialData,
-}: {
-  initialData?: Letter[];
-}) {
+export default function LettersList({ initialData }: { initialData?: Letter[] }) {
   const { data: session } = authClient.useSession();
-  const [signInWarningModalOpened, signInWarningModalHandler] =
-    useDisclosure(false);
+  const [signInWarningModalOpened, signInWarningModalHandler] = useDisclosure(false);
 
   const {
     data: postsData,
@@ -96,8 +91,7 @@ export default function LettersList({
                 key={post.id}
                 post={post}
                 likeLoading={
-                  handleLikeMutation.isPending &&
-                  handleLikeMutation.variables?.id === post.id
+                  handleLikeMutation.isPending && handleLikeMutation.variables?.id === post.id
                 }
                 onLike={handleLike}
               />

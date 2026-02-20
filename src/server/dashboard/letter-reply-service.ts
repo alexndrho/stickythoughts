@@ -1,7 +1,7 @@
-import "server-only";
+import 'server-only';
 
-import { ADMIN_DELETED_PER_PAGE } from "@/config/admin";
-import { prisma } from "@/lib/db";
+import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
+import { prisma } from '@/lib/db';
 
 export async function listDeletedReplies(args: { page: number }) {
   const page = Math.max(args.page, 1);
@@ -14,7 +14,7 @@ export async function listDeletedReplies(args: { page: number }) {
       },
     },
     orderBy: {
-      deletedAt: "desc",
+      deletedAt: 'desc',
     },
     take: ADMIN_DELETED_PER_PAGE,
     skip,
@@ -73,4 +73,3 @@ export async function purgeReply(args: { replyId: string }) {
     where: { id: args.replyId },
   });
 }
-

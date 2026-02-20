@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { unknownErrorResponse } from "@/lib/http";
-import { countDeletedThoughts } from "@/server/dashboard";
+import { guardSession } from '@/lib/session-guard';
+import { unknownErrorResponse } from '@/lib/http';
+import { countDeletedThoughts } from '@/server/dashboard';
 
 export async function GET(request: Request) {
   try {
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        thought: ["list-deleted"],
+        thought: ['list-deleted'],
       },
     });
 
@@ -22,6 +22,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ total }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

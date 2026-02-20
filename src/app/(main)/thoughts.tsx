@@ -1,32 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Input, Kbd, Tooltip } from "@mantine/core";
-import { useDebouncedState, useDisclosure, useHotkeys } from "@mantine/hooks";
-import { notifications } from "@mantine/notifications";
-import { IconCheck, IconMessage, IconSearch, IconX } from "@tabler/icons-react";
+import { useEffect, useRef } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Button, Input, Kbd, Tooltip } from '@mantine/core';
+import { useDebouncedState, useDisclosure, useHotkeys } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import { IconCheck, IconMessage, IconSearch, IconX } from '@tabler/icons-react';
 
-import {
-  thoughtsInfiniteOptions,
-  thoughtsSearchInfiniteOptions,
-} from "@/app/(main)/options";
-import Thought from "@/components/thought";
-import SendThoughtModal from "./send-thought-modal";
-import InfiniteScroll from "@/components/infinite-scroll";
-import classes from "./home.module.css";
-import ThoughtsLoader from "./thoughts-loader";
-import type { PublicThought } from "@/types/thought";
+import { thoughtsInfiniteOptions, thoughtsSearchInfiniteOptions } from '@/app/(main)/options';
+import Thought from '@/components/thought';
+import SendThoughtModal from './send-thought-modal';
+import InfiniteScroll from '@/components/infinite-scroll';
+import classes from './home.module.css';
+import ThoughtsLoader from './thoughts-loader';
+import type { PublicThought } from '@/types/thought';
 
-export default function HomeThoughts({
-  initialData,
-}: {
-  initialData?: PublicThought[];
-}) {
+export default function HomeThoughts({ initialData }: { initialData?: PublicThought[] }) {
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const [searchBarValue, setSearchBarValue] = useDebouncedState("", 250);
+  const [searchBarValue, setSearchBarValue] = useDebouncedState('', 250);
 
   const {
     data: thoughtsData,
@@ -60,57 +53,52 @@ export default function HomeThoughts({
   };
 
   useHotkeys([
-    ["t", focusSearchBar],
-    ["s", toggle],
+    ['t', focusSearchBar],
+    ['s', toggle],
   ]);
 
   useEffect(() => {
     if (isThoughtsRefetching || isSearchRefetching) {
       notifications.show({
-        id: "refetch-thoughts",
+        id: 'refetch-thoughts',
         loading: true,
-        title: "Fetching new thoughts",
-        message: "Please wait...",
+        title: 'Fetching new thoughts',
+        message: 'Please wait...',
         autoClose: false,
         withCloseButton: false,
       });
     } else if (!isThoughtsError || !isSearchRefetchError) {
       notifications.update({
-        id: "refetch-thoughts",
+        id: 'refetch-thoughts',
         loading: false,
         icon: <IconCheck size="1em" />,
-        title: "Thoughts updated",
-        message: "New thoughts have been fetched",
+        title: 'Thoughts updated',
+        message: 'New thoughts have been fetched',
         autoClose: 4000,
         withCloseButton: true,
       });
     } else {
       notifications.update({
-        id: "refetch-thoughts",
+        id: 'refetch-thoughts',
         loading: false,
-        color: "red",
+        color: 'red',
         icon: <IconX size="1em" />,
-        title: "Failed to reload thoughts",
-        message: "Please try again later",
+        title: 'Failed to reload thoughts',
+        message: 'Please try again later',
         autoClose: 4000,
         withCloseButton: true,
       });
     }
-  }, [
-    isThoughtsRefetching,
-    isSearchRefetching,
-    isThoughtsError,
-    isSearchRefetchError,
-  ]);
+  }, [isThoughtsRefetching, isSearchRefetching, isThoughtsError, isSearchRefetchError]);
 
   useEffect(() => {
     return () => {
       // Clean up notification on unmount
       notifications.update({
-        id: "refetch-thoughts",
+        id: 'refetch-thoughts',
         loading: false,
         autoClose: 0,
-        message: "",
+        message: '',
       });
     };
   }, []);
@@ -123,14 +111,14 @@ export default function HomeThoughts({
 
   return (
     <>
-      <div className={classes["actions-bar"]}>
+      <div className={classes['actions-bar']}>
         <Input
           ref={searchRef}
           leftSection={<IconSearch size="1rem" />}
           rightSection={<Kbd>t</Kbd>}
           placeholder="Search for an author"
           onChange={(e) => setSearchBarValue(e.currentTarget.value)}
-          className={classes["actions-bar__search-bar"]}
+          className={classes['actions-bar__search-bar']}
         />
 
         <Tooltip label="Press (s) to stick" position="bottom">

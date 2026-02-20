@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { Button, Flex, Text, Title } from "@mantine/core";
-import { IconMail } from "@tabler/icons-react";
+import type { Metadata } from 'next';
+import { Button, Flex, Text, Title } from '@mantine/core';
+import { IconMail } from '@tabler/icons-react';
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: 'Contact',
   alternates: {
-    canonical: "/contact",
+    canonical: '/contact',
   },
 };
 

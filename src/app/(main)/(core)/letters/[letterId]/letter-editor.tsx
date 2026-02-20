@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import TextEditor from "@/components/text-editor";
-import { useTiptapEditor } from "@/hooks/use-tiptap";
-import { isNotEmptyHTML, useForm } from "@mantine/form";
-import { Button, Flex, Text } from "@mantine/core";
-import { useMutation } from "@tanstack/react-query";
+import { useEffect } from 'react';
+import TextEditor from '@/components/text-editor';
+import { useTiptapEditor } from '@/hooks/use-tiptap';
+import { isNotEmptyHTML, useForm } from '@mantine/form';
+import { Button, Flex, Text } from '@mantine/core';
+import { useMutation } from '@tanstack/react-query';
 
-import { updateLetter } from "@/services/letter";
-import { getQueryClient } from "@/lib/get-query-client";
-import ServerError from "@/utils/error/ServerError";
-import { letterKeys } from "@/lib/query-keys";
-import type { Letter } from "@/types/letter";
-import classes from "./letter.module.css";
+import { updateLetter } from '@/services/letter';
+import { getQueryClient } from '@/lib/get-query-client';
+import ServerError from '@/utils/error/ServerError';
+import { letterKeys } from '@/lib/query-keys';
+import type { Letter } from '@/types/letter';
+import classes from './letter.module.css';
 
 export interface ForumEditorProps {
   id: string;
@@ -23,9 +23,9 @@ export interface ForumEditorProps {
 export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
   const editor = useTiptapEditor({
     content: body,
-    placeholder: "Edit your post...",
+    placeholder: 'Edit your post...',
     onUpdate: ({ editor }) => {
-      updateForm.setFieldValue("body", editor.getHTML());
+      updateForm.setFieldValue('body', editor.getHTML());
     },
     shouldRerenderOnTransaction: false,
   });
@@ -35,13 +35,13 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       body,
     },
     validate: {
-      body: isNotEmptyHTML("Body is required"),
+      body: isNotEmptyHTML('Body is required'),
     },
   });
 
   useEffect(() => {
     if (editor) {
-      editor.commands.focus("end");
+      editor.commands.focus('end');
     }
   }, [editor]);
 
@@ -59,20 +59,18 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       });
       updateForm.reset();
 
-      getQueryClient().setQueryData(
-        letterKeys.byId(id),
-        (oldData: Letter | undefined) =>
-          oldData
-            ? {
-                ...oldData,
-                ...data,
-              }
-            : oldData,
+      getQueryClient().setQueryData(letterKeys.byId(id), (oldData: Letter | undefined) =>
+        oldData
+          ? {
+              ...oldData,
+              ...data,
+            }
+          : oldData,
       );
 
       getQueryClient().invalidateQueries({
         queryKey: letterKeys.byId(id),
-        refetchType: "none",
+        refetchType: 'none',
       });
 
       getQueryClient().invalidateQueries({
@@ -81,24 +79,19 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
     },
     onError: (error) => {
       if (error instanceof ServerError) {
-        updateForm.setFieldError("root", error.issues[0].message);
+        updateForm.setFieldError('root', error.issues[0].message);
       } else {
-        updateForm.setFieldError("root", "Failed to update post");
+        updateForm.setFieldError('root', 'Failed to update post');
       }
     },
   });
 
   return (
-    <form
-      onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}
-    >
+    <form onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}>
       <TextEditor editor={editor} error={updateForm.errors.body} />
 
       {updateForm.errors.root && (
-        <Text
-          size="xs"
-          className={classes["letter-editor-root-error-messsage"]}
-        >
+        <Text size="xs" className={classes['letter-editor-root-error-messsage']}>
           {updateForm.errors.root}
         </Text>
       )}
@@ -108,11 +101,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
           Cancel
         </Button>
 
-        <Button
-          type="submit"
-          loading={updateMutation.isPending}
-          disabled={!updateForm.isDirty()}
-        >
+        <Button type="submit" loading={updateMutation.isPending} disabled={!updateForm.isDirty()}>
           Save
         </Button>
       </Flex>

@@ -1,13 +1,8 @@
-import { useCallback } from "react";
-import {
-  useEditor,
-  type Content,
-  type Editor,
-  type UseEditorOptions,
-} from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import { Placeholder } from "@tiptap/extensions";
+import { useCallback } from 'react';
+import { useEditor, type Content, type Editor, type UseEditorOptions } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import { Placeholder } from '@tiptap/extensions';
 
 export interface UseTiptapEditorProps extends UseEditorOptions {
   value?: Content;
@@ -24,18 +19,14 @@ const createTiptapExtensions = (placeholder: string) => [
   }),
   Link.configure({
     HTMLAttributes: {
-      target: "_blank",
-      rel: "noopener noreferrer",
+      target: '_blank',
+      rel: 'noopener noreferrer',
     },
   }),
   Placeholder.configure({ placeholder }),
 ];
 
-export const useTiptapEditor = ({
-  value,
-  placeholder = "",
-  ...props
-}: UseTiptapEditorProps) => {
+export const useTiptapEditor = ({ value, placeholder = '', ...props }: UseTiptapEditorProps) => {
   const handleCreate = useCallback(
     (editor: Editor) => {
       if (value && editor.isEmpty) {
@@ -46,7 +37,7 @@ export const useTiptapEditor = ({
   );
 
   return useEditor({
-      shouldRerenderOnTransaction: true,
+    shouldRerenderOnTransaction: true,
     immediatelyRender: false,
     extensions: createTiptapExtensions(placeholder),
     onCreate: ({ editor }) => handleCreate(editor),

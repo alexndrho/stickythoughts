@@ -1,30 +1,26 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { Center, Loader } from "@mantine/core";
+import { useState } from 'react';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { Center, Loader } from '@mantine/core';
 
-import { type authClient } from "@/lib/auth-client";
-import { letterRepliesInfiniteOptions } from "@/app/(main)/(core)/letters/options";
-import { likeLetterReply, unlikeLetterReply } from "@/services/letter";
-import { setLikeLetterReplyQueryData } from "@/app/(main)/(core)/letters/set-query-data";
-import InfiniteScroll from "@/components/infinite-scroll";
-import ReplyItem from "./reply-item";
-import { type LetterReply } from "@/types/letter";
-import classes from "./letter.module.css";
-import DeleteReplyModal from "./delete-reply-modal";
+import { type authClient } from '@/lib/auth-client';
+import { letterRepliesInfiniteOptions } from '@/app/(main)/(core)/letters/options';
+import { likeLetterReply, unlikeLetterReply } from '@/services/letter';
+import { setLikeLetterReplyQueryData } from '@/app/(main)/(core)/letters/set-query-data';
+import InfiniteScroll from '@/components/infinite-scroll';
+import ReplyItem from './reply-item';
+import { type LetterReply } from '@/types/letter';
+import classes from './letter.module.css';
+import DeleteReplyModal from './delete-reply-modal';
 
 export interface RepliesProps {
   letterId: string;
-  session: ReturnType<typeof authClient.useSession>["data"];
+  session: ReturnType<typeof authClient.useSession>['data'];
   onOpenSignInWarningModal: () => void;
 }
 
-export default function Replies({
-  letterId,
-  session,
-  onOpenSignInWarningModal,
-}: RepliesProps) {
+export default function Replies({ letterId, session, onOpenSignInWarningModal }: RepliesProps) {
   const {
     data: repliesData,
     isLoading: isLoadingReplies,
@@ -118,8 +114,7 @@ export default function Replies({
               session={session}
               reply={reply}
               likeLoading={
-                replyLikeMutation.isPending &&
-                replyLikeMutation.variables?.replyId === reply.id
+                replyLikeMutation.isPending && replyLikeMutation.variables?.replyId === reply.id
               }
               onLike={() =>
                 handleLike({

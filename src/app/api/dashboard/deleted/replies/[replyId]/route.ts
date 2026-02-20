@@ -1,12 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { guardSession } from "@/lib/session-guard";
-import { jsonError, unknownErrorResponse } from "@/lib/http";
-import {
-  getDeletedReplyStatus,
-  purgeReply,
-  restoreReply,
-} from "@/server/dashboard";
+import { guardSession } from '@/lib/session-guard';
+import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { getDeletedReplyStatus, purgeReply, restoreReply } from '@/server/dashboard';
 
 export async function PATCH(
   request: Request,
@@ -16,7 +12,7 @@ export async function PATCH(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letterReply: ["restore"],
+        letterReply: ['restore'],
       },
     });
 
@@ -29,18 +25,15 @@ export async function PATCH(
     const reply = await getDeletedReplyStatus({ replyId });
 
     if (!reply || !reply.deletedAt) {
-      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     await restoreReply({ replyId });
 
-    return NextResponse.json(
-      { message: "Reply restored successfully" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'Reply restored successfully' }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }
 
@@ -52,7 +45,7 @@ export async function DELETE(
     const session = await guardSession({
       headers: request.headers,
       permission: {
-        letterReply: ["purge"],
+        letterReply: ['purge'],
       },
     });
 
@@ -65,17 +58,14 @@ export async function DELETE(
     const reply = await getDeletedReplyStatus({ replyId });
 
     if (!reply || !reply.deletedAt) {
-      return jsonError([{ code: "not-found", message: "Reply not found" }], 404);
+      return jsonError([{ code: 'not-found', message: 'Reply not found' }], 404);
     }
 
     await purgeReply({ replyId });
 
-    return NextResponse.json(
-      { message: "Reply deleted permanently" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'Reply deleted permanently' }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return unknownErrorResponse("Something went wrong");
+    return unknownErrorResponse('Something went wrong');
   }
 }

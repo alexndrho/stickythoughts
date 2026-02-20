@@ -1,6 +1,6 @@
-import "server-only";
+import 'server-only';
 
-const FALLBACK_BASE_URL = "http://localhost:3000";
+const FALLBACK_BASE_URL = 'http://localhost:3000';
 
 function pickRawBaseUrl(): string {
   return (
@@ -20,4 +20,3 @@ export function getBaseUrl(): URL {
     return new URL(FALLBACK_BASE_URL);
   }
 }
-

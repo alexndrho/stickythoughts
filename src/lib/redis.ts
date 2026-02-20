@@ -1,6 +1,6 @@
-import "server-only";
+import 'server-only';
 
-import Redis from "ioredis";
+import Redis from 'ioredis';
 
 let redis: Redis | null = null;
 

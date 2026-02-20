@@ -1,14 +1,14 @@
-import { type Metadata } from "next";
-import { headers } from "next/headers";
-import { notFound } from "next/navigation";
+import { type Metadata } from 'next';
+import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 
-import { auth } from "@/lib/auth";
-import Content from "./content";
+import { auth } from '@/lib/auth';
+import Content from './content';
 
 export const metadata: Metadata = {
-  title: "Users",
+  title: 'Users',
   alternates: {
-    canonical: "/dashboard/users",
+    canonical: '/dashboard/users',
   },
 };
 
@@ -21,7 +21,7 @@ export default async function AdminUsersPage() {
     body: {
       userId: session?.user.id,
       permission: {
-        user: ["list"],
+        user: ['list'],
       },
     },
   });
