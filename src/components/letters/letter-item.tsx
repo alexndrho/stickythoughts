@@ -8,7 +8,7 @@ import LikeButton from "@/app/(main)/(core)/letters/like-button";
 import ReplyButton from "@/app/(main)/(core)/letters/reply-button";
 import ShareButton from "@/app/(main)/(core)/letters/share-button";
 import type { Letter } from "@/types/letter";
-import classes from "./letters.module.css";
+import classes from "@/styles/components/letter-item.module.css";
 
 export interface LetterItemProps {
   post: Letter;

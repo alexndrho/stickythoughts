@@ -2,7 +2,7 @@
 
 import { Button, Group, Modal, Text } from "@mantine/core";
 
-import Thought from "@/app/(main)/thought";
+import Thought from "@/components/thought";
 import type { DeletedThought } from "@/types/deleted";
 
 export interface PermanentlyDeleteThoughtModalProps {

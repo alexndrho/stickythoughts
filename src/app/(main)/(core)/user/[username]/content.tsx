@@ -36,12 +36,12 @@ import LettersTab from "./letters-tab";
 import LikesTab from "./likes-tab";
 import RepliesTab from "./replies-tab";
 import SignInWarningModal from "@/components/sign-in-warning-modal";
-import EditUserModal from "@/app/dashboard/users/edit-user-modal";
-import DeleteUserProfilePictureModal from "@/app/dashboard/users/delete-user-profile-picture-modal";
+import EditUserModal from "@/components/dashboard/users/edit-user-modal";
+import DeleteUserProfilePictureModal from "@/components/dashboard/users/delete-user-profile-picture-modal";
 import DeleteUserBioModal from "@/app/dashboard/users/delete-user-bio-modal";
-import RevokeUserSessionsModal from "@/app/dashboard/users/revoke-user-sessions-modal";
-import BanUserModal from "@/app/dashboard/users/ban-user-modal";
-import UnbanUserModal from "@/app/dashboard/users/unban-user-modal";
+import RevokeUserSessionsModal from "@/components/dashboard/users/revoke-user-sessions-modal";
+import BanUserModal from "@/components/dashboard/users/ban-user-modal";
+import UnbanUserModal from "@/components/dashboard/users/unban-user-modal";
 import { notifications } from "@mantine/notifications";
 import classes from "./user.module.css";
 

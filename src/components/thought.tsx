@@ -9,7 +9,7 @@ import {
 
 import { getFormattedDate } from "@/utils/date";
 import { filterText } from "@/utils/text";
-import classes from "./home.module.css";
+import classes from "@/styles/components/thought.module.css";
 
 export interface ThoughtProps extends CardProps {
   message?: string;

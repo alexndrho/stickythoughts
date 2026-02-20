@@ -7,7 +7,7 @@ import { getQueryClient } from "@/lib/get-query-client";
 import { thoughtKeys } from "@/lib/query-keys";
 import { adminKeys } from "@/lib/query-keys";
 import { deleteThought } from "@/services/moderate/thought";
-import Thought from "../(main)/thought";
+import Thought from "@/components/thought";
 import type { PublicThought } from "@/types/thought";
 
 export interface DeleteThoughtModalProps {

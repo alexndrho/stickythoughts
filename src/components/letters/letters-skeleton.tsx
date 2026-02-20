@@ -1,7 +1,7 @@
 import { Skeleton } from "@mantine/core";
 
 import { LETTERS_PER_PAGE } from "@/config/letter";
-import classes from "./letters.module.css";
+import classes from "@/styles/components/letters-skeleton.module.css";
 
 export function LettersSkeleton() {
   return (

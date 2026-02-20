@@ -6,7 +6,7 @@ import LettersActions from "./letters-actions";
 import HeaderNote from "./header-note";
 import SignInCard from "./sign-in-card";
 import LettersListServer from "./letters-list.server";
-import { LettersSkeleton } from "./letters-skeleton";
+import { LettersSkeleton } from "@/components/letters/letters-skeleton";
 import classes from "./letters.module.css";
 
 export const metadata: Metadata = {

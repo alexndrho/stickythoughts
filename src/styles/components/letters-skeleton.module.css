@@ -1,0 +1,10 @@
+.letter-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.letter-skeleton {
+  height: rem(200px);
+  box-shadow: var(--mantine-shadow-xs);
+}

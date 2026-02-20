@@ -8,7 +8,7 @@ import { userUsernameRepliesInfiniteOptions } from "../options";
 import { setLikeLetterReplyQueryData } from "../../letters/set-query-data";
 import { likeLetterReply, unlikeLetterReply } from "@/services/letter";
 import InfiniteScroll from "@/components/infinite-scroll";
-import { LettersSkeleton } from "../../letters/letters-skeleton";
+import { LettersSkeleton } from "@/components/letters/letters-skeleton";
 import UserReplyItem from "./user-reply-item";
 import ReplyPrompt from "./reply-prompt";
 import classes from "./user.module.css";

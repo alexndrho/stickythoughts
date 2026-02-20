@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Carousel } from "@mantine/carousel";
 import { Card, Text } from "@mantine/core";
 
-import Thought from "./thought";
+import Thought from "@/components/thought";
 import { highlightedThoughtOptions } from "./options";
 import type { PublicThought } from "@/types/thought";
 import classes from "./home.module.css";

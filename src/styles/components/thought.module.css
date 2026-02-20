@@ -1,0 +1,26 @@
+.thought {
+  width: 16.5rem;
+  aspect-ratio: 9 / 10;
+  padding: 0.75em;
+  color: var(--mantine-color-dark-9);
+  border-radius: var(--mantine-radius-xs);
+  box-shadow: var(--mantine-shadow-sm);
+  overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.thought__author {
+  text-align: right;
+}
+
+.thought--fluid {
+  width: auto;
+  aspect-ratio: auto;
+}
+
+.thought--empty {
+  border-style: dashed;
+  color: inherit;
+}

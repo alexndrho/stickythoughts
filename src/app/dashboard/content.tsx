@@ -35,7 +35,7 @@ import {
 import { setThoughtHighlighting } from "./set-query";
 import HighlightThoughtModal from "./highlight-thought-modal";
 import RemoveHighlightModal from "./remove-highlight-modal";
-import Thought from "../(main)/thought";
+import Thought from "@/components/thought";
 import { formatUserDisplayName } from "@/utils/user";
 import type { PrivateThought } from "@/types/thought";
 import dashboardClasses from "./dashboard.module.css";

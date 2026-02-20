@@ -11,7 +11,7 @@ import {
   thoughtsInfiniteOptions,
   thoughtsSearchInfiniteOptions,
 } from "@/app/(main)/options";
-import Thought from "./thought";
+import Thought from "@/components/thought";
 import SendThoughtModal from "./send-thought-modal";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./home.module.css";

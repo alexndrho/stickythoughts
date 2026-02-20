@@ -109,63 +109,6 @@
   gap: var(--mantine-spacing-md);
 }
 
-.letter-item {
-  position: relative;
-  box-shadow: var(--mantine-shadow-xs);
-  transition: var(--surface-hover-transition);
-}
-
-.letter-item:hover {
-  transform: translateY(var(--surface-hover-translate));
-  box-shadow: var(--surface-hover-shadow);
-}
-
-.letter-item__main-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.letter-item__content {
-  padding: var(--mantine-spacing-md);
-}
-
-.letter-item__header {
-  display: flex;
-  align-items: center;
-  gap: var(--mantine-spacing-xs);
-}
-
-.letter-item__avatar {
-  position: relative;
-}
-
-.letter-item__user-link {
-  position: relative;
-  color: var(--mantine-color-text);
-}
-
-.letter-item__group-actions {
-  margin-top: var(--mantine-spacing-md);
-}
-
-.letter-item__action {
-  position: relative;
-}
-
-.letter-skeletons {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mantine-spacing-md);
-}
-
-.letter-skeleton {
-  height: rem(200px);
-  box-shadow: var(--mantine-shadow-xs);
-}
-
 .spotlight__action-overide[data-selected="true"] {
   color: var(--mantine-color-default-color);
   background-color: #0000;

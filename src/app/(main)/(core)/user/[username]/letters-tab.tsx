@@ -4,11 +4,11 @@ import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Tabs } from "@mantine/core";
 
 import type { authClient } from "@/lib/auth-client";
-import LetterItem from "../../letters/letter-item";
+import LetterItem from "@/components/letters/letter-item";
 import { userUsernameLettersInfiniteOptions } from "@/app/(main)/(core)/user/options";
 import { likeLetter, unlikeLetter } from "@/services/letter";
 import { setLikeLetterQueryData } from "@/app/(main)/(core)/letters/set-query-data";
-import { LettersSkeleton } from "../../letters/letters-skeleton";
+import { LettersSkeleton } from "@/components/letters/letters-skeleton";
 import LetterPrompt from "./letter-prompt";
 import InfiniteScroll from "@/components/infinite-scroll";
 import classes from "./user.module.css";
