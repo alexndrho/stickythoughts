@@ -3,8 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { updateUserBioInput } from '@/lib/validations/user';
 import z from 'zod';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { clearUserBio, updateUserBio } from '@/server/user';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { clearUserBio, updateUserBio } from '@/server/user/user';
 
 export async function PUT(request: Request) {
   try {

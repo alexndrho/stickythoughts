@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { purgeSoftDeletedContent } from '@/server/cron';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { purgeSoftDeletedContent } from '@/server/cron/purge';
 
 export async function GET(request: Request) {
   try {

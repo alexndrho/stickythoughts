@@ -2,7 +2,7 @@ import 'client-only';
 
 import { queryOptions } from '@tanstack/react-query';
 
-import { adminKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
 import {
   getDeletedThoughts,
   getDeletedLetters,

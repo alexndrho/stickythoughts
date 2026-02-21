@@ -6,7 +6,8 @@ import { cache } from 'react';
 import { auth } from '@/lib/auth';
 import type { UserPublicAccount } from '@/types/user';
 import { enforceRscRateLimit } from '@/lib/rate-limit/rsc';
-import { getUserPublicAccount, UserNotFoundError } from '@/server/user';
+import { getUserPublicAccount } from '@/server/user/user-profile';
+import { UserNotFoundError } from '@/server/user/user-errors';
 
 export { UserNotFoundError };
 

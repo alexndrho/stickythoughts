@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { formatUserNotifications } from '@/utils/user';
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse } from '@/lib/http';
-import { listUserNotifications } from '@/server/user';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { listUserNotifications } from '@/server/user/user-notifications';
 import { toDTO } from '@/lib/http/to-dto';
 import type { UserNotificationDTO } from '@/types/user';
 

@@ -1,5 +1,6 @@
 import { getQueryClient } from '@/lib/get-query-client';
-import { adminKeys, thoughtKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
+import { thoughtKeys } from '@/lib/query-keys/thought';
 import type { PrivateHighlightedThought } from '@/types/thought';
 
 export const setThoughtHighlighting = ({

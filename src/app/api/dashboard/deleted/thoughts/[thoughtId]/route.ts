@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 
 import { revalidateAllThoughts } from '@/lib/cache/thought-revalidation';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { getDeletedThoughtStatus, purgeThought, restoreThought } from '@/server/dashboard';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { getDeletedThoughtStatus, purgeThought, restoreThought } from '@/server/dashboard/thought';
 
 export async function PATCH(
   request: Request,

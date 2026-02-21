@@ -7,7 +7,7 @@ import { Avatar, Button, FileButton, Flex, Group, Modal, Text } from '@mantine/c
 import { authClient } from '@/lib/auth-client';
 import { uploadProfilePicture } from '@/services/user';
 import { getQueryClient } from '@/lib/get-query-client';
-import { letterKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
 import ServerError from '@/utils/error/ServerError';
 import classes from './account.module.css';
 

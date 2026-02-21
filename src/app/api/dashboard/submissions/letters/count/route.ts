@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { countSubmissionLetters } from '@/server/dashboard';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { countSubmissionLetters } from '@/server/dashboard/letter';
 import { letterSubmissionsStatusQueryInput } from '@/lib/validations/letter';
 
 export async function GET(request: Request) {

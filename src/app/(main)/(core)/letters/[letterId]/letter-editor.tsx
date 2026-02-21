@@ -10,7 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { updateLetter } from '@/services/letter';
 import { getQueryClient } from '@/lib/get-query-client';
 import ServerError from '@/utils/error/ServerError';
-import { letterKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
 import type { Letter } from '@/types/letter';
 import classes from './letter.module.css';
 

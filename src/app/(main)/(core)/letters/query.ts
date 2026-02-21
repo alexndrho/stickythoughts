@@ -2,7 +2,7 @@ import 'server-only';
 
 import { auth } from '@/lib/auth';
 import { enforceRscRateLimit } from '@/lib/rate-limit/rsc';
-import { listLettersPublic } from '@/server/letter';
+import { listLettersPublic } from '@/server/letter/letters';
 import { headers } from 'next/headers';
 import { formatLetters } from '@/utils/letter';
 import type { Letter } from '@/types/letter';

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { getUserAccountSettings } from '@/server/user';
-import { UserNotFoundError } from '@/server/user';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { getUserAccountSettings } from '@/server/user/user';
+import { UserNotFoundError } from '@/server/user/user-errors';
 import type { UserAccountSettingsDTO } from '@/types/user';
 
 export async function GET(request: Request) {

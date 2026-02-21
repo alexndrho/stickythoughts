@@ -3,7 +3,7 @@ import 'server-only';
 import type { NextResponse } from 'next/server';
 
 import { auth } from '@/lib/auth';
-import { jsonError } from '@/lib/http';
+import { jsonError } from '@/lib/http/api-responses';
 import type IError from '@/types/error';
 
 type GetSessionArgs = NonNullable<Parameters<typeof auth.api.getSession>[0]>;

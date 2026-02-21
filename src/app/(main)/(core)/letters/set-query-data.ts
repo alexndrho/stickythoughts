@@ -1,9 +1,9 @@
 import { type InfiniteData } from '@tanstack/react-query';
 
 import { getQueryClient } from '@/lib/get-query-client';
-import { letterKeys } from '@/lib/query-keys';
-import { userKeys } from '@/lib/query-keys';
-import { adminKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
+import { userKeys } from '@/lib/query-keys/user';
+import { adminKeys } from '@/lib/query-keys/admin';
 import type { Letter, LetterReply, UserLetterReply } from '@/types/letter';
 
 export const setLikeLetterQueryData = ({

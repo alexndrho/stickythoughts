@@ -4,7 +4,7 @@ import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
 import { getHighlightedThought, getThoughts, getThoughtsCount } from '@/services/thought';
 import { THOUGHTS_PER_PAGE } from '@/config/thought';
-import { thoughtKeys } from '@/lib/query-keys';
+import { thoughtKeys } from '@/lib/query-keys/thought';
 
 // query options
 export const thoughtsOptions = queryOptions({

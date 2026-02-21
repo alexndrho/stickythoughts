@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import { getQueryClient } from '@/lib/get-query-client';
 import { getUserServer, UserNotFoundError } from '@/app/(main)/(core)/user/[username]/user.server';
 import { formatUserDisplayName } from '@/utils/user';

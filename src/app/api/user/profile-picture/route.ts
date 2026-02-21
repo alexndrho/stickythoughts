@@ -5,11 +5,11 @@ import { auth } from '@/lib/auth';
 import { deleteFile, isUrlStorage, uploadFile } from '@/lib/storage';
 import { extractUserProfileImageKeyFromUrl } from '@/utils/text';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { isPrismaKnownRequestErrorCode } from '@/server/db';
-import { getUserProfileImage } from '@/server/user';
-import { UserNotFoundError } from '@/server/user';
-import { removeUserProfilePicture } from '@/server/user';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { isPrismaKnownRequestErrorCode } from '@/server/db/prisma-errors';
+import { getUserProfileImage } from '@/server/user/user';
+import { UserNotFoundError } from '@/server/user/user-errors';
+import { removeUserProfilePicture } from '@/server/user/profile-picture';
 
 export async function PUT(request: Request) {
   const session = await guardSession({ headers: request.headers });

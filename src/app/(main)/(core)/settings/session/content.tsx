@@ -8,7 +8,7 @@ import { Button, Divider, Group, Loader, Title } from '@mantine/core';
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
 import { userSessionsOptions } from './options';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import SessionItem from './session-item';
 import classes from '../settings.module.css';
 import sessionClasses from './session.module.css';

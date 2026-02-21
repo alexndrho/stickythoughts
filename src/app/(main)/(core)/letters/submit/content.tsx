@@ -8,9 +8,9 @@ import { IconAlertCircle } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
-import { letterKeys } from '@/lib/query-keys';
-import { searchKeys } from '@/lib/query-keys';
-import { userKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
+import { searchKeys } from '@/lib/query-keys/search';
+import { userKeys } from '@/lib/query-keys/user';
 import { sanitizeString } from '@/utils/text';
 import { submitLetter } from '@/services/letter';
 import { useTiptapEditor } from '@/hooks/use-tiptap';

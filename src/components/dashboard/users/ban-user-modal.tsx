@@ -11,8 +11,8 @@ import { addDays, differenceInCalendarDays, differenceInSeconds } from 'date-fns
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
-import { adminKeys } from '@/lib/query-keys';
-import { userKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
+import { userKeys } from '@/lib/query-keys/user';
 
 export interface BanUserModalProps {
   user: {

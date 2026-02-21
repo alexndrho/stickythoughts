@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 
 import { userNotificationMarkReadInput } from '@/lib/validations/user';
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { deleteNotification, markNotificationRead } from '@/server/user';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { deleteNotification, markNotificationRead } from '@/server/user/user-notifications';
 
 export async function PUT(
   request: Request,

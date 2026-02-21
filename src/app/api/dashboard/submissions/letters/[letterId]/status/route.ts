@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { reviewLetterServerInput } from '@/lib/validations/letter';
-import { getSubmissionLetterStatus, setSubmissionLetterStatus } from '@/server/dashboard';
+import { getSubmissionLetterStatus, setSubmissionLetterStatus } from '@/server/dashboard/letter';
 
 export async function PATCH(
   request: Request,

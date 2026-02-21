@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { listSubmissionLetters } from '@/server/dashboard';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { listSubmissionLetters } from '@/server/dashboard/letter';
 import { letterSubmissionsStatusQueryInput } from '@/lib/validations/letter';
 import { toDTO } from '@/lib/http/to-dto';
 import type { SubmissionLetterDTO } from '@/types/submission';

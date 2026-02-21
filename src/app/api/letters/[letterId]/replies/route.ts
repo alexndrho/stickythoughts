@@ -5,9 +5,9 @@ import { auth } from '@/lib/auth';
 import { createLetterReplyServerInput } from '@/lib/validations/letter';
 import { formatLetterReplies } from '@/utils/letter';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { createLetterReply, listLetterReplies } from '@/server/letter';
-import { LetterNotFoundError } from '@/server/letter';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { createLetterReply, listLetterReplies } from '@/server/letter/letter-replies';
+import { LetterNotFoundError } from '@/server/letter/letter-errors';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterReplyDTO } from '@/types/letter';
 

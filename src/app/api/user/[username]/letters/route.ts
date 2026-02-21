@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/lib/auth';
 import { formatLetters } from '@/utils/letter';
-import { unknownErrorResponse } from '@/lib/http';
-import { listUserLetters } from '@/server/user';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { listUserLetters } from '@/server/user/user-profile';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterDTO } from '@/types/letter';
 

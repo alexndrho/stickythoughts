@@ -7,7 +7,7 @@ import {
   countPublicThoughts as countPublicThoughtsService,
   getHighlightedThought as getHighlightedThoughtService,
   listPublicThoughts as listPublicThoughtsService,
-} from '@/server/thought/thoughts-service';
+} from '@/server/thought/thoughts';
 import { parsePublicThoughtFromServer } from '@/utils/thought';
 import type { PublicThought } from '@/types/thought';
 

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { getHighlightedThought } from '@/server/dashboard/thought-service';
-import { unknownErrorResponse } from '@/lib/http';
+import { getHighlightedThought } from '@/server/dashboard/thought';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
 import type { PrivateHighlightedThoughtDTO } from '@/types/thought';
 import { toDTO } from '@/lib/http/to-dto';
 

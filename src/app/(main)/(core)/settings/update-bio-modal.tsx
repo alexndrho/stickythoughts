@@ -9,7 +9,7 @@ import { Button, Group, Modal, Text, Textarea } from '@mantine/core';
 import { updateUserBioInput } from '@/lib/validations/user';
 import { updateUserBio } from '@/services/user';
 import { getQueryClient } from '@/lib/get-query-client';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import ServerError from '@/utils/error/ServerError';
 import { USER_BIO_MAX_LENGTH } from '@/config/user';
 

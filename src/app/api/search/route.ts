@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { unknownErrorResponse } from '@/lib/http';
-import { searchAll, searchLetters, searchUsers } from '@/server/search';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { searchAll, searchLetters, searchUsers } from '@/server/search/search';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

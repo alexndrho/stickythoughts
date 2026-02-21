@@ -4,11 +4,12 @@ import { ZodError } from 'zod';
 import { auth } from '@/lib/auth';
 import { guardSession } from '@/lib/session-guard';
 import { updateLetterServerInput } from '@/lib/validations/letter';
-import { getLetterPublic, LetterNotFoundError } from '@/server/letter';
+import { getLetterPublic } from '@/server/letter/letters';
+import { LetterNotFoundError } from '@/server/letter/letter-errors';
 import { formatLetters } from '@/utils/letter';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { isRecordNotFoundError } from '@/server/db';
-import { softDeleteLetter, updateLetter } from '@/server/letter';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { isRecordNotFoundError } from '@/server/db/prisma-errors';
+import { softDeleteLetter, updateLetter } from '@/server/letter/letters';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterDTO } from '@/types/letter';
 

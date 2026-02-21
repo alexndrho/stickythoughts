@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { likeLetter, unlikeLetter } from '@/server/letter';
-import { LetterNotFoundError } from '@/server/letter';
-import { isRecordNotFoundError, isUniqueConstraintError } from '@/server/db';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { likeLetter, unlikeLetter } from '@/server/letter/letter-like';
+import { LetterNotFoundError } from '@/server/letter/letter-errors';
+import { isRecordNotFoundError, isUniqueConstraintError } from '@/server/db/prisma-errors';
 
 export async function POST(
   request: Request,

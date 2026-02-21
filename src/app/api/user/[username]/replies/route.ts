@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/lib/auth';
 import { formatUserLetterReplies } from '@/utils/letter';
-import { unknownErrorResponse } from '@/lib/http';
-import { listUserReplies } from '@/server/user';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { listUserReplies } from '@/server/user/user-profile';
 import { toDTO } from '@/lib/http/to-dto';
 import type { UserLetterReplyDTO } from '@/types/letter';
 

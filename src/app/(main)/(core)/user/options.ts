@@ -12,7 +12,7 @@ import {
 } from '@/services/user';
 import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from '@/config/letter';
 import { NOTIFICATION_PER_PAGE } from '@/config/user';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 
 export const userOptions = queryOptions({
   queryKey: userKeys.all(),

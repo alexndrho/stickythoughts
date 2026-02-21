@@ -4,8 +4,8 @@ import { ZodError } from 'zod';
 
 import { revalidateThoughts } from '@/lib/cache/thought-revalidation';
 import { createThoughtInput } from '@/lib/validations/thought';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { createThought, listPublicThoughts } from '@/server/thought';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { createThought, listPublicThoughts } from '@/server/thought/thoughts';
 import { toDTO } from '@/lib/http/to-dto';
 import type { PublicThoughtDTO } from '@/types/thought';
 

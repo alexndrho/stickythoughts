@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { getDeletedLetterStatus, purgeLetter, restoreLetter } from '@/server/dashboard';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { getDeletedLetterStatus, purgeLetter, restoreLetter } from '@/server/dashboard/letter';
 
 export async function PATCH(
   request: Request,

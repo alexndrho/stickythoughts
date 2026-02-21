@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/lib/auth';
-import { getUserPublicAccount, UserNotFoundError } from '@/server/user';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { getUserPublicAccount } from '@/server/user/user-profile';
+import { UserNotFoundError } from '@/server/user/user-errors';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
 import type { UserPublicAccountDTO } from '@/types/user';
 
 export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }) {

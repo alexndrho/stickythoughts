@@ -6,8 +6,8 @@ import { getLetterReplies, getLetter, getLetters } from '@/services/letter';
 import type { SearchSegmentType } from '@/types/search';
 import { getSearchResults } from '@/services/search';
 import { LETTER_REPLIES_PER_PAGE, LETTERS_PER_PAGE } from '@/config/letter';
-import { letterKeys } from '@/lib/query-keys';
-import { searchKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
+import { searchKeys } from '@/lib/query-keys/search';
 
 // letter
 export const letterBaseOptions = queryOptions({

@@ -5,9 +5,9 @@ import { ZodError } from 'zod';
 import { auth } from '@/lib/auth';
 import { createLetterServerInput } from '@/lib/validations/letter';
 import { formatLetters } from '@/utils/letter';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { isUniqueConstraintError } from '@/server/db';
-import { createLetter, listLettersPublic } from '@/server/letter';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { isUniqueConstraintError } from '@/server/db/prisma-errors';
+import { createLetter, listLettersPublic } from '@/server/letter/letters';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterDTO } from '@/types/letter';
 

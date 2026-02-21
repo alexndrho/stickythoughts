@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 
 import { revalidateAllThoughts } from '@/lib/cache/thought-revalidation';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { isRecordNotFoundError } from '@/server/db';
-import { softDeleteThought } from '@/server/dashboard';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { isRecordNotFoundError } from '@/server/db/prisma-errors';
+import { softDeleteThought } from '@/server/dashboard/thought';
 
 export async function DELETE(
   request: Request,

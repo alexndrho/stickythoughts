@@ -3,7 +3,7 @@ import 'server-only';
 import { NotificationType } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
-import { LetterNotFoundError } from '@/server/letter';
+import { LetterNotFoundError } from '@/server/letter/letter-errors';
 
 export async function likeLetter(args: { letterId: string; userId: string }): Promise<void> {
   const letterStatus = await prisma.letter.findUnique({

@@ -34,7 +34,7 @@ import { useThrottledCallback } from '@mantine/hooks';
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
-import { thoughtKeys } from '@/lib/query-keys';
+import { thoughtKeys } from '@/lib/query-keys/thought';
 import UserNotification from './user-notification';
 import classes from '@/styles/nav.module.css';
 

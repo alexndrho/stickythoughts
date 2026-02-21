@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse } from '@/lib/http';
-import { getUserPrivacySettings } from '@/server/user';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { getUserPrivacySettings } from '@/server/user/user';
 import type { UserSettingsPrivacyDTO } from '@/types/user';
 
 export async function GET(request: Request) {

@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 
 import { userNotificationOpenedInput } from '@/lib/validations/user';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { countNewUserNotifications, setNotificationsOpened } from '@/server/user';
-import { UserNotFoundError } from '@/server/user';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import {
+  countNewUserNotifications,
+  setNotificationsOpened,
+} from '@/server/user/user-notifications';
+import { UserNotFoundError } from '@/server/user/user-errors';
 
 export async function GET(request: Request) {
   try {

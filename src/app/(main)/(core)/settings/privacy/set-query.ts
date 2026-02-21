@@ -1,5 +1,5 @@
 import { getQueryClient } from '@/lib/get-query-client';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import type { UserSettingsPrivacy } from '@/types/user';
 
 export const setUserSettingsPrivacyQuery = ({

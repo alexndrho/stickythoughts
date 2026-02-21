@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { getHighlightedThought } from '@/server/thought';
-import { unknownErrorResponse } from '@/lib/http';
+import { getHighlightedThought } from '@/server/thought/thoughts';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
 import { toDTO } from '@/lib/http/to-dto';
 import type { PublicThoughtDTO } from '@/types/thought';
 

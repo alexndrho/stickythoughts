@@ -4,8 +4,8 @@ import { useMutation } from '@tanstack/react-query';
 import { Button, Group, Modal } from '@mantine/core';
 
 import { getQueryClient } from '@/lib/get-query-client';
-import { thoughtKeys } from '@/lib/query-keys';
-import { adminKeys } from '@/lib/query-keys';
+import { thoughtKeys } from '@/lib/query-keys/thought';
+import { adminKeys } from '@/lib/query-keys/admin';
 import { deleteThought } from '@/services/moderate/thought';
 import Thought from '@/components/thought';
 import type { PublicThought } from '@/types/thought';

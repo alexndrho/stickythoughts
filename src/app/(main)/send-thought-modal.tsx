@@ -10,7 +10,7 @@ import { IconMessage } from '@tabler/icons-react';
 import RandomButton from '@/components/random-button';
 import CheckColorSwatch from '@/components/check-color-swatch';
 import { getQueryClient } from '@/lib/get-query-client';
-import { thoughtKeys } from '@/lib/query-keys';
+import { thoughtKeys } from '@/lib/query-keys/thought';
 import { submitThought } from '@/services/thought';
 import { createThoughtInput } from '@/lib/validations/thought';
 import {

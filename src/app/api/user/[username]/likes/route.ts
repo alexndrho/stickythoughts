@@ -2,9 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/lib/auth';
 import { formatLetters } from '@/utils/letter';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import { getUserLikesVisibility, listUserLikedLetters } from '@/server/user';
-import { UserNotFoundError } from '@/server/user';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { getUserLikesVisibility, listUserLikedLetters } from '@/server/user/user-profile';
+import { UserNotFoundError } from '@/server/user/user-errors';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterDTO } from '@/types/letter';
 

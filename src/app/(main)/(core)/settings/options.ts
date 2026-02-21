@@ -4,7 +4,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { authClient } from '@/lib/auth-client';
 import { getUserAccountSettings } from '@/services/user';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 
 export const userAccountOptions = queryOptions({
   queryKey: userKeys.account(),

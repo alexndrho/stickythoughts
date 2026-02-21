@@ -1,7 +1,7 @@
 import { InfiniteData } from '@tanstack/react-query';
 
 import { getQueryClient } from '@/lib/get-query-client';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import { UserNotification } from '@/types/user';
 
 export const setUserNotificationOpenedQueryData = () => {

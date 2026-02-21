@@ -6,7 +6,7 @@ import { IconX } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
-import { userKeys } from '@/lib/query-keys';
+import { userKeys } from '@/lib/query-keys/user';
 import classes from './session.module.css';
 
 export interface SessionItemProps {

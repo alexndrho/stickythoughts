@@ -7,7 +7,7 @@ import { IconClock, IconX } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/get-query-client';
 import { useState } from 'react';
-import { adminKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
 
 export interface RevokeUserSessionsModalProps {
   user: {

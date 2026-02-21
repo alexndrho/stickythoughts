@@ -5,9 +5,9 @@ import { auth } from '@/lib/auth';
 import { updateLetterReplyServerInput } from '@/lib/validations/letter';
 import { formatLetterReplies } from '@/utils/letter';
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { isRecordNotFoundError } from '@/server/db';
-import { softDeleteLetterReply, updateLetterReply } from '@/server/letter';
+import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { isRecordNotFoundError } from '@/server/db/prisma-errors';
+import { softDeleteLetterReply, updateLetterReply } from '@/server/letter/letter-replies';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterReplyDTO } from '@/types/letter';
 

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse } from '@/lib/http';
-import { countDeletedReplies } from '@/server/dashboard';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { countDeletedReplies } from '@/server/dashboard/letter-reply';
 
 export async function GET(request: Request) {
   try {

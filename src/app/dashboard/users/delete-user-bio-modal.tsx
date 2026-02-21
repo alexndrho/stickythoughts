@@ -7,8 +7,8 @@ import { Button, Group, Modal } from '@mantine/core';
 import { IconFaceId, IconX } from '@tabler/icons-react';
 
 import { getQueryClient } from '@/lib/get-query-client';
-import { adminKeys } from '@/lib/query-keys';
-import { userKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
+import { userKeys } from '@/lib/query-keys/user';
 import ServerError from '@/utils/error/ServerError';
 import { deleteUserBio } from '@/services/user';
 

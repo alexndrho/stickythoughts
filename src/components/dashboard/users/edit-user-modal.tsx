@@ -9,8 +9,8 @@ import { IconEdit } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
-import { adminKeys } from '@/lib/query-keys';
-import { userKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
+import { userKeys } from '@/lib/query-keys/user';
 import TextInputLabelModifiedIndicator from '@/components/text-input-label-modified-indicator';
 
 export interface EditUserModalProps {

@@ -5,7 +5,7 @@ import { RateLimiterRes } from 'rate-limiter-flexible';
 
 import type IError from '@/types/error';
 import { getClientIp } from '@/lib/http/get-client-ip';
-import { jsonError } from '@/lib/http';
+import { jsonError } from '@/lib/http/api-responses';
 import { buildRateLimitKey } from './keys';
 import { getTierLimiters } from './limiters';
 import { RATE_LIMITS, type RateLimitTier } from './config';

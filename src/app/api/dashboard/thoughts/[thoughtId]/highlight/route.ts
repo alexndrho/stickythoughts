@@ -4,12 +4,12 @@ import { THOUGHT_HIGHLIGHT_LOCK_HOURS } from '@/config/thought';
 import { revalidateThoughtHighlight } from '@/lib/cache/thought-revalidation';
 import { guardSession } from '@/lib/session-guard';
 import { formatHighlightedThoughtLockRemaining, isHighlightedThoughtLocked } from '@/utils/thought';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
 import {
   findCurrentHighlight,
   getThoughtHighlightStatus,
   updateHighlight,
-} from '@/server/dashboard';
+} from '@/server/dashboard/thought';
 import { toDTO } from '@/lib/http/to-dto';
 import type { PrivateHighlightedThoughtDTO } from '@/types/thought';
 

@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import Content from './content';
 import { getQueryClient } from '@/lib/get-query-client';
-import { letterKeys } from '@/lib/query-keys';
+import { letterKeys } from '@/lib/query-keys/letter';
 import {
   getLetterServer,
   LetterNotFoundError,

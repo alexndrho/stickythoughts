@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { unknownErrorResponse } from '@/lib/http';
-import { countPublicThoughts } from '@/server/thought';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { countPublicThoughts } from '@/server/thought/thoughts';
 
 export async function GET() {
   try {

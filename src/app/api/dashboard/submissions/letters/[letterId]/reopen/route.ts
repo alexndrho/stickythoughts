@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { jsonError, unknownErrorResponse } from '@/lib/http';
-import {
-  getSubmissionLetterStatus,
-  reopenSubmissionLetter,
-} from '@/server/dashboard/letter-service';
+import { jsonError, unknownErrorResponse } from '@/lib/http/api-responses';
+import { getSubmissionLetterStatus, reopenSubmissionLetter } from '@/server/dashboard/letter';
 
 export async function PATCH(
   request: Request,

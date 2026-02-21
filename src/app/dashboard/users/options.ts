@@ -4,7 +4,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { authClient } from '@/lib/auth-client';
 import { ADMIN_USERS_PER_PAGE } from '@/config/admin';
-import { adminKeys } from '@/lib/query-keys';
+import { adminKeys } from '@/lib/query-keys/admin';
 
 export const adminUsersOptions = queryOptions({
   queryKey: adminKeys.users(),

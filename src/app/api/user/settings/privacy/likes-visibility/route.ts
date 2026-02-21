@@ -3,8 +3,8 @@ import { ZodError } from 'zod';
 
 import { updateUserLikesVisibilityInput } from '@/lib/validations/user';
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse, zodInvalidInput } from '@/lib/http';
-import { updateUserLikesVisibility } from '@/server/user';
+import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
+import { updateUserLikesVisibility } from '@/server/user/user';
 
 export async function PUT(request: Request) {
   try {

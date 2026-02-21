@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { guardSession } from '@/lib/session-guard';
-import { unknownErrorResponse } from '@/lib/http';
-import { listDeletedReplies } from '@/server/dashboard';
+import { unknownErrorResponse } from '@/lib/http/api-responses';
+import { listDeletedReplies } from '@/server/dashboard/letter-reply';
 import { toDTO } from '@/lib/http/to-dto';
 import type { DeletedLetterReplyDTO } from '@/types/deleted';
 
