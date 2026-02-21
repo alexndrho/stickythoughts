@@ -4,6 +4,14 @@ import { censor, matcher } from '@/lib/bad-words';
 export const sanitizeString = (text: string) =>
   text.replace(INVISIBLE_AND_FORMATTING, '').replace(WHITESPACE_REGEX, ' ').trim();
 
+export const sanitizeMultilineString = (text: string) =>
+  text
+    .replace(INVISIBLE_AND_FORMATTING, '')
+    .replace(/\r\n?/g, '\n')
+    .replace(/[^\S\n]+/g, ' ')
+    .replace(/\n+/g, '\n')
+    .trim();
+
 export const containsUrl = (text: string) => {
   return URL_REGEX.test(text);
 };
@@ -35,38 +43,4 @@ export const extractUserProfileImageKeyFromUrl = (url: string, userId: string) =
 
   const expectedPrefix = `user/${userId}/profile/`;
   return key.startsWith(expectedPrefix) ? key : null;
-};
-
-export const stripHtmlTags = (text: string) => {
-  // Keep paragraph-like separators readable before stripping tags.
-  const sanitizedText = text.replace(/<\/?p>/gi, ' ');
-
-  if (typeof DOMParser !== 'undefined') {
-    const doc = new DOMParser().parseFromString(sanitizedText, 'text/html');
-    return doc.body.textContent?.trim() || '';
-  }
-
-  // Prefer cheerio on server for more reliable HTML text extraction.
-  if (typeof window === 'undefined') {
-    try {
-      // In ESM server bundles, `require` may not be directly in scope.
-      const nodeRequire = (0, eval)('require') as NodeJS.Require;
-      const { load } = nodeRequire('cheerio') as typeof import('cheerio');
-      return load(sanitizedText).text().trim();
-    } catch {
-      // Fall through to lightweight regex fallback.
-    }
-  }
-  // Server/runtime fallback (Node): strip tags without browser DOM APIs.
-  return sanitizedText
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, ' ')
-    .trim();
 };

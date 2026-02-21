@@ -12,7 +12,7 @@ import type { UserWithAvatarSummary } from './user';
 type PrismaBaseLetter = Prisma.LetterGetPayload<{
   select: {
     id: true;
-    title: true;
+    recipient: true;
     body: true;
     authorId: true;
     isAnonymous: true;
@@ -126,7 +126,7 @@ type PrismaBaseUserLetterReply = Prisma.LetterReplyGetPayload<{
     updatedAt: true;
     letter: {
       select: {
-        title: true;
+        recipient: true;
       };
     };
     author: {

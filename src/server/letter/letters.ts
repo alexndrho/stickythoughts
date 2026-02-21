@@ -9,7 +9,7 @@ import type { Letter } from '@/types/letter';
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;
-  title: string;
+  recipient: string;
   body: string;
   isAnonymous?: boolean;
 }) {
@@ -19,7 +19,7 @@ export async function createLetter(args: {
 
   return prisma.letter.create({
     data: {
-      title: args.title,
+      recipient: args.recipient,
       body: args.body,
       isAnonymous,
       ...(args.session && {

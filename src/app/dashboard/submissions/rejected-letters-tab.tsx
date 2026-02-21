@@ -75,7 +75,7 @@ export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps
           <Table highlightOnHover withColumnBorders withRowBorders>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Title</Table.Th>
+                <Table.Th>Recipient</Table.Th>
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Submitted</Table.Th>
                 <Table.Th>Rejected By</Table.Th>
@@ -87,7 +87,7 @@ export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps
               {letters?.map((letter) => (
                 <Table.Tr key={letter.id}>
                   <Table.Td>
-                    <Text lineClamp={1}>{letter.title}</Text>
+                    <Text lineClamp={1}>{letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
                     {!letter.author || letter.isAnonymous

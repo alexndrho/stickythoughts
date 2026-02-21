@@ -27,7 +27,7 @@ export type DeletedThoughtDTO = SerializeDates<DeletedThought>;
 export type DeletedLetter = Prisma.LetterGetPayload<{
   select: {
     id: true;
-    title: true;
+    recipient: true;
     body: true;
     authorId: true;
     deletedById: true;
@@ -91,7 +91,7 @@ export type DeletedLetterReply = Prisma.LetterReplyGetPayload<{
     letter: {
       select: {
         id: true;
-        title: true;
+        recipient: true;
       };
     };
   };

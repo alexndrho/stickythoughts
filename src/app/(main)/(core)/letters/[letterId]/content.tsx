@@ -5,17 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  ActionIcon,
-  Anchor,
-  Button,
-  Center,
-  Group,
-  Menu,
-  Text,
-  Title,
-  Typography,
-} from '@mantine/core';
+import { ActionIcon, Anchor, Button, Center, Group, Menu, Text } from '@mantine/core';
+import MultilineText from '@/components/multiline-text';
 import { formatDistanceToNow } from 'date-fns';
 import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 
@@ -158,15 +149,15 @@ export default function Content({ id }: ContentProps) {
 
       {isEditable ? (
         <>
-          <Title className={classes['edit-title']}>{letter.title}</Title>
+          <Text className={classes.recipient}>To: {letter.recipient}</Text>
 
           <LetterEditor id={id} body={letter.body} onClose={() => setIsEditable(false)} />
         </>
       ) : (
-        <Typography>
-          <h1>{letter.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: letter.body }} />
-        </Typography>
+        <>
+          <Text className={classes.recipient}>To: {letter.recipient}</Text>
+          <MultilineText text={letter.body} />
+        </>
       )}
 
       <Group my="md">
@@ -181,7 +172,7 @@ export default function Content({ id }: ContentProps) {
         <ReplyButton
           count={letter.replies.count}
           size="compact-sm"
-          onClick={() => replySectionRef.current?.editor?.commands.focus()}
+          onClick={() => replySectionRef.current?.focus()}
         />
 
         <ShareButton
@@ -215,7 +206,7 @@ export default function Content({ id }: ContentProps) {
       {(isAuthor || hasPermissionToDelete) && (
         <DeleteLetterModal
           id={letter.id}
-          title={letter.title}
+          recipient={letter.recipient}
           authorUsername={letter.author?.username}
           opened={deleteModalOpened}
           onClose={deleteModalHandlers.close}

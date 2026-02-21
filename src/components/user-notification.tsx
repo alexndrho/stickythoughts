@@ -28,7 +28,6 @@ import {
   setMarkReadNotificationQueryData,
   setUserNotificationOpenedQueryData,
 } from '@/app/(main)/(core)/user/set-query-data';
-import { stripHtmlTags } from '@/utils/text';
 import {
   deleteUserNotification,
   userNotificationMarkRead,
@@ -314,7 +313,7 @@ function formatNotificationBody({
           {actor}
           {others}
           {' liked your reply: '}
-          {stripHtmlTags(notification.body)}
+          {notification.body}
         </>
       );
     case 'LETTER_REPLY':
@@ -322,7 +321,7 @@ function formatNotificationBody({
         <>
           {actor}
           {' replied to your letter: '}
-          {stripHtmlTags(notification.body)}
+          {notification.body}
         </>
       );
     default:

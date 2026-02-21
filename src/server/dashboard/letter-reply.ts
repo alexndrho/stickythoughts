@@ -37,7 +37,7 @@ export async function listDeletedReplies(args: { page: number }) {
       letter: {
         select: {
           id: true,
-          title: true,
+          recipient: true,
         },
       },
     },

@@ -3,20 +3,29 @@
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from '@mantine/form';
-import { Alert, Button, Container, Group, Switch, Text, TextInput, Title } from '@mantine/core';
+import { zod4Resolver } from 'mantine-form-zod-resolver';
+import {
+  Alert,
+  Button,
+  Container,
+  Group,
+  Switch,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
+import { createLetterServerInput } from '@/lib/validations/letter';
 import { getQueryClient } from '@/lib/get-query-client';
 import { letterKeys } from '@/lib/query-keys/letter';
 import { searchKeys } from '@/lib/query-keys/search';
 import { userKeys } from '@/lib/query-keys/user';
-import { sanitizeString } from '@/utils/text';
 import { submitLetter } from '@/services/letter';
-import { useTiptapEditor } from '@/hooks/use-tiptap';
-import TextEditor from '@/components/text-editor';
 import ServerError from '@/utils/error/ServerError';
-import { LETTER_BODY_MAX_LENGTH } from '@/lib/validations/letter';
 import classes from './letter-submit.module.css';
 import { notifications } from '@mantine/notifications';
 
@@ -28,37 +37,11 @@ export default function Content() {
 
   const form = useForm({
     initialValues: {
-      title: '',
-      body: '<p></p>',
-      isAnonymous: false,
+      recipient: '',
+      body: '',
+      isAnonymous: session ? false : true,
     },
-    validate: {
-      title: (value) => {
-        const formattedValue = sanitizeString(value);
-        if (formattedValue.length < 1) return 'Title is required';
-        if (formattedValue.length > 100) {
-          return `Title must be at most 100 characters long`;
-        }
-      },
-      body: () => {
-        const textContent = editor?.isEmpty ? '' : sanitizeString(editor?.getText() || '');
-
-        if (textContent.length < 1) {
-          return 'Body is required';
-        } else if (textContent.length > LETTER_BODY_MAX_LENGTH) {
-          return `Body must be at most ${LETTER_BODY_MAX_LENGTH.toLocaleString()} characters long`;
-        }
-      },
-    },
-  });
-
-  const editor = useTiptapEditor({
-    content: '<p></p>',
-    placeholder: 'Write your post...',
-    onUpdate: ({ editor }) => {
-      form.setFieldValue('body', editor.getHTML());
-    },
-    shouldRerenderOnTransaction: false,
+    validate: zod4Resolver(createLetterServerInput),
   });
 
   const mutation = useMutation({
@@ -96,11 +79,7 @@ export default function Content() {
     onError: (error) => {
       if (error instanceof ServerError) {
         error.issues.forEach((issue) => {
-          if (issue.code === 'letter/title-already-exists') {
-            form.setFieldError('title', issue.message);
-          } else {
-            form.setFieldError('root', issue.message);
-          }
+          form.setFieldError('root', issue.message);
         });
       }
     },
@@ -121,13 +100,22 @@ export default function Content() {
 
       <form onSubmit={form.onSubmit((value) => mutation.mutate(value))}>
         <TextInput
-          label="Title"
+          label="Recipient"
           withAsterisk
-          {...form.getInputProps('title')}
+          placeholder="Who is this letter for?"
+          {...form.getInputProps('recipient')}
           className={classes['title-text-input']}
         />
 
-        <TextEditor editor={editor} error={form.errors.body} />
+        <Textarea
+          label="Body"
+          withAsterisk
+          autosize
+          minRows={8}
+          maxRows={20}
+          placeholder="What do you want to tell them?"
+          {...form.getInputProps('body')}
+        />
 
         {form.errors.root && (
           <Text size="xs" className={classes['root-error-messsage']}>
@@ -135,20 +123,18 @@ export default function Content() {
           </Text>
         )}
 
-        {session && (
-          <Switch
-            mt="md"
-            label="Post anonymously"
-            {...form.getInputProps('isAnonymous', { type: 'checkbox' })}
-          />
-        )}
+        <Group mt="md" justify="space-between">
+          <Tooltip label="Sign in to post anonymously or with your name" disabled={!!session}>
+            <span>
+              <Switch
+                label="Post anonymously"
+                disabled={!session}
+                {...form.getInputProps('isAnonymous', { type: 'checkbox' })}
+              />
+            </span>
+          </Tooltip>
 
-        <Group mt="md" justify="end">
-          <Button
-            type="submit"
-            loading={mutation.isPending}
-            disabled={!form.isDirty('title') || !form.isDirty('body')}
-          >
+          <Button type="submit" loading={mutation.isPending}>
             Post it!
           </Button>
         </Group>

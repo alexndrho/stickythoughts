@@ -1,2 +1,9 @@
 export const LETTERS_PER_PAGE = 10;
 export const LETTER_REPLIES_PER_PAGE = 15;
+
+export const LETTER_BODY_MIN_LENGTH = 5;
+export const LETTER_BODY_MAX_LENGTH = 7500;
+export const LETTER_RECIPIENT_MIN_LENGTH = 2;
+export const LETTER_RECIPIENT_MAX_LENGTH = 20;
+
+export const LETTER_REPLY_MAX_LENGTH = 7500;

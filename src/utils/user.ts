@@ -1,5 +1,18 @@
 import type { BaseUserNotification, UserNotification } from '@/types/user';
 
+const NOTIFICATION_BODY_PREVIEW_MAX_LENGTH = 120;
+
+function toNotificationPreview(text?: string | null) {
+  const plainText = (text || '').trim();
+  if (!plainText) return '';
+
+  if (plainText.length <= NOTIFICATION_BODY_PREVIEW_MAX_LENGTH) {
+    return plainText;
+  }
+
+  return `${plainText.slice(0, NOTIFICATION_BODY_PREVIEW_MAX_LENGTH - 1).trimEnd()}…`;
+}
+
 export function formatUserNotifications(notifications: BaseUserNotification[]): UserNotification[] {
   return notifications.map((notification) => {
     const firstActor = notification.actors?.[0]?.user;
@@ -18,15 +31,16 @@ export function formatUserNotifications(notifications: BaseUserNotification[]): 
 
     switch (notification.type) {
       case 'LETTER_LIKE': {
-        body = notification.letter?.title || '';
+        body =
+          toNotificationPreview(notification.letter?.body) || notification.letter?.recipient || '';
         break;
       }
       case 'LETTER_REPLY_LIKE': {
-        body = notification.reply?.body || '';
+        body = toNotificationPreview(notification.reply?.body);
         break;
       }
       case 'LETTER_REPLY': {
-        body = notification.reply?.body || '';
+        body = toNotificationPreview(notification.reply?.body);
         if (notification.reply?.isAnonymous) {
           mainActor = {
             image: null,

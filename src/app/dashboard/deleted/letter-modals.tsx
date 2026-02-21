@@ -21,7 +21,7 @@ export const PermanentlyDeleteLetterModal = ({
 }: PermanentlyDeleteLetterModalProps) => {
   return (
     <Modal title="Permanently delete this letter?" opened={opened} onClose={onClose} centered>
-      <Text>{letter?.title}</Text>
+      <Text>{letter?.recipient}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">
         This action cannot be undone.
@@ -63,7 +63,7 @@ export const RecoverLetterModal = ({
 }: RecoverLetterModalProps) => {
   return (
     <Modal title="Recover this letter?" opened={opened} onClose={onClose} centered>
-      <Text>{letter?.title}</Text>
+      <Text>{letter?.recipient}</Text>
 
       <Text mt="sm" c="dimmed" size="sm">
         This will restore the letter and make it visible again.

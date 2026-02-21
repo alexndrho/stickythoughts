@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { Anchor, Group, Paper, Text, Title } from '@mantine/core';
+import { Anchor, Group, Paper, Text } from '@mantine/core';
 
-import { stripHtmlTags } from '@/utils/text';
 import AuthorAvatar from '@/components/author-avatar';
 import LikeButton from '@/app/(main)/(core)/letters/like-button';
 import ReplyButton from '@/app/(main)/(core)/letters/reply-button';
@@ -29,7 +28,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
     <Paper component="article" withBorder className={classes['letter-item']}>
       <Link
         href={`/letters/${post.id}`}
-        aria-label={`View letter titled ${post.title}`}
+        aria-label={`View letter for ${post.recipient}`}
         className={classes['letter-item__main-link']}
       />
 
@@ -69,12 +68,12 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
             </Text>
           </div>
 
-          <Title order={2} size="h3" lineClamp={2}>
-            {post.title}
-          </Title>
+          <Text size="sm" lineClamp={1} className={classes['letter-item__recipient']}>
+            To: {post.recipient}
+          </Text>
         </header>
 
-        <Text lineClamp={5}>{stripHtmlTags(post.body)}</Text>
+        <Text lineClamp={5}>{post.body}</Text>
 
         <Group className={classes['letter-item__group-actions']}>
           <LikeButton

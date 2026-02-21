@@ -1,15 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
-import TextEditor from '@/components/text-editor';
-import { useTiptapEditor } from '@/hooks/use-tiptap';
-import { isNotEmptyHTML, useForm } from '@mantine/form';
-import { Button, Flex, Text } from '@mantine/core';
+import { Button, Flex, Text, Textarea } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { useMutation } from '@tanstack/react-query';
+import { zod4Resolver } from 'mantine-form-zod-resolver';
 
 import { updateLetter } from '@/services/letter';
 import { getQueryClient } from '@/lib/get-query-client';
 import ServerError from '@/utils/error/ServerError';
+import { updateLetterServerInput } from '@/lib/validations/letter';
 import { letterKeys } from '@/lib/query-keys/letter';
 import type { Letter } from '@/types/letter';
 import classes from './letter.module.css';
@@ -21,29 +20,12 @@ export interface ForumEditorProps {
 }
 
 export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
-  const editor = useTiptapEditor({
-    content: body,
-    placeholder: 'Edit your post...',
-    onUpdate: ({ editor }) => {
-      updateForm.setFieldValue('body', editor.getHTML());
-    },
-    shouldRerenderOnTransaction: false,
-  });
-
   const updateForm = useForm({
     initialValues: {
       body,
     },
-    validate: {
-      body: isNotEmptyHTML('Body is required'),
-    },
+    validate: zod4Resolver(updateLetterServerInput),
   });
-
-  useEffect(() => {
-    if (editor) {
-      editor.commands.focus('end');
-    }
-  }, [editor]);
 
   const updateMutation = useMutation({
     mutationFn: async ({ body }: { body: string }) =>
@@ -88,7 +70,13 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
 
   return (
     <form onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}>
-      <TextEditor editor={editor} error={updateForm.errors.body} />
+      <Textarea
+        autosize
+        minRows={6}
+        maxRows={18}
+        placeholder="Edit your post..."
+        {...updateForm.getInputProps('body')}
+      />
 
       {updateForm.errors.root && (
         <Text size="xs" className={classes['letter-editor-root-error-messsage']}>

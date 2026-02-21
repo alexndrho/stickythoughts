@@ -15,7 +15,6 @@ import { getQueryClient } from '@/lib/get-query-client';
 import { adminKeys } from '@/lib/query-keys/admin';
 import { letterKeys } from '@/lib/query-keys/letter';
 import { permanentlyDeleteReply, restoreDeletedReply } from '@/services/moderate/deleted';
-import { stripHtmlTags } from '@/utils/text';
 import { formatUserDisplayName } from '@/utils/user';
 import { PermanentlyDeleteReplyModal, RecoverReplyModal } from './reply-modals';
 import type { DeletedLetterReply } from '@/types/deleted';
@@ -121,11 +120,11 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
               {data?.map((reply) => (
                 <Table.Tr key={reply.id}>
                   <Table.Td>
-                    <Text lineClamp={2}>{stripHtmlTags(reply.body)}</Text>
+                    <Text lineClamp={2}>{reply.body}</Text>
                   </Table.Td>
                   <Table.Td>{formatUserDisplayName(reply.author)}</Table.Td>
                   <Table.Td>
-                    <Text lineClamp={1}>{reply.letter.title}</Text>
+                    <Text lineClamp={1}>{reply.letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
                     {reply.deletedById === reply.authorId ? (

@@ -18,12 +18,13 @@ export default function SignInCard() {
           </Text>
 
           <Text size="lg" className={classes['sign-in-prompt__title']}>
-            Write a letter or respond to one
+            Write a letter for someone
           </Text>
 
           <Text className={classes['sign-in-prompt__copy']}>
-            You can post without an account, and guest letters are reviewed before publishing. Sign
-            in to reply and interact, and verify your account to publish instantly.
+            You can write a letter with your name or anonymously, even without an account. Guest
+            letters are reviewed before publishing. Sign in to reply and interact, and verify your
+            account to publish instantly.
           </Text>
 
           <div className={classes['sign-in-prompt__actions']}>

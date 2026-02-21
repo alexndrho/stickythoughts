@@ -7,7 +7,7 @@ import type { UserSummary, UserWithAvatarSummary } from './user';
 type BaseSubmissionLetter = Prisma.LetterGetPayload<{
   select: {
     id: true;
-    title: true;
+    recipient: true;
     body: true;
     authorId: true;
     status: true;

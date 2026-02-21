@@ -20,7 +20,7 @@ export async function generateMetadata({
   try {
     const letter = await getLetterServer(letterId);
     return {
-      title: `${letter.title}`,
+      title: `${letter.recipient}`,
       alternates: {
         canonical: `/letters/${letterId}`,
       },

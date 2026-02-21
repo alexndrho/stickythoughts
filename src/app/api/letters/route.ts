@@ -6,7 +6,6 @@ import { auth } from '@/lib/auth';
 import { createLetterServerInput } from '@/lib/validations/letter';
 import { formatLetters } from '@/utils/letter';
 import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
-import { isUniqueConstraintError } from '@/server/db/prisma-errors';
 import { createLetter, listLettersPublic } from '@/server/letter/letters';
 import { toDTO } from '@/lib/http/to-dto';
 import type { LetterDTO } from '@/types/letter';
@@ -23,11 +22,11 @@ export async function POST(request: Request) {
       headers: request.headers,
     });
 
-    const { title, body, isAnonymous } = createLetterServerInput.parse(await request.json());
+    const { recipient, body, isAnonymous } = createLetterServerInput.parse(await request.json());
 
     const post = await createLetter({
       session,
-      title,
+      recipient,
       body,
       isAnonymous,
     });
@@ -38,18 +37,6 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);
-    }
-
-    if (isUniqueConstraintError(error)) {
-      return jsonError(
-        [
-          {
-            code: 'letter/title-already-exists',
-            message: 'Post name must be unique',
-          },
-        ],
-        400,
-      );
     }
 
     console.error(error);

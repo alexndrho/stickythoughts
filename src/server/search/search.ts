@@ -33,12 +33,12 @@ export async function searchLetters(args: { q: string; take?: number }) {
   const letters = await prisma.letter.findMany({
     take,
     where: {
-      title: { contains: args.q, mode: 'insensitive' },
+      recipient: { contains: args.q, mode: 'insensitive' },
       deletedAt: null,
     },
     select: {
       id: true,
-      title: true,
+      recipient: true,
     },
   });
 
@@ -67,12 +67,12 @@ export async function searchAll(args: { q: string }) {
     prisma.letter.findMany({
       take: takeEach,
       where: {
-        title: { contains: args.q, mode: 'insensitive' },
+        recipient: { contains: args.q, mode: 'insensitive' },
         deletedAt: null,
       },
       select: {
         id: true,
-        title: true,
+        recipient: true,
       },
     }),
   ]);

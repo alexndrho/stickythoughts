@@ -25,8 +25,9 @@
   color: var(--mantine-color-dimmed);
 }
 
-.edit-title {
+.recipient {
   margin-bottom: var(--mantine-spacing-md);
+  color: var(--mantine-color-dimmed);
 }
 
 .letter-editor-root-error-messsage {

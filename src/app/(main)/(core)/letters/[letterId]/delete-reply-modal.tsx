@@ -7,7 +7,6 @@ import { IconTrash } from '@tabler/icons-react';
 
 import { deleteLetterReply } from '@/services/letter';
 import { setDeleteLetterReplyQueryData } from '../set-query-data';
-import { stripHtmlTags } from '@/utils/text';
 import { type LetterReply } from '@/types/letter';
 
 export interface DeleteReplyModalProps {
@@ -64,7 +63,7 @@ export default function DeleteReplyModal({
     >
       {reply && (
         <Text mb="md" lineClamp={3}>
-          &quot;{stripHtmlTags(reply.body)}&quot;
+          &quot;{reply.body}&quot;
         </Text>
       )}
 

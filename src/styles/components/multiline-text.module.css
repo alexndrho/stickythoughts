@@ -1,0 +1,7 @@
+.multiline-text__line {
+  overflow-wrap: break-word;
+}
+
+.multiline-text__line + .multiline-text__line {
+  margin-top: var(--mantine-spacing-xs);
+}

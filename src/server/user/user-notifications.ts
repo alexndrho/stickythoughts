@@ -24,7 +24,8 @@ export async function listUserNotifications(args: {
       letter: {
         select: {
           id: true,
-          title: true,
+          recipient: true,
+          body: true,
         },
       },
       reply: {

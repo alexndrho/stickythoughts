@@ -1,6 +1,6 @@
 'use client';
 
-import { createTheme, Menu, NavLink, Tooltip, Typography } from '@mantine/core';
+import { createTheme, Menu, NavLink, Tooltip } from '@mantine/core';
 
 export const theme = createTheme({
   cursorType: 'pointer',
@@ -14,13 +14,6 @@ export const theme = createTheme({
       defaultProps: {
         withArrow: true,
       },
-    }),
-    Typography: Typography.extend({
-      styles: () => ({
-        root: {
-          overflowWrap: 'break-word',
-        },
-      }),
     }),
     NavLink: NavLink.extend({
       defaultProps: {

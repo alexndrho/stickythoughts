@@ -36,6 +36,11 @@
   color: var(--mantine-color-text);
 }
 
+.letter-item__recipient {
+  margin-bottom: var(--mantine-spacing-xs);
+  color: var(--mantine-color-dimmed);
+}
+
 .letter-item__group-actions {
   margin-top: var(--mantine-spacing-md);
 }

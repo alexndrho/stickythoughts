@@ -86,7 +86,7 @@ function ActionLetter({
     <Spotlight.Action
       role="link"
       leftSection={<IconMessage />}
-      label={result.title}
+      label={result.recipient}
       onClick={() => router.push(`/letters/${result.id}`)}
       className={classes['spotlight__action-overide']}
     />

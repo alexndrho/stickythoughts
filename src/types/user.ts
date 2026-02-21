@@ -65,7 +65,8 @@ export type BaseUserNotification = Prisma.NotificationGetPayload<{
     letter: {
       select: {
         id: true;
-        title: true;
+        recipient: true;
+        body: true;
       };
     };
     reply: {

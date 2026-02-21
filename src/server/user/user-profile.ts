@@ -164,7 +164,7 @@ export async function listUserReplies(args: {
     include: {
       letter: {
         select: {
-          title: true,
+          recipient: true,
         },
       },
       author: {

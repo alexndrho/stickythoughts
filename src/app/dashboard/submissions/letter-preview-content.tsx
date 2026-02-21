@@ -1,6 +1,7 @@
 'use client';
 
-import { Text, Title, Typography } from '@mantine/core';
+import { Text } from '@mantine/core';
+import MultilineText from '@/components/multiline-text';
 
 import type { SubmissionLetter } from '@/types/submission';
 import { getFormattedDate } from '@/utils/date';
@@ -13,23 +14,18 @@ export interface LetterPreviewContentProps {
 export default function LetterPreviewContent({ letter }: LetterPreviewContentProps) {
   return (
     <>
-      <Title mb="xs">{letter?.title || '-'}</Title>
-
       <Text size="sm" c="dimmed">
         Author:{' '}
         {!letter?.author || letter.isAnonymous ? 'Anonymous' : formatUserDisplayName(letter.author)}
       </Text>
       <Text size="sm" c="dimmed">
+        Recipient: {letter?.recipient || '-'}
+      </Text>
+      <Text size="sm" c="dimmed">
         Submitted: {letter?.createdAt ? getFormattedDate(letter.createdAt) : '-'}
       </Text>
 
-      <Typography mt="md">
-        <div
-          dangerouslySetInnerHTML={{
-            __html: letter?.body || '<p>-</p>',
-          }}
-        />
-      </Typography>
+      <MultilineText text={letter?.body || '-'} mt="md" />
     </>
   );
 }

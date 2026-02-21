@@ -38,7 +38,7 @@ export type SearchUserType = Prisma.UserGetPayload<{
 export type SearchLetterType = Prisma.LetterGetPayload<{
   select: {
     id: true;
-    title: true;
+    recipient: true;
   };
 }> &
   SearchResult;

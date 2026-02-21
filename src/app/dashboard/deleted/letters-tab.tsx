@@ -106,7 +106,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
           <Table highlightOnHover withColumnBorders withRowBorders>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Title</Table.Th>
+                <Table.Th>Recipient</Table.Th>
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Deleted By</Table.Th>
                 <Table.Th>Deleted</Table.Th>
@@ -118,7 +118,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
               {deletedLetters?.map((letter) => (
                 <Table.Tr key={letter.id}>
                   <Table.Td>
-                    <Text>{letter.title}</Text>
+                    <Text>{letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
                     {/* Show "Anonymous" if the letter was submitted anonymously

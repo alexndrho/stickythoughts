@@ -11,7 +11,7 @@ import { deleteLetter } from '@/services/letter';
 
 export interface DeleteLetterModalProps {
   id: string;
-  title: string;
+  recipient: string;
   authorUsername?: string;
   opened: boolean;
   onClose: () => void;
@@ -20,7 +20,7 @@ export interface DeleteLetterModalProps {
 
 export default function DeleteLetterModal({
   id,
-  title,
+  recipient,
   authorUsername,
   opened,
   onClose,
@@ -54,7 +54,7 @@ export default function DeleteLetterModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={`Are you sure you want to delete "${title}"?`}
+      title={`Are you sure you want to delete the letter for "${recipient}"?`}
       centered
     >
       <Text mb="md">

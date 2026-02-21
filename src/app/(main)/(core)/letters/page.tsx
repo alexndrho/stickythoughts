@@ -20,16 +20,16 @@ export default function LettersPage() {
   return (
     <div className={classes.container}>
       <Paper component="header" withBorder className={classes['header']}>
-        <div>
+        <div className={classes['header__content']}>
           <Text size="xs" className={classes['header__eyebrow']}>
             Letters
           </Text>
 
-          <Title className={classes['header__title']}>Longer stories. Slower replies.</Title>
+          <Title className={classes['header__title']}>Longer stories. Sent with heart.</Title>
 
           <Text className={classes.header__description}>
-            When a thought needs more room, write a letter. Read, reply, and keep the conversation
-            moving.
+            Write a letter for someone on your mind. Send it named or anonymous, then read and reply
+            to letters that resonate.
           </Text>
 
           <LettersActions />

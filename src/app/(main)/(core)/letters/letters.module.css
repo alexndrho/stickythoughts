@@ -29,6 +29,14 @@
   letter-spacing: 0.05em;
 }
 
+.header__content {
+  width: 100%;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    max-width: rem(640px);
+  }
+}
+
 .header__title {
   margin-bottom: var(--mantine-spacing-sm);
 

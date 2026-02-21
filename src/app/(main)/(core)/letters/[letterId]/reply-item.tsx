@@ -1,21 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { ActionIcon, Anchor, Avatar, Button, Group, Menu, Text, Typography } from '@mantine/core';
-import { isNotEmptyHTML, useForm } from '@mantine/form';
+import { zod4Resolver } from 'mantine-form-zod-resolver';
+import { ActionIcon, Anchor, Avatar, Button, Group, Menu, Text, Textarea } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { setUpdateLetterReplyQueryData } from '@/app/(main)/(core)/letters/set-query-data';
-import TextEditor from '@/components/text-editor';
 import AuthorAvatar from '@/components/author-avatar';
 import LikeButton from '@/app/(main)/(core)/letters/like-button';
-import { useTiptapEditor } from '@/hooks/use-tiptap';
+import MultilineText from '@/components/multiline-text';
 import { updateLetterReply } from '@/services/letter';
 import ServerError from '@/utils/error/ServerError';
+import { updateLetterReplyServerInput } from '@/lib/validations/letter';
 import type { LetterReply } from '@/types/letter';
 import classes from './letter.module.css';
 
@@ -138,9 +139,7 @@ export default function ReplyItem({
           <Editor reply={reply} onClose={() => setIsEditable(false)} />
         ) : (
           <>
-            <Typography>
-              <div dangerouslySetInnerHTML={{ __html: reply.body }} />
-            </Typography>
+            <MultilineText text={reply.body} />
 
             <LikeButton
               liked={reply.likes.liked}
@@ -158,29 +157,23 @@ export default function ReplyItem({
 }
 
 function Editor({ reply, onClose }: { reply: LetterReply; onClose: () => void }) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
   const updateForm = useForm({
     initialValues: {
       body: reply.body,
     },
-    validate: {
-      body: isNotEmptyHTML('Reply is required'),
-    },
-  });
-
-  const editor = useTiptapEditor({
-    content: reply.body,
-    placeholder: 'Write a reply...',
-    onUpdate: ({ editor }) => {
-      updateForm.setFieldValue('body', editor.getHTML());
-    },
-    shouldRerenderOnTransaction: false,
+    validate: zod4Resolver(updateLetterReplyServerInput),
   });
 
   useEffect(() => {
-    if (editor) {
-      editor.commands.focus('end');
-    }
-  }, [editor]);
+    const element = textareaRef.current;
+    if (!element) return;
+
+    element.focus();
+    const valueLength = element.value.length;
+    element.setSelectionRange(valueLength, valueLength);
+  }, []);
 
   const updateMutation = useMutation({
     mutationFn: (values: typeof updateForm.values) =>
@@ -216,7 +209,14 @@ function Editor({ reply, onClose }: { reply: LetterReply; onClose: () => void })
 
   return (
     <form onSubmit={updateForm.onSubmit((values) => updateMutation.mutate(values))}>
-      <TextEditor editor={editor} error={updateForm.errors.body} />
+      <Textarea
+        ref={textareaRef}
+        autosize
+        minRows={4}
+        maxRows={12}
+        placeholder="Write a reply..."
+        {...updateForm.getInputProps('body')}
+      />
 
       <Group mt="md" justify="end">
         <Button variant="default" onClick={onClose}>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { Anchor, Paper, Text, Typography } from '@mantine/core';
+import { Anchor, Paper, Text } from '@mantine/core';
+import MultilineText from '@/components/multiline-text';
 
 import LikeButton from '../../letters/like-button';
 import { type UserLetterReply } from '@/types/letter';
@@ -28,7 +29,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
       <Link
         href={`/letters/${reply.letterId}`}
         className={classes['user-reply-item__main-link']}
-        aria-label={`View letter titled ${reply.letter.title}`}
+        aria-label={`View letter for ${reply.letter.recipient}`}
       />
 
       <div className={classes['user-reply-item__content']}>
@@ -40,7 +41,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
             href={`/letters/${reply.letterId}`}
             className={classes['user-reply-item__link']}
           >
-            {reply.letter.title}
+            {reply.letter.recipient}
           </Anchor>
         </Text>
 
@@ -84,9 +85,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
           </Text>
         </header>
 
-        <Typography>
-          <div dangerouslySetInnerHTML={{ __html: reply.body }} />
-        </Typography>
+        <MultilineText text={reply.body} />
 
         <LikeButton
           size="compact-sm"

@@ -12,19 +12,11 @@ export type validationCode =
   | 'validation/invalid-input'
   | 'validation/too-large';
 
-export type letterCode = 'letter/title-already-exists';
-
 export type thoughtCode = 'thought/highlight-locked';
 
 export type antiBotCode = 'captcha/validation-failed' | 'botid/validation-failed';
 
-export type errorCode =
-  | systemCode
-  | authCode
-  | validationCode
-  | letterCode
-  | thoughtCode
-  | antiBotCode;
+export type errorCode = systemCode | authCode | validationCode | thoughtCode | antiBotCode;
 
 export default interface IError {
   issues: {

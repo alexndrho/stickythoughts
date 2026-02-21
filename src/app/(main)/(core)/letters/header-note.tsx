@@ -10,7 +10,7 @@ export default function HeaderNote() {
       <Text className={classes['header__note-title']}>What you can do</Text>
 
       <List>
-        <List.Item>Write a letter with a title and a story.</List.Item>
+        <List.Item>Write a letter for someone you care about.</List.Item>
         <List.Item>Reply to a letter that resonates.</List.Item>
         <List.Item>Prefer privacy? Write anonymously.</List.Item>
       </List>

@@ -156,10 +156,10 @@ enum LetterStatus {
 
 model Letter {
   id          String        @id @default(cuid())
-  title       String
   body        String
   authorId    String?
   author      User?         @relation("LetterAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  recipient   String
   isAnonymous Boolean?      @default(false)
   likes       LetterLike[]
   replies     LetterReply[]
