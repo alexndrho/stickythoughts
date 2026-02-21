@@ -6,13 +6,13 @@ import { searchAll, searchLetters, searchUsers } from '@/server/search/search';
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const q = searchParams.get('q') ?? '';
-  const type = searchParams.get('type'); // "all", "letters", "users"
+  const type = searchParams.get('type'); // "all", "recipients", "users"
 
   try {
     if (type === 'users') {
       const users = await searchUsers({ q });
       return NextResponse.json(users, { status: 200 });
-    } else if (type === 'letters') {
+    } else if (type === 'recipients') {
       const letters = await searchLetters({ q });
       return NextResponse.json(letters, { status: 200 });
     }

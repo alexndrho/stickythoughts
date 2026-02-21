@@ -3,7 +3,7 @@ import type { SerializeDates } from './serialization';
 
 export const searchSegments = [
   { label: 'All', value: 'all' },
-  { label: 'Letters', value: 'letters' },
+  { label: 'Recipients', value: 'recipients' },
   { label: 'Users', value: 'users' },
 ] as const;
 
@@ -11,13 +11,13 @@ export type SearchSegmentType = (typeof searchSegments)[number]['value'];
 
 export type SearchResultMap = {
   users: SearchUserType[];
-  letters: SearchLetterType[];
+  recipients: SearchLetterType[];
   all: SearchAllType[];
 };
 
 export type SearchResultDTOMap = {
   users: SearchUserDTO[];
-  letters: SearchLetterDTO[];
+  recipients: SearchLetterDTO[];
   all: SearchAllDTO[];
 };
 

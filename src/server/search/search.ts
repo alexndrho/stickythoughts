@@ -42,7 +42,7 @@ export async function searchLetters(args: { q: string; take?: number }) {
     },
   });
 
-  return letters.map((letter) => ({ ...letter, type: 'letters' as const }));
+  return letters.map((letter) => ({ ...letter, type: 'recipients' as const }));
 }
 
 export async function searchAll(args: { q: string }) {
@@ -79,7 +79,7 @@ export async function searchAll(args: { q: string }) {
 
   const combinedResults: SearchAllType[] = [
     ...users.map((user) => ({ ...user, type: 'users' as const })),
-    ...letters.map((letter) => ({ ...letter, type: 'letters' as const })),
+    ...letters.map((letter) => ({ ...letter, type: 'recipients' as const })),
   ];
 
   return combinedResults;

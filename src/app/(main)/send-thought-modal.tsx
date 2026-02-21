@@ -101,6 +101,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         <Textarea
           label="Message"
           withAsterisk
+          placeholder="What do you want to say?"
           rows={5}
           maxLength={THOUGHT_MAX_MESSAGE_LENGTH}
           disabled={mutation.isPending}
@@ -118,6 +119,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         <TextInput
           label="Author"
           withAsterisk
+          placeholder="Who is this thought from?"
           maxLength={THOUGHT_MAX_AUTHOR_LENGTH}
           disabled={mutation.isPending}
           leftSection={'\u2013'}
