@@ -5,6 +5,7 @@ import { Button, Flex, Modal, Text } from '@mantine/core';
 
 import { getQueryClient } from '@/lib/get-query-client';
 import { letterKeys } from '@/lib/query-keys/letter';
+import { searchKeys } from '@/lib/query-keys/search';
 import { userKeys } from '@/lib/query-keys/user';
 import { adminKeys } from '@/lib/query-keys/admin';
 import { deleteLetter } from '@/services/letter';
@@ -38,6 +39,10 @@ export default function DeleteLetterModal({
 
       queryClient.invalidateQueries({
         queryKey: adminKeys.deletedLetters(),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: searchKeys.all(),
       });
 
       if (authorUsername) {
