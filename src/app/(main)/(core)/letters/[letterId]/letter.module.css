@@ -4,7 +4,7 @@
   padding-bottom: var(--mantine-spacing-xl);
 }
 
-.header {
+.header__meta {
   margin-bottom: var(--mantine-spacing-xs);
   display: flex;
   justify-content: space-between;
@@ -25,9 +25,8 @@
   color: var(--mantine-color-dimmed);
 }
 
-.recipient {
+.divider {
   margin-bottom: var(--mantine-spacing-md);
-  color: var(--mantine-color-dimmed);
 }
 
 .letter-editor-root-error-messsage {

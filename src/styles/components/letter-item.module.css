@@ -21,7 +21,8 @@
   padding: var(--mantine-spacing-md);
 }
 
-.letter-item__header {
+.letter-item__meta {
+  margin-bottom: var(--mantine-spacing-xs);
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-xs);
@@ -36,9 +37,8 @@
   color: var(--mantine-color-text);
 }
 
-.letter-item__recipient {
-  margin-bottom: var(--mantine-spacing-xs);
-  color: var(--mantine-color-dimmed);
+.letter-item__divider {
+  margin-bottom: var(--mantine-spacing-md);
 }
 
 .letter-item__group-actions {

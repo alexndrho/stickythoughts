@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useDisclosure } from '@mantine/hooks';
-import { ActionIcon, Anchor, Button, Center, Group, Menu, Text } from '@mantine/core';
+import { ActionIcon, Anchor, Button, Center, Divider, Group, Menu, Text } from '@mantine/core';
 import MultilineText from '@/components/multiline-text';
 import { formatDistanceToNow } from 'date-fns';
 import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
@@ -82,81 +82,85 @@ export default function Content({ id }: ContentProps) {
 
   return (
     <div className={classes.container}>
-      <header className={classes.header}>
-        <div className={classes.header__info}>
-          {letter.isAnonymous || !letter.author ? (
-            <AuthorAvatar isAnonymous={!!letter.isAnonymous} />
-          ) : (
-            <AuthorAvatar
-              component={Link}
-              href={`/user/${letter.author.username}`}
-              src={letter.author.image}
-            />
-          )}
-
-          <div>
+      <header>
+        <div className={classes.header__meta}>
+          <div className={classes.header__info}>
             {letter.isAnonymous || !letter.author ? (
-              <Text className={classes['header__author-name']}>Anonymous</Text>
+              <AuthorAvatar isAnonymous={!!letter.isAnonymous} />
             ) : (
-              <Anchor
+              <AuthorAvatar
                 component={Link}
                 href={`/user/${letter.author.username}`}
-                className={classes['header__author-name']}
-              >
-                {letter.author.name || letter.author.username}
-              </Anchor>
+                src={letter.author.image}
+              />
             )}
 
-            <Text size="xs" className={classes['header__created-at']}>
-              {formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
-                addSuffix: true,
-              })}
-              {letter.contentUpdatedAt && <span> (edited)</span>}
-            </Text>
-          </div>
-        </div>
-
-        {(isAuthor || hasPermissionToDelete) && (
-          <Menu>
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray" size="lg" aria-label="Letter more actions">
-                <IconDots size="1.25em" />
-              </ActionIcon>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              {isAuthor && (
-                <Menu.Item
-                  leftSection={<IconEdit size="1em" />}
-                  onClick={() => setIsEditable(true)}
+            <div>
+              {letter.isAnonymous || !letter.author ? (
+                <Text className={classes['header__author-name']}>Anonymous</Text>
+              ) : (
+                <Anchor
+                  component={Link}
+                  href={`/user/${letter.author.username}`}
+                  className={classes['header__author-name']}
                 >
-                  Edit
-                </Menu.Item>
+                  {letter.author.name || letter.author.username}
+                </Anchor>
               )}
 
-              <Menu.Item
-                color="red"
-                leftSection={<IconTrash size="1em" />}
-                onClick={deleteModalHandlers.open}
-              >
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        )}
+              <Text size="xs" className={classes['header__created-at']}>
+                {formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
+                  addSuffix: true,
+                })}
+                {letter.contentUpdatedAt && <span> (edited)</span>}
+              </Text>
+            </div>
+          </div>
+
+          {(isAuthor || hasPermissionToDelete) && (
+            <Menu>
+              <Menu.Target>
+                <ActionIcon
+                  variant="subtle"
+                  color="gray"
+                  size="lg"
+                  aria-label="Letter more actions"
+                >
+                  <IconDots size="1.25em" />
+                </ActionIcon>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                {isAuthor && (
+                  <Menu.Item
+                    leftSection={<IconEdit size="1em" />}
+                    onClick={() => setIsEditable(true)}
+                  >
+                    Edit
+                  </Menu.Item>
+                )}
+
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconTrash size="1em" />}
+                  onClick={deleteModalHandlers.open}
+                >
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
+        </div>
+
+        <Text size="lg">To: {letter.recipient}</Text>
       </header>
 
-      {isEditable ? (
-        <>
-          <Text className={classes.recipient}>To: {letter.recipient}</Text>
+      <Divider className={classes.divider} />
 
-          <LetterEditor id={id} body={letter.body} onClose={() => setIsEditable(false)} />
-        </>
+      {isEditable ? (
+        <LetterEditor id={id} body={letter.body} onClose={() => setIsEditable(false)} />
       ) : (
-        <>
-          <Text className={classes.recipient}>To: {letter.recipient}</Text>
-          <MultilineText text={letter.body} />
-        </>
+        <MultilineText text={letter.body} />
       )}
 
       <Group my="md">

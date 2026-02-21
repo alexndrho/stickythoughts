@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { Anchor, Group, Paper, Text } from '@mantine/core';
+import { Anchor, Divider, Group, Paper, Text } from '@mantine/core';
 
 import AuthorAvatar from '@/components/author-avatar';
 import LikeButton from '@/app/(main)/(core)/letters/like-button';
@@ -34,7 +34,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
 
       <div className={classes['letter-item__content']}>
         <header>
-          <div className={classes['letter-item__header']}>
+          <div className={classes['letter-item__meta']}>
             {post.isAnonymous || !post.author ? (
               <AuthorAvatar size="xs" isAnonymous={!!post.isAnonymous} />
             ) : (
@@ -68,10 +68,12 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
             </Text>
           </div>
 
-          <Text size="sm" lineClamp={1} className={classes['letter-item__recipient']}>
+          <Text size="lg" lineClamp={1} className={classes['letter-item__recipient']}>
             To: {post.recipient}
           </Text>
         </header>
+
+        <Divider className={classes['letter-item__divider']} />
 
         <Text lineClamp={5}>{post.body}</Text>
 
