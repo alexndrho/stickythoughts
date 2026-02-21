@@ -108,7 +108,6 @@ export default function Content({ id }: ContentProps) {
             )}
 
             <Text size="xs" className={classes['header__created-at']}>
-              Posted{' '}
               {formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
                 addSuffix: true,
               })}

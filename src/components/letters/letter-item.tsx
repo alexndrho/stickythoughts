@@ -61,7 +61,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
                   {post.author.name || post.author.username}
                 </Anchor>
               )}{' '}
-              • Posted{' '}
+              •{' '}
               {formatDistanceToNow(post.postedAt ?? post.createdAt, {
                 addSuffix: true,
               })}
