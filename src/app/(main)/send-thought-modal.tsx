@@ -17,6 +17,8 @@ import {
   THOUGHT_MAX_AUTHOR_LENGTH,
   THOUGHT_MAX_MESSAGE_LENGTH,
   THOUGHT_COLORS,
+  THOUGHT_MESSAGE_WARNING_THRESHOLD,
+  THOUGHT_AUTHOR_WARNING_THRESHOLD,
 } from '@/config/thought';
 import classes from './home.module.css';
 import ServerError from '@/utils/error/ServerError';
@@ -106,7 +108,8 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
           maxLength={THOUGHT_MAX_MESSAGE_LENGTH}
           disabled={mutation.isPending}
           rightSection={
-            THOUGHT_MAX_MESSAGE_LENGTH - form.values.message.length <= 10 && (
+            THOUGHT_MAX_MESSAGE_LENGTH - form.values.message.length <=
+              THOUGHT_MESSAGE_WARNING_THRESHOLD && (
               <Text size="sm" className={classes['send-thought-modal__message-length-indicator']}>
                 {THOUGHT_MAX_MESSAGE_LENGTH - form.values.message.length}
               </Text>
@@ -124,7 +127,8 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
           disabled={mutation.isPending}
           leftSection={'\u2013'}
           rightSection={
-            THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length <= 5 && (
+            THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length <=
+              THOUGHT_AUTHOR_WARNING_THRESHOLD && (
               <Text size="sm" className={classes['send-thought-modal__message-length-indicator']}>
                 {THOUGHT_MAX_AUTHOR_LENGTH - form.values.author.length}
               </Text>

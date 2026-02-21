@@ -11,6 +11,7 @@ import ServerError from '@/utils/error/ServerError';
 import { updateLetterServerInput } from '@/lib/validations/letter';
 import { letterKeys } from '@/lib/query-keys/letter';
 import type { Letter } from '@/types/letter';
+import { LETTER_BODY_MAX_LENGTH, LETTER_BODY_WARNING_THRESHOLD } from '@/config/letter';
 import classes from './letter.module.css';
 
 export interface ForumEditorProps {
@@ -75,6 +76,15 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
         minRows={6}
         maxRows={18}
         placeholder="Edit your post..."
+        maxLength={LETTER_BODY_MAX_LENGTH}
+        rightSection={
+          LETTER_BODY_MAX_LENGTH - updateForm.values.body.length <=
+            LETTER_BODY_WARNING_THRESHOLD && (
+            <Text size="sm" className={classes['length-indicator']}>
+              {LETTER_BODY_MAX_LENGTH - updateForm.values.body.length}
+            </Text>
+          )
+        }
         {...updateForm.getInputProps('body')}
       />
 

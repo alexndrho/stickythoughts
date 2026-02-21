@@ -7,6 +7,9 @@ export const THOUGHT_MIN_MESSAGE_LENGTH = 5;
 export const THOUGHT_MAX_AUTHOR_LENGTH = 20;
 export const THOUGHT_MAX_MESSAGE_LENGTH = 250;
 
+export const THOUGHT_MESSAGE_WARNING_THRESHOLD = 20;
+export const THOUGHT_AUTHOR_WARNING_THRESHOLD = 5;
+
 export const THOUGHT_COLORS = ['yellow', 'blue', 'red', 'violet', 'green', 'pink'] as const;
 
 export const THOUGHT_HIGHLIGHT_LOCK_HOURS = 12;

@@ -28,6 +28,12 @@ import { submitLetter } from '@/services/letter';
 import ServerError from '@/utils/error/ServerError';
 import classes from './letter-submit.module.css';
 import { notifications } from '@mantine/notifications';
+import {
+  LETTER_BODY_MAX_LENGTH,
+  LETTER_BODY_WARNING_THRESHOLD,
+  LETTER_RECIPIENT_MAX_LENGTH,
+  LETTER_RECIPIENT_WARNING_THRESHOLD,
+} from '@/config/letter';
 
 export default function Content() {
   const router = useRouter();
@@ -103,6 +109,15 @@ export default function Content() {
           label="Recipient"
           withAsterisk
           placeholder="Who is this letter for?"
+          maxLength={LETTER_RECIPIENT_MAX_LENGTH}
+          rightSection={
+            LETTER_RECIPIENT_MAX_LENGTH - form.values.recipient.length <=
+              LETTER_RECIPIENT_WARNING_THRESHOLD && (
+              <Text size="sm" className={classes['length-indicator']}>
+                {LETTER_RECIPIENT_MAX_LENGTH - form.values.recipient.length}
+              </Text>
+            )
+          }
           {...form.getInputProps('recipient')}
           className={classes['title-text-input']}
         />
@@ -114,6 +129,14 @@ export default function Content() {
           minRows={8}
           maxRows={20}
           placeholder="What do you want to tell them?"
+          maxLength={LETTER_BODY_MAX_LENGTH}
+          rightSection={
+            LETTER_BODY_MAX_LENGTH - form.values.body.length <= LETTER_BODY_WARNING_THRESHOLD && (
+              <Text size="sm" className={classes['length-indicator']}>
+                {LETTER_BODY_MAX_LENGTH - form.values.body.length}
+              </Text>
+            )
+          }
           {...form.getInputProps('body')}
         />
 

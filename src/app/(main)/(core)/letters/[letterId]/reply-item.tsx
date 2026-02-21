@@ -18,6 +18,7 @@ import { updateLetterReply } from '@/services/letter';
 import ServerError from '@/utils/error/ServerError';
 import { updateLetterReplyServerInput } from '@/lib/validations/letter';
 import type { LetterReply } from '@/types/letter';
+import { LETTER_REPLY_MAX_LENGTH, LETTER_REPLY_WARNING_THRESHOLD } from '@/config/letter';
 import classes from './letter.module.css';
 
 export interface ReplyItemProps {
@@ -215,6 +216,15 @@ function Editor({ reply, onClose }: { reply: LetterReply; onClose: () => void })
         minRows={4}
         maxRows={12}
         placeholder="Write a reply..."
+        maxLength={LETTER_REPLY_MAX_LENGTH}
+        rightSection={
+          LETTER_REPLY_MAX_LENGTH - updateForm.values.body.length <=
+            LETTER_REPLY_WARNING_THRESHOLD && (
+            <Text size="sm" className={classes['length-indicator']}>
+              {LETTER_REPLY_MAX_LENGTH - updateForm.values.body.length}
+            </Text>
+          )
+        }
         {...updateForm.getInputProps('body')}
       />
 
