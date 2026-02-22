@@ -23,6 +23,7 @@ import LikeButton from '@/app/(main)/(core)/letters/like-button';
 import ReplyButton from '@/app/(main)/(core)/letters/reply-button';
 import ShareButton from '@/app/(main)/(core)/letters/share-button';
 import SignInWarningModal from '@/components/sign-in-warning-modal';
+import { getLetterFromDisplay } from '@/utils/letter-display';
 import classes from './letter.module.css';
 
 export interface ContentProps {
@@ -40,6 +41,16 @@ export default function Content({ id }: ContentProps) {
   const replySectionRef = useRef<ReplySectionRef>(null);
 
   const { data: letter } = useSuspenseQuery(letterOptions(id));
+  const authorName = letter.author?.name || null;
+  const authorUsername = letter.author?.username || null;
+  const { displayName: fromDisplayName, isAnonymous } = getLetterFromDisplay({
+    anonymousFrom: letter.anonymousFrom,
+    authorName,
+    authorUsername,
+  });
+  const createdAtLabel = formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
+    addSuffix: true,
+  });
 
   const isAuthor = letter.isOwner;
   const hasPermissionToDelete =
@@ -84,39 +95,6 @@ export default function Content({ id }: ContentProps) {
     <div className={classes.container}>
       <header>
         <div className={classes.header__meta}>
-          <div className={classes.header__info}>
-            {letter.isAnonymous || !letter.author ? (
-              <AuthorAvatar isAnonymous={!!letter.isAnonymous} />
-            ) : (
-              <AuthorAvatar
-                component={Link}
-                href={`/user/${letter.author.username}`}
-                src={letter.author.image}
-              />
-            )}
-
-            <div>
-              {letter.isAnonymous || !letter.author ? (
-                <Text className={classes['header__author-name']}>Anonymous</Text>
-              ) : (
-                <Anchor
-                  component={Link}
-                  href={`/user/${letter.author.username}`}
-                  className={classes['header__author-name']}
-                >
-                  {letter.author.name || letter.author.username}
-                </Anchor>
-              )}
-
-              <Text size="xs" className={classes['header__created-at']}>
-                {formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
-                  addSuffix: true,
-                })}
-                {letter.contentUpdatedAt && <span> (edited)</span>}
-              </Text>
-            </div>
-          </div>
-
           {(isAuthor || hasPermissionToDelete) && (
             <Menu>
               <Menu.Target>
@@ -152,7 +130,59 @@ export default function Content({ id }: ContentProps) {
           )}
         </div>
 
-        <Text size="lg">To: {letter.recipient}</Text>
+        <div>
+          <div className={classes['header__participant-row']}>
+            <Text className={classes['header__participant-label']}>From:</Text>
+
+            <Group className={classes['header__participant-value-group']}>
+              {!isAnonymous && letter.author && (
+                <AuthorAvatar
+                  component={Link}
+                  href={`/user/${letter.author.username}`}
+                  src={letter.author.image}
+                  size="xs"
+                />
+              )}
+
+              {!isAnonymous && letter.author ? (
+                <Anchor
+                  component={Link}
+                  href={`/user/${letter.author.username}`}
+                  className={classes['header__participant-value']}
+                  title={fromDisplayName}
+                >
+                  {fromDisplayName}
+                </Anchor>
+              ) : (
+                <Text className={classes['header__participant-value']} title={fromDisplayName}>
+                  {fromDisplayName}
+                </Text>
+              )}
+            </Group>
+          </div>
+
+          <div className={classes['header__participant-row']}>
+            <Text className={classes['header__participant-label']}>To:</Text>
+
+            <Text
+              size="md"
+              fw={500}
+              className={classes['header__participant-value']}
+              title={letter.recipient}
+            >
+              {letter.recipient}
+            </Text>
+          </div>
+
+          <div className={classes['header__participant-row']}>
+            <Text className={classes['header__participant-label']}>Date:</Text>
+
+            <Text size="md" fw={500} className={classes['header__participant-value']}>
+              {createdAtLabel}
+              {letter.contentUpdatedAt && <span> (edited)</span>}
+            </Text>
+          </div>
+        </div>
       </header>
 
       <Divider className={classes.divider} />
@@ -189,7 +219,7 @@ export default function Content({ id }: ContentProps) {
           <ReplyEditor
             ref={replySectionRef}
             letterId={letter.id}
-            isDefaultAnonymous={isAuthor && !!letter.isAnonymous}
+            isDefaultAnonymous={isAuthor && isAnonymous}
           />
         ) : (
           <Center mt="lg">

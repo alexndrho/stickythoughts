@@ -7,6 +7,7 @@ import LikeButton from '@/app/(main)/(core)/letters/like-button';
 import ReplyButton from '@/app/(main)/(core)/letters/reply-button';
 import ShareButton from '@/app/(main)/(core)/letters/share-button';
 import type { Letter } from '@/types/letter';
+import { getLetterFromDisplay } from '@/utils/letter-display';
 import classes from '@/styles/components/letter-item.module.css';
 
 export interface LetterItemProps {
@@ -24,53 +25,88 @@ export interface LetterItemProps {
 }
 
 export default function LetterItem({ post, likeLoading, onLike }: LetterItemProps) {
+  const authorName = post.author?.name || null;
+  const authorUsername = post.author?.username || null;
+  const { displayName: fromDisplayName, isAnonymous } = getLetterFromDisplay({
+    anonymousFrom: post.anonymousFrom,
+    authorName,
+    authorUsername,
+  });
+  const createdAtLabel = formatDistanceToNow(post.postedAt ?? post.createdAt, {
+    addSuffix: true,
+  });
+
   return (
     <Paper component="article" withBorder className={classes['letter-item']}>
       <Link
         href={`/letters/${post.id}`}
-        aria-label={`View letter for ${post.recipient}`}
+        aria-label={`View letter from ${fromDisplayName} to ${post.recipient}`}
         className={classes['letter-item__main-link']}
       />
 
       <div className={classes['letter-item__content']}>
         <header>
-          <div className={classes['letter-item__meta']}>
-            {post.isAnonymous || !post.author ? (
-              <AuthorAvatar size="xs" isAnonymous={!!post.isAnonymous} />
-            ) : (
-              <AuthorAvatar
-                component={Link}
-                size="xs"
-                src={post.author.image}
-                aria-label={`View profile of ${post.author.username}`}
-                href={`/user/${post.author.username}`}
-                className={classes['letter-item__avatar']}
-              />
-            )}
+          <div>
+            <div className={classes['letter-item__participant-row']}>
+              <Text className={classes['letter-item__participant-label']}>From:</Text>
 
-            <Text size="sm">
-              {post.isAnonymous || !post.author ? (
-                'Anonymous'
-              ) : (
-                <Anchor
-                  component={Link}
-                  inherit
-                  href={`/user/${post.author.username}`}
-                  className={classes['letter-item__user-link']}
-                >
-                  {post.author.name || post.author.username}
-                </Anchor>
-              )}{' '}
-              •{' '}
-              {formatDistanceToNow(post.postedAt ?? post.createdAt, {
-                addSuffix: true,
-              })}
-            </Text>
+              <Group className={classes['letter-item__participant-value-group']}>
+                {!isAnonymous && post.author && (
+                  <AuthorAvatar
+                    component={Link}
+                    size="xs"
+                    src={post.author.image}
+                    aria-label={`View profile of ${post.author.username}`}
+                    href={`/user/${post.author.username}`}
+                    className={classes['letter-item__avatar']}
+                  />
+                )}
+
+                {!isAnonymous && post.author ? (
+                  <Anchor
+                    component={Link}
+                    inherit
+                    href={`/user/${post.author.username}`}
+                    className={`${classes['letter-item__user-link']} ${classes['letter-item__participant-value']}`}
+                    title={fromDisplayName}
+                  >
+                    {fromDisplayName}
+                  </Anchor>
+                ) : (
+                  <Text
+                    size="md"
+                    fw={500}
+                    className={classes['letter-item__participant-value']}
+                    title={fromDisplayName}
+                  >
+                    {fromDisplayName}
+                  </Text>
+                )}
+              </Group>
+            </div>
+
+            <div className={classes['letter-item__participant-row']}>
+              <Text className={classes['letter-item__participant-label']}>To:</Text>
+
+              <Text
+                size="md"
+                fw={500}
+                className={classes['letter-item__participant-value']}
+                title={post.recipient}
+              >
+                {post.recipient}
+              </Text>
+            </div>
+
+            <div className={classes['letter-item__participant-row']}>
+              <Text className={classes['letter-item__participant-label']}>Date:</Text>
+
+              <Text size="md" fw={500} className={classes['letter-item__participant-value']}>
+                {createdAtLabel}
+                {post.contentUpdatedAt && <span> (edited)</span>}
+              </Text>
+            </div>
           </div>
-
-          <Text size="lg" lineClamp={1} className={classes['letter-item__recipient']}>
-            To: {post.recipient}
-          </Text>
         </header>
 
         <Divider className={classes['letter-item__divider']} />

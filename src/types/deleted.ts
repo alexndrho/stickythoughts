@@ -33,7 +33,7 @@ export type DeletedLetter = Prisma.LetterGetPayload<{
     deletedById: true;
     status: true;
     statusSetById: true;
-    isAnonymous: true;
+    anonymousFrom: true;
     postedAt: true;
     contentUpdatedAt: true;
     createdAt: true;

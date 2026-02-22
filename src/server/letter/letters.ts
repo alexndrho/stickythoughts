@@ -5,23 +5,32 @@ import { LETTERS_PER_PAGE } from '@/config/letter';
 import { prisma } from '@/lib/db';
 import { LetterNotFoundError } from './letter-errors';
 import { formatLetters } from '@/utils/letter';
+import { sanitizeString } from '@/utils/text';
 import type { Letter } from '@/types/letter';
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;
   recipient: string;
   body: string;
-  isAnonymous?: boolean;
+  shareMode: 'you' | 'anonymous';
+  anonymousFrom?: string;
 }) {
   const isAuthenticated = Boolean(args.session);
   const isAutoApproved = Boolean(args.session?.user.emailVerified);
-  const isAnonymous = isAuthenticated ? args.isAnonymous : true;
+  const normalizedShareMode = !isAuthenticated
+    ? 'anonymous'
+    : args.shareMode === 'you'
+      ? 'you'
+      : 'anonymous';
+
+  const sanitizedAnonymousFrom = sanitizeString(args.anonymousFrom || '');
+  const anonymousFrom = normalizedShareMode === 'anonymous' ? sanitizedAnonymousFrom : null;
 
   return prisma.letter.create({
     data: {
       recipient: args.recipient,
       body: args.body,
-      isAnonymous,
+      anonymousFrom,
       ...(args.session && {
         author: {
           connect: {

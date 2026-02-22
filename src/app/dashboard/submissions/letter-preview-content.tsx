@@ -12,11 +12,14 @@ export interface LetterPreviewContentProps {
 }
 
 export default function LetterPreviewContent({ letter }: LetterPreviewContentProps) {
+  const anonymousFrom = letter?.anonymousFrom;
+  const senderName = anonymousFrom || 'Anonymous';
+
   return (
     <>
       <Text size="sm" c="dimmed">
         Author:{' '}
-        {!letter?.author || letter.isAnonymous ? 'Anonymous' : formatUserDisplayName(letter.author)}
+        {!letter?.author || anonymousFrom ? senderName : formatUserDisplayName(letter.author)}
       </Text>
       <Text size="sm" c="dimmed">
         Recipient: {letter?.recipient || '-'}

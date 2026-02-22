@@ -21,13 +21,6 @@
   padding: var(--mantine-spacing-md);
 }
 
-.letter-item__meta {
-  margin-bottom: var(--mantine-spacing-xs);
-  display: flex;
-  align-items: center;
-  gap: var(--mantine-spacing-xs);
-}
-
 .letter-item__avatar {
   position: relative;
 }
@@ -37,7 +30,35 @@
   color: var(--mantine-color-text);
 }
 
+.letter-item__participant-row {
+  min-width: 0;
+  display: flex;
+  align-items: start;
+  gap: var(--mantine-spacing-xs);
+}
+
+.letter-item__participant-label {
+  width: rem(52px);
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+}
+
+.letter-item__participant-value-group {
+  gap: rem(5px);
+}
+
+.letter-item__participant-value {
+  color: var(--mantine-color-text);
+  display: block;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .letter-item__divider {
+  margin-top: var(--mantine-spacing-md);
   margin-bottom: var(--mantine-spacing-md);
 }
 

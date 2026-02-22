@@ -96,8 +96,8 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
                     <Text>{letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
-                    {!letter.author || letter.isAnonymous
-                      ? 'Anonymous'
+                    {!letter.author || letter.anonymousFrom
+                      ? letter.anonymousFrom || 'Anonymous'
                       : formatUserDisplayName(letter.author)}
                   </Table.Td>
                   <Table.Td>{letter.createdAt ? getFormattedDate(letter.createdAt) : '-'}</Table.Td>

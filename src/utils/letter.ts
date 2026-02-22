@@ -31,10 +31,11 @@ export function formatLetters({
 }): Letter[] | Letter {
   const formatLetter = (letter: BaseLetter): Letter => {
     const { authorId, likes, _count, ...rest } = letter;
+    const isAnonymousLetter = Boolean(rest.anonymousFrom?.trim());
 
     return {
       ...rest,
-      author: rest.isAnonymous || !rest.author ? undefined : rest.author,
+      author: isAnonymousLetter || !rest.author ? undefined : rest.author,
       isOwner: sessionUserId === authorId,
       likes: {
         liked: !!(likes && likes.length),
@@ -60,7 +61,8 @@ export function formatLetterReplies(
 ): LetterReply[] | LetterReply {
   const formatLetterReply = (reply: BaseLetterReply): LetterReply => {
     const { authorId, likes, _count, ...rest } = reply;
-    const isOP = rest.letter.authorId === authorId && rest.letter.isAnonymous === rest.isAnonymous;
+    const isAnonymousLetter = Boolean(rest.letter.anonymousFrom?.trim());
+    const isOP = rest.letter.authorId === authorId && isAnonymousLetter === !!rest.isAnonymous;
     const isSelf = sessionUserId === authorId;
     const anonymousLabel =
       rest.isAnonymous && !isOP

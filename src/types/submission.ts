@@ -12,7 +12,7 @@ type BaseSubmissionLetter = Prisma.LetterGetPayload<{
     authorId: true;
     status: true;
     statusSetById: true;
-    isAnonymous: true;
+    anonymousFrom: true;
     postedAt: true;
     contentUpdatedAt: true;
     createdAt: true;

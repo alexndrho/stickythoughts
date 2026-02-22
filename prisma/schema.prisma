@@ -160,7 +160,7 @@ model Letter {
   authorId    String?
   author      User?         @relation("LetterAuthor", fields: [authorId], references: [id], onDelete: Cascade)
   recipient   String
-  isAnonymous Boolean?      @default(false)
+  anonymousFrom String?
   likes       LetterLike[]
   replies     LetterReply[]
 

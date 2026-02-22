@@ -121,10 +121,8 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                     <Text>{letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
-                    {/* Show "Anonymous" if the letter was submitted anonymously
-                         or if the author information is missing (author can be null for deleted letters). */}
-                    {!letter.author || letter.isAnonymous
-                      ? 'Anonymous'
+                    {!letter.author || letter.anonymousFrom
+                      ? letter.anonymousFrom || 'Anonymous'
                       : formatUserDisplayName(letter.author)}
                   </Table.Td>
                   <Table.Td>

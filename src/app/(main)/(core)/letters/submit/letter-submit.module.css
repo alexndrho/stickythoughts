@@ -11,7 +11,27 @@
   margin-bottom: var(--mantine-spacing-lg);
 }
 
-.title-text-input {
+.header {
+  border-radius: var(--mantine-radius-sm);
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.header__card {
+  padding: var(--mantine-spacing-md);
+}
+
+.header__card__content {
+  margin-top: var(--mantine-spacing-xs);
+  margin-left: rem(32px);
+}
+
+.header__card__content--user-display {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.recipient-input {
   margin-bottom: var(--mantine-spacing-md);
 }
 

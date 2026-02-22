@@ -15,7 +15,7 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
     recipient: true;
     body: true;
     authorId: true;
-    isAnonymous: true;
+    anonymousFrom: true;
     postedAt: true;
     contentUpdatedAt: true;
     createdAt: true;
@@ -73,7 +73,7 @@ type PrismaBaseLetterReply = Prisma.LetterReplyGetPayload<{
     letter: {
       select: {
         authorId: true;
-        isAnonymous: true;
+        anonymousFrom: true;
       };
     };
     author: {

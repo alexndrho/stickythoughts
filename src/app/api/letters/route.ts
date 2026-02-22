@@ -22,13 +22,16 @@ export async function POST(request: Request) {
       headers: request.headers,
     });
 
-    const { recipient, body, isAnonymous } = createLetterServerInput.parse(await request.json());
+    const { recipient, body, shareMode, anonymousFrom } = createLetterServerInput.parse(
+      await request.json(),
+    );
 
     const post = await createLetter({
       session,
       recipient,
       body,
-      isAnonymous,
+      shareMode,
+      anonymousFrom,
     });
 
     return NextResponse.json({

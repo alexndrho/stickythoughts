@@ -5,28 +5,40 @@
 }
 
 .header__meta {
-  margin-bottom: var(--mantine-spacing-xs);
+  margin-bottom: var(--mantine-spacing-sm);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
-.header__info {
+.header__participant-row {
+  min-width: 0;
   display: flex;
+  align-items: start;
   gap: var(--mantine-spacing-xs);
-  align-items: center;
 }
 
-.header__author-name {
-  color: var(--mantine-color-text);
-  font-weight: bold;
-}
-
-.header__created-at {
+.header__participant-label {
+  width: rem(52px);
   color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+}
+
+.header__participant-value-group {
+  gap: rem(5px);
+}
+
+.header__participant-value {
+  color: var(--mantine-color-text);
+  display: block;
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .divider {
   margin-bottom: var(--mantine-spacing-md);
+  margin-top: var(--mantine-spacing-md);
 }
 
 .letter-editor-root-error-messsage {

@@ -97,7 +97,7 @@ export async function listUserLetters(args: {
       },
       deletedAt: null,
       ...(args.viewerUsername !== args.username && {
-        isAnonymous: false,
+        anonymousFrom: null,
       }),
       status: 'APPROVED',
     },

@@ -90,8 +90,8 @@ export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps
                     <Text lineClamp={1}>{letter.recipient}</Text>
                   </Table.Td>
                   <Table.Td>
-                    {!letter.author || letter.isAnonymous
-                      ? 'Anonymous'
+                    {!letter.author || letter.anonymousFrom
+                      ? letter.anonymousFrom || 'Anonymous'
                       : formatUserDisplayName(letter.author)}
                   </Table.Td>
                   <Table.Td>{letter.createdAt ? getFormattedDate(letter.createdAt) : '-'}</Table.Td>

@@ -31,7 +31,7 @@ export async function createLetterReply(args: {
       letter: {
         select: {
           authorId: true,
-          isAnonymous: true,
+          anonymousFrom: true,
         },
       },
       author: {
@@ -100,7 +100,7 @@ export async function listLetterReplies(args: {
       letter: {
         select: {
           authorId: true,
-          isAnonymous: true,
+          anonymousFrom: true,
         },
       },
       author: {
@@ -154,7 +154,7 @@ export async function updateLetterReply(args: {
       letter: {
         select: {
           authorId: true,
-          isAnonymous: true,
+          anonymousFrom: true,
         },
       },
       author: {
