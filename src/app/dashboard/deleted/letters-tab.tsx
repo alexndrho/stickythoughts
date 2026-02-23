@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
-import { IconArrowBackUp, IconTrashX } from '@tabler/icons-react';
+import { IconArrowBackUp, IconEye, IconTrashX } from '@tabler/icons-react';
 
 import { deletedLettersCountOptions, deletedLettersPageOptions } from './options';
 import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
@@ -18,6 +18,7 @@ import type { DeletedLetter } from '@/types/deleted';
 import { permanentlyDeleteLetter, restoreDeletedLetter } from '@/services/moderate/deleted';
 import { formatUserDisplayName } from '@/utils/user';
 import { PermanentlyDeleteLetterModal, RecoverLetterModal } from './letter-modals';
+import LetterPreview from '@/components/letter/letter-preview';
 
 export interface LettersTabProps {
   isActive: boolean;
@@ -31,6 +32,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
   const [restoringLetter, setRestoringLetter] = useState<DeletedLetter | null>(null);
   const [restoringLetterId, setRestoringLetterId] = useState<string | null>(null);
   const [deletingLetterId, setDeletingLetterId] = useState<string | null>(null);
+  const [previewLetter, setPreviewLetter] = useState<DeletedLetter | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
@@ -135,6 +137,18 @@ export default function LettersTab({ isActive }: LettersTabProps) {
                   <Table.Td>{formatDeletedDate(letter.deletedAt)}</Table.Td>
                   <Table.Td>
                     <ActionIcon.Group>
+                      <Tooltip label="Preview letter">
+                        <ActionIcon
+                          aria-label="Preview letter"
+                          variant="default"
+                          onClick={() => {
+                            setPreviewLetter(letter);
+                          }}
+                        >
+                          <IconEye size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
+
                       <Tooltip label="Recover letter">
                         <ActionIcon
                           aria-label="Recover letter"
@@ -219,6 +233,20 @@ export default function LettersTab({ isActive }: LettersTabProps) {
           loading={restoreMutation.isPending && restoringLetterId === restoringLetter?.id}
         />
       )}
+
+      <LetterPreview
+        title="Preview Letter"
+        letter={{
+          author: previewLetter?.author,
+          anonymousFrom: previewLetter?.anonymousFrom,
+          recipient: previewLetter?.recipient,
+          createdAt: previewLetter?.createdAt,
+          deletedAt: previewLetter?.deletedAt,
+          body: previewLetter?.body,
+        }}
+        opened={!!previewLetter}
+        onClose={() => setPreviewLetter(null)}
+      />
     </Tabs.Panel>
   );
 }

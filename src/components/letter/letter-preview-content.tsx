@@ -2,18 +2,27 @@
 
 import { Text } from '@mantine/core';
 import MultilineText from '@/components/multiline-text';
-
-import type { SubmissionLetter } from '@/types/submission';
+import type { UserWithAvatarSummary } from '@/types/user';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
 
+export interface LetterPreviewData {
+  author?: UserWithAvatarSummary | null;
+  anonymousFrom?: string | null;
+  recipient?: string | null;
+  createdAt?: Date | string | null;
+  deletedAt?: Date | string | null;
+  body?: string | null;
+}
+
 export interface LetterPreviewContentProps {
-  letter: SubmissionLetter | null;
+  letter: LetterPreviewData | null;
 }
 
 export default function LetterPreviewContent({ letter }: LetterPreviewContentProps) {
   const anonymousFrom = letter?.anonymousFrom;
   const senderName = anonymousFrom || 'Anonymous';
+  const previewBody = letter?.body?.trim() || '-';
 
   return (
     <>
@@ -27,8 +36,13 @@ export default function LetterPreviewContent({ letter }: LetterPreviewContentPro
       <Text size="sm" c="dimmed">
         Submitted: {letter?.createdAt ? getFormattedDate(letter.createdAt) : '-'}
       </Text>
+      {letter?.deletedAt ? (
+        <Text size="sm" c="dimmed">
+          Deleted: {getFormattedDate(letter.deletedAt)}
+        </Text>
+      ) : null}
 
-      <MultilineText text={letter?.body || '-'} mt="md" />
+      <MultilineText text={previewBody} mt="md" />
     </>
   );
 }

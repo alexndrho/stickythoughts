@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
-import { IconArrowBackUp, IconTrashX } from '@tabler/icons-react';
+import { IconArrowBackUp, IconEye, IconTrashX } from '@tabler/icons-react';
 
 import { deletedRepliesCountOptions, deletedRepliesPageOptions } from './options';
 import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
@@ -18,6 +18,7 @@ import { permanentlyDeleteReply, restoreDeletedReply } from '@/services/moderate
 import { formatUserDisplayName } from '@/utils/user';
 import { PermanentlyDeleteReplyModal, RecoverReplyModal } from './reply-modals';
 import type { DeletedLetterReply } from '@/types/deleted';
+import LetterPreview from '@/components/letter/letter-preview';
 
 export interface RepliesTabProps {
   isActive: boolean;
@@ -30,6 +31,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
   const [restoringReply, setRestoringReply] = useState<DeletedLetterReply | null>(null);
   const [restoringReplyId, setRestoringReplyId] = useState<string | null>(null);
   const [deletingReplyId, setDeletingReplyId] = useState<string | null>(null);
+  const [previewReply, setPreviewReply] = useState<DeletedLetterReply | null>(null);
 
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
@@ -136,6 +138,18 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
                   <Table.Td>{formatDeletedDate(reply.deletedAt)}</Table.Td>
                   <Table.Td>
                     <ActionIcon.Group>
+                      <Tooltip label="Preview reply">
+                        <ActionIcon
+                          aria-label="Preview reply"
+                          variant="default"
+                          onClick={() => {
+                            setPreviewReply(reply);
+                          }}
+                        >
+                          <IconEye size="1em" />
+                        </ActionIcon>
+                      </Tooltip>
+
                       <Tooltip label="Recover reply">
                         <ActionIcon
                           aria-label="Recover reply"
@@ -220,6 +234,19 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
           loading={restoreMutation.isPending && restoringReplyId === restoringReply?.id}
         />
       )}
+
+      <LetterPreview
+        title="Preview Reply"
+        letter={{
+          author: previewReply?.author,
+          recipient: previewReply?.letter.recipient,
+          createdAt: previewReply?.createdAt,
+          deletedAt: previewReply?.deletedAt,
+          body: previewReply?.body,
+        }}
+        opened={!!previewReply}
+        onClose={() => setPreviewReply(null)}
+      />
     </Tabs.Panel>
   );
 }

@@ -3,7 +3,7 @@
 import { Button, Group, Modal } from '@mantine/core';
 import type { LetterStatus } from '@/generated/prisma/client';
 
-import LetterPreviewContent from './letter-preview-content';
+import LetterPreviewContent from '@/components/letter/letter-preview-content';
 import type { SubmissionLetter } from '@/types/submission';
 
 export interface SubmittedLetterPreviewModalProps {
