@@ -103,7 +103,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
 
               <Text size="md" fw={500} className={classes['letter-item__participant-value']}>
                 {createdAtLabel}
-                {post.contentUpdatedAt && <span> (edited)</span>}
+                {post.bodyUpdatedAt && <span> (edited)</span>}
               </Text>
             </div>
           </div>

@@ -151,7 +151,7 @@ export async function updateLetter(args: { letterId: string; authorId: string; b
     },
     data: {
       body: args.body,
-      contentUpdatedAt: new Date(),
+      bodyUpdatedAt: new Date(),
     },
     include: {
       author: {

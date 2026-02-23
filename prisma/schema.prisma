@@ -155,14 +155,14 @@ enum LetterStatus {
 }
 
 model Letter {
-  id          String        @id @default(cuid())
-  body        String
-  authorId    String?
-  author      User?         @relation("LetterAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  recipient   String
+  id            String        @id @default(cuid())
+  body          String
+  authorId      String?
+  author        User?         @relation("LetterAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  recipient     String
   anonymousFrom String?
-  likes       LetterLike[]
-  replies     LetterReply[]
+  likes         LetterLike[]
+  replies       LetterReply[]
 
   status        LetterStatus @default(PENDING)
   statusSetById String?
@@ -175,10 +175,10 @@ model Letter {
   deletedBy   User?     @relation("LetterDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
 
   // Timestamp when the letter was approved and posted. Null for pending/rejected letters.
-  postedAt         DateTime?
-  contentUpdatedAt DateTime?
-  updatedAt        DateTime  @updatedAt
-  createdAt        DateTime  @default(now())
+  postedAt      DateTime?
+  bodyUpdatedAt DateTime?
+  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
 
   @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([authorId, deletedAt, createdAt(sort: Desc), id(sort: Desc)])

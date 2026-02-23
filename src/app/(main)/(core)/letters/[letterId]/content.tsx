@@ -179,7 +179,7 @@ export default function Content({ id }: ContentProps) {
 
             <Text size="md" fw={500} className={classes['header__participant-value']}>
               {createdAtLabel}
-              {letter.contentUpdatedAt && <span> (edited)</span>}
+              {letter.bodyUpdatedAt && <span> (edited)</span>}
             </Text>
           </div>
         </div>
