@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
@@ -12,20 +11,10 @@ import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
 
 import Providers from './providers';
+import { appFont } from './font';
 import { theme } from './theme';
-import './global.css';
-
 import { getBaseUrl } from '@/lib/seo/base-url.server';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import './global.css';
 
 export const metadata: Metadata = {
   title: {
@@ -48,7 +37,7 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
 
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={appFont.variable}>
         <MantineProvider defaultColorScheme="auto" theme={theme}>
           <Providers>{children}</Providers>
           <Notifications />
