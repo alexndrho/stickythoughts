@@ -156,6 +156,7 @@ export async function listUserReplies(args: {
       deletedAt: null,
       letter: {
         deletedAt: null,
+        status: 'APPROVED',
       },
       ...(args.viewerUsername !== args.username && {
         isAnonymous: false,
@@ -217,6 +218,7 @@ export async function listUserLikedLetters(args: {
         },
       },
       deletedAt: null,
+      status: 'APPROVED',
     },
     include: {
       author: {
@@ -249,5 +251,30 @@ export async function listUserLikedLetters(args: {
       },
     },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+  });
+}
+
+export async function listUsersForSitemap(args: { take: number }) {
+  return prisma.user.findMany({
+    take: args.take,
+    where: {
+      banned: {
+        not: true,
+      },
+      letters: {
+        some: {
+          deletedAt: null,
+          status: 'APPROVED',
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+    select: {
+      username: true,
+      updatedAt: true,
+      createdAt: true,
+    },
   });
 }

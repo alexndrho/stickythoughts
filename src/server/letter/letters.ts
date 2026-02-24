@@ -142,6 +142,24 @@ export async function listLettersPublic(args: { lastId?: string | null; viewerUs
   });
 }
 
+export async function listLettersForSitemap(args: { take: number }) {
+  return prisma.letter.findMany({
+    take: args.take,
+    where: {
+      deletedAt: null,
+      status: 'APPROVED',
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+    select: {
+      id: true,
+      updatedAt: true,
+      createdAt: true,
+    },
+  });
+}
+
 export async function updateLetter(args: { letterId: string; authorId: string; body: string }) {
   return prisma.letter.update({
     where: {

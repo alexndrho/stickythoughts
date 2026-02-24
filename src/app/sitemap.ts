@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 
 import { getBaseUrl } from '@/lib/seo/base-url.server';
+import { listLettersForSitemap } from '@/server/letter/letters';
+import { listUsersForSitemap } from '@/server/user/user-profile';
 
 export const revalidate = 86400; // daily
 
@@ -12,9 +14,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const today = new Date();
 
-  // This route may run during `next build`/static export. If the DB is not
-  // reachable in that environment, we still want the build to succeed and
-  // serve a static-only sitemap.
   let letters: Array<{ id: string; updatedAt: Date | null; createdAt: Date }> = [];
   let users: Array<{
     username: string;
@@ -22,27 +21,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     createdAt: Date;
   }> = [];
   try {
-    const { prisma } = await import('@/lib/db');
-
     const [lettersRes, usersRes] = await Promise.allSettled([
-      prisma.letter.findMany({
-        take: LETTERS_IN_SITEMAP,
-        where: { deletedAt: null },
-        orderBy: { updatedAt: 'desc' },
-        select: { id: true, updatedAt: true, createdAt: true },
-      }),
-      prisma.user.findMany({
-        take: USERS_IN_SITEMAP,
-        // Only include public-ish profiles worth indexing:
-        // - not banned
-        // - has at least one non-deleted letter
-        where: {
-          letters: { some: { deletedAt: null } },
-          banned: { not: true },
-        },
-        orderBy: { updatedAt: 'desc' },
-        select: { username: true, updatedAt: true, createdAt: true },
-      }),
+      listLettersForSitemap({ take: LETTERS_IN_SITEMAP }),
+      listUsersForSitemap({ take: USERS_IN_SITEMAP }),
     ]);
 
     if (lettersRes.status === 'fulfilled') {
@@ -61,8 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
   } catch (error) {
-    // If importing prisma/db fails (common during build in CI), keep sitemap static.
-    console.error('Sitemap: failed to load DB; falling back to static.', {
+    console.error('Sitemap: failed to load data; falling back to static.', {
       error,
     });
   }
