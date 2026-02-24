@@ -18,9 +18,15 @@ export interface RepliesProps {
   letterId: string;
   session: ReturnType<typeof authClient.useSession>['data'];
   onOpenSignInWarningModal: () => void;
+  hasReplies?: boolean;
 }
 
-export default function Replies({ letterId, session, onOpenSignInWarningModal }: RepliesProps) {
+export default function Replies({
+  letterId,
+  session,
+  onOpenSignInWarningModal,
+  hasReplies,
+}: RepliesProps) {
   const {
     data: repliesData,
     isLoading: isLoadingReplies,
@@ -28,7 +34,7 @@ export default function Replies({ letterId, session, onOpenSignInWarningModal }:
     isRefetching: isRefetchingReplies,
     fetchNextPage: fetchNextRepliesPage,
     hasNextPage: hasNextRepliesPage,
-  } = useInfiniteQuery(letterRepliesInfiniteOptions(letterId));
+  } = useInfiniteQuery({ ...letterRepliesInfiniteOptions(letterId), enabled: hasReplies ?? true });
 
   const [deletingReply, setDeletingReply] = useState<LetterReply | null>(null);
 

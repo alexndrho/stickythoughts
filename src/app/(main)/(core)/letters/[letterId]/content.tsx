@@ -238,6 +238,7 @@ export default function Content({ id, initialData }: ContentProps) {
           letterId={letter.id}
           session={session}
           onOpenSignInWarningModal={signInWarningModalHandlers.open}
+          hasReplies={letter.replies.count > 0}
         />
       </section>
 
