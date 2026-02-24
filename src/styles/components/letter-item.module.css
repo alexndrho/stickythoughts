@@ -45,6 +45,8 @@
 
 .letter-item__participant-value-group {
   gap: rem(5px);
+  min-width: 0;
+  flex: 1;
 }
 
 .letter-item__participant-value {
@@ -52,9 +54,7 @@
   display: block;
   min-width: 0;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
 }
 
 .letter-item__divider {
