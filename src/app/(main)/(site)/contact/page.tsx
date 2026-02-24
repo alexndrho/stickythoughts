@@ -26,10 +26,10 @@ export default function ContactPage() {
 
       <Flex my="md" align="center" gap="xs" fz="xl">
         <IconMail size="1.25em" />
-        ho.alexander.g@gmail.com
+        support@stickythoughts.app
       </Flex>
 
-      <Button component="a" href="mailto:ho.alexander.g@gmail.com">
+      <Button component="a" href="mailto:support@stickythoughts.app">
         Send a Mail
       </Button>
     </Flex>

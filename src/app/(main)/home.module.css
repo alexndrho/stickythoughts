@@ -137,6 +137,11 @@
   flex: 1;
 }
 
+.send-thought-modal__alert {
+  margin-bottom: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-xs);
+}
+
 .send-thought-modal__text-input {
   margin-top: var(--mantine-spacing-md);
 }
@@ -147,10 +152,6 @@
 
 .send-thought-modal__message-length-indicator {
   color: var(--mantine-color-error);
-}
-
-.send-thought-modal__captcha {
-  margin-top: var(--mantine-spacing-md);
 }
 
 .send-thought-modal__root-error-messsage {

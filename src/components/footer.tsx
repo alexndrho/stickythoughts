@@ -31,6 +31,12 @@ export default function Footer() {
           </Group>
 
           <Group gap={5}>
+            <Anchor component={Link} href="/community-guidelines" size="sm">
+              Community Guidelines
+            </Anchor>
+
+            <Divider orientation="vertical" />
+
             <Anchor component={Link} href="/terms-and-conditions" size="sm">
               Terms and Conditions
             </Anchor>
@@ -40,12 +46,6 @@ export default function Footer() {
             <Anchor component={Link} href="/privacy-policy" size="sm">
               Privacy Policy
             </Anchor>
-
-            <Divider orientation="vertical" />
-
-            <Anchor component={Link} href="/disclaimer" size="sm">
-              Disclaimer
-            </Anchor>
           </Group>
         </section>
 
@@ -54,8 +54,8 @@ export default function Footer() {
             Contact
           </Title>
 
-          <Anchor href="mailto:ho.alexander.g@gmail.com" className={classes.link}>
-            ho.alexander.g@gmail.com
+          <Anchor href="mailto:support@stickythoughts.app" className={classes.link}>
+            support@stickythoughts.app
           </Anchor>
 
           <Anchor
