@@ -1,9 +1,6 @@
 import { Metadata } from 'next';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 
-import { userKeys } from '@/lib/query-keys/user';
-import { getQueryClient } from '@/lib/get-query-client';
 import { getUserServer, UserNotFoundError } from '@/app/(main)/(core)/user/[username]/user.server';
 import { formatUserDisplayName } from '@/utils/user';
 import Content from './content';
@@ -45,12 +42,10 @@ export async function generateMetadata({
 
 export default async function UserPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
-
-  const queryClient = getQueryClient();
+  let user: Awaited<ReturnType<typeof getUserServer>>;
 
   try {
-    const user = await getUserServer(username);
-    queryClient.setQueryData(userKeys.byUsername(username), user);
+    user = await getUserServer(username);
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       notFound();
@@ -58,9 +53,5 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     throw err;
   }
 
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Content username={username} />
-    </HydrationBoundary>
-  );
+  return <Content username={username} initialData={user} />;
 }

@@ -33,11 +33,13 @@ import DeleteUserBioModal from '@/app/dashboard/users/delete-user-bio-modal';
 import RevokeUserSessionsModal from '@/components/dashboard/users/revoke-user-sessions-modal';
 import BanUserModal from '@/components/dashboard/users/ban-user-modal';
 import UnbanUserModal from '@/components/dashboard/users/unban-user-modal';
+import type { UserPublicAccount } from '@/types/user';
 import { notifications } from '@mantine/notifications';
 import classes from './user.module.css';
 
 export interface ContentProps {
   username: string;
+  initialData?: UserPublicAccount;
 }
 
 type AdminCheckParams = Parameters<typeof authClient.admin.checkRolePermission>[0];
@@ -53,7 +55,7 @@ const hasAdminPermission = (
   return authClient.admin.checkRolePermission({ role, permissions });
 };
 
-export default function Content({ username }: ContentProps) {
+export default function Content({ username, initialData }: ContentProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -68,7 +70,10 @@ export default function Content({ username }: ContentProps) {
   const [banUserModalOpened, banUserModalHandler] = useDisclosure(false);
   const [unbanUserModalOpened, unbanUserModalHandler] = useDisclosure(false);
 
-  const { data: user } = useSuspenseQuery(userUsernameOptions(username));
+  const { data: user } = useSuspenseQuery({
+    ...userUsernameOptions(username),
+    initialData,
+  });
 
   const currentTab = useMemo(() => {
     const tab = searchParams.get('tab');

@@ -24,13 +24,15 @@ import ReplyButton from '@/app/(main)/(core)/letters/reply-button';
 import ShareButton from '@/app/(main)/(core)/letters/share-button';
 import SignInWarningModal from '@/components/sign-in-warning-modal';
 import { getLetterFromDisplay } from '@/utils/letter-display';
+import type { Letter } from '@/types/letter';
 import classes from './letter.module.css';
 
 export interface ContentProps {
   id: string;
+  initialData?: Letter;
 }
 
-export default function Content({ id }: ContentProps) {
+export default function Content({ id, initialData }: ContentProps) {
   const router = useRouter();
 
   const { data: session } = authClient.useSession();
@@ -40,7 +42,10 @@ export default function Content({ id }: ContentProps) {
 
   const replySectionRef = useRef<ReplySectionRef>(null);
 
-  const { data: letter } = useSuspenseQuery(letterOptions(id));
+  const { data: letter } = useSuspenseQuery({
+    ...letterOptions(id),
+    initialData,
+  });
   const authorName = letter.author?.name || null;
   const authorUsername = letter.author?.username || null;
   const { displayName: fromDisplayName, isAnonymous } = getLetterFromDisplay({
