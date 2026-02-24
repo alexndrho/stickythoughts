@@ -219,7 +219,7 @@ export default function Content({ id, initialData }: ContentProps) {
         />
       </Group>
 
-      <section>
+      <section className={classes['reply-section']}>
         {session ? (
           <ReplyEditor
             ref={replySectionRef}

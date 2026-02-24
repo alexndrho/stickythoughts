@@ -10,9 +10,10 @@ import { likeLetterReply, unlikeLetterReply } from '@/services/letter';
 import { setLikeLetterReplyQueryData } from '@/app/(main)/(core)/letters/set-query-data';
 import InfiniteScroll from '@/components/infinite-scroll';
 import ReplyItem from './reply-item';
+import ReplyPrompt from './reply-prompt';
+import DeleteReplyModal from './delete-reply-modal';
 import { type LetterReply } from '@/types/letter';
 import classes from './letter.module.css';
-import DeleteReplyModal from './delete-reply-modal';
 
 export interface RepliesProps {
   letterId: string;
@@ -104,6 +105,12 @@ export default function Replies({
   const handleDeleteReplyModalClose = () => {
     setDeletingReply(null);
   };
+
+  const hasNoReplies = !hasReplies || (!isFetchingReplies && repliesData?.pages?.[0]?.length === 0);
+
+  if (hasNoReplies) {
+    return <ReplyPrompt />;
+  }
 
   return (
     <InfiniteScroll
