@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button, Group, Modal, Text, TextInput, Textarea, Tooltip } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useLocalStorage } from '@mantine/hooks';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { notifications } from '@mantine/notifications';
 import { IconMessage } from '@tabler/icons-react';
@@ -20,8 +21,8 @@ import {
   THOUGHT_MESSAGE_WARNING_THRESHOLD,
   THOUGHT_AUTHOR_WARNING_THRESHOLD,
 } from '@/config/thought';
-import classes from './home.module.css';
 import ServerError from '@/utils/error/ServerError';
+import classes from './home.module.css';
 
 export interface SendThoughtModalProps {
   open: boolean;
@@ -29,10 +30,16 @@ export interface SendThoughtModalProps {
 }
 
 export default function SendThoughtModal({ open, onClose }: SendThoughtModalProps) {
+  const [storedAuthor, setStoredAuthor] = useLocalStorage<string>({
+    key: 'author',
+    defaultValue: '',
+    getInitialValueInEffect: false,
+  });
+
   const form = useForm({
     initialValues: {
       message: '',
-      author: typeof window !== 'undefined' ? localStorage.getItem('author') || '' : '',
+      author: storedAuthor,
       color: THOUGHT_COLORS[0] as (typeof THOUGHT_COLORS)[number],
     },
     validate: zod4Resolver(createThoughtInput),
@@ -70,7 +77,8 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
       }
     },
     onSuccess: ({ formValues }) => {
-      localStorage.setItem('author', formValues.author);
+      setStoredAuthor(formValues.author);
+
       form.setInitialValues({
         message: '',
         author: formValues.author,
