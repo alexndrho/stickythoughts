@@ -2,13 +2,14 @@
 
 import { Tabs } from '@mantine/core';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { IconHeartBroken, IconLock } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { userUsernameLikedLettersInfiniteOptions } from '@/app/(main)/(core)/user/options';
 import { setLikeLetterQueryData } from '@/app/(main)/(core)/letters/set-query-data';
 import LetterItem from '@/components/letters/letter-item';
 import { LettersSkeleton } from '@/components/letters/letters-skeleton';
-import LikesPrompt from './likes-prompt';
+import EmptyState from '@/components/prompt/empty-state';
 import { likeLetter, unlikeLetter } from '@/services/letter';
 import InfiniteScroll from '@/components/infinite-scroll';
 import classes from './user.module.css';
@@ -75,7 +76,18 @@ export default function LikesTab({
     <Tabs.Panel value="likes" className={classes['tab-content']}>
       {(!canFetchLikedLetters && !isSessionPending) ||
       (!isLikedLettersFetching && likedLetters?.pages?.[0]?.length === 0) ? (
-        <LikesPrompt isOwnProfile={sessionData?.user.username === username} isPrivate={isPrivate} />
+        isPrivate && sessionData?.user.username !== username ? (
+          <EmptyState icon={IconLock} title="This user's liked letters are private" />
+        ) : (
+          <EmptyState
+            icon={IconHeartBroken}
+            title={
+              sessionData?.user.username === username
+                ? "You haven't liked any letters yet"
+                : "This user hasn't liked any letters yet"
+            }
+          />
+        )
       ) : (
         <InfiniteScroll
           onLoadMore={() => {

@@ -2,6 +2,7 @@
 
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { Tabs } from '@mantine/core';
+import { IconNote } from '@tabler/icons-react';
 
 import { type authClient } from '@/lib/auth-client';
 import { userUsernameRepliesInfiniteOptions } from '../options';
@@ -9,8 +10,8 @@ import { setLikeLetterReplyQueryData } from '../../letters/set-query-data';
 import { likeLetterReply, unlikeLetterReply } from '@/services/letter';
 import InfiniteScroll from '@/components/infinite-scroll';
 import { LettersSkeleton } from '@/components/letters/letters-skeleton';
+import EmptyState from '@/components/prompt/empty-state';
 import UserReplyItem from './user-reply-item';
-import ReplyPrompt from './reply-prompt';
 import classes from './user.module.css';
 
 export interface RepliesTabProps {
@@ -90,7 +91,14 @@ export default function RepliesTab({
   return (
     <Tabs.Panel value="replies" className={classes['tab-content']}>
       {!isRepliesFetching && replies?.pages[0].length === 0 ? (
-        <ReplyPrompt isOwnProfile={session?.user.username === username} />
+        <EmptyState
+          icon={IconNote}
+          title={
+            session?.user.username === username
+              ? "You haven't created any replies yet"
+              : "This user hasn't created any replies yet"
+          }
+        />
       ) : (
         <InfiniteScroll
           onLoadMore={fetchNextRepliesPage}

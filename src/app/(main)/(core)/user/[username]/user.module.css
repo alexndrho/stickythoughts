@@ -52,26 +52,6 @@
   gap: var(--mantine-spacing-md);
 }
 
-.tab-prompt {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.tab-prompt__icon {
-  margin-bottom: var(--mantine-spacing-md);
-}
-
-.tab-prompt__title {
-  text-align: center;
-}
-
-.tab-prompt__create-button {
-  margin-top: var(--mantine-spacing-md);
-}
-
 .user-reply-item {
   position: relative;
   box-shadow: var(--mantine-shadow-xs);

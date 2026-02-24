@@ -3,14 +3,15 @@
 import { useState } from 'react';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { Center, Loader } from '@mantine/core';
+import { IconNote } from '@tabler/icons-react';
 
 import { type authClient } from '@/lib/auth-client';
 import { letterRepliesInfiniteOptions } from '@/app/(main)/(core)/letters/options';
 import { likeLetterReply, unlikeLetterReply } from '@/services/letter';
 import { setLikeLetterReplyQueryData } from '@/app/(main)/(core)/letters/set-query-data';
 import InfiniteScroll from '@/components/infinite-scroll';
+import EmptyState from '@/components/prompt/empty-state';
 import ReplyItem from './reply-item';
-import ReplyPrompt from './reply-prompt';
 import DeleteReplyModal from './delete-reply-modal';
 import { type LetterReply } from '@/types/letter';
 import classes from './letter.module.css';
@@ -109,7 +110,7 @@ export default function Replies({
   const hasNoReplies = !hasReplies || (!isFetchingReplies && repliesData?.pages?.[0]?.length === 0);
 
   if (hasNoReplies) {
-    return <ReplyPrompt />;
+    return <EmptyState mt="xl" icon={IconNote} title="Be the first to reply to this letter" />;
   }
 
   return (

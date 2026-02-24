@@ -1,7 +1,9 @@
 'use client';
 
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { Tabs } from '@mantine/core';
+import { Button, Tabs } from '@mantine/core';
+import { IconNote, IconPlus } from '@tabler/icons-react';
+import Link from 'next/link';
 
 import type { authClient } from '@/lib/auth-client';
 import LetterItem from '@/components/letters/letter-item';
@@ -9,7 +11,7 @@ import { userUsernameLettersInfiniteOptions } from '@/app/(main)/(core)/user/opt
 import { likeLetter, unlikeLetter } from '@/services/letter';
 import { setLikeLetterQueryData } from '@/app/(main)/(core)/letters/set-query-data';
 import { LettersSkeleton } from '@/components/letters/letters-skeleton';
-import LetterPrompt from './letter-prompt';
+import EmptyState from '@/components/prompt/empty-state';
 import InfiniteScroll from '@/components/infinite-scroll';
 import classes from './user.module.css';
 
@@ -68,7 +70,19 @@ export default function Letters({
   return (
     <Tabs.Panel value="letters" className={classes['tab-content']}>
       {!isLettersFetching && letters?.pages[0].length === 0 ? (
-        <LetterPrompt isOwnProfile={session?.user?.username === username} />
+        session?.user?.username === username ? (
+          <EmptyState
+            icon={IconNote}
+            title="You haven't created any letters yet, create your first letter to get started"
+            action={
+              <Button component={Link} href="/letters/submit" leftSection={<IconPlus size="1em" />}>
+                Create Letter
+              </Button>
+            }
+          />
+        ) : (
+          <EmptyState icon={IconNote} title="This user hasn't created any letters yet" />
+        )
       ) : (
         <InfiniteScroll
           onLoadMore={() => {
