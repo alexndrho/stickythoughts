@@ -1,5 +1,3 @@
-'use client';
-
 import { Card, Skeleton, Text } from '@mantine/core';
 import { IconMessage } from '@tabler/icons-react';
 

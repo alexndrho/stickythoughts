@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Carousel } from '@mantine/carousel';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Card, Text } from '@mantine/core';
 
 import Thought from '@/components/thought';
@@ -37,7 +37,7 @@ export default function HeaderCarousel({
         control: classes.header__carousel__control,
       }}
     >
-      <Carousel.Slide className={classes['header__carousel__slide']}>
+      <CarouselSlide className={classes['header__carousel__slide']}>
         <div className={classes['header__notes']}>
           <Text className={classes['header__highlight-title']}>A thought worth keeping</Text>
           <div className={classes['header__highlight']}>
@@ -58,9 +58,9 @@ export default function HeaderCarousel({
             )}
           </div>
         </div>
-      </Carousel.Slide>
+      </CarouselSlide>
 
-      <Carousel.Slide className={classes.header__slide}>
+      <CarouselSlide className={classes.header__slide}>
         <div className={classes.header__notes}>
           <Card withBorder className={classes.header__note}>
             <Text className={classes['header__note-title']}>Highlights live here</Text>
@@ -78,7 +78,7 @@ export default function HeaderCarousel({
             </Text>
           </Card>
         </div>
-      </Carousel.Slide>
+      </CarouselSlide>
     </Carousel>
   );
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import { Text } from '@mantine/core';
 import MultilineText from '@/components/multiline-text';
 import type { UserWithAvatarSummary } from '@/types/user';

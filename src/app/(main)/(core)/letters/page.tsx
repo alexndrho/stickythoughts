@@ -1,9 +1,8 @@
 import { Suspense } from 'react';
 import { type Metadata } from 'next';
-import { Paper, Text, Title } from '@mantine/core';
+import { Card, List, ListItem, Paper, Text, Title } from '@mantine/core';
 
 import LettersActions from './letters-actions';
-import HeaderNote from './header-note';
 import SignInCard from './sign-in-card';
 import LettersListServer from './letters-list.server';
 import { LettersSkeleton } from '@/components/letters/letters-skeleton';
@@ -35,7 +34,15 @@ export default function LettersPage() {
           <LettersActions />
         </div>
 
-        <HeaderNote />
+        <Card withBorder className={classes['header__note']}>
+          <Text className={classes['header__note-title']}>What you can do</Text>
+
+          <List>
+            <ListItem>Write a letter for someone you care about.</ListItem>
+            <ListItem>Reply to a letter that resonates.</ListItem>
+            <ListItem>Prefer privacy? Write anonymously.</ListItem>
+          </List>
+        </Card>
       </Paper>
 
       <SignInCard />

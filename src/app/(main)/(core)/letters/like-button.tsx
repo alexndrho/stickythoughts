@@ -1,5 +1,3 @@
-'use client';
-
 import { Button, type ButtonProps } from '@mantine/core';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 
