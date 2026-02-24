@@ -99,8 +99,8 @@ export default function Content({ id, initialData }: ContentProps) {
   return (
     <div className={classes.container}>
       <header>
-        <div className={classes.header__meta}>
-          {(isAuthor || hasPermissionToDelete) && (
+        {(isAuthor || hasPermissionToDelete) && (
+          <Group justify="end">
             <Menu>
               <Menu.Target>
                 <ActionIcon
@@ -132,8 +132,8 @@ export default function Content({ id, initialData }: ContentProps) {
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
-          )}
-        </div>
+          </Group>
+        )}
 
         <div>
           <div className={classes['header__participant-row']}>

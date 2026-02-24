@@ -7,12 +7,6 @@
   flex-direction: column;
 }
 
-.header__meta {
-  margin-bottom: var(--mantine-spacing-sm);
-  display: flex;
-  justify-content: flex-end;
-}
-
 .header__participant-row {
   min-width: 0;
   display: flex;
