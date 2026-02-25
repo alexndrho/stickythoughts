@@ -51,13 +51,29 @@ export function formatUserNotifications(notifications: BaseUserNotification[]): 
         }
         break;
       }
+      case 'LETTER_PENDING_REVIEW': {
+        body =
+          toNotificationPreview(notification.letter?.body) ||
+          notification.letter?.recipient ||
+          'A new letter is awaiting review.';
+
+        if (!firstActor) {
+          mainActor = {
+            image: null,
+            name: null,
+            username: null,
+            isAnonymous: true,
+          };
+        }
+        break;
+      }
     }
 
     return {
       id: notification.id,
       type: notification.type,
       mainActor,
-      otherActorCount: (notification._count?.actors ?? 1) - 1,
+      otherActorCount: Math.max((notification._count?.actors ?? 0) - 1, 0),
       letterId: notification.letter?.id || notification.reply?.letter?.id,
       replyId: notification.reply?.id,
       body,

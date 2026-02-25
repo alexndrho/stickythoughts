@@ -236,6 +236,7 @@ enum NotificationType {
   LETTER_LIKE
   LETTER_REPLY
   LETTER_REPLY_LIKE
+  LETTER_PENDING_REVIEW
 }
 
 model Notification {

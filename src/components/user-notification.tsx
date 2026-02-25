@@ -189,7 +189,9 @@ function NotificationItem({
         ? `/letters/${notification.letterId}`
         : notification.type === 'LETTER_REPLY'
           ? `/letters/${notification.letterId}`
-          : '#';
+          : notification.type === 'LETTER_PENDING_REVIEW'
+            ? '/dashboard/submissions'
+            : '#';
 
   return (
     <div
@@ -322,6 +324,15 @@ function formatNotificationBody({
           {actor}
           {' replied to your letter: '}
           {notification.body}
+        </>
+      );
+    case 'LETTER_PENDING_REVIEW':
+      return (
+        <>
+          <Text span inherit fw={600}>
+            New pending letter
+          </Text>
+          {notification.body ? `: ${notification.body}` : ''}
         </>
       );
     default:
