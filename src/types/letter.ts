@@ -127,6 +127,15 @@ type PrismaBaseUserLetterReply = Prisma.LetterReplyGetPayload<{
     letter: {
       select: {
         recipient: true;
+        anonymousFrom: true;
+        author: {
+          select: {
+            id: true;
+            name: true;
+            username: true;
+            image: true;
+          };
+        };
       };
     };
     author: {

@@ -7,6 +7,7 @@ import LikeButton from '../../letters/like-button';
 import { type UserLetterReply } from '@/types/letter';
 import classes from './user.module.css';
 import AuthorAvatar from '@/components/author-avatar';
+import { formatUserDisplayName } from '@/utils/user';
 
 export interface UserReplyItemProps {
   reply: UserLetterReply;
@@ -24,6 +25,16 @@ export interface UserReplyItemProps {
 }
 
 export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
+  const isReplyToOwnLetter =
+    !!reply.author &&
+    !!reply.letter.author &&
+    reply.author.username === reply.letter.author.username;
+  const repliedToLabel = isReplyToOwnLetter
+    ? 'own letter'
+    : reply.letter.author
+      ? formatUserDisplayName(reply.letter.author)
+      : 'Anonymous';
+
   return (
     <Paper component="article" withBorder className={classes['user-reply-item']}>
       <Link
@@ -41,7 +52,7 @@ export default function UserReplyItem({ reply, onLike }: UserReplyItemProps) {
             href={`/letters/${reply.letterId}`}
             className={classes['user-reply-item__link']}
           >
-            {reply.letter.recipient}
+            {repliedToLabel}
           </Anchor>
         </Text>
 

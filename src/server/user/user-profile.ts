@@ -166,6 +166,15 @@ export async function listUserReplies(args: {
       letter: {
         select: {
           recipient: true,
+          anonymousFrom: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+            },
+          },
         },
       },
       author: {

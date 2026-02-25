@@ -93,9 +93,14 @@ export function formatUserLetterReplies(
   const formatUserLetterReply = (reply: BaseUserLetterReply): UserLetterReply => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { authorId, likes, _count, ...rest } = reply;
+    const isAnonymousLetter = Boolean(rest.letter.anonymousFrom?.trim());
 
     return {
       ...rest,
+      letter: {
+        ...rest.letter,
+        author: isAnonymousLetter || !rest.letter.author ? null : rest.letter.author,
+      },
       author: rest.isAnonymous || !rest.author ? undefined : rest.author,
       likes: {
         liked: !!(likes && likes.length),
