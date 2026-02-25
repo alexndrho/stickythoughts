@@ -324,6 +324,7 @@ export default function Content() {
                 // @ts-expect-error - username exists but not in UserWithRole type
                 username: editingUser.username,
                 email: editingUser.email,
+                role: editingUser.role,
               }
             : null
         }
