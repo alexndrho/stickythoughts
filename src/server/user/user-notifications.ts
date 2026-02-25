@@ -1,8 +1,19 @@
 import 'server-only';
 
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { NOTIFICATION_PER_PAGE } from '@/config/user';
-import { UserNotFoundError } from '@/server/user/user-errors';
+
+const visibleNotificationWhere: Prisma.NotificationWhereInput = {
+  AND: [
+    {
+      OR: [{ letterId: null }, { letter: { deletedAt: null } }],
+    },
+    {
+      OR: [{ replyId: null }, { reply: { deletedAt: null, letter: { deletedAt: null } } }],
+    },
+  ],
+};
 
 export async function listUserNotifications(args: {
   userId: string;
@@ -15,6 +26,7 @@ export async function listUserNotifications(args: {
       updatedAt: {
         lt: args.lastUpdatedAt ? new Date(args.lastUpdatedAt) : undefined,
       },
+      ...visibleNotificationWhere,
     },
     select: {
       id: true,
@@ -65,26 +77,13 @@ export async function listUserNotifications(args: {
 }
 
 export async function countNewUserNotifications(args: { userId: string }) {
-  const user = await prisma.user.findUnique({
-    where: { id: args.userId },
-    select: {
-      _count: {
-        select: {
-          notifications: {
-            where: {
-              isCountDecremented: false,
-            },
-          },
-        },
-      },
+  return prisma.notification.count({
+    where: {
+      userId: args.userId,
+      isCountDecremented: false,
+      ...visibleNotificationWhere,
     },
   });
-
-  if (!user) {
-    throw new UserNotFoundError('User not found');
-  }
-
-  return user._count.notifications;
 }
 
 export async function setNotificationsOpened(args: { userId: string; opened: boolean }) {
