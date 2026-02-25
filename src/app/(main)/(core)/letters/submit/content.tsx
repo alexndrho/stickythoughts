@@ -10,7 +10,7 @@ import {
   Button,
   Container,
   Divider,
-  Group,
+  Flex,
   Paper,
   Radio,
   Text,
@@ -21,6 +21,7 @@ import {
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
+import { LegalNoticeInline } from '@/components/legal-notice-inline';
 import { createLetterServerInput } from '@/lib/validations/letter';
 import { getQueryClient } from '@/lib/get-query-client';
 import { letterKeys } from '@/lib/query-keys/letter';
@@ -36,11 +37,14 @@ import {
   LETTER_RECIPIENT_WARNING_THRESHOLD,
 } from '@/config/letter';
 import { sanitizeString } from '@/utils/text';
+import { useLegalNoticeAcknowledgement } from '@/hooks/use-legal-notice-acknowledgement';
 import classes from './letter-submit.module.css';
 
 export default function Content() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
+  const { isLegalNoticeAcknowledged, markAsLegalNoticeAcknowledged } =
+    useLegalNoticeAcknowledgement();
 
   const requiresReview = !session || !session.user.emailVerified;
 
@@ -61,6 +65,8 @@ export default function Content() {
   const mutation = useMutation({
     mutationFn: submitLetter,
     onSuccess: ({ id }) => {
+      markAsLegalNoticeAcknowledged();
+
       if (!requiresReview) {
         const queryClient = getQueryClient();
 
@@ -102,6 +108,8 @@ export default function Content() {
   const clearFormFromError = () => {
     form.clearFieldError('anonymousFrom');
   };
+
+  const showLegalNotice = !session && !isLegalNoticeAcknowledged;
 
   return (
     <Container size="sm" className={classes.container}>
@@ -235,11 +243,13 @@ export default function Content() {
           </Text>
         )}
 
-        <Group mt="md" justify="end">
-          <Button type="submit" loading={mutation.isPending}>
+        <Flex mt="md" justify={showLegalNotice ? 'space-between' : 'end'} gap="md">
+          {showLegalNotice && <LegalNoticeInline variant="submit" />}
+
+          <Button type="submit" loading={mutation.isPending} className={classes['submit-button']}>
             Post it!
           </Button>
-        </Group>
+        </Flex>
       </form>
     </Container>
   );

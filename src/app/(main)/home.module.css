@@ -137,11 +137,6 @@
   flex: 1;
 }
 
-.send-thought-modal__alert {
-  margin-bottom: var(--mantine-spacing-md);
-  padding: var(--mantine-spacing-xs);
-}
-
 .send-thought-modal__text-input {
   margin-top: var(--mantine-spacing-md);
 }
@@ -157,6 +152,10 @@
 .send-thought-modal__root-error-messsage {
   margin-top: var(--mantine-spacing-xs);
   color: var(--mantine-color-error);
+}
+
+.send-thought-modal__submit-button {
+  flex-shrink: 0;
 }
 
 .thoughts {

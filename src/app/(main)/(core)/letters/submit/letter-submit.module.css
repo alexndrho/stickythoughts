@@ -43,3 +43,7 @@
 .length-indicator {
   color: var(--mantine-color-error);
 }
+
+.submit-button {
+  flex-shrink: 0;
+}

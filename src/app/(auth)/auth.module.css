@@ -38,6 +38,10 @@
   margin-top: var(--mantine-spacing-md);
 }
 
+.legal-notice {
+  margin-top: var(--mantine-spacing-md);
+}
+
 .root-error-messsage {
   margin-top: var(--mantine-spacing-xs);
   color: var(--mantine-color-error);

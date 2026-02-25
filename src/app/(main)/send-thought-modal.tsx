@@ -1,16 +1,19 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { Button, Group, Modal, Text, TextInput, Textarea, Tooltip } from '@mantine/core';
+import { Button, Flex, Group, Modal, Text, TextInput, Textarea, Tooltip } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useLocalStorage } from '@mantine/hooks';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { notifications } from '@mantine/notifications';
 import { IconMessage } from '@tabler/icons-react';
 
+import { authClient } from '@/lib/auth-client';
+import { getQueryClient } from '@/lib/get-query-client';
 import RandomButton from '@/components/random-button';
 import CheckColorSwatch from '@/components/check-color-swatch';
-import { getQueryClient } from '@/lib/get-query-client';
+import { LegalNoticeInline } from '@/components/legal-notice-inline';
+import { useLegalNoticeAcknowledgement } from '@/hooks/use-legal-notice-acknowledgement';
 import { thoughtKeys } from '@/lib/query-keys/thought';
 import { submitThought } from '@/services/thought';
 import { createThoughtInput } from '@/lib/validations/thought';
@@ -30,6 +33,10 @@ export interface SendThoughtModalProps {
 }
 
 export default function SendThoughtModal({ open, onClose }: SendThoughtModalProps) {
+  const { data: session } = authClient.useSession();
+  const { isLegalNoticeAcknowledged, markAsLegalNoticeAcknowledged } =
+    useLegalNoticeAcknowledgement();
+
   const [storedAuthor, setStoredAuthor] = useLocalStorage<string>({
     key: 'author',
     defaultValue: '',
@@ -78,6 +85,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
     },
     onSuccess: ({ formValues }) => {
       setStoredAuthor(formValues.author);
+      markAsLegalNoticeAcknowledged();
 
       form.setInitialValues({
         message: '',
@@ -104,6 +112,8 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
       form.reset();
     },
   });
+
+  const showLegalNotice = !session && !isLegalNoticeAcknowledged;
 
   return (
     <Modal opened={open} onClose={onClose} title="Share a thought" centered>
@@ -168,11 +178,17 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
           ))}
         </Group>
 
-        <Group justify="right" mt="md">
-          <Button type="submit" loading={mutation.isPending}>
+        <Flex mt="md" justify={showLegalNotice ? 'space-between' : 'end'} gap="md">
+          {showLegalNotice && <LegalNoticeInline variant="submit" />}
+
+          <Button
+            type="submit"
+            loading={mutation.isPending}
+            className={classes['send-thought-modal__submit-button']}
+          >
             Stick it!
           </Button>
-        </Group>
+        </Flex>
       </form>
     </Modal>
   );
