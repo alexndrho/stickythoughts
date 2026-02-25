@@ -75,13 +75,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: new URL('/community-guidelines', base).toString(),
-      lastModified: new Date('2026-02-24'),
+      lastModified: new Date('2026-02-25'),
       changeFrequency: 'yearly',
       priority: 0.5,
     },
     {
       url: new URL('/terms-and-conditions', base).toString(),
-      lastModified: new Date('2026-02-24'),
+      lastModified: new Date('2026-02-25'),
       changeFrequency: 'yearly',
       priority: 0.5,
     },

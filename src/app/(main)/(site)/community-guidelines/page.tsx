@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-24 (Asia/Manila)';
+const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Community Guidelines',
@@ -46,6 +46,22 @@ export default function CommunityGuidelinesPage() {
         <ListItem>
           Content expressing personal struggles is allowed, but content that encourages, instructs,
           or glorifies self-harm is prohibited
+        </ListItem>
+      </List>
+
+      <Title order={2} size="h4" mt="lg">
+        Promotional Content
+      </Title>
+      <List spacing="xs" my="sm">
+        <ListItem>
+          Aggressive, exploitative, or disruptive advertising and promotional behavior is prohibited
+        </ListItem>
+        <ListItem>
+          No spam-like repetition, mass posting, or engagement manipulation for promotion
+        </ListItem>
+        <ListItem>
+          Reasonable, non-intrusive sharing is allowed when relevant to the discussion and aligned
+          with the platform&apos;s purpose
         </ListItem>
       </List>
 

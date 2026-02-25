@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-24 (Asia/Manila)';
+const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions',
@@ -53,6 +53,13 @@ export default function TermsPage() {
         <ListItem>Doxxing or sharing private/confidential information without permission</ListItem>
         <ListItem>Illegal content, including sexual content involving minors</ListItem>
         <ListItem>Spam, scams, impersonation, or platform abuse</ListItem>
+        <ListItem>
+          Aggressive, exploitative, disruptive, or spam-like advertising and promotional activity
+        </ListItem>
+        <ListItem>
+          Limited, non-intrusive promotional sharing is only allowed when it is relevant and does
+          not interfere with normal platform use
+        </ListItem>
         <ListItem>Attempts to bypass anti-bot or rate-limit protections</ListItem>
       </List>
 
