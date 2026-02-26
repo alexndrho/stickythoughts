@@ -121,7 +121,7 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
           className={classes['actions-bar__search-bar']}
         />
 
-        <Tooltip label="Press (s) to stick" position="bottom">
+        <Tooltip label="Press (s) to stick">
           <Button rightSection={<IconMessage size="1em" />} onClick={open}>
             Stick a thought
           </Button>
