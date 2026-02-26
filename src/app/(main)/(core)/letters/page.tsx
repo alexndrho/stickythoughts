@@ -10,6 +10,8 @@ import classes from './letters.module.css';
 
 export const metadata: Metadata = {
   title: 'Letters',
+  description:
+    'Read public letters written for someone, reply when a story resonates, and send your own letter with your name or anonymously.',
   alternates: {
     canonical: `/letters`,
   },

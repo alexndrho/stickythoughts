@@ -4,6 +4,8 @@ import { IconMail } from '@tabler/icons-react';
 
 export const metadata: Metadata = {
   title: 'Contact',
+  description:
+    'Contact StickyThoughts for support, feedback, or policy questions. Reach the team directly and help us keep the community safe, thoughtful, and open.',
   alternates: {
     canonical: '/contact',
   },

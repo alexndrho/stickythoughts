@@ -5,6 +5,8 @@ const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions',
+  description:
+    'Review StickyThoughts Terms and Conditions, including user responsibilities, moderation rules, content licensing, and legal terms for using the platform.',
   alternates: {
     canonical: '/terms-and-conditions',
   },

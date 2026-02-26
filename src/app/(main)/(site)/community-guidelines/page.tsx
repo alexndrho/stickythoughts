@@ -5,6 +5,8 @@ const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Community Guidelines',
+  description:
+    'Read the StickyThoughts Community Guidelines for respectful, lawful participation. Learn what is allowed, what is prohibited, and how moderation works.',
   alternates: {
     canonical: '/community-guidelines',
   },

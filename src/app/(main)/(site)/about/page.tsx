@@ -6,6 +6,8 @@ import noteImg from '@/assets/note.svg';
 
 export const metadata: Metadata = {
   title: 'About',
+  description:
+    'Learn what StickyThoughts is, why it exists, and the purpose behind this digital freedom wall.',
   alternates: {
     canonical: '/about',
   },

@@ -5,6 +5,8 @@ const LAST_UPDATED = '2026-02-24 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
+  description:
+    'See how StickyThoughts collects, uses, and protects data for anonymous posts, accounts, sessions, and safety systems, plus retention and contact details.',
   alternates: {
     canonical: '/privacy-policy',
   },

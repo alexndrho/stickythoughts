@@ -4,6 +4,10 @@ import Content from './content';
 
 export const metadata: Metadata = {
   title: 'Submit a Letter',
+  robots: {
+    index: false,
+    follow: false,
+  },
   alternates: {
     canonical: `/letters/submit`,
   },
