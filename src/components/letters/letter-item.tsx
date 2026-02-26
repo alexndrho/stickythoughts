@@ -50,7 +50,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
             <div className={classes['letter-item__participant-row']}>
               <Text className={classes['letter-item__participant-label']}>From:</Text>
 
-              <Group className={classes['letter-item__participant-value-group']}>
+              <div className={classes['letter-item__participant-value-container']}>
                 {!isAnonymous && post.author && (
                   <AuthorAvatar
                     component={Link}
@@ -82,7 +82,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
                     {fromDisplayName}
                   </Text>
                 )}
-              </Group>
+              </div>
             </div>
 
             <div className={classes['letter-item__participant-row']}>
