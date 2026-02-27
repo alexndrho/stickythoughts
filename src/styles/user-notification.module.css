@@ -1,5 +1,5 @@
-.notification {
-  width: rem(500px) !important;
+.notification__dropdown {
+  max-width: min(rem(500px), calc(100vw - var(--mantine-spacing-md)));
 }
 
 .notification__title {
@@ -8,16 +8,6 @@
 
 .notification-item {
   position: relative;
-  width: 100%;
-
-  border-radius: var(--mantine-radius-sm);
-  overflow: hidden;
-}
-
-.notification-item:hover {
-  background-color: var(--mantine-color-default-hover);
-  cursor: pointer;
-  z-index: 0;
 }
 
 .notification-item--unread {
@@ -28,7 +18,7 @@
   background-color: var(--mantine-primary-color-light-hover);
 }
 
-.notification-item__link {
+.notification-item__overlay-link {
   position: absolute;
   top: 0;
   left: 0;
@@ -37,32 +27,10 @@
 }
 
 .notification-item__content {
-  padding: calc(var(--mantine-spacing-xs) / 1.5) var(--mantine-spacing-sm);
-  display: flex;
-  justify-content: space-between;
-  gap: var(--mantine-spacing-sm);
+  position: relative;
+  pointer-events: none;
 }
 
-.notification-item__avatar {
-  position: relative;
-}
-
-.notification-item__actor-link {
-  position: relative;
+.notification-item__actor {
   font-weight: bold;
-  color: var(--mantine-color-text);
-}
-
-.notification-item__other-actor {
-  font-weight: bold;
-}
-
-.notification-item__more {
-  position: relative;
-  color: var(--mantine-color-text);
-  z-index: 1;
-}
-
-.notification-item__more:hover {
-  color: var(--mantine-color-text);
 }

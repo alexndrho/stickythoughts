@@ -5,17 +5,7 @@ import Link from 'next/link';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { notifications } from '@mantine/notifications';
-import {
-  ActionIcon,
-  Anchor,
-  Center,
-  Flex,
-  Indicator,
-  Loader,
-  Menu,
-  ScrollArea,
-  Text,
-} from '@mantine/core';
+import { ActionIcon, Center, Indicator, Loader, Menu, ScrollArea, Text } from '@mantine/core';
 import { IconDots, IconMessageDots, IconTrash, IconX } from '@tabler/icons-react';
 
 import { type authClient } from '@/lib/auth-client';
@@ -77,7 +67,15 @@ export default function UserNotification({ children, session }: UserNotification
   };
 
   return (
-    <Menu opened={opened} onChange={onChange}>
+    <Menu
+      opened={opened}
+      onChange={onChange}
+      closeOnItemClick={false}
+      width={500}
+      classNames={{
+        dropdown: classes['notification__dropdown'],
+      }}
+    >
       <Menu.Target>
         <Indicator
           label={newNotificationCount && newNotificationCount > 99 ? '99+' : newNotificationCount}
@@ -90,7 +88,7 @@ export default function UserNotification({ children, session }: UserNotification
         </Indicator>
       </Menu.Target>
 
-      <Menu.Dropdown className={classes.notification}>
+      <Menu.Dropdown>
         <ScrollArea.Autosize mah={400}>
           <InfiniteScroll
             onLoadMore={fetchNextNotificationsPage}
@@ -194,98 +192,76 @@ function NotificationItem({
             : '#';
 
   return (
-    <div
-      key={notification.id}
-      className={`${classes['notification-item']} ${
-        !notification.isRead ? classes['notification-item--unread'] : ''
-      }`}
+    <Menu.Item
+      className={`${classes['notification-item']} ${notification.isRead ? '' : classes['notification-item--unread']}`}
+      closeMenuOnClick={false}
+      leftSection={
+        <AuthorAvatar
+          isAnonymous={notification.mainActor.isAnonymous}
+          src={notification.mainActor.isAnonymous ? undefined : notification.mainActor.image}
+        />
+      }
+      rightSection={
+        <div onClick={(event) => event.stopPropagation()}>
+          <Menu withinPortal={false}>
+            <Menu.Target>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <IconDots size="1em" />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconMessageDots size="1em" />}
+                onClick={() => markReadMutation.mutate(!notification.isRead)}
+              >
+                {notification.isRead ? 'Mark as Unread' : 'Mark as Read'}
+              </Menu.Item>
+
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size="1em" />}
+                onClick={() => deleteMutation.mutate()}
+              >
+                Delete
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+      }
     >
       <Link
-        aria-label="View Letter"
         href={link}
+        aria-label="Open notification"
+        className={classes['notification-item__overlay-link']}
         onClick={() => {
           setClosed();
           markReadMutation.mutate(true);
         }}
-        className={classes['notification-item__link']}
       />
 
       <div className={classes['notification-item__content']}>
-        <Flex gap="sm">
-          {notification.mainActor.isAnonymous ? (
-            <AuthorAvatar isAnonymous={true} className={classes['notification-item__avatar']} />
-          ) : (
-            <AuthorAvatar
-              component={Link}
-              src={notification.mainActor.image}
-              href={`/user/${notification.mainActor.username}`}
-              className={classes['notification-item__avatar']}
-              onClick={() => setClosed()}
-            />
-          )}
+        <Text size="sm" lineClamp={3}>
+          {formatNotificationBody({ notification })}
+        </Text>
 
-          <div>
-            <Text size="sm" lineClamp={3}>
-              {formatNotificationBody({ notification, setClosed })}
-            </Text>
-            <Text size="xs">{formatDistanceToNow(notification.updatedAt)}</Text>
-          </div>
-        </Flex>
-
-        <Menu>
-          <Menu.Target>
-            <ActionIcon
-              variant="transparent"
-              onPointerDown={(e) => e.stopPropagation()}
-              className={classes['notification-item__more']}
-            >
-              <IconDots size="1em" />
-            </ActionIcon>
-          </Menu.Target>
-
-          <Menu.Dropdown onPointerDown={(e) => e.stopPropagation()}>
-            <Menu.Item
-              leftSection={<IconMessageDots size="1em" />}
-              onClick={() => markReadMutation.mutate(!notification.isRead)}
-            >
-              {notification.isRead ? 'Mark as Unread' : 'Mark as Read'}
-            </Menu.Item>
-
-            <Menu.Item
-              color="red"
-              leftSection={<IconTrash size="1em" />}
-              onClick={() => deleteMutation.mutate()}
-            >
-              Delete
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <Text size="xs">{formatDistanceToNow(notification.updatedAt)}</Text>
       </div>
-    </div>
+    </Menu.Item>
   );
 }
 
-function formatNotificationBody({
-  notification,
-  setClosed,
-}: {
-  notification: UserNotification;
-  setClosed: () => void;
-}) {
-  const actor = notification.mainActor.isAnonymous ? (
-    <Text span inherit className={classes['notification-item__actor-link']}>
-      Anonymous
+function formatNotificationBody({ notification }: { notification: UserNotification }) {
+  const actor = (
+    <Text span inherit className={classes['notification-item__actor']}>
+      {notification.mainActor.isAnonymous
+        ? 'Anonymous'
+        : notification.mainActor.name || notification.mainActor.username}
     </Text>
-  ) : (
-    <Anchor
-      component={Link}
-      inherit
-      href={`/user/${notification.mainActor.username}`}
-      onClick={() => setClosed()}
-      className={classes['notification-item__actor-link']}
-    >
-      {notification.mainActor.name || notification.mainActor.username}
-    </Anchor>
   );
 
   const others =
