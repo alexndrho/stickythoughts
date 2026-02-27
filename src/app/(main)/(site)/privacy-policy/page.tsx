@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-24 (Asia/Manila)';
+const LAST_UPDATED = '2026-02-27 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -94,8 +94,10 @@ export default function PrivacyPage() {
         Retention
       </Title>
       <Text my="sm">
-        Content can be soft-deleted first. Soft-deleted thoughts, letters, and replies are eligible
-        for permanent deletion after about one month when purge jobs run.
+        Thoughts are intended to remain on the service as persistent posts, and users cannot delete
+        a Thought in the app at this time. If we remove or limit content for moderation, safety,
+        legal, or operational reasons, it may be soft-deleted first. Soft-deleted thoughts, letters,
+        and replies are eligible for permanent deletion after about one month when purge jobs run.
       </Text>
 
       <Title order={2} size="h4" mt="lg">

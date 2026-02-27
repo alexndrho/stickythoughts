@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
+const LAST_UPDATED = '2026-02-27 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions',
@@ -80,6 +80,15 @@ export default function TermsPage() {
         You keep ownership of your content. By posting, you give StickyThoughts a non-exclusive,
         worldwide, royalty-free license to host, store, display, adapt, and distribute your content
         only as needed to operate and secure the service.
+      </Text>
+
+      <Title order={2} size="h4" mt="lg">
+        Thought Persistence
+      </Title>
+      <Text my="sm">
+        Thoughts are intended to be persistent posts on StickyThoughts. At this time, users cannot
+        delete a Thought through the app once it is submitted. We may still remove, limit, or retain
+        content when needed for moderation, safety, legal compliance, or service operations.
       </Text>
 
       <Title order={2} size="h4" mt="lg">
