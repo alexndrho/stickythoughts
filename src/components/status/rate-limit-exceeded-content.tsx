@@ -1,17 +1,17 @@
 import Link from 'next/link';
 import { Button, Group, Text, Title } from '@mantine/core';
 
-import classes from '@/styles/status/rate-limit-exceeded-content.module.css';
+import classes from '@/styles/status/status-content.module.css';
 
 export default function RateLimitExceededContent(props: { error?: unknown; onRetry?: () => void }) {
   return (
-    <div className={classes.container}>
-      <Title c="blue" className={classes.title}>
-        <span className={classes['title__status-code']}>429</span>
+    <div className={classes['status-content']}>
+      <Title c="blue" className={classes['status-content__title']}>
+        <span className={classes['status-content__status-code']}>429</span>
         Too Many Requests
       </Title>
 
-      <Text size="xl" className={classes.description}>
+      <Text size="xl" className={classes['status-content__description']}>
         You&apos;ve hit a rate limit. Please wait a moment and try again.
       </Text>
 

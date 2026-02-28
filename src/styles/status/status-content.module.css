@@ -1,4 +1,4 @@
-.container {
+.status-content {
   height: 100%;
   padding-top: var(--mantine-spacing-xl);
   padding-bottom: var(--mantine-spacing-xl);
@@ -9,17 +9,17 @@
   gap: var(--mantine-spacing-md);
 }
 
-.title {
+.status-content__title {
   text-transform: uppercase;
   text-align: center;
 }
 
-.title__status-code {
+.status-content__status-code {
   display: block;
   font-size: 6rem;
   text-align: center;
 }
 
-.description {
+.status-content__description {
   text-align: center;
 }
