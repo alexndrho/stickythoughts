@@ -1,4 +1,5 @@
 import {
+  DataSet,
   RegExpMatcher,
   TextCensor,
   asteriskCensorStrategy,
@@ -9,7 +10,16 @@ import {
 
 import badwords from '@/config/badwords.json';
 
-const englishData = englishDataset.build();
+const englishData = new DataSet<{ originalWord: string }>()
+  .addAll(englishDataset)
+  .removePhrasesIf((phrase) => phrase.metadata?.originalWord === 'nigger')
+  .addPhrase((phrase) =>
+    phrase
+      .setMetadata({ originalWord: 'nigger' })
+      .addPattern(pattern`|[i]n[i]gga[i]|`)
+      .addPattern(pattern`|[i]n[i]gger[i]|`),
+  )
+  .build();
 
 // Start IDs after the English dataset's terms
 const startId = englishData.blacklistedTerms.length;
