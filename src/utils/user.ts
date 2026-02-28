@@ -78,7 +78,7 @@ export function formatUserNotifications(notifications: BaseUserNotification[]): 
       replyId: notification.reply?.id,
       body,
       isRead: notification.isRead,
-      updatedAt: notification.updatedAt,
+      lastActivityAt: notification.lastActivityAt,
     };
   });
 }

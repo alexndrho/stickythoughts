@@ -36,7 +36,7 @@ export const userNotificationsInfiniteOptions = infiniteQueryOptions({
     getUserNotifications(pageParam),
   getNextPageParam: (notifications) => {
     if (notifications.length < NOTIFICATION_PER_PAGE) return undefined;
-    return notifications[notifications.length - 1].updatedAt;
+    return notifications[notifications.length - 1].lastActivityAt;
   },
 });
 

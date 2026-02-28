@@ -118,11 +118,11 @@ export const updateUserLikesVisibility = async (
   );
 };
 
-export const getUserNotifications = async (lastUpdatedAt?: Date): Promise<UserNotification[]> => {
+export const getUserNotifications = async (lastActivityAt?: Date): Promise<UserNotification[]> => {
   const searchParams = new URLSearchParams();
 
-  if (lastUpdatedAt) {
-    searchParams.append('lastUpdatedAt', lastUpdatedAt.toISOString());
+  if (lastActivityAt) {
+    searchParams.append('lastActivityAt', lastActivityAt.toISOString());
   }
 
   return fetchJson<UserNotificationDTO[]>(

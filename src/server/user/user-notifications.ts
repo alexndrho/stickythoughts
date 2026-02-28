@@ -34,14 +34,14 @@ const visibleNotificationWhere: Prisma.NotificationWhereInput = {
 
 export async function listUserNotifications(args: {
   userId: string;
-  lastUpdatedAt?: string | null;
+  lastActivityAt?: string | null;
 }) {
   return prisma.notification.findMany({
     take: NOTIFICATION_PER_PAGE,
     where: {
       userId: args.userId,
-      updatedAt: {
-        lt: args.lastUpdatedAt ? new Date(args.lastUpdatedAt) : undefined,
+      lastActivityAt: {
+        lt: args.lastActivityAt ? new Date(args.lastActivityAt) : undefined,
       },
       ...visibleNotificationWhere,
     },
@@ -49,7 +49,7 @@ export async function listUserNotifications(args: {
       id: true,
       type: true,
       isRead: true,
-      updatedAt: true,
+      lastActivityAt: true,
       letter: {
         select: {
           id: true,
@@ -88,7 +88,7 @@ export async function listUserNotifications(args: {
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      lastActivityAt: 'desc',
     },
   });
 }

@@ -61,7 +61,7 @@ export type BaseUserNotification = Prisma.NotificationGetPayload<{
     id: true;
     type: true;
     isRead: true;
-    updatedAt: true;
+    lastActivityAt: true;
     letter: {
       select: {
         id: true;
@@ -112,7 +112,7 @@ export type UserNotification = Pick<BaseUserNotification, 'id' | 'type' | 'isRea
   letterId: string | undefined;
   replyId: string | undefined;
   body: string;
-  updatedAt: Date;
+  lastActivityAt: Date;
 };
 
 export type UserNotificationDTO = SerializeDates<UserNotification>;

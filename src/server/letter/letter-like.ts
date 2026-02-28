@@ -37,13 +37,13 @@ export async function likeLetter(args: { letterId: string; userId: string }): Pr
             take: 1,
             where: {
               type: NotificationType.LETTER_LIKE,
-              updatedAt: {
+              lastActivityAt: {
                 gte: new Date(Date.now() - NOTIFICATION_UPDATE_INTERVAL_MS),
               },
             },
             select: { id: true },
             orderBy: {
-              updatedAt: 'desc',
+              lastActivityAt: 'desc',
             },
           },
         },
@@ -63,6 +63,7 @@ export async function likeLetter(args: { letterId: string; userId: string }): Pr
       data: {
         isRead: false,
         isCountDecremented: false,
+        lastActivityAt: new Date(),
         actors: {
           create: {
             userId: letterLike.userId,

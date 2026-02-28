@@ -50,12 +50,12 @@ export async function likeReply(input: { letterId: string; replyId: string; user
             take: 1,
             where: {
               type: NotificationType.LETTER_REPLY_LIKE,
-              updatedAt: {
+              lastActivityAt: {
                 gte: new Date(Date.now() - NOTIFICATION_UPDATE_INTERVAL_MS),
               },
             },
             select: { id: true },
-            orderBy: { updatedAt: 'desc' },
+            orderBy: { lastActivityAt: 'desc' },
           },
         },
       },
@@ -72,6 +72,7 @@ export async function likeReply(input: { letterId: string; replyId: string; user
       data: {
         isRead: false,
         isCountDecremented: false,
+        lastActivityAt: new Date(),
         actors: {
           create: { userId: replyLike.userId },
         },

@@ -249,7 +249,7 @@ function NotificationItem({
           {formatNotificationBody({ notification })}
         </Text>
 
-        <Text size="xs">{formatDistanceToNow(notification.updatedAt)}</Text>
+        <Text size="xs">{formatDistanceToNow(notification.lastActivityAt)}</Text>
       </div>
     </Menu.Item>
   );

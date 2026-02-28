@@ -9,7 +9,7 @@ import type { UserNotificationDTO } from '@/types/user';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const lastUpdatedAt = searchParams.get('lastUpdatedAt');
+  const lastActivityAt = searchParams.get('lastActivityAt');
 
   try {
     const session = await guardSession({ headers: request.headers });
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const notifications = await listUserNotifications({
       userId: session.user.id,
-      lastUpdatedAt,
+      lastActivityAt,
     });
 
     const formattedNotifications = formatUserNotifications(notifications);
