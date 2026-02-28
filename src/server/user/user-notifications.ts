@@ -5,12 +5,29 @@ import { prisma } from '@/lib/db';
 import { NOTIFICATION_PER_PAGE } from '@/config/user';
 
 const visibleNotificationWhere: Prisma.NotificationWhereInput = {
-  AND: [
+  OR: [
     {
-      OR: [{ letterId: null }, { letter: { deletedAt: null } }],
+      type: {
+        in: ['LETTER_LIKE', 'LETTER_PENDING_REVIEW'],
+      },
+      letter: {
+        is: {
+          deletedAt: null,
+        },
+      },
     },
     {
-      OR: [{ replyId: null }, { reply: { deletedAt: null, letter: { deletedAt: null } } }],
+      type: {
+        in: ['LETTER_REPLY', 'LETTER_REPLY_LIKE'],
+      },
+      reply: {
+        is: {
+          deletedAt: null,
+          letter: {
+            deletedAt: null,
+          },
+        },
+      },
     },
   ],
 };
