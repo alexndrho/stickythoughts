@@ -43,7 +43,7 @@ export default function UserNotification({ children, session }: UserNotification
     hasNextPage: hasNextNotificationsPage,
   } = useInfiniteQuery({
     ...userNotificationsInfiniteOptions,
-    enabled: !!session,
+    enabled: !!session && opened,
   });
 
   const { data: newNotificationCount } = useQuery({
