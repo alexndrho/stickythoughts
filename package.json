@@ -53,6 +53,7 @@
     "resend": "^6.7.0",
     "sharp": "^0.34.5",
     "unique-username-generator": "^1.5.1",
+    "web-push": "^3.6.7",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -61,6 +62,7 @@
     "@types/node": "^20",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
+    "@types/web-push": "^3.6.4",
     "baseline-browser-mapping": "^2.10.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",

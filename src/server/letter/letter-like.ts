@@ -4,6 +4,10 @@ import { NotificationType } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
 import { LetterNotFoundError } from '@/server/letter/letter-errors';
+import {
+  upsertLetterLikeNotification,
+  removeLikeNotification,
+} from '@/server/letter/letter-notifications';
 
 export async function likeLetter(args: { letterId: string; userId: string }): Promise<void> {
   const letterStatus = await prisma.letter.findUnique({
@@ -30,6 +34,7 @@ export async function likeLetter(args: { letterId: string; userId: string }): Pr
     },
     select: {
       userId: true,
+      user: { select: { name: true, username: true } },
       letter: {
         select: {
           authorId: true,
@@ -55,36 +60,13 @@ export async function likeLetter(args: { letterId: string; userId: string }): Pr
   const recipientUserId = letterLike.letter.authorId;
   if (!recipientUserId) return;
 
-  if (letterLike.letter.notifications.length > 0) {
-    await prisma.notification.update({
-      where: {
-        id: letterLike.letter.notifications[0].id,
-      },
-      data: {
-        isRead: false,
-        isCountDecremented: false,
-        lastActivityAt: new Date(),
-        actors: {
-          create: {
-            userId: letterLike.userId,
-          },
-        },
-      },
-    });
-  } else {
-    await prisma.notification.create({
-      data: {
-        user: { connect: { id: recipientUserId } },
-        type: NotificationType.LETTER_LIKE,
-        letter: { connect: { id: args.letterId } },
-        actors: {
-          create: {
-            userId: letterLike.userId,
-          },
-        },
-      },
-    });
-  }
+  await upsertLetterLikeNotification({
+    letterId: args.letterId,
+    actorUserId: letterLike.userId,
+    actorName: letterLike.user.name || letterLike.user.username,
+    recipientUserId,
+    existingNotifications: letterLike.letter.notifications,
+  });
 }
 
 export async function unlikeLetter(args: { letterId: string; userId: string }): Promise<void> {
@@ -125,31 +107,8 @@ export async function unlikeLetter(args: { letterId: string; userId: string }): 
 
   if (deletedLetterLike.letter.authorId === deletedLetterLike.userId) return;
 
-  const notificationsToDelete = deletedLetterLike.letter.notifications
-    .filter((notification) => notification._count.actors <= 1)
-    .map((notification) => notification.id);
-  const notificationsToUpdate = deletedLetterLike.letter.notifications
-    .filter((notification) => notification._count.actors > 1)
-    .map((notification) => notification.id);
-
-  // Delete notifications with only 1 actor
-  if (notificationsToDelete.length > 0) {
-    await prisma.notification.deleteMany({
-      where: {
-        id: {
-          in: notificationsToDelete,
-        },
-      },
-    });
-  }
-
-  // Remove the actor from notifications with multiple actors
-  if (notificationsToUpdate.length > 0) {
-    await prisma.notificationActor.deleteMany({
-      where: {
-        notificationId: { in: notificationsToUpdate },
-        userId: deletedLetterLike.userId,
-      },
-    });
-  }
+  await removeLikeNotification({
+    actorUserId: deletedLetterLike.userId,
+    notifications: deletedLetterLike.letter.notifications,
+  });
 }

@@ -1,9 +1,12 @@
 import 'server-only';
 
-import { NotificationType } from '@/generated/prisma/enums';
 import { LETTER_REPLIES_PER_PAGE } from '@/config/letter';
 import { prisma } from '@/lib/db';
 import { LetterNotFoundError } from '@/server/letter/letter-errors';
+import {
+  createLetterReplyNotification,
+  removeLetterReplyNotifications,
+} from '@/server/letter/letter-notifications';
 
 export async function createLetterReply(args: {
   letterId: string;
@@ -59,17 +62,12 @@ export async function createLetterReply(args: {
   });
 
   if (reply.letter.authorId && reply.letter.authorId !== reply.authorId) {
-    await prisma.notification.create({
-      data: {
-        user: { connect: { id: reply.letter.authorId } },
-        type: NotificationType.LETTER_REPLY,
-        actors: {
-          create: {
-            userId: reply.authorId,
-          },
-        },
-        reply: { connect: { id: reply.id } },
-      },
+    await createLetterReplyNotification({
+      replyId: reply.id,
+      letterId: args.letterId,
+      actorUserId: reply.authorId,
+      actorName: reply.isAnonymous ? 'Anonymous' : reply.author.name || reply.author.username,
+      recipientUserId: reply.letter.authorId,
     });
   }
 
@@ -213,15 +211,5 @@ export async function softDeleteLetterReply(args: {
     (id): id is string => Boolean(id),
   );
 
-  // Delete notifications for both the reply author and the letter author
-  if (recipientIds.length > 0) {
-    await prisma.notification.deleteMany({
-      where: {
-        userId: {
-          in: recipientIds,
-        },
-        replyId: args.replyId,
-      },
-    });
-  }
+  await removeLetterReplyNotifications({ replyId: args.replyId, recipientIds });
 }

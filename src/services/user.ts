@@ -188,6 +188,22 @@ export const deleteUserNotification = async (id: string) => {
   );
 };
 
+export const savePushSubscription = async (body: {
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+}): Promise<{ message: string }> => {
+  return fetchJson(
+    '/api/user/push-subscriptions',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+    { errorMessage: 'Push subscription save error' },
+  );
+};
+
 // profile
 export const getUserLetters = async ({
   username,

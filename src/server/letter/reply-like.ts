@@ -5,6 +5,10 @@ import { prisma } from '@/lib/db';
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
 
 import { ReplyNotFoundError } from '@/server/letter/letter-errors';
+import {
+  upsertReplyLikeNotification,
+  removeLikeNotification,
+} from '@/server/letter/letter-notifications';
 
 export { ReplyNotFoundError };
 
@@ -43,6 +47,7 @@ export async function likeReply(input: { letterId: string; replyId: string; user
     },
     select: {
       userId: true,
+      user: { select: { name: true, username: true } },
       reply: {
         select: {
           authorId: true,
@@ -66,28 +71,13 @@ export async function likeReply(input: { letterId: string; replyId: string; user
     return;
   }
 
-  if (replyLike.reply.notifications.length > 0) {
-    await prisma.notification.update({
-      where: { id: replyLike.reply.notifications[0].id },
-      data: {
-        isRead: false,
-        isCountDecremented: false,
-        lastActivityAt: new Date(),
-        actors: {
-          create: { userId: replyLike.userId },
-        },
-      },
-    });
-    return;
-  }
-
-  await prisma.notification.create({
-    data: {
-      user: { connect: { id: replyLike.reply.authorId } },
-      type: NotificationType.LETTER_REPLY_LIKE,
-      actors: { create: { userId: replyLike.userId } },
-      reply: { connect: { id: input.replyId } },
-    },
+  await upsertReplyLikeNotification({
+    replyId: input.replyId,
+    letterId: input.letterId,
+    actorUserId: replyLike.userId,
+    actorName: replyLike.user.name || replyLike.user.username,
+    recipientUserId: replyLike.reply.authorId,
+    existingNotifications: replyLike.reply.notifications,
   });
 }
 
@@ -158,25 +148,8 @@ export async function unlikeReply(input: { letterId: string; replyId: string; us
     return;
   }
 
-  const notificationsToDelete = deletedLike.reply.notifications
-    .filter((n) => n._count.actors <= 1)
-    .map((n) => n.id);
-  const notificationsToUpdate = deletedLike.reply.notifications
-    .filter((n) => n._count.actors > 1)
-    .map((n) => n.id);
-
-  if (notificationsToDelete.length > 0) {
-    await prisma.notification.deleteMany({
-      where: { id: { in: notificationsToDelete } },
-    });
-  }
-
-  if (notificationsToUpdate.length > 0) {
-    await prisma.notificationActor.deleteMany({
-      where: {
-        notificationId: { in: notificationsToUpdate },
-        userId: deletedLike.userId,
-      },
-    });
-  }
+  await removeLikeNotification({
+    actorUserId: deletedLike.userId,
+    notifications: deletedLike.reply.notifications,
+  });
 }

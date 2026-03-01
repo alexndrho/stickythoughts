@@ -6,39 +6,8 @@ import { prisma } from '@/lib/db';
 import { LetterNotFoundError } from './letter-errors';
 import { formatLetters } from '@/utils/letter';
 import { sanitizeString } from '@/utils/text';
-import { NotificationType } from '@/generated/prisma/enums';
 import type { Letter } from '@/types/letter';
-
-async function notifyStaffPendingLetter(args: { letterId: string; submitterId?: string }) {
-  try {
-    const staffUsers = await prisma.user.findMany({
-      where: {
-        role: { in: ['admin', 'moderator'] },
-        ...(args.submitterId && { id: { not: args.submitterId } }),
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (staffUsers.length === 0) {
-      return;
-    }
-
-    await prisma.notification.createMany({
-      data: staffUsers.map((user) => ({
-        userId: user.id,
-        type: NotificationType.LETTER_PENDING_REVIEW,
-        letterId: args.letterId,
-      })),
-    });
-  } catch (error) {
-    console.error('Failed to create notifications for pending letter', {
-      letterId: args.letterId,
-      error,
-    });
-  }
-}
+import { notifyStaffPendingLetter } from '@/server/letter/letter-notifications';
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;

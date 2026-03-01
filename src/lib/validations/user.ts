@@ -26,3 +26,10 @@ export const userNotificationMarkReadInput = z.object({
 export const updateUserLikesVisibilityInput = z.object({
   visibility: z.enum(VisibilityLevel),
 });
+
+// push subscriptions
+export const savePushSubscriptionInput = z.object({
+  endpoint: z.url(),
+  p256dh: z.string().min(1),
+  auth: z.string().min(1),
+});
