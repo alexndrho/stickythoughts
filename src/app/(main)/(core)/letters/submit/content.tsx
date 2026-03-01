@@ -137,8 +137,14 @@ export default function Content() {
           }),
         )}
       >
-        <Paper withBorder className={classes.header}>
-          <div className={classes.header__card}>
+        <Paper withBorder className={classes.header} role="radiogroup" aria-label="Share as">
+          <div
+            className={classes.header__card}
+            onClick={() => {
+              form.setFieldValue('shareMode', 'anonymous');
+              clearFormFromError();
+            }}
+          >
             <Radio
               label="Share as: Anonymous"
               value="anonymous"
@@ -171,7 +177,14 @@ export default function Content() {
 
           <Divider />
 
-          <div className={classes.header__card}>
+          <div
+            className={`${classes.header__card}${!session ? ` ${classes['header__card--disabled']}` : ''}`}
+            onClick={() => {
+              if (!session) return;
+              form.setFieldValue('shareMode', 'you');
+              clearFormFromError();
+            }}
+          >
             <Radio
               label="Share as: As you"
               value="you"

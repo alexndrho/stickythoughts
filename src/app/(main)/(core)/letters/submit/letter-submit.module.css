@@ -18,6 +18,11 @@
 
 .header__card {
   padding: var(--mantine-spacing-md);
+  cursor: pointer;
+}
+
+.header__card--disabled {
+  cursor: not-allowed;
 }
 
 .header__card__content {
