@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
-import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, DEFAULT_THEME, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -16,6 +16,13 @@ import { theme } from './theme';
 import { getBaseUrl } from '@/lib/seo/base-url.server';
 import './global.css';
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: DEFAULT_THEME.white },
+    { media: '(prefers-color-scheme: dark)', color: DEFAULT_THEME.colors.dark[7] },
+  ],
+};
+
 export const metadata: Metadata = {
   title: {
     default: 'StickyThoughts - Your Digital Freedom Wall',
@@ -24,6 +31,10 @@ export const metadata: Metadata = {
   description:
     'Share your thoughts anonymously on StickyThoughts. Express yourself freely, connect with others, and discover authentic stories.',
   metadataBase: getBaseUrl(),
+  icons: {
+    icon: '/icon-192x192.png',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
