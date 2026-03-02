@@ -1,12 +1,13 @@
 self.addEventListener('push', (event) => {
   if (!event.data) return;
 
-  const payload = event.data.json();
-  const title = payload.title ?? 'StickyThoughts';
+  const data = event.data.json();
+  const title = data.title ?? 'StickyThoughts';
   const options = {
-    body: payload.body,
-    icon: '/favicon.ico',
-    data: { url: payload.url ?? '/' },
+    body: data.body,
+    icon: data.icon || '/icon-192x192.png',
+    vibrate: [100, 50, 100],
+    data: { url: data.url ?? '/' },
   };
 
   event.waitUntil(self.registration.showNotification(title, options));

@@ -29,16 +29,26 @@ export async function deleteUserPushSubscription(userId: string, endpoint: strin
   });
 }
 
+export async function deleteAllUserPushSubscriptions(userId: string) {
+  await prisma.pushSubscription.deleteMany({
+    where: { userId },
+  });
+}
+
 export async function sendPushNotificationsToUser(
   userId: string,
   payload: { title: string; body: string; url: string },
 ) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { pushSubscriptions: true },
+    select: {
+      pushSubscriptions: true,
+      settings: { select: { pushNotificationsEnabled: true } },
+    },
   });
 
-  if (!user?.pushSubscriptions.length) return;
+  if (!user?.settings?.pushNotificationsEnabled) return;
+  if (!user.pushSubscriptions.length) return;
 
   await Promise.allSettled(
     user.pushSubscriptions.map(async (sub) => {

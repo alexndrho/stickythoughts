@@ -27,6 +27,11 @@ export const updateUserLikesVisibilityInput = z.object({
   visibility: z.enum(VisibilityLevel),
 });
 
+// notification settings
+export const updateUserNotificationsInput = z.object({
+  pushNotificationsEnabled: z.boolean(),
+});
+
 // push subscriptions
 export const savePushSubscriptionInput = z.object({
   endpoint: z.url(),

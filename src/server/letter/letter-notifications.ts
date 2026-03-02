@@ -34,8 +34,8 @@ export async function upsertLetterLikeNotification(args: {
     }
 
     sendPushNotificationsToUser(args.recipientUserId, {
-      title: 'StickyThoughts',
-      body: `${args.actorName} liked your letter`,
+      title: args.actorName,
+      body: 'Liked your letter',
       url: `/letters/${args.letterId}`,
     }).catch(() => {});
   } catch (error) {
@@ -78,8 +78,8 @@ export async function upsertReplyLikeNotification(args: {
     }
 
     sendPushNotificationsToUser(args.recipientUserId, {
-      title: 'StickyThoughts',
-      body: `${args.actorName} liked your reply`,
+      title: args.actorName,
+      body: 'Liked your reply',
       url: `/letters/${args.letterId}`,
     }).catch(() => {});
   } catch (error) {
@@ -134,8 +134,8 @@ export async function createLetterReplyNotification(args: {
     });
 
     sendPushNotificationsToUser(args.recipientUserId, {
-      title: 'StickyThoughts',
-      body: `${args.actorName} replied to your letter`,
+      title: args.actorName,
+      body: 'Replied to your letter',
       url: `/letters/${args.letterId}`,
     }).catch(() => {});
   } catch (error) {
@@ -190,8 +190,8 @@ export async function notifyStaffPendingLetter(args: {
 
     staffUsers.forEach((staffUser) => {
       sendPushNotificationsToUser(staffUser.id, {
-        title: 'StickyThoughts',
-        body: 'A letter is pending review',
+        title: 'Letter Pending Review',
+        body: 'A new letter is waiting for your review',
         url: '/admin/letters',
       }).catch(() => {});
     });

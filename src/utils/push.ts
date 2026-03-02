@@ -1,6 +1,6 @@
 import 'client-only';
 
-import { savePushSubscription } from '@/services/user';
+import { savePushSubscription, deletePushSubscription } from '@/services/user';
 
 export function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -17,7 +17,10 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuf
 }
 
 export async function subscribePush() {
-  await navigator.serviceWorker.register('/sw.js');
+  await navigator.serviceWorker.register('/sw.js', {
+    scope: '/',
+    updateViaCache: 'none',
+  });
   const registration = await navigator.serviceWorker.ready;
 
   const existing = await registration.pushManager.getSubscription();
@@ -34,4 +37,13 @@ export async function subscribePush() {
   };
 
   await savePushSubscription({ endpoint, p256dh: keys.p256dh, auth: keys.auth });
+}
+
+export async function unsubscribePush() {
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+  if (subscription) {
+    await subscription.unsubscribe();
+  }
+  await deletePushSubscription();
 }

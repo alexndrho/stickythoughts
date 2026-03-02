@@ -85,6 +85,32 @@ export async function updateUserLikesVisibility(args: {
   return updatedUser.settings?.privacySettings ?? null;
 }
 
+export async function getUserNotificationSettings(args: { userId: string }) {
+  const userSettings = await prisma.userSettings.findUnique({
+    where: { userId: args.userId },
+    select: { pushNotificationsEnabled: true },
+  });
+
+  return { pushNotificationsEnabled: userSettings?.pushNotificationsEnabled ?? false };
+}
+
+export async function updateUserNotificationSettings(args: {
+  userId: string;
+  pushNotificationsEnabled: boolean;
+}) {
+  await prisma.user.update({
+    where: { id: args.userId },
+    data: {
+      settings: {
+        upsert: {
+          update: { pushNotificationsEnabled: args.pushNotificationsEnabled },
+          create: { pushNotificationsEnabled: args.pushNotificationsEnabled },
+        },
+      },
+    },
+  });
+}
+
 export async function getUserProfileImage(args: { userId: string }) {
   const user = await prisma.user.findUnique({
     where: { id: args.userId },

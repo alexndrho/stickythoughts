@@ -71,7 +71,8 @@ model UserSettings {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  privacySettings UserPrivacySettings?
+  privacySettings          UserPrivacySettings?
+  pushNotificationsEnabled Boolean              @default(false)
 }
 
 model PushSubscription {

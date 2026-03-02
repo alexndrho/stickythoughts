@@ -4,6 +4,7 @@ import { NotificationType } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
 import { LetterNotFoundError } from '@/server/letter/letter-errors';
+import { formatUserDisplayName } from '@/utils/user';
 import {
   upsertLetterLikeNotification,
   removeLikeNotification,
@@ -63,7 +64,7 @@ export async function likeLetter(args: { letterId: string; userId: string }): Pr
   await upsertLetterLikeNotification({
     letterId: args.letterId,
     actorUserId: letterLike.userId,
-    actorName: letterLike.user.name || letterLike.user.username,
+    actorName: formatUserDisplayName(letterLike.user),
     recipientUserId,
     existingNotifications: letterLike.letter.notifications,
   });

@@ -3,6 +3,7 @@ import type { input } from 'zod';
 import type {
   updateUserBioInput,
   updateUserLikesVisibilityInput,
+  updateUserNotificationsInput,
   userNotificationMarkReadInput,
   userNotificationOpenedInput,
 } from '@/lib/validations/user';
@@ -127,7 +128,14 @@ export type UserWithAvatarSummary = UserSummary & {
   image: string | null;
 };
 
+export type UserSettingsNotifications = {
+  pushNotificationsEnabled: boolean;
+};
+
+export type UserSettingsNotificationsDTO = SerializeDates<UserSettingsNotifications>;
+
 export type UpdateUserBioBody = input<typeof updateUserBioInput>;
 export type UpdateUserLikesVisibilityBody = input<typeof updateUserLikesVisibilityInput>;
+export type UpdateUserNotificationsBody = input<typeof updateUserNotificationsInput>;
 export type UserNotificationOpenedBody = input<typeof userNotificationOpenedInput>;
 export type UserNotificationMarkReadBody = input<typeof userNotificationMarkReadInput>;

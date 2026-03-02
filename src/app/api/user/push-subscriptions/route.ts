@@ -3,7 +3,10 @@ import { ZodError } from 'zod';
 
 import { guardSession } from '@/lib/session-guard';
 import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
-import { saveUserPushSubscription } from '@/server/user/user-push-subscriptions';
+import {
+  saveUserPushSubscription,
+  deleteAllUserPushSubscriptions,
+} from '@/server/user/user-push-subscriptions';
 import { savePushSubscriptionInput } from '@/lib/validations/user';
 
 export async function POST(request: Request) {
@@ -23,6 +26,23 @@ export async function POST(request: Request) {
       return zodInvalidInput(error);
     }
     console.error('POST /api/user/push-subscriptions error:', error);
+    return unknownErrorResponse('Something went wrong');
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await guardSession({ headers: request.headers });
+
+    if (session instanceof NextResponse) {
+      return session;
+    }
+
+    await deleteAllUserPushSubscriptions(session.user.id);
+
+    return NextResponse.json({ message: 'Unsubscribed' }, { status: 200 });
+  } catch (error) {
+    console.error('DELETE /api/user/push-subscriptions error:', error);
     return unknownErrorResponse('Something went wrong');
   }
 }

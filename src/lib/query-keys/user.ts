@@ -7,6 +7,7 @@ export const userKeys = {
   privacy: () => [...userKeys.all(), 'privacy'] as const,
   sessions: () => [...userKeys.all(), 'sessions'] as const,
 
+  notificationSettings: () => [...userKeys.all(), 'notification-settings'] as const,
   notifications: () => [...userKeys.all(), 'notifications'] as const,
   notificationsInfinite: () => [...userKeys.notifications(), 'infiniteNotifications'] as const,
   notificationCount: () => [...userKeys.notifications(), 'count'] as const,

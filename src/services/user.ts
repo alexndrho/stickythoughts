@@ -10,8 +10,10 @@ import type {
   UserPublicAccountDTO,
   UserSettingsPrivacy,
   UserSettingsPrivacyDTO,
+  UserSettingsNotifications,
   UpdateUserBioBody,
   UpdateUserLikesVisibilityBody,
+  UpdateUserNotificationsBody,
   UserNotificationMarkReadBody,
   UserNotificationOpenedBody,
 } from '@/types/user';
@@ -188,6 +190,26 @@ export const deleteUserNotification = async (id: string) => {
   );
 };
 
+export const getUserSettingsNotifications = async (): Promise<UserSettingsNotifications> => {
+  return fetchJson('/api/user/settings/notifications', undefined, {
+    errorMessage: 'User notification settings fetch error',
+  });
+};
+
+export const updateUserSettingsNotifications = async (
+  body: UpdateUserNotificationsBody,
+): Promise<UserSettingsNotifications> => {
+  return fetchJson(
+    '/api/user/settings/notifications',
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+    { errorMessage: 'User notification settings update error' },
+  );
+};
+
 export const savePushSubscription = async (body: {
   endpoint: string;
   p256dh: string;
@@ -201,6 +223,14 @@ export const savePushSubscription = async (body: {
       body: JSON.stringify(body),
     },
     { errorMessage: 'Push subscription save error' },
+  );
+};
+
+export const deletePushSubscription = async (): Promise<{ message: string }> => {
+  return fetchJson(
+    '/api/user/push-subscriptions',
+    { method: 'DELETE' },
+    { errorMessage: 'Push subscription delete error' },
   );
 };
 

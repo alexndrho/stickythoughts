@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavLink } from '@mantine/core';
-import { IconClock, IconLock, IconUser } from '@tabler/icons-react';
+import { IconBell, IconClock, IconLock, IconUser } from '@tabler/icons-react';
 
 import classes from './layout.module.css';
 
@@ -17,6 +17,11 @@ const navLinks = [
     icon: <IconLock size="1em" />,
     label: 'Privacy',
     href: '/settings/privacy',
+  },
+  {
+    icon: <IconBell size="1em" />,
+    label: 'Notifications',
+    href: '/settings/notifications',
   },
   {
     icon: <IconClock size="1em" />,

@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { NOTIFICATION_UPDATE_INTERVAL_MS } from '@/config/user';
 
 import { ReplyNotFoundError } from '@/server/letter/letter-errors';
+import { formatUserDisplayName } from '@/utils/user';
 import {
   upsertReplyLikeNotification,
   removeLikeNotification,
@@ -75,7 +76,7 @@ export async function likeReply(input: { letterId: string; replyId: string; user
     replyId: input.replyId,
     letterId: input.letterId,
     actorUserId: replyLike.userId,
-    actorName: replyLike.user.name || replyLike.user.username,
+    actorName: formatUserDisplayName(replyLike.user),
     recipientUserId: replyLike.reply.authorId,
     existingNotifications: replyLike.reply.notifications,
   });

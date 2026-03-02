@@ -3,6 +3,7 @@ import 'server-only';
 import { LETTER_REPLIES_PER_PAGE } from '@/config/letter';
 import { prisma } from '@/lib/db';
 import { LetterNotFoundError } from '@/server/letter/letter-errors';
+import { formatUserDisplayName } from '@/utils/user';
 import {
   createLetterReplyNotification,
   removeLetterReplyNotifications,
@@ -66,7 +67,7 @@ export async function createLetterReply(args: {
       replyId: reply.id,
       letterId: args.letterId,
       actorUserId: reply.authorId,
-      actorName: reply.isAnonymous ? 'Anonymous' : reply.author.name || reply.author.username,
+      actorName: reply.isAnonymous ? 'Anonymous' : formatUserDisplayName(reply.author),
       recipientUserId: reply.letter.authorId,
     });
   }
