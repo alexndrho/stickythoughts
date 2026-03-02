@@ -36,15 +36,10 @@ export async function POST(request: NextRequest) {
 
     const { author, message, color } = createThoughtInput.parse(await request.json());
 
-    await createThought({ author, message, color });
+    const thought = await createThought({ author, message, color });
     revalidateThoughts();
 
-    return NextResponse.json(
-      {
-        message: 'Thought submitted successfully',
-      },
-      { status: 201 },
-    );
+    return NextResponse.json(toDTO(thought) satisfies PublicThoughtDTO, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);

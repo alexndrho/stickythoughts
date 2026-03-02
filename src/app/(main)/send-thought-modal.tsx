@@ -9,12 +9,10 @@ import { notifications } from '@mantine/notifications';
 import { IconMessage } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
-import { getQueryClient } from '@/lib/get-query-client';
 import RandomButton from '@/components/random-button';
 import CheckColorSwatch from '@/components/check-color-swatch';
 import { LegalNoticeInline } from '@/components/legal-notice-inline';
 import { useLegalNoticeAcknowledgement } from '@/hooks/use-legal-notice-acknowledgement';
-import { thoughtKeys } from '@/lib/query-keys/thought';
 import { submitThought } from '@/services/thought';
 import { createThoughtInput } from '@/lib/validations/thought';
 import {
@@ -24,6 +22,7 @@ import {
   THOUGHT_MESSAGE_WARNING_THRESHOLD,
   THOUGHT_AUTHOR_WARNING_THRESHOLD,
 } from '@/config/thought';
+import { setSubmitThoughtQueryData } from './set-query-data';
 import ServerError from '@/utils/error/ServerError';
 import classes from './home.module.css';
 
@@ -63,11 +62,8 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
 
   const mutation = useMutation({
     mutationFn: async (values: typeof form.values) => {
-      const response = await submitThought({
-        ...values,
-      });
-
-      return { response, formValues: values };
+      const thought = await submitThought({ ...values });
+      return { thought, formValues: values };
     },
     onError: (error) => {
       if (error instanceof ServerError) {
@@ -83,7 +79,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         });
       }
     },
-    onSuccess: ({ formValues }) => {
+    onSuccess: ({ thought, formValues }) => {
       setStoredAuthor(formValues.author);
       markAsLegalNoticeAcknowledged();
 
@@ -93,13 +89,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         color: THOUGHT_COLORS[0],
       });
 
-      getQueryClient().invalidateQueries({
-        queryKey: thoughtKeys.infinite(),
-      });
-
-      getQueryClient().invalidateQueries({
-        queryKey: thoughtKeys.all(),
-      });
+      setSubmitThoughtQueryData(thought);
 
       notifications.show({
         title: 'Thought submitted!',

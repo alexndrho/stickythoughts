@@ -40,11 +40,18 @@ export async function listPublicThoughts(args: {
 }
 
 export async function createThought(args: { author: string; message: string; color: string }) {
-  await prisma.thought.create({
+  return prisma.thought.create({
     data: {
       author: args.author,
       message: args.message,
       color: args.color,
+    },
+    select: {
+      id: true,
+      author: true,
+      message: true,
+      color: true,
+      createdAt: true,
     },
   });
 }

@@ -29,8 +29,8 @@ const getThoughts = async ({
   return data.map(parsePublicThoughtFromServer);
 };
 
-const submitThought = async (data: SubmitThoughtBody): Promise<{ message: string }> => {
-  return fetchJson(
+const submitThought = async (data: SubmitThoughtBody): Promise<PublicThought> => {
+  const dto = await fetchJson<PublicThoughtDTO>(
     '/api/thoughts',
     {
       method: 'POST',
@@ -41,6 +41,7 @@ const submitThought = async (data: SubmitThoughtBody): Promise<{ message: string
     },
     { errorMessage: 'Failed to submit thought' },
   );
+  return parsePublicThoughtFromServer(dto);
 };
 
 const getThoughtsCount = async (): Promise<number> => {
