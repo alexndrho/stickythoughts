@@ -74,5 +74,9 @@ export default function Thought({
     return content;
   }
 
-  return <Tooltip label={resolvedLabel}>{content}</Tooltip>;
+  return (
+    <Tooltip label={resolvedLabel} events={{ hover: true, focus: true, touch: true }}>
+      {content}
+    </Tooltip>
+  );
 }
