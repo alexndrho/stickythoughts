@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { LetterStatus } from '@/generated/prisma/client';
+import type { ModerationStatus } from '@/generated/prisma/client';
 import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
 import { prisma } from '@/lib/db';
 
@@ -71,7 +71,7 @@ export async function purgeLetter(args: { letterId: string }) {
 
 export async function listSubmissionLetters(args: {
   page: number;
-  status: Extract<LetterStatus, 'PENDING' | 'REJECTED'>;
+  status: Extract<ModerationStatus, 'PENDING' | 'REJECTED'>;
 }) {
   const page = Math.max(args.page, 1);
   const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
@@ -108,7 +108,7 @@ export async function listSubmissionLetters(args: {
 }
 
 export async function countSubmissionLetters(args: {
-  status: Extract<LetterStatus, 'PENDING' | 'REJECTED'>;
+  status: Extract<ModerationStatus, 'PENDING' | 'REJECTED'>;
 }) {
   return prisma.letter.count({
     where: {
@@ -127,7 +127,7 @@ export async function getSubmissionLetterStatus(args: { letterId: string }) {
 
 export async function setSubmissionLetterStatus(args: {
   letterId: string;
-  status: Extract<LetterStatus, 'APPROVED' | 'REJECTED'>;
+  status: Extract<ModerationStatus, 'APPROVED' | 'REJECTED'>;
   statusSetById: string;
 }) {
   await prisma.letter.update({

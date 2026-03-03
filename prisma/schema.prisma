@@ -160,7 +160,7 @@ model TwoFactor {
   @@map("twoFactor")
 }
 
-enum LetterStatus {
+enum ModerationStatus {
   PENDING
   APPROVED
   REJECTED
@@ -176,9 +176,9 @@ model Letter {
   likes         LetterLike[]
   replies       LetterReply[]
 
-  status        LetterStatus @default(PENDING)
+  status        ModerationStatus @default(PENDING)
   statusSetById String?
-  statusSetBy   User?        @relation("LetterStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
+  statusSetBy   User?            @relation("LetterStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
 
   notifications Notification[]
 

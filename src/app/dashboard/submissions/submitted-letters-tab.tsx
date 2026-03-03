@@ -10,7 +10,7 @@ import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
 import { adminKeys } from '@/lib/query-keys/admin';
 import { letterKeys } from '@/lib/query-keys/letter';
-import type { LetterStatus } from '@/generated/prisma/client';
+import type { ModerationStatus } from '@/generated/prisma/client';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
 import { setSubmissionLetterStatus } from '@/services/moderate/submissions';
@@ -29,7 +29,7 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
   const [previewLetter, setPreviewLetter] = useState<SubmissionLetter | null>(null);
   const [updatingLetterId, setUpdatingLetterId] = useState<string | null>(null);
   const [actionStatus, setActionStatus] = useState<Extract<
-    LetterStatus,
+    ModerationStatus,
     'APPROVED' | 'REJECTED'
   > | null>(null);
 
