@@ -122,7 +122,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    nextCookies(),
     adminPlugin({
       ac,
       roles: {
@@ -184,6 +183,7 @@ export const auth = betterAuth({
         );
       },
     }),
+    nextCookies(),
   ],
   hooks: {
     // current better-auth version doesn't support targeting specific roles
