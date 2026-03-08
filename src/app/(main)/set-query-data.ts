@@ -14,7 +14,10 @@ export const setSubmitThoughtQueryData = (thought: PublicThought) => {
 
     // Flatten all pages, prepend the new thought, drop the last one,
     // then re-chunk so every page stays at THOUGHTS_PER_PAGE items.
-    const all = [thought, ...oldData.pages.flat()].slice(0, -1);
+    const all = [thought, ...oldData.pages.flat()].slice(
+      0,
+      THOUGHTS_PER_PAGE * oldData.pages.length,
+    );
     const pages = chunk(all, THOUGHTS_PER_PAGE);
 
     return { ...oldData, pages };
@@ -23,4 +26,6 @@ export const setSubmitThoughtQueryData = (thought: PublicThought) => {
   queryClient.setQueryData<number>(thoughtKeys.count(), (oldCount) =>
     oldCount !== undefined ? oldCount + 1 : oldCount,
   );
+
+  queryClient.invalidateQueries({ queryKey: [...thoughtKeys.infinite(), 'infiniteSearch'] });
 };
