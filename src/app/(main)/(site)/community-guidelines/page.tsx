@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-25 (Asia/Manila)';
+const LAST_UPDATED = '2026-03-09 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Community Guidelines',
@@ -71,8 +71,8 @@ export default function CommunityGuidelinesPage() {
         Moderation and Enforcement
       </Title>
       <Text my="sm">
-        We may reject/remove content, ban accounts, revoke sessions, or restrict abusive traffic.
-        Guest or unverified letter submissions may be reviewed before publication.
+        Moderation decisions may be made with the assistance of automated tools. We may reject or
+        remove content, ban accounts, revoke sessions, or restrict abusive traffic.
       </Text>
 
       <Title order={2} size="h4" mt="lg">

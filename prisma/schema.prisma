@@ -163,6 +163,7 @@ model TwoFactor {
 enum ModerationStatus {
   PENDING
   APPROVED
+  FLAGGED
   REJECTED
 }
 

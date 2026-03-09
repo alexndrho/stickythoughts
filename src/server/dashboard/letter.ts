@@ -71,7 +71,7 @@ export async function purgeLetter(args: { letterId: string }) {
 
 export async function listSubmissionLetters(args: {
   page: number;
-  status: Extract<ModerationStatus, 'PENDING' | 'REJECTED'>;
+  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
 }) {
   const page = Math.max(args.page, 1);
   const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
@@ -94,7 +94,7 @@ export async function listSubmissionLetters(args: {
         },
       },
       statusSetBy:
-        args.status === 'REJECTED'
+        args.status === 'FLAGGED' || args.status === 'REJECTED'
           ? {
               select: {
                 id: true,
@@ -108,7 +108,7 @@ export async function listSubmissionLetters(args: {
 }
 
 export async function countSubmissionLetters(args: {
-  status: Extract<ModerationStatus, 'PENDING' | 'REJECTED'>;
+  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
 }) {
   return prisma.letter.count({
     where: {

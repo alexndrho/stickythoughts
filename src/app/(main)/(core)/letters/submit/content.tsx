@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import {
-  Alert,
   Avatar,
   Button,
   Container,
@@ -18,7 +17,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import { LegalNoticeInline } from '@/components/legal-notice-inline';
@@ -46,8 +45,6 @@ export default function Content() {
   const { isLegalNoticeAcknowledged, markAsLegalNoticeAcknowledged } =
     useLegalNoticeAcknowledgement();
 
-  const requiresReview = !session || !session.user.emailVerified;
-
   const form = useForm({
     initialValues: {
       shareMode: 'anonymous' as 'anonymous' | 'you',
@@ -64,17 +61,17 @@ export default function Content() {
 
   const mutation = useMutation({
     mutationFn: submitLetter,
-    onSuccess: ({ id }) => {
+    onSuccess: ({ id, status }) => {
       markAsLegalNoticeAcknowledged();
 
-      if (!requiresReview) {
+      if (status === 'APPROVED') {
         const queryClient = getQueryClient();
 
         queryClient.invalidateQueries({
           queryKey: letterKeys.infiniteList(),
         });
 
-        if (session.user.username) {
+        if (session?.user.username) {
           queryClient.invalidateQueries({
             queryKey: userKeys.infiniteLetters(session.user.username),
           });
@@ -85,14 +82,21 @@ export default function Content() {
         });
 
         router.push(`/letters/${id}`);
+
+        notifications.show({
+          icon: <IconCircleCheck size="1em" />,
+          title: 'Letter published',
+          message: 'Your letter passed moderation and is now live.',
+        });
       } else {
         router.push('/letters');
 
         notifications.show({
           icon: <IconAlertCircle size="1em" />,
-          title: 'Letter submitted',
+          color: 'yellow',
+          title: 'Letter pending review',
           message:
-            'Your letter has been submitted and is awaiting review. It will be published once approved.',
+            'Your letter was flagged for review. It will be published once approved by our team.',
         });
       }
     },
@@ -114,15 +118,6 @@ export default function Content() {
   return (
     <Container size="sm" className={classes.container}>
       <Title className={classes.title}>Write a letter</Title>
-
-      {requiresReview && (
-        <Alert mb="md" color="yellow" title="Review required" icon={<IconAlertCircle />}>
-          Your letter will be reviewed before it is published.{' '}
-          {session
-            ? 'Verify your email to have future letters published without review.'
-            : 'Sign in and verify your email to have future letters published without review.'}
-        </Alert>
-      )}
 
       <form
         onSubmit={form.onSubmit((value) =>

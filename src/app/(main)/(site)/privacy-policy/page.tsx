@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-27 (Asia/Manila)';
+const LAST_UPDATED = '2026-03-09 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -75,11 +75,19 @@ export default function PrivacyPage() {
       </List>
 
       <Title order={2} size="h4" mt="lg">
+        Automated Moderation
+      </Title>
+      <Text my="sm">
+        Content moderation decisions may be made with the assistance of automated tools. Submission
+        content may be shared with third-party services as part of this process.
+      </Text>
+
+      <Title order={2} size="h4" mt="lg">
         Tools and Providers
       </Title>
       <Text my="sm">
-        The app uses providers for auth, database/cache, storage, analytics, anti-bot, CAPTCHA, and
-        email delivery.
+        The app uses providers for auth, database/cache, storage, analytics, anti-bot, CAPTCHA,
+        email delivery, and content moderation.
       </Text>
 
       <Title order={2} size="h4" mt="lg">

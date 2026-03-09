@@ -6,8 +6,10 @@ import { prisma } from '@/lib/db';
 import { LetterNotFoundError } from './letter-errors';
 import { formatLetters } from '@/utils/letter';
 import { sanitizeString } from '@/utils/text';
-import type { Letter } from '@/types/letter';
 import { notifyStaffPendingLetter } from '@/server/letter/letter-notifications';
+import { moderateContent } from '@/server/moderation';
+import type { Letter } from '@/types/letter';
+import { type ModerationStatus } from '@/generated/prisma/enums';
 
 export async function createLetter(args: {
   session?: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -17,7 +19,6 @@ export async function createLetter(args: {
   anonymousFrom?: string;
 }) {
   const isAuthenticated = Boolean(args.session);
-  const isAutoApproved = Boolean(args.session?.user.emailVerified);
   const normalizedShareMode = !isAuthenticated
     ? 'anonymous'
     : args.shareMode === 'you'
@@ -26,6 +27,18 @@ export async function createLetter(args: {
 
   const sanitizedAnonymousFrom = sanitizeString(args.anonymousFrom || '');
   const anonymousFrom = normalizedShareMode === 'anonymous' ? sanitizedAnonymousFrom : null;
+
+  let moderationStatus: ModerationStatus = 'PENDING';
+  try {
+    const { flagged } = await moderateContent(
+      [anonymousFrom, args.recipient, args.body].filter(Boolean).join(' '),
+    );
+
+    moderationStatus = flagged ? 'FLAGGED' : 'APPROVED';
+  } catch (error) {
+    console.error('Error during content moderation:', error);
+    moderationStatus = 'PENDING';
+  }
 
   const createdLetter = await prisma.letter.create({
     data: {
@@ -39,7 +52,8 @@ export async function createLetter(args: {
           },
         },
       }),
-      ...(isAutoApproved && { status: 'APPROVED', postedAt: new Date() }),
+      status: moderationStatus,
+      ...(moderationStatus === 'APPROVED' && { postedAt: new Date() }),
     },
     select: {
       id: true,
@@ -56,6 +70,7 @@ export async function createLetter(args: {
 
   return {
     id: createdLetter.id,
+    status: createdLetter.status,
   };
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-02-27 (Asia/Manila)';
+const LAST_UPDATED = '2026-03-09 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions',
@@ -69,8 +69,9 @@ export default function TermsPage() {
         Moderation and Enforcement
       </Title>
       <Text my="sm">
-        We may review, reject, remove, restore, or permanently delete content, suspend or ban
-        accounts, revoke sessions, and limit abusive traffic.
+        Moderation decisions may be made with the assistance of automated tools. We may review,
+        reject, remove, restore, or permanently delete content, suspend or ban accounts, revoke
+        sessions, and limit abusive traffic.
       </Text>
 
       <Title order={2} size="h4" mt="lg">
