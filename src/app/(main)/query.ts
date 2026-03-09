@@ -3,6 +3,7 @@ import 'server-only';
 import { unstable_cache } from 'next/cache';
 
 import { CACHE_TAGS } from '@/config/cache-tags';
+import { THOUGHT_HIGHLIGHT_MAX_AGE_MS } from '@/config/thought';
 import {
   countPublicThoughts as countPublicThoughtsService,
   getHighlightedThought as getHighlightedThoughtService,
@@ -45,6 +46,7 @@ const getHighlightedThoughtCached = unstable_cache(
   ['public-thought-highlight'],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT],
+    revalidate: THOUGHT_HIGHLIGHT_MAX_AGE_MS / 1000,
   },
 );
 
