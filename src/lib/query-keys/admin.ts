@@ -18,10 +18,13 @@ export const adminKeys = {
 
   submissions: () => [...adminKeys.all(), 'submissions'] as const,
   submittedLetters: () => [...adminKeys.submissions(), 'submitted'] as const,
+  flaggedLetters: () => [...adminKeys.submissions(), 'flagged'] as const,
   rejectedLetters: () => [...adminKeys.submissions(), 'rejected'] as const,
   submittedLettersPage: (page: number) => [...adminKeys.submittedLetters(), page] as const,
+  flaggedLettersPage: (page: number) => [...adminKeys.flaggedLetters(), page] as const,
   rejectedLettersPage: (page: number) => [...adminKeys.rejectedLetters(), page] as const,
   submittedLettersCount: () => [...adminKeys.submittedLetters(), 'count'] as const,
+  flaggedLettersCount: () => [...adminKeys.flaggedLetters(), 'count'] as const,
   rejectedLettersCount: () => [...adminKeys.rejectedLetters(), 'count'] as const,
 
   users: () => [...adminKeys.all(), 'users'] as const,

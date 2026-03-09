@@ -4,7 +4,7 @@ import { ZodError } from 'zod';
 import { guardSession } from '@/lib/session-guard';
 import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { listSubmissionLetters } from '@/server/dashboard/letter';
-import { letterSubmissionsStatusQueryInput } from '@/lib/validations/letter';
+import { letterSubmissionsTypeQueryInput, submissionTypeToStatus } from '@/lib/validations/letter';
 import { toDTO } from '@/lib/http/to-dto';
 import type { SubmissionLetterDTO } from '@/types/submission';
 
@@ -22,12 +22,12 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const status = letterSubmissionsStatusQueryInput.parse(searchParams.get('status'));
+    const type = letterSubmissionsTypeQueryInput.parse(searchParams.get('type'));
     const page = Math.max(Number(searchParams.get('page') || '1'), 1);
 
     const items = await listSubmissionLetters({
       page,
-      status,
+      status: submissionTypeToStatus[type],
     });
 
     return NextResponse.json(toDTO(items) satisfies SubmissionLetterDTO[], {

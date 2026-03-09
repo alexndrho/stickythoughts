@@ -177,6 +177,16 @@ export type UserLetterReply = Omit<
 
 export type UserLetterReplyDTO = SerializeDates<UserLetterReply>;
 
+type PrismaSubmitLetterResult = Prisma.LetterGetPayload<{
+  select: {
+    id: true;
+    status: true;
+  };
+}>;
+
+export type SubmitLetterResult = PrismaSubmitLetterResult;
+export type SubmitLetterResultDTO = SerializeDates<SubmitLetterResult>;
+
 export type SubmitLetterBody = input<typeof createLetterServerInput>;
 export type UpdateLetterBody = input<typeof updateLetterServerInput>;
 export type SubmitLetterReplyBody = input<typeof createLetterReplyServerInput>;

@@ -7,31 +7,31 @@ import type {
   SubmissionLetterDTO,
 } from '@/types/submission';
 
-const getStatusParam = (status: 'PENDING' | 'REJECTED') => {
-  return `status=${status}`;
+const getTypeParam = (type: 'submitted' | 'rejected' | 'flagged') => {
+  return `type=${type}`;
 };
 
 export const getSubmissionLetters = async ({
   page,
-  status,
+  type,
 }: {
   page: number;
-  status: 'PENDING' | 'REJECTED';
+  type: 'submitted' | 'rejected' | 'flagged';
 }): Promise<SubmissionLetter[]> => {
   return fetchJson<SubmissionLetterDTO[]>(
-    `/api/dashboard/submissions/letters?page=${page}&${getStatusParam(status)}`,
+    `/api/dashboard/submissions/letters?page=${page}&${getTypeParam(type)}`,
     undefined,
     { errorMessage: 'Failed to get letters submissions' },
   );
 };
 
 export const getSubmissionLettersCount = async ({
-  status,
+  type,
 }: {
-  status: 'PENDING' | 'REJECTED';
+  type: 'submitted' | 'rejected' | 'flagged';
 }): Promise<number> => {
   const data = await fetchJson<{ total: number }>(
-    `/api/dashboard/submissions/letters/count?${getStatusParam(status)}`,
+    `/api/dashboard/submissions/letters/count?${getTypeParam(type)}`,
     undefined,
     { errorMessage: 'Failed to get submissions count' },
   );

@@ -8,12 +8,13 @@ import type {
   LetterReplyDTO,
   SubmitLetterBody,
   SubmitLetterReplyBody,
+  SubmitLetterResultDTO,
   UpdateLetterBody,
   UpdateLetterReplyBody,
 } from '@/types/letter';
 
 // letter
-export const submitLetter = async (data: SubmitLetterBody): Promise<{ id: string }> => {
+export const submitLetter = async (data: SubmitLetterBody): Promise<SubmitLetterResultDTO> => {
   return fetchJson(
     '/api/letters',
     {

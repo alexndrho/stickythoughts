@@ -8,7 +8,7 @@ import { formatLetters } from '@/utils/letter';
 import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { createLetter, listLettersPublic } from '@/server/letter/letters';
 import { toDTO } from '@/lib/http/to-dto';
-import type { LetterDTO } from '@/types/letter';
+import type { LetterDTO, SubmitLetterResultDTO } from '@/types/letter';
 
 export async function POST(request: Request) {
   try {
@@ -34,9 +34,7 @@ export async function POST(request: Request) {
       anonymousFrom,
     });
 
-    return NextResponse.json({
-      id: post.id,
-    });
+    return NextResponse.json(toDTO(post) satisfies SubmitLetterResultDTO);
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);

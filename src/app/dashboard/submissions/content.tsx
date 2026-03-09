@@ -7,6 +7,7 @@ import dashboardClasses from '../dashboard.module.css';
 import classes from './submissions.module.css';
 import SubmittedLettersTab from './submitted-letters-tab';
 import RejectedLettersTab from './rejected-letters-tab';
+import FlaggedLettersTab from './flagged-letters-tab';
 
 export default function Content() {
   const [activeTab, setActiveTab] = useState<string | null>('submitted');
@@ -18,10 +19,12 @@ export default function Content() {
       <Tabs value={activeTab} onChange={setActiveTab} keepMounted={false} className={classes.tabs}>
         <Tabs.List mb="md">
           <Tabs.Tab value="submitted">Submitted Letters</Tabs.Tab>
+          <Tabs.Tab value="flagged">Flagged Letters</Tabs.Tab>
           <Tabs.Tab value="rejected">Rejected Letters</Tabs.Tab>
         </Tabs.List>
 
         <SubmittedLettersTab isActive={activeTab === 'submitted'} />
+        <FlaggedLettersTab isActive={activeTab === 'flagged'} />
         <RejectedLettersTab isActive={activeTab === 'rejected'} />
       </Tabs>
     </div>
