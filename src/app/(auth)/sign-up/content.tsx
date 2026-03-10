@@ -11,6 +11,7 @@ import { Anchor, Button, Divider, PasswordInput, Text, TextInput, Title } from '
 import { IconAt, IconBrandGoogleFilled, IconLock, IconMail, IconX } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
+import { LegalNoticeInline } from '@/components/legal-notice-inline';
 import { AuthContainer } from '../auth-container';
 import classes from '../auth.module.css';
 
@@ -180,6 +181,7 @@ export default function Content() {
           Sign in with Google
         </Button>
       </AuthContainer>
+      <LegalNoticeInline className={classes['legal-notice']} />
     </>
   );
 }

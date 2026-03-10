@@ -23,6 +23,7 @@ import { IconAt, IconBrandGoogleFilled, IconLock, IconX } from '@tabler/icons-re
 
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
+import { LegalNoticeInline } from '@/components/legal-notice-inline';
 import { AuthContainer } from '../auth-container';
 import classes from '../auth.module.css';
 
@@ -54,6 +55,7 @@ export default function Content() {
           <TwoFactorSetupForm signedInRedirect={signedInRedirect} />
         )}
       </AuthContainer>
+      <LegalNoticeInline className={classes['legal-notice']} />
     </>
   );
 }
