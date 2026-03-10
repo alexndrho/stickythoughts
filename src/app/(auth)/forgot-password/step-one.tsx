@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
-import { Anchor, Box, Button, Center, Group, Text, TextInput, Title } from '@mantine/core';
+import { Anchor, Box, Button, Center, Text, TextInput, Title } from '@mantine/core';
 import { isEmail, useForm } from '@mantine/form';
 import { useMutation } from '@tanstack/react-query';
 import { IconArrowLeft, IconMail } from '@tabler/icons-react';
@@ -95,22 +95,23 @@ export default function StepOne({ setEmail, nextStep }: StepOneProps) {
             </Text>
           )}
 
-          <Group mt="md" justify="space-between">
-            <Anchor component={Link} href="/sign-in" c="dimmed" size="sm">
-              <Center inline>
-                <IconArrowLeft size={12} stroke={1.5} />
-                <Box ml={5}>Back to the login page</Box>
-              </Center>
-            </Anchor>
-
+          <div className={classes['step-one__actions']}>
             <Button
               type="submit"
               loading={sendOTPMutation.isPending}
               disabled={sendOTPForm.values.turnstileToken === ''}
+              className={classes['step-one__submit']}
             >
               Reset password
             </Button>
-          </Group>
+
+            <Anchor component={Link} href="/sign-in" c="dimmed" size="sm">
+              <Center inline>
+                <IconArrowLeft size={12} stroke={1.5} />
+                <Box ml={5}>Back to the sign in page</Box>
+              </Center>
+            </Anchor>
+          </div>
         </form>
       </AuthContainer>
     </Center>
