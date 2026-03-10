@@ -2,6 +2,7 @@ import 'server-only';
 
 import { subDays } from 'date-fns';
 
+import type { ModerationStatus } from '@/generated/prisma/client';
 import { ADMIN_DELETED_PER_PAGE, ADMIN_THOUGHTS_PER_PAGE } from '@/config/admin';
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS } from '@/config/thought';
@@ -26,6 +27,7 @@ export async function listAdminThoughts(args: { page: number }) {
     skip,
     where: {
       deletedAt: null,
+      status: 'APPROVED',
       highlightedAt: null,
       highlightedById: null,
     },
@@ -211,5 +213,77 @@ export async function updateHighlight(args: {
         },
       },
     });
+  });
+}
+
+export async function listSubmissionThoughts(args: {
+  page: number;
+  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
+}) {
+  const page = Math.max(args.page, 1);
+  const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
+
+  return prisma.thought.findMany({
+    where: {
+      deletedAt: null,
+      status: args.status,
+    },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take: ADMIN_DELETED_PER_PAGE,
+    skip,
+    include: {
+      statusSetBy:
+        args.status === 'FLAGGED' || args.status === 'REJECTED'
+          ? {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+              },
+            }
+          : false,
+    },
+  });
+}
+
+export async function countSubmissionThoughts(args: {
+  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
+}) {
+  return prisma.thought.count({
+    where: {
+      deletedAt: null,
+      status: args.status,
+    },
+  });
+}
+
+export async function getSubmissionThoughtStatus(args: { thoughtId: string }) {
+  return prisma.thought.findUnique({
+    where: { id: args.thoughtId },
+    select: { deletedAt: true, status: true },
+  });
+}
+
+export async function setSubmissionThoughtStatus(args: {
+  thoughtId: string;
+  status: Extract<ModerationStatus, 'APPROVED' | 'REJECTED'>;
+  statusSetById: string;
+}) {
+  await prisma.thought.update({
+    where: { id: args.thoughtId, deletedAt: null },
+    data: {
+      status: args.status,
+      statusSetById: args.statusSetById,
+    },
+  });
+}
+
+export async function reopenSubmissionThought(args: { thoughtId: string }) {
+  await prisma.thought.update({
+    where: { id: args.thoughtId, deletedAt: null, status: 'REJECTED' },
+    data: {
+      status: 'PENDING',
+      statusSetById: null,
+    },
   });
 }

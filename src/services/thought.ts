@@ -2,7 +2,13 @@ import 'client-only';
 
 import { parsePublicThoughtFromServer } from '@/utils/thought';
 import { fetchJson } from '@/services/http';
-import type { PublicThought, PublicThoughtDTO, SubmitThoughtBody } from '@/types/thought';
+import type {
+  PublicThought,
+  PublicThoughtDTO,
+  SubmitThoughtBody,
+  SubmitThoughtResponse,
+  SubmitThoughtResponseDTO,
+} from '@/types/thought';
 
 const getThoughts = async ({
   lastId,
@@ -29,8 +35,8 @@ const getThoughts = async ({
   return data.map(parsePublicThoughtFromServer);
 };
 
-const submitThought = async (data: SubmitThoughtBody): Promise<PublicThought> => {
-  const dto = await fetchJson<PublicThoughtDTO>(
+const submitThought = async (data: SubmitThoughtBody): Promise<SubmitThoughtResponse> => {
+  const dto = await fetchJson<SubmitThoughtResponseDTO>(
     '/api/thoughts',
     {
       method: 'POST',
@@ -41,7 +47,7 @@ const submitThought = async (data: SubmitThoughtBody): Promise<PublicThought> =>
     },
     { errorMessage: 'Failed to submit thought' },
   );
-  return parsePublicThoughtFromServer(dto);
+  return { ...parsePublicThoughtFromServer(dto), status: dto.status };
 };
 
 const getThoughtsCount = async (): Promise<number> => {

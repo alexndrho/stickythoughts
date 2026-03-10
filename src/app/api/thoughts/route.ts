@@ -7,7 +7,7 @@ import { createThoughtInput } from '@/lib/validations/thought';
 import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { createThought, listPublicThoughts } from '@/server/thought/thoughts';
 import { toDTO } from '@/lib/http/to-dto';
-import type { PublicThoughtDTO } from '@/types/thought';
+import type { PublicThoughtDTO, SubmitThoughtResponseDTO } from '@/types/thought';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -37,9 +37,12 @@ export async function POST(request: NextRequest) {
     const { author, message, color } = createThoughtInput.parse(await request.json());
 
     const thought = await createThought({ author, message, color });
-    revalidateThoughts();
 
-    return NextResponse.json(toDTO(thought) satisfies PublicThoughtDTO, { status: 201 });
+    if (thought.status === 'APPROVED') {
+      revalidateThoughts();
+    }
+
+    return NextResponse.json(toDTO(thought) satisfies SubmitThoughtResponseDTO, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
       return zodInvalidInput(error);

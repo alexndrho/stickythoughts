@@ -6,7 +6,7 @@ import { useForm } from '@mantine/form';
 import { useLocalStorage } from '@mantine/hooks';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { notifications } from '@mantine/notifications';
-import { IconMessage } from '@tabler/icons-react';
+import { IconAlertCircle, IconMessage } from '@tabler/icons-react';
 
 import { authClient } from '@/lib/auth-client';
 import RandomButton from '@/components/random-button';
@@ -89,14 +89,24 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         color: THOUGHT_COLORS[0],
       });
 
-      setSubmitThoughtQueryData(thought);
+      if (thought.status === 'APPROVED') {
+        setSubmitThoughtQueryData(thought);
 
-      notifications.show({
-        title: 'Thought submitted!',
-        message: 'Your thought has been successfully submitted.',
-        color: `${form.values.color}.6`,
-        icon: <IconMessage size="1em" />,
-      });
+        notifications.show({
+          title: 'Thought submitted!',
+          message: 'Your thought has been successfully submitted.',
+          color: `${formValues.color}.6`,
+          icon: <IconMessage size="1em" />,
+        });
+      } else {
+        notifications.show({
+          icon: <IconAlertCircle size="1em" />,
+          color: 'yellow',
+          title: 'Thought pending review',
+          message:
+            'Your thought was flagged for review. It will be published once approved by our team.',
+        });
+      }
 
       onClose();
       form.reset();

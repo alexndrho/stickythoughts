@@ -4,6 +4,8 @@ import { subDays } from 'date-fns';
 
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
+import { moderateContent } from '@/server/moderation';
+import { type ModerationStatus } from '@/generated/prisma/enums';
 
 export async function listPublicThoughts(args: {
   searchTerm?: string | null;
@@ -27,6 +29,7 @@ export async function listPublicThoughts(args: {
         },
       }),
       deletedAt: null,
+      status: 'APPROVED',
     },
     select: {
       id: true,
@@ -40,17 +43,34 @@ export async function listPublicThoughts(args: {
 }
 
 export async function createThought(args: { author: string; message: string; color: string }) {
+  let moderationStatus: ModerationStatus = 'PENDING';
+  try {
+    const { flagged } = await moderateContent(
+      [args.author, args.message].filter(Boolean).join(' '),
+    );
+
+    moderationStatus = flagged ? 'FLAGGED' : 'APPROVED';
+  } catch (error) {
+    console.error('Error during content moderation:', error);
+    // We use light moderation for thoughts: auto-approve on service failure to avoid
+    // blocking submissions due to moderation outages (false negatives are preferred over
+    // false positives here).
+    moderationStatus = 'APPROVED';
+  }
+
   return prisma.thought.create({
     data: {
       author: args.author,
       message: args.message,
       color: args.color,
+      status: moderationStatus,
     },
     select: {
       id: true,
       author: true,
       message: true,
       color: true,
+      status: true,
       createdAt: true,
     },
   });
@@ -58,7 +78,7 @@ export async function createThought(args: { author: string; message: string; col
 
 export async function countPublicThoughts() {
   return prisma.thought.count({
-    where: { deletedAt: null },
+    where: { deletedAt: null, status: 'APPROVED' },
   });
 }
 
@@ -68,6 +88,7 @@ export async function getHighlightedThought() {
   return prisma.thought.findFirst({
     where: {
       deletedAt: null,
+      status: 'APPROVED',
       highlightedAt: { not: null, gte: highlightCutoff },
     },
     orderBy: {

@@ -61,3 +61,16 @@ export type PublicThought = BasePublicThought;
 export type PublicThoughtDTO = SerializeDates<PublicThought>;
 
 export type SubmitThoughtBody = input<typeof createThoughtInput>;
+
+export type SubmitThoughtResponse = Prisma.ThoughtGetPayload<{
+  select: {
+    id: true;
+    author: true;
+    message: true;
+    color: true;
+    status: true;
+    createdAt: true;
+  };
+}>;
+
+export type SubmitThoughtResponseDTO = SerializeDates<SubmitThoughtResponse>;

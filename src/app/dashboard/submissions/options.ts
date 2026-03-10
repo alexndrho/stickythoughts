@@ -3,7 +3,47 @@ import 'client-only';
 import { queryOptions } from '@tanstack/react-query';
 
 import { adminKeys } from '@/lib/query-keys/admin';
+import {
+  getSubmissionThoughts,
+  getSubmissionThoughtsCount,
+} from '@/services/moderate/thought-submissions';
 import { getSubmissionLetters, getSubmissionLettersCount } from '@/services/moderate/submissions';
+
+export const submittedThoughtsPageOptions = (page: number) =>
+  queryOptions({
+    queryKey: adminKeys.submittedThoughtsPage(page),
+    queryFn: () => getSubmissionThoughts({ page, type: 'submitted' }),
+  });
+
+export const submittedThoughtsCountOptions = () =>
+  queryOptions({
+    queryKey: adminKeys.submittedThoughtsCount(),
+    queryFn: () => getSubmissionThoughtsCount({ type: 'submitted' }),
+  });
+
+export const flaggedThoughtsPageOptions = (page: number) =>
+  queryOptions({
+    queryKey: adminKeys.flaggedThoughtsPage(page),
+    queryFn: () => getSubmissionThoughts({ page, type: 'flagged' }),
+  });
+
+export const flaggedThoughtsCountOptions = () =>
+  queryOptions({
+    queryKey: adminKeys.flaggedThoughtsCount(),
+    queryFn: () => getSubmissionThoughtsCount({ type: 'flagged' }),
+  });
+
+export const rejectedThoughtsPageOptions = (page: number) =>
+  queryOptions({
+    queryKey: adminKeys.rejectedThoughtsPage(page),
+    queryFn: () => getSubmissionThoughts({ page, type: 'rejected' }),
+  });
+
+export const rejectedThoughtsCountOptions = () =>
+  queryOptions({
+    queryKey: adminKeys.rejectedThoughtsCount(),
+    queryFn: () => getSubmissionThoughtsCount({ type: 'rejected' }),
+  });
 
 export const submittedLettersPageOptions = (page: number) =>
   queryOptions({

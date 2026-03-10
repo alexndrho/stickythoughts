@@ -14,6 +14,10 @@ model Thought {
   color     String
   createdAt DateTime @default(now())
 
+  status        ModerationStatus @default(PENDING)
+  statusSetById String?
+  statusSetBy   User?            @relation("ThoughtStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
+
   highlightedAt   DateTime?
   highlightedById String?
   highlightedBy   User?     @relation("ThoughtHighlightedBy", fields: [highlightedById], references: [id], onDelete: SetNull)
@@ -21,6 +25,7 @@ model Thought {
   deletedById     String?
   deletedBy       User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
 
+  @@index([status, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
 }
 
@@ -49,6 +54,7 @@ model User {
   letterReplies        LetterReply[]     @relation("LetterReplyAuthor")
   letterReplyLikes     LetterReplyLike[]
   highlightedThoughts  Thought[]         @relation("ThoughtHighlightedBy")
+  statusThoughts       Thought[]         @relation("ThoughtStatusBy")
   deletedLetters       Letter[]          @relation("LetterDeletedBy")
   deletedLetterReplies LetterReply[]     @relation("LetterReplyDeletedBy")
   deletedThoughts      Thought[]         @relation("ThoughtDeletedBy")
