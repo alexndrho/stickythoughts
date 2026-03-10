@@ -34,6 +34,11 @@ function pickTier(request: NextRequest): RateLimitTier {
     return 'get:search';
   }
 
+  // Letter submissions
+  if (pathname === '/api/letters' && upperMethod === 'POST') {
+    return 'mutate:letter';
+  }
+
   // Like/unlike endpoints (letters and replies)
   if (pathname.match(ROUTE_PATTERNS.letterLike) || pathname.match(ROUTE_PATTERNS.replyLike)) {
     return 'interaction:like';

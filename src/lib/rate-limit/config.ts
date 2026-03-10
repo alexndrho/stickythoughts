@@ -3,6 +3,7 @@ export type RateLimitTier =
   | 'get:search'
   | 'mutate:standard'
   | 'mutate:thought'
+  | 'mutate:letter'
   | 'mutate:content'
   | 'interaction:like'
   | 'interaction:notificationUpdate';
@@ -12,6 +13,7 @@ export const RATE_LIMIT_TIERS = [
   'get:search',
   'mutate:standard',
   'mutate:thought',
+  'mutate:letter',
   'mutate:content',
   'interaction:like',
   'interaction:notificationUpdate',
@@ -49,6 +51,12 @@ export const RATE_LIMITS: Record<RateLimitTier, RateLimitConfig> = {
     duration: 60,
     blockDuration: 300,
     keyPrefix: 'ratelimit:mutate:thought',
+  },
+  'mutate:letter': {
+    points: 2,
+    duration: 60,
+    blockDuration: 600,
+    keyPrefix: 'ratelimit:mutate:letter',
   },
   'mutate:content': {
     points: 10,
