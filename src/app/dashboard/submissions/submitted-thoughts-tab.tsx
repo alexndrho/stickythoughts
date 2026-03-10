@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 
 import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
@@ -12,10 +12,11 @@ import { adminKeys } from '@/lib/query-keys/admin';
 import { thoughtKeys } from '@/lib/query-keys/thought';
 import type { ModerationStatus } from '@/generated/prisma/client';
 import { getFormattedDate } from '@/utils/date';
-import { setSubmissionThoughtStatus } from '@/services/moderate/thought-submissions';
+import { setSubmissionThoughtStatus } from '@/services/moderate/submissions/thought';
 import PaginatedPanelLayout from '../paginated-panel-layout';
 import classes from './submissions.module.css';
 import { submittedThoughtsCountOptions, submittedThoughtsPageOptions } from './options';
+import { STATUS_BADGE } from './constants';
 import SubmittedThoughtPreviewModal from './submitted-thought-preview-modal';
 import type { SubmissionThought } from '@/types/thought-submission';
 
@@ -83,6 +84,7 @@ export default function SubmittedThoughtsTab({ isActive }: SubmittedThoughtsTabP
               <Table.Tr>
                 <Table.Th>Author</Table.Th>
                 <Table.Th>Message</Table.Th>
+                <Table.Th>Status</Table.Th>
                 <Table.Th>Submitted</Table.Th>
                 <Table.Th>Actions</Table.Th>
               </Table.Tr>
@@ -96,6 +98,11 @@ export default function SubmittedThoughtsTab({ isActive }: SubmittedThoughtsTabP
                   </Table.Td>
                   <Table.Td>
                     <Text lineClamp={1}>{thought.message}</Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Badge color={STATUS_BADGE[thought.status]?.color ?? 'gray'} size="sm">
+                      {STATUS_BADGE[thought.status]?.label ?? thought.status}
+                    </Badge>
                   </Table.Td>
                   <Table.Td>
                     {thought.createdAt ? getFormattedDate(thought.createdAt) : '-'}
@@ -117,14 +124,14 @@ export default function SubmittedThoughtsTab({ isActive }: SubmittedThoughtsTabP
 
               {isFetching ? (
                 <Table.Tr>
-                  <Table.Td colSpan={4} ta="center">
+                  <Table.Td colSpan={5} ta="center">
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
                 thoughts?.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={4} ta="center">
+                    <Table.Td colSpan={5} ta="center">
                       No submitted thoughts found.
                     </Table.Td>
                   </Table.Tr>

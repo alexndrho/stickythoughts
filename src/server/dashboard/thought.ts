@@ -216,43 +216,35 @@ export async function updateHighlight(args: {
   });
 }
 
-export async function listSubmissionThoughts(args: {
-  page: number;
-  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
-}) {
+export async function listSubmissionThoughts(args: { page: number; statuses: ModerationStatus[] }) {
   const page = Math.max(args.page, 1);
   const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
 
   return prisma.thought.findMany({
     where: {
       deletedAt: null,
-      status: args.status,
+      status: { in: args.statuses },
     },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: ADMIN_DELETED_PER_PAGE,
     skip,
     include: {
-      statusSetBy:
-        args.status === 'FLAGGED' || args.status === 'REJECTED'
-          ? {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-              },
-            }
-          : false,
+      statusSetBy: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+        },
+      },
     },
   });
 }
 
-export async function countSubmissionThoughts(args: {
-  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
-}) {
+export async function countSubmissionThoughts(args: { statuses: ModerationStatus[] }) {
   return prisma.thought.count({
     where: {
       deletedAt: null,
-      status: args.status,
+      status: { in: args.statuses },
     },
   });
 }

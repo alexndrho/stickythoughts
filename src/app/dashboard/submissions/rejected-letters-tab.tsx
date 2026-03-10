@@ -10,7 +10,7 @@ import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
 import { adminKeys } from '@/lib/query-keys/admin';
 import { letterKeys } from '@/lib/query-keys/letter';
-import { reopenSubmissionLetter } from '@/services/moderate/submissions';
+import { reopenSubmissionLetter } from '@/services/moderate/submissions/letter';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
 import PaginatedPanelLayout from '../paginated-panel-layout';

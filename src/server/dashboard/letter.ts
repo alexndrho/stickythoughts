@@ -69,17 +69,14 @@ export async function purgeLetter(args: { letterId: string }) {
   });
 }
 
-export async function listSubmissionLetters(args: {
-  page: number;
-  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
-}) {
+export async function listSubmissionLetters(args: { page: number; statuses: ModerationStatus[] }) {
   const page = Math.max(args.page, 1);
   const skip = (page - 1) * ADMIN_DELETED_PER_PAGE;
 
   return prisma.letter.findMany({
     where: {
       deletedAt: null,
-      status: args.status,
+      status: { in: args.statuses },
     },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: ADMIN_DELETED_PER_PAGE,
@@ -93,27 +90,22 @@ export async function listSubmissionLetters(args: {
           image: true,
         },
       },
-      statusSetBy:
-        args.status === 'FLAGGED' || args.status === 'REJECTED'
-          ? {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-              },
-            }
-          : false,
+      statusSetBy: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+        },
+      },
     },
   });
 }
 
-export async function countSubmissionLetters(args: {
-  status: Extract<ModerationStatus, 'PENDING' | 'FLAGGED' | 'REJECTED'>;
-}) {
+export async function countSubmissionLetters(args: { statuses: ModerationStatus[] }) {
   return prisma.letter.count({
     where: {
       deletedAt: null,
-      status: args.status,
+      status: { in: args.statuses },
     },
   });
 }

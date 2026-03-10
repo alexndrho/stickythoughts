@@ -6,8 +6,11 @@ import { adminKeys } from '@/lib/query-keys/admin';
 import {
   getSubmissionThoughts,
   getSubmissionThoughtsCount,
-} from '@/services/moderate/thought-submissions';
-import { getSubmissionLetters, getSubmissionLettersCount } from '@/services/moderate/submissions';
+} from '@/services/moderate/submissions/thought';
+import {
+  getSubmissionLetters,
+  getSubmissionLettersCount,
+} from '@/services/moderate/submissions/letter';
 
 export const submittedThoughtsPageOptions = (page: number) =>
   queryOptions({
@@ -19,18 +22,6 @@ export const submittedThoughtsCountOptions = () =>
   queryOptions({
     queryKey: adminKeys.submittedThoughtsCount(),
     queryFn: () => getSubmissionThoughtsCount({ type: 'submitted' }),
-  });
-
-export const flaggedThoughtsPageOptions = (page: number) =>
-  queryOptions({
-    queryKey: adminKeys.flaggedThoughtsPage(page),
-    queryFn: () => getSubmissionThoughts({ page, type: 'flagged' }),
-  });
-
-export const flaggedThoughtsCountOptions = () =>
-  queryOptions({
-    queryKey: adminKeys.flaggedThoughtsCount(),
-    queryFn: () => getSubmissionThoughtsCount({ type: 'flagged' }),
   });
 
 export const rejectedThoughtsPageOptions = (page: number) =>
@@ -55,18 +46,6 @@ export const submittedLettersCountOptions = () =>
   queryOptions({
     queryKey: adminKeys.submittedLettersCount(),
     queryFn: () => getSubmissionLettersCount({ type: 'submitted' }),
-  });
-
-export const flaggedLettersPageOptions = (page: number) =>
-  queryOptions({
-    queryKey: adminKeys.flaggedLettersPage(page),
-    queryFn: () => getSubmissionLetters({ page, type: 'flagged' }),
-  });
-
-export const flaggedLettersCountOptions = () =>
-  queryOptions({
-    queryKey: adminKeys.flaggedLettersCount(),
-    queryFn: () => getSubmissionLettersCount({ type: 'flagged' }),
   });
 
 export const rejectedLettersPageOptions = (page: number) =>

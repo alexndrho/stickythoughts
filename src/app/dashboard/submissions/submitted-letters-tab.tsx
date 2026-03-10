@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ActionIcon, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Badge, Loader, Table, Tabs, Text, Tooltip } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 
 import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
@@ -13,10 +13,11 @@ import { letterKeys } from '@/lib/query-keys/letter';
 import type { ModerationStatus } from '@/generated/prisma/client';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
-import { setSubmissionLetterStatus } from '@/services/moderate/submissions';
+import { setSubmissionLetterStatus } from '@/services/moderate/submissions/letter';
 import PaginatedPanelLayout from '../paginated-panel-layout';
 import classes from './submissions.module.css';
 import { submittedLettersCountOptions, submittedLettersPageOptions } from './options';
+import { STATUS_BADGE } from './constants';
 import SubmittedLetterPreviewModal from './submitted-letter-preview-modal';
 import type { SubmissionLetter } from '@/types/submission';
 
@@ -84,6 +85,7 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
               <Table.Tr>
                 <Table.Th>Recipient</Table.Th>
                 <Table.Th>Author</Table.Th>
+                <Table.Th>Status</Table.Th>
                 <Table.Th>Submitted</Table.Th>
                 <Table.Th>Actions</Table.Th>
               </Table.Tr>
@@ -99,6 +101,11 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
                     {!letter.author || letter.anonymousFrom
                       ? letter.anonymousFrom || 'Anonymous'
                       : formatUserDisplayName(letter.author)}
+                  </Table.Td>
+                  <Table.Td>
+                    <Badge color={STATUS_BADGE[letter.status].color} size="sm">
+                      {STATUS_BADGE[letter.status]?.label ?? letter.status}
+                    </Badge>
                   </Table.Td>
                   <Table.Td>{letter.createdAt ? getFormattedDate(letter.createdAt) : '-'}</Table.Td>
                   <Table.Td>
@@ -118,14 +125,14 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
 
               {isFetching ? (
                 <Table.Tr>
-                  <Table.Td colSpan={4} ta="center">
+                  <Table.Td colSpan={5} ta="center">
                     <Loader />
                   </Table.Td>
                 </Table.Tr>
               ) : (
                 letters?.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={4} ta="center">
+                    <Table.Td colSpan={5} ta="center">
                       No submitted letters found.
                     </Table.Td>
                   </Table.Tr>

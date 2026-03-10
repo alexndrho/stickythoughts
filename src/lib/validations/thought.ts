@@ -61,11 +61,3 @@ const thoughtStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export const reviewThoughtServerInput = z.object({
   status: thoughtStatusSchema.exclude(['PENDING']),
 });
-
-export const thoughtSubmissionsTypeQueryInput = z.enum(['submitted', 'flagged', 'rejected']);
-
-export const thoughtSubmissionTypeToStatus = {
-  submitted: 'PENDING',
-  flagged: 'FLAGGED',
-  rejected: 'REJECTED',
-} as const;

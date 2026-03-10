@@ -108,11 +108,3 @@ const letterStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export const reviewLetterServerInput = z.object({
   status: letterStatusSchema.exclude(['PENDING']),
 });
-
-export const letterSubmissionsTypeQueryInput = z.enum(['submitted', 'flagged', 'rejected']);
-
-export const submissionTypeToStatus = {
-  submitted: 'PENDING',
-  flagged: 'FLAGGED',
-  rejected: 'REJECTED',
-} as const;

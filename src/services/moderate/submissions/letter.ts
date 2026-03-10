@@ -5,9 +5,10 @@ import type {
   SetSubmissionLetterStatusBody,
   SubmissionLetter,
   SubmissionLetterDTO,
+  SubmissionsType,
 } from '@/types/submission';
 
-const getTypeParam = (type: 'submitted' | 'rejected' | 'flagged') => {
+const getTypeParam = (type: SubmissionsType) => {
   return `type=${type}`;
 };
 
@@ -16,7 +17,7 @@ export const getSubmissionLetters = async ({
   type,
 }: {
   page: number;
-  type: 'submitted' | 'rejected' | 'flagged';
+  type: SubmissionsType;
 }): Promise<SubmissionLetter[]> => {
   return fetchJson<SubmissionLetterDTO[]>(
     `/api/dashboard/submissions/letters?page=${page}&${getTypeParam(type)}`,
@@ -28,7 +29,7 @@ export const getSubmissionLetters = async ({
 export const getSubmissionLettersCount = async ({
   type,
 }: {
-  type: 'submitted' | 'rejected' | 'flagged';
+  type: SubmissionsType;
 }): Promise<number> => {
   const data = await fetchJson<{ total: number }>(
     `/api/dashboard/submissions/letters/count?${getTypeParam(type)}`,

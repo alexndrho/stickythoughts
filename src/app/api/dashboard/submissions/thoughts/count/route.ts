@@ -4,10 +4,7 @@ import { ZodError } from 'zod';
 import { guardSession } from '@/lib/session-guard';
 import { unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { countSubmissionThoughts } from '@/server/dashboard/thought';
-import {
-  thoughtSubmissionsTypeQueryInput,
-  thoughtSubmissionTypeToStatus,
-} from '@/lib/validations/thought';
+import { submissionsTypeQueryInput, submissionTypeToStatuses } from '@/lib/validations/submission';
 
 export async function GET(request: Request) {
   try {
@@ -23,10 +20,10 @@ export async function GET(request: Request) {
     }
 
     const url = new URL(request.url);
-    const type = thoughtSubmissionsTypeQueryInput.parse(url.searchParams.get('type'));
+    const type = submissionsTypeQueryInput.parse(url.searchParams.get('type'));
 
     const total = await countSubmissionThoughts({
-      status: thoughtSubmissionTypeToStatus[type],
+      statuses: [...submissionTypeToStatuses[type]],
     });
 
     return NextResponse.json({ total }, { status: 200 });

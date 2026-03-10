@@ -1,6 +1,8 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { input } from 'zod';
+import type { input, infer as zInfer } from 'zod';
 import type { reviewLetterServerInput } from '@/lib/validations/letter';
+import type { submissionsTypeQueryInput } from '@/lib/validations/submission';
+
 import type { SerializeDates } from './serialization';
 import type { UserSummary, UserWithAvatarSummary } from './user';
 
@@ -44,3 +46,4 @@ export type SubmissionLetter = Omit<BaseSubmissionLetter, 'author' | 'statusSetB
 export type SubmissionLetterDTO = SerializeDates<SubmissionLetter>;
 
 export type SetSubmissionLetterStatusBody = input<typeof reviewLetterServerInput>;
+export type SubmissionsType = zInfer<typeof submissionsTypeQueryInput>;

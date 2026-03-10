@@ -6,8 +6,9 @@ import type {
   SubmissionThought,
   SubmissionThoughtDTO,
 } from '@/types/thought-submission';
+import type { SubmissionsType } from '@/types/submission';
 
-const getTypeParam = (type: 'submitted' | 'rejected' | 'flagged') => {
+const getTypeParam = (type: SubmissionsType) => {
   return `type=${type}`;
 };
 
@@ -16,7 +17,7 @@ export const getSubmissionThoughts = async ({
   type,
 }: {
   page: number;
-  type: 'submitted' | 'rejected' | 'flagged';
+  type: SubmissionsType;
 }): Promise<SubmissionThought[]> => {
   return fetchJson<SubmissionThoughtDTO[]>(
     `/api/dashboard/submissions/thoughts?page=${page}&${getTypeParam(type)}`,
@@ -28,7 +29,7 @@ export const getSubmissionThoughts = async ({
 export const getSubmissionThoughtsCount = async ({
   type,
 }: {
-  type: 'submitted' | 'rejected' | 'flagged';
+  type: SubmissionsType;
 }): Promise<number> => {
   const data = await fetchJson<{ total: number }>(
     `/api/dashboard/submissions/thoughts/count?${getTypeParam(type)}`,
