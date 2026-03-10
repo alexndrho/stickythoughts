@@ -9,7 +9,6 @@ import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
 import { adminKeys } from '@/lib/query-keys/admin';
-import { thoughtKeys } from '@/lib/query-keys/thought';
 import { reopenSubmissionThought } from '@/services/moderate/submissions/thought';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
@@ -61,7 +60,6 @@ export default function RejectedThoughtsTab({ isActive }: RejectedThoughtsTabPro
       setPreviewThought(null);
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({ queryKey: adminKeys.thoughtSubmissions() });
-      queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
     },
     onSettled: () => {
       setUpdatingThoughtId(null);

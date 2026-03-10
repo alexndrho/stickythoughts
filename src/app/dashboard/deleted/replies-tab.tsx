@@ -65,20 +65,16 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
 
   const total = getPagedTotal(totalCount, ADMIN_DELETED_PER_PAGE);
 
-  const handleInvalidate = () => {
-    const queryClient = getQueryClient();
-    queryClient.invalidateQueries({
-      queryKey: adminKeys.deletedReplies(),
-    });
-    queryClient.invalidateQueries({ queryKey: letterKeys.all() });
-  };
-
   const restoreMutation = useMutation({
     mutationFn: restoreDeletedReply,
     onMutate: (id) => {
       setRestoringReplyId(id);
     },
-    onSuccess: handleInvalidate,
+    onSuccess: () => {
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedReplies() });
+      queryClient.invalidateQueries({ queryKey: letterKeys.all() });
+    },
     onSettled: () => {
       setRestoringReplyId(null);
     },
@@ -91,7 +87,8 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
     },
     onSuccess: () => {
       setPermanentlyDeletingReply(null);
-      handleInvalidate();
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedReplies() });
     },
     onSettled: () => {
       setDeletingReplyId(null);

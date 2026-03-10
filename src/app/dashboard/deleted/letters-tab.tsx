@@ -66,18 +66,16 @@ export default function LettersTab({ isActive }: LettersTabProps) {
 
   const total = getPagedTotal(totalCount, ADMIN_DELETED_PER_PAGE);
 
-  const handleInvalidate = () => {
-    const queryClient = getQueryClient();
-    queryClient.invalidateQueries({ queryKey: adminKeys.deletedLetters() });
-    queryClient.invalidateQueries({ queryKey: letterKeys.all() });
-  };
-
   const restoreMutation = useMutation({
     mutationFn: restoreDeletedLetter,
     onMutate: (id) => {
       setRestoringLetterId(id);
     },
-    onSuccess: handleInvalidate,
+    onSuccess: () => {
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedLetters() });
+      queryClient.invalidateQueries({ queryKey: letterKeys.all() });
+    },
     onSettled: () => {
       setRestoringLetterId(null);
     },
@@ -90,7 +88,8 @@ export default function LettersTab({ isActive }: LettersTabProps) {
     },
     onSuccess: () => {
       setPermanentlyDeletingLetter(null);
-      handleInvalidate();
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedLetters() });
     },
     onSettled: () => {
       setDeletingLetterId(null);

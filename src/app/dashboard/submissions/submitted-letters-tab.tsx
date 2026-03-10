@@ -64,11 +64,13 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
       setUpdatingLetterId(id);
       setActionStatus(body.status);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       setPreviewLetter(null);
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({ queryKey: adminKeys.submissions() });
-      queryClient.invalidateQueries({ queryKey: letterKeys.all() });
+      if (variables.body.status === 'APPROVED') {
+        queryClient.invalidateQueries({ queryKey: letterKeys.all() });
+      }
     },
     onSettled: () => {
       setUpdatingLetterId(null);

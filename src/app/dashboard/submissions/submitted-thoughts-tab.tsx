@@ -63,11 +63,13 @@ export default function SubmittedThoughtsTab({ isActive }: SubmittedThoughtsTabP
       setUpdatingThoughtId(id);
       setActionStatus(body.status);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       setPreviewThought(null);
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({ queryKey: adminKeys.thoughtSubmissions() });
-      queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
+      if (variables.body.status === 'APPROVED') {
+        queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
+      }
     },
     onSettled: () => {
       setUpdatingThoughtId(null);

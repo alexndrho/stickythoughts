@@ -9,7 +9,6 @@ import { ADMIN_DELETED_PER_PAGE } from '@/config/admin';
 import { authClient } from '@/lib/auth-client';
 import { getQueryClient } from '@/lib/get-query-client';
 import { adminKeys } from '@/lib/query-keys/admin';
-import { letterKeys } from '@/lib/query-keys/letter';
 import { reopenSubmissionLetter } from '@/services/moderate/submissions/letter';
 import { getFormattedDate } from '@/utils/date';
 import { formatUserDisplayName } from '@/utils/user';
@@ -61,7 +60,6 @@ export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps
       setPreviewLetter(null);
       const queryClient = getQueryClient();
       queryClient.invalidateQueries({ queryKey: adminKeys.submissions() });
-      queryClient.invalidateQueries({ queryKey: letterKeys.all() });
     },
     onSettled: () => {
       setUpdatingLetterId(null);

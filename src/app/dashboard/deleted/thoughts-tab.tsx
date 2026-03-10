@@ -63,21 +63,17 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
 
   const total = getPagedTotal(totalCount, ADMIN_DELETED_PER_PAGE);
 
-  const handleInvalidate = () => {
-    const queryClient = getQueryClient();
-    queryClient.invalidateQueries({
-      queryKey: adminKeys.deletedThoughts(),
-    });
-    queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
-    queryClient.invalidateQueries({ queryKey: adminKeys.thoughts() });
-  };
-
   const restoreMutation = useMutation({
     mutationFn: restoreDeletedThought,
     onMutate: (id) => {
       setRestoringThoughtId(id);
     },
-    onSuccess: handleInvalidate,
+    onSuccess: () => {
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedThoughts() });
+      queryClient.invalidateQueries({ queryKey: thoughtKeys.all() });
+      queryClient.invalidateQueries({ queryKey: adminKeys.thoughts() });
+    },
     onSettled: () => {
       setRestoringThoughtId(null);
     },
@@ -90,7 +86,8 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
     },
     onSuccess: () => {
       setPermanentlyDeletingThought(null);
-      handleInvalidate();
+      const queryClient = getQueryClient();
+      queryClient.invalidateQueries({ queryKey: adminKeys.deletedThoughts() });
     },
     onSettled: () => {
       setDeletingThoughtId(null);
