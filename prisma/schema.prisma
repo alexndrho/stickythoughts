@@ -14,16 +14,19 @@ model Thought {
   color     String
   createdAt DateTime @default(now())
 
+  highlightedAt   DateTime?
+  highlightedById String?
+  highlightedBy   User?     @relation("ThoughtHighlightedBy", fields: [highlightedById], references: [id], onDelete: SetNull)
+
   status        ModerationStatus @default(PENDING)
   statusSetById String?
   statusSetBy   User?            @relation("ThoughtStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
 
-  highlightedAt   DateTime?
-  highlightedById String?
-  highlightedBy   User?     @relation("ThoughtHighlightedBy", fields: [highlightedById], references: [id], onDelete: SetNull)
-  deletedAt       DateTime?
-  deletedById     String?
-  deletedBy       User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
+  notifications Notification[]
+
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?     @relation("ThoughtDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull)
 
   @@index([status, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
@@ -249,6 +252,7 @@ model LetterReplyLike {
 }
 
 enum NotificationType {
+  THOUGHT_PENDING_REVIEW
   LETTER_LIKE
   LETTER_REPLY
   LETTER_REPLY_LIKE
@@ -262,17 +266,19 @@ model Notification {
   isRead             Boolean          @default(false)
   isCountDecremented Boolean          @default(false)
 
-  actors   NotificationActor[]
-  letterId String?
-  replyId  String?
+  actors    NotificationActor[]
+  thoughtId String?
+  letterId  String?
+  replyId   String?
 
   lastActivityAt DateTime @default(now())
   updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
 
-  user   User         @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
-  letter Letter?      @relation(fields: [letterId], references: [id], onDelete: Cascade)
-  reply  LetterReply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  user    User         @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
+  letter  Letter?      @relation(fields: [letterId], references: [id], onDelete: Cascade)
+  reply   LetterReply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  thought Thought?     @relation(fields: [thoughtId], references: [id], onDelete: Cascade)
 
   @@index([userId, lastActivityAt(sort: Desc)])
 }

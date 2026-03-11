@@ -63,6 +63,13 @@ export type BaseUserNotification = Prisma.NotificationGetPayload<{
     type: true;
     isRead: true;
     lastActivityAt: true;
+    thought: {
+      select: {
+        id: true;
+        message: true;
+        author: true;
+      };
+    };
     letter: {
       select: {
         id: true;
@@ -110,6 +117,7 @@ export type UserNotification = Pick<BaseUserNotification, 'id' | 'type' | 'isRea
     isAnonymous?: boolean;
   };
   otherActorCount: number;
+  thoughtId: string | undefined;
   letterId: string | undefined;
   replyId: string | undefined;
   body: string;

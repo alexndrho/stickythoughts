@@ -7,6 +7,10 @@ import { NOTIFICATION_PER_PAGE } from '@/config/user';
 const visibleNotificationWhere: Prisma.NotificationWhereInput = {
   OR: [
     {
+      type: 'THOUGHT_PENDING_REVIEW',
+      thought: { is: { deletedAt: null } },
+    },
+    {
       type: {
         in: ['LETTER_LIKE', 'LETTER_PENDING_REVIEW'],
       },
@@ -50,6 +54,13 @@ export async function listUserNotifications(args: {
       type: true,
       isRead: true,
       lastActivityAt: true,
+      thought: {
+        select: {
+          id: true,
+          message: true,
+          author: true,
+        },
+      },
       letter: {
         select: {
           id: true,

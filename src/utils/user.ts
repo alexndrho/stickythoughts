@@ -30,6 +30,22 @@ export function formatUserNotifications(notifications: BaseUserNotification[]): 
     let body = 'You have a new notification';
 
     switch (notification.type) {
+      case 'THOUGHT_PENDING_REVIEW': {
+        body =
+          toNotificationPreview(notification.thought?.message) ||
+          notification.thought?.author ||
+          'A new thought is awaiting review.';
+
+        if (!firstActor) {
+          mainActor = {
+            image: null,
+            name: null,
+            username: null,
+            isAnonymous: true,
+          };
+        }
+        break;
+      }
       case 'LETTER_LIKE': {
         body =
           toNotificationPreview(notification.letter?.body) || notification.letter?.recipient || '';
@@ -74,6 +90,7 @@ export function formatUserNotifications(notifications: BaseUserNotification[]): 
       type: notification.type,
       mainActor,
       otherActorCount: Math.max((notification._count?.actors ?? 0) - 1, 0),
+      thoughtId: notification.thought?.id,
       letterId: notification.letter?.id || notification.reply?.letter?.id,
       replyId: notification.reply?.id,
       body,

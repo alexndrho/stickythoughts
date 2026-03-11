@@ -37,7 +37,7 @@ export async function deleteAllUserPushSubscriptions(userId: string) {
 
 export async function sendPushNotificationsToUser(
   userId: string,
-  payload: { title: string; body: string; url: string },
+  payload: { title: string; body: string; url: string; tag?: string },
 ) {
   const user = await prisma.user.findUnique({
     where: { id: userId },

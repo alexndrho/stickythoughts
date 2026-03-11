@@ -181,15 +181,17 @@ function NotificationItem({
   });
 
   const link =
-    notification.type === 'LETTER_LIKE'
-      ? `/letters/${notification.letterId}`
-      : notification.type === 'LETTER_REPLY_LIKE'
+    notification.type === 'THOUGHT_PENDING_REVIEW'
+      ? '/dashboard/submissions'
+      : notification.type === 'LETTER_LIKE'
         ? `/letters/${notification.letterId}`
-        : notification.type === 'LETTER_REPLY'
+        : notification.type === 'LETTER_REPLY_LIKE'
           ? `/letters/${notification.letterId}`
-          : notification.type === 'LETTER_PENDING_REVIEW'
-            ? '/dashboard/submissions'
-            : '#';
+          : notification.type === 'LETTER_REPLY'
+            ? `/letters/${notification.letterId}`
+            : notification.type === 'LETTER_PENDING_REVIEW'
+              ? '/dashboard/submissions'
+              : '#';
 
   return (
     <Menu.Item
@@ -276,6 +278,15 @@ function formatNotificationBody({ notification }: { notification: UserNotificati
     ) : null;
 
   switch (notification.type) {
+    case 'THOUGHT_PENDING_REVIEW':
+      return (
+        <>
+          <Text span inherit fw={600}>
+            New pending thought
+          </Text>
+          {notification.body ? `: ${notification.body}` : ''}
+        </>
+      );
     case 'LETTER_LIKE':
       return (
         <>

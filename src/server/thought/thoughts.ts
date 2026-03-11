@@ -5,6 +5,7 @@ import { subDays } from 'date-fns';
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
 import { moderateContent } from '@/server/moderation';
+import { notifyStaffPendingThought } from '@/server/letter/letter-notifications';
 import { type ModerationStatus } from '@/generated/prisma/enums';
 
 export async function listPublicThoughts(args: {
@@ -58,7 +59,7 @@ export async function createThought(args: { author: string; message: string; col
     moderationStatus = 'APPROVED';
   }
 
-  return prisma.thought.create({
+  const createdThought = await prisma.thought.create({
     data: {
       author: args.author,
       message: args.message,
@@ -74,6 +75,12 @@ export async function createThought(args: { author: string; message: string; col
       createdAt: true,
     },
   });
+
+  if (createdThought.status === 'FLAGGED') {
+    notifyStaffPendingThought({ thoughtId: createdThought.id }).catch(() => {});
+  }
+
+  return createdThought;
 }
 
 export async function countPublicThoughts() {

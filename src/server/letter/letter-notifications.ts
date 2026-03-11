@@ -165,18 +165,66 @@ export async function removeLetterReplyNotifications(args: {
   }
 }
 
+export async function notifyStaffPendingThought(args: { thoughtId: string }): Promise<void> {
+  try {
+    const [staffUsers, pendingCount] = await Promise.all([
+      prisma.user.findMany({
+        where: { role: { in: ['admin', 'moderator'] } },
+        select: { id: true },
+      }),
+      prisma.thought.count({
+        where: { status: { in: ['PENDING', 'FLAGGED'] }, deletedAt: null },
+      }),
+    ]);
+
+    if (staffUsers.length === 0) return;
+
+    await prisma.notification.createMany({
+      data: staffUsers.map((user) => ({
+        userId: user.id,
+        type: NotificationType.THOUGHT_PENDING_REVIEW,
+        thoughtId: args.thoughtId,
+      })),
+    });
+
+    const body =
+      pendingCount === 1
+        ? '1 thought is waiting for your review'
+        : `${pendingCount} thoughts are waiting for your review`;
+
+    staffUsers.forEach((staffUser) => {
+      sendPushNotificationsToUser(staffUser.id, {
+        title: 'Thought Pending Review',
+        body,
+        url: '/dashboard/submissions',
+        tag: 'pending-thoughts',
+      }).catch(() => {});
+    });
+  } catch (error) {
+    console.error('Failed to create notifications for pending thought', {
+      thoughtId: args.thoughtId,
+      error,
+    });
+  }
+}
+
 export async function notifyStaffPendingLetter(args: {
   letterId: string;
   submitterId?: string;
 }): Promise<void> {
   try {
-    const staffUsers = await prisma.user.findMany({
-      where: {
-        role: { in: ['admin', 'moderator'] },
-        ...(args.submitterId && { id: { not: args.submitterId } }),
-      },
-      select: { id: true },
-    });
+    const [staffUsers, pendingCount] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          role: { in: ['admin', 'moderator'] },
+          ...(args.submitterId && { id: { not: args.submitterId } }),
+        },
+        select: { id: true },
+      }),
+      prisma.letter.count({
+        where: { status: { in: ['PENDING', 'FLAGGED'] }, deletedAt: null },
+      }),
+    ]);
 
     if (staffUsers.length === 0) return;
 
@@ -188,11 +236,17 @@ export async function notifyStaffPendingLetter(args: {
       })),
     });
 
+    const body =
+      pendingCount === 1
+        ? '1 letter is waiting for your review'
+        : `${pendingCount} letters are waiting for your review`;
+
     staffUsers.forEach((staffUser) => {
       sendPushNotificationsToUser(staffUser.id, {
         title: 'Letter Pending Review',
-        body: 'A new letter is waiting for your review',
-        url: '/admin/letters',
+        body,
+        url: '/dashboard/submissions',
+        tag: 'pending-letters',
       }).catch(() => {});
     });
   } catch (error) {

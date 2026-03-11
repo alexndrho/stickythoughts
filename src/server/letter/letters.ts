@@ -60,7 +60,7 @@ export async function createLetter(args: {
     },
   });
 
-  if (createdLetter.status === 'PENDING') {
+  if (createdLetter.status === 'PENDING' || createdLetter.status === 'FLAGGED') {
     await notifyStaffPendingLetter({
       letterId: createdLetter.id,
       submitterId: args.session?.user.id,

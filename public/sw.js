@@ -8,6 +8,7 @@ self.addEventListener('push', (event) => {
     icon: data.icon || '/icon-192x192.png',
     vibrate: [100, 50, 100],
     data: { url: data.url ?? '/' },
+    ...(data.tag && { tag: data.tag }),
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
