@@ -10,6 +10,7 @@ import { isPrismaKnownRequestErrorCode } from '@/server/db/prisma-errors';
 import { getUserProfileImage } from '@/server/user/user';
 import { UserNotFoundError } from '@/server/user/user-errors';
 import { removeUserProfilePicture } from '@/server/user/profile-picture';
+import { moderateContent } from '@/server/moderation';
 
 export async function PUT(request: Request) {
   const session = await guardSession({ headers: request.headers });
@@ -64,6 +65,19 @@ export async function PUT(request: Request) {
         quality: 80,
       })
       .toBuffer();
+
+    const { flagged } = await moderateContent({ type: 'image', buffer: processedImage });
+    if (flagged) {
+      return jsonError(
+        [
+          {
+            code: 'moderation/inappropriate-content',
+            message: 'Image was flagged as inappropriate',
+          },
+        ],
+        422,
+      );
+    }
 
     // Store old image key for cleanup if needed
     if (session.user.image && isUrlStorage(session.user.image)) {

@@ -46,9 +46,10 @@ export async function listPublicThoughts(args: {
 export async function createThought(args: { author: string; message: string; color: string }) {
   let moderationStatus: ModerationStatus = 'PENDING';
   try {
-    const { flagged } = await moderateContent(
-      [args.author, args.message].filter(Boolean).join(' '),
-    );
+    const { flagged } = await moderateContent({
+      type: 'text',
+      text: [args.author, args.message].filter(Boolean).join(' '),
+    });
 
     moderationStatus = flagged ? 'FLAGGED' : 'APPROVED';
   } catch (error) {

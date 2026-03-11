@@ -30,9 +30,10 @@ export async function createLetter(args: {
 
   let moderationStatus: ModerationStatus = 'PENDING';
   try {
-    const { flagged } = await moderateContent(
-      [anonymousFrom, args.recipient, args.body].filter(Boolean).join(' '),
-    );
+    const { flagged } = await moderateContent({
+      type: 'text',
+      text: [anonymousFrom, args.recipient, args.body].filter(Boolean).join(' '),
+    });
 
     moderationStatus = flagged ? 'FLAGGED' : 'APPROVED';
   } catch (error) {

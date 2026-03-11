@@ -16,7 +16,15 @@ export type thoughtCode = 'thought/highlight-locked';
 
 export type antiBotCode = 'captcha/validation-failed' | 'botid/validation-failed';
 
-export type errorCode = systemCode | authCode | validationCode | thoughtCode | antiBotCode;
+export type moderationCode = 'moderation/inappropriate-content';
+
+export type errorCode =
+  | systemCode
+  | authCode
+  | validationCode
+  | thoughtCode
+  | antiBotCode
+  | moderationCode;
 
 export default interface IError {
   issues: {
