@@ -127,6 +127,7 @@ export async function setSubmissionLetterStatus(args: {
     data: {
       status: args.status,
       statusSetById: args.statusSetById,
+      statusSetAt: new Date(),
     },
   });
 }
@@ -137,6 +138,7 @@ export async function reopenSubmissionLetter(args: { letterId: string }) {
     data: {
       status: 'PENDING',
       statusSetById: null,
+      statusSetAt: null,
     },
   });
 }

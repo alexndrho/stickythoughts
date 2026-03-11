@@ -266,6 +266,7 @@ export async function setSubmissionThoughtStatus(args: {
     data: {
       status: args.status,
       statusSetById: args.statusSetById,
+      statusSetAt: new Date(),
     },
   });
 }
@@ -276,6 +277,7 @@ export async function reopenSubmissionThought(args: { thoughtId: string }) {
     data: {
       status: 'PENDING',
       statusSetById: null,
+      statusSetAt: null,
     },
   });
 }

@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/purge-deleted",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/soft-delete-rejected",
+      "schedule": "0 1 * * *"
     }
   ]
 }

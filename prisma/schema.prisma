@@ -21,6 +21,7 @@ model Thought {
   status        ModerationStatus @default(PENDING)
   statusSetById String?
   statusSetBy   User?            @relation("ThoughtStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
+  statusSetAt   DateTime?
 
   notifications Notification[]
 
@@ -30,6 +31,7 @@ model Thought {
 
   @@index([status, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([status, deletedAt, statusSetAt])
 }
 
 model User {
@@ -189,6 +191,7 @@ model Letter {
   status        ModerationStatus @default(PENDING)
   statusSetById String?
   statusSetBy   User?            @relation("LetterStatusBy", fields: [statusSetById], references: [id], onDelete: SetNull)
+  statusSetAt   DateTime?
 
   notifications Notification[]
 
@@ -203,6 +206,7 @@ model Letter {
   @@index([deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([authorId, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
   @@index([status, deletedAt, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([status, deletedAt, statusSetAt])
 }
 
 model LetterLike {
