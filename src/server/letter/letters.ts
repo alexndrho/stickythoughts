@@ -53,7 +53,6 @@ export async function createLetter(args: {
         },
       }),
       status: moderationStatus,
-      ...(moderationStatus === 'APPROVED' && { postedAt: new Date() }),
     },
     select: {
       id: true,
@@ -166,7 +165,7 @@ export async function listLettersPublic(args: { lastId?: string | null; viewerUs
         },
       },
     },
-    orderBy: [{ postedAt: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }, { id: 'desc' }],
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
 }
 

@@ -53,7 +53,7 @@ export default function Content({ id, initialData }: ContentProps) {
     authorName,
     authorUsername,
   });
-  const createdAtLabel = formatDistanceToNow(letter.postedAt ?? letter.createdAt, {
+  const createdAtLabel = formatDistanceToNow(letter.createdAt, {
     addSuffix: true,
   });
 

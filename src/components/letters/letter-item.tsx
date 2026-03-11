@@ -32,7 +32,7 @@ export default function LetterItem({ post, likeLoading, onLike }: LetterItemProp
     authorName,
     authorUsername,
   });
-  const createdAtLabel = formatDistanceToNow(post.postedAt ?? post.createdAt, {
+  const createdAtLabel = formatDistanceToNow(post.createdAt, {
     addSuffix: true,
   });
 

@@ -16,7 +16,6 @@ type PrismaBaseLetter = Prisma.LetterGetPayload<{
     body: true;
     authorId: true;
     anonymousFrom: true;
-    postedAt: true;
     bodyUpdatedAt: true;
     createdAt: true;
     updatedAt: true;
