@@ -80,9 +80,9 @@ export async function getLetterPublic(args: {
 }): Promise<Letter> {
   const letter = await prisma.letter.findUnique({
     where: {
-      deletedAt: null,
       id: args.letterId,
       status: 'APPROVED',
+      deletedAt: null,
     },
     include: {
       author: {
@@ -193,6 +193,7 @@ export async function updateLetter(args: { letterId: string; authorId: string; b
     where: {
       id: args.letterId,
       authorId: args.authorId,
+      status: 'APPROVED',
       deletedAt: null,
     },
     data: {

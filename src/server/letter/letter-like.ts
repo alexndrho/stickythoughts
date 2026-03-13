@@ -13,10 +13,10 @@ import {
 export async function likeLetter(args: { letterId: string; userId: string }): Promise<void> {
   const letterStatus = await prisma.letter.findUnique({
     where: { id: args.letterId },
-    select: { deletedAt: true },
+    select: { status: true, deletedAt: true },
   });
 
-  if (!letterStatus || letterStatus.deletedAt) {
+  if (!letterStatus || letterStatus.status !== 'APPROVED' || letterStatus.deletedAt) {
     throw new LetterNotFoundError('Letter post not found');
   }
 

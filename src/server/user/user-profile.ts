@@ -95,11 +95,11 @@ export async function listUserLetters(args: {
       author: {
         username: args.username,
       },
+      status: 'APPROVED',
       deletedAt: null,
       ...(args.viewerUsername !== args.username && {
         anonymousFrom: null,
       }),
-      status: 'APPROVED',
     },
     include: {
       author: {
@@ -226,8 +226,8 @@ export async function listUserLikedLetters(args: {
           },
         },
       },
-      deletedAt: null,
       status: 'APPROVED',
+      deletedAt: null,
     },
     include: {
       author: {

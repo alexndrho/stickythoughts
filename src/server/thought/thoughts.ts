@@ -29,8 +29,8 @@ export async function listPublicThoughts(args: {
           mode: 'insensitive',
         },
       }),
-      deletedAt: null,
       status: 'APPROVED',
+      deletedAt: null,
     },
     select: {
       id: true,
@@ -95,9 +95,9 @@ export async function getHighlightedThought() {
 
   return prisma.thought.findFirst({
     where: {
-      deletedAt: null,
       status: 'APPROVED',
       highlightedAt: { not: null, gte: highlightCutoff },
+      deletedAt: null,
     },
     orderBy: {
       highlightedAt: 'desc',

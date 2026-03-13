@@ -34,6 +34,7 @@ export async function searchLetters(args: { q: string; take?: number }) {
     take,
     where: {
       recipient: { contains: args.q, mode: 'insensitive' },
+      status: 'APPROVED',
       deletedAt: null,
     },
     select: {
@@ -68,6 +69,7 @@ export async function searchAll(args: { q: string }) {
       take: takeEach,
       where: {
         recipient: { contains: args.q, mode: 'insensitive' },
+        status: 'APPROVED',
         deletedAt: null,
       },
       select: {

@@ -21,6 +21,7 @@ export async function likeReply(input: { letterId: string; replyId: string; user
       deletedAt: true,
       letter: {
         select: {
+          status: true,
           deletedAt: true,
         },
       },
@@ -31,6 +32,7 @@ export async function likeReply(input: { letterId: string; replyId: string; user
     !replyStatus ||
     replyStatus.letterId !== input.letterId ||
     replyStatus.deletedAt ||
+    replyStatus.letter.status !== 'APPROVED' ||
     replyStatus.letter.deletedAt
   ) {
     throw new ReplyNotFoundError('Reply not found');
@@ -90,6 +92,7 @@ export async function unlikeReply(input: { letterId: string; replyId: string; us
       deletedAt: true,
       letter: {
         select: {
+          status: true,
           deletedAt: true,
         },
       },
@@ -100,6 +103,7 @@ export async function unlikeReply(input: { letterId: string; replyId: string; us
     !replyStatus ||
     replyStatus.letterId !== input.letterId ||
     replyStatus.deletedAt ||
+    replyStatus.letter.status !== 'APPROVED' ||
     replyStatus.letter.deletedAt
   ) {
     throw new ReplyNotFoundError('Reply not found');

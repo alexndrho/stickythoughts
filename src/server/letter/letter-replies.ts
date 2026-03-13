@@ -17,10 +17,10 @@ export async function createLetterReply(args: {
 }) {
   const letterStatus = await prisma.letter.findUnique({
     where: { id: args.letterId },
-    select: { deletedAt: true },
+    select: { status: true, deletedAt: true },
   });
 
-  if (!letterStatus || letterStatus.deletedAt) {
+  if (!letterStatus || letterStatus.status !== 'APPROVED' || letterStatus.deletedAt) {
     throw new LetterNotFoundError('Letter post not found');
   }
 
@@ -92,6 +92,7 @@ export async function listLetterReplies(args: {
       letterId: args.letterId,
       deletedAt: null,
       letter: {
+        status: 'APPROVED',
         deletedAt: null,
       },
     },
@@ -143,6 +144,7 @@ export async function updateLetterReply(args: {
       deletedAt: null,
       authorId: args.authorId,
       letter: {
+        status: 'APPROVED',
         deletedAt: null,
       },
     },

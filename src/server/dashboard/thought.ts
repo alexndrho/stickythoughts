@@ -109,6 +109,7 @@ export async function findCurrentHighlight() {
   return prisma.thought.findFirst({
     where: {
       highlightedAt: { not: null },
+      status: 'APPROVED',
       deletedAt: null,
     },
     select: {
@@ -193,7 +194,7 @@ export async function updateHighlight(args: {
     }
 
     return tx.thought.update({
-      where: { id: args.thoughtId },
+      where: { id: args.thoughtId, status: 'APPROVED', deletedAt: null },
       data: args.highlighted
         ? { highlightedAt: new Date(), highlightedById: args.userId }
         : { highlightedAt: null, highlightedById: null },
@@ -222,8 +223,8 @@ export async function listSubmissionThoughts(args: { page: number; statuses: Mod
 
   return prisma.thought.findMany({
     where: {
-      deletedAt: null,
       status: { in: args.statuses },
+      deletedAt: null,
     },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: ADMIN_DELETED_PER_PAGE,
@@ -243,8 +244,8 @@ export async function listSubmissionThoughts(args: { page: number; statuses: Mod
 export async function countSubmissionThoughts(args: { statuses: ModerationStatus[] }) {
   return prisma.thought.count({
     where: {
-      deletedAt: null,
       status: { in: args.statuses },
+      deletedAt: null,
     },
   });
 }
