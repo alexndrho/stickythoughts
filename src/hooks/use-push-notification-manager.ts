@@ -21,8 +21,20 @@ export function usePushNotificationManager() {
     if (!session) return;
     if (!notificationSettings?.pushNotificationsEnabled) return;
     if (typeof Notification === 'undefined') return;
-    if (Notification.permission !== 'granted') return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
-    subscribePush().catch(() => {});
+    if (Notification.permission === 'granted') {
+      subscribePush().catch(() => {});
+      return;
+    }
+
+    if (Notification.permission !== 'default') return;
+
+    void Notification.requestPermission()
+      .then((permission) => {
+        if (permission !== 'granted') return;
+        return subscribePush();
+      })
+      .catch(() => {});
   }, [session, notificationSettings?.pushNotificationsEnabled]);
 }
