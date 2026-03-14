@@ -126,6 +126,10 @@
   margin-bottom: var(--mantine-spacing-xs);
 }
 
+.qotd {
+  margin-top: var(--mantine-spacing-md);
+}
+
 .actions-bar {
   margin-top: var(--mantine-spacing-md);
   margin-bottom: var(--mantine-spacing-md);

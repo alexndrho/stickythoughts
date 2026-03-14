@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/cron/revalidate-home",
+      "schedule": "0 16 * * *"
+    },
+    {
       "path": "/api/cron/purge-deleted",
       "schedule": "0 0 * * *"
     },

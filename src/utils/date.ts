@@ -1,4 +1,4 @@
-import { secondsToMinutes } from 'date-fns';
+import { getDayOfYear, secondsToMinutes } from 'date-fns';
 
 const formatTime = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -51,4 +51,9 @@ export const secondsToMinutesExtended = (seconds: number): string => {
 
   // Under 1 minute: just show seconds
   return String(secondsLeft);
+};
+
+export const getDayInPhilippines = (): number => {
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+  return getDayOfYear(now);
 };

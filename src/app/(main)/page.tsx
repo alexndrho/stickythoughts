@@ -1,14 +1,16 @@
 import { Suspense } from 'react';
 import { type Metadata } from 'next';
-import { Paper, Text, Title } from '@mantine/core';
+import { Alert, Paper, Text, Title } from '@mantine/core';
+import { IconBubbleTextFilled } from '@tabler/icons-react';
 
+import { getQotd } from '@/utils/text';
 import ThoughtCount from './thought-count';
 import HeaderCarousel from './header-carousel';
 import ThoughtCountServer from './thought-count.server';
 import HeaderCarouselServer from './header-carousel.server';
-import classes from './home.module.css';
 import ThoughtsServer from './thoughts.server';
 import ThoughtsLoader from './thoughts-loader';
+import classes from './home.module.css';
 
 export const metadata: Metadata = {
   alternates: {
@@ -43,6 +45,10 @@ export default async function HomePage() {
           <HeaderCarouselServer />
         </Suspense>
       </Paper>
+
+      <Alert icon={<IconBubbleTextFilled />} title="Question of the day" className={classes.qotd}>
+        {getQotd()}
+      </Alert>
 
       <Suspense fallback={<ThoughtsLoader />}>
         <ThoughtsServer />

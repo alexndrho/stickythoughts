@@ -1,5 +1,11 @@
 import { INVISIBLE_AND_FORMATTING, URL_REGEX, WHITESPACE_REGEX } from '@/config/text';
 import { censor, matcher } from '@/lib/bad-words';
+import { getDayInPhilippines } from './date';
+import { qotd } from '@/config/qotd.json';
+
+export const getQotd = (): string => {
+  return qotd[(getDayInPhilippines() - 1) % qotd.length];
+};
 
 export const sanitizeString = (text: string) =>
   text.replace(INVISIBLE_AND_FORMATTING, '').replace(WHITESPACE_REGEX, ' ').trim();
