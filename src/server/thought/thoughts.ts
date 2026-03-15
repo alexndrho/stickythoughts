@@ -2,16 +2,65 @@ import 'server-only';
 
 import { subDays } from 'date-fns';
 
+import { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
 import { moderateContent } from '@/server/moderation';
 import { notifyStaffPendingThought } from '@/server/letter/letter-notifications';
 import { type ModerationStatus } from '@/generated/prisma/enums';
+import type { ThoughtsSort } from '@/types/thought';
 
-export async function listPublicThoughts(args: {
+async function listPublicThoughtsRandom(args: {
+  seed: string;
   searchTerm?: string | null;
   lastId?: string | null;
 }) {
+  const seed = args.seed;
+
+  const searchCondition = args.searchTerm
+    ? Prisma.sql`AND author ILIKE ${'%' + args.searchTerm + '%'}`
+    : Prisma.empty;
+
+  const cursorCondition = args.lastId
+    ? Prisma.sql`AND md5(id || ${seed}) > md5(${args.lastId} || ${seed})`
+    : Prisma.empty;
+
+  return prisma.$queryRaw<
+    Array<{
+      id: string;
+      author: string;
+      message: string;
+      color: string;
+      createdAt: Date;
+    }>
+  >`
+    SELECT id, author, message, color, "createdAt"
+    FROM "Thought"
+    WHERE status = 'APPROVED'
+      AND "deletedAt" IS NULL
+      ${searchCondition}
+      ${cursorCondition}
+    ORDER BY md5(id || ${seed})
+    LIMIT ${THOUGHTS_PER_PAGE}
+  `;
+}
+
+export async function listPublicThoughts(args: {
+  sort?: ThoughtsSort | null;
+  searchTerm?: string | null;
+  lastId?: string | null;
+  seed?: string | null;
+}) {
+  if (args.sort === 'random' && args.seed) {
+    return listPublicThoughtsRandom({
+      seed: args.seed,
+      searchTerm: args.searchTerm,
+      lastId: args.lastId,
+    });
+  }
+
+  const orderDirection = args.sort === 'oldest' ? 'asc' : 'desc';
+
   return prisma.thought.findMany({
     take: THOUGHTS_PER_PAGE,
     ...(args.lastId
@@ -39,7 +88,7 @@ export async function listPublicThoughts(args: {
       color: true,
       createdAt: true,
     },
-    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    orderBy: [{ createdAt: orderDirection }, { id: orderDirection }],
   });
 }
 

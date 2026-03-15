@@ -7,15 +7,22 @@ import { createThoughtInput } from '@/lib/validations/thought';
 import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { createThought, listPublicThoughts } from '@/server/thought/thoughts';
 import { toDTO } from '@/lib/http/to-dto';
-import type { PublicThoughtDTO, SubmitThoughtResponseDTO } from '@/types/thought';
+import {
+  parseRandomSeed,
+  parseThoughtsSort,
+  type PublicThoughtDTO,
+  type SubmitThoughtResponseDTO,
+} from '@/types/thought';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const sort = parseThoughtsSort(searchParams.get('sort'));
   const searchTerm = searchParams.get('searchTerm');
   const lastId = searchParams.get('lastId');
+  const seed = parseRandomSeed(searchParams.get('seed'));
 
   try {
-    const thoughts = await listPublicThoughts({ searchTerm, lastId });
+    const thoughts = await listPublicThoughts({ sort, searchTerm, lastId, seed });
 
     const typedThoughts = toDTO(thoughts) satisfies PublicThoughtDTO[];
 

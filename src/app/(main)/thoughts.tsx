@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { Button, Input, Kbd, Tooltip } from '@mantine/core';
+import { Button, Input, Kbd, SegmentedControl, Tooltip } from '@mantine/core';
 import { useDebouncedState, useDisclosure, useHotkeys } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconMessage, IconSearch, IconX } from '@tabler/icons-react';
@@ -13,13 +13,14 @@ import SendThoughtModal from './send-thought-modal';
 import InfiniteScroll from '@/components/infinite-scroll';
 import classes from './home.module.css';
 import ThoughtsLoader from './thoughts-loader';
-import type { PublicThought } from '@/types/thought';
+import type { PublicThought, ThoughtsSort } from '@/types/thought';
 
 export default function HomeThoughts({ initialData }: { initialData?: PublicThought[] }) {
-  const [messageOpen, { open, close, toggle }] = useDisclosure(false);
-
   const searchRef = useRef<HTMLInputElement>(null);
   const [searchBarValue, setSearchBarValue] = useDebouncedState('', 250);
+  const [messageOpen, { open, close, toggle }] = useDisclosure(false);
+  const [sortOrder, setSortOrder] = useState<ThoughtsSort>('newest');
+  const [randomSeed, setRandomSeed] = useState(() => crypto.randomUUID());
 
   const {
     data: thoughtsData,
@@ -29,9 +30,12 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
     isRefetching: isThoughtsRefetching,
     isRefetchError: isThoughtsError,
   } = useInfiniteQuery({
-    ...thoughtsInfiniteOptions,
+    ...thoughtsInfiniteOptions({
+      sort: sortOrder,
+      seed: sortOrder === 'random' ? randomSeed : undefined,
+    }),
     initialData:
-      initialData !== undefined
+      initialData !== undefined && sortOrder === 'newest'
         ? {
             pages: [initialData],
             pageParams: [undefined],
@@ -46,7 +50,13 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
     isFetching: isSearchFetching,
     isRefetching: isSearchRefetching,
     isRefetchError: isSearchRefetchError,
-  } = useInfiniteQuery(thoughtsSearchInfiniteOptions(searchBarValue));
+  } = useInfiniteQuery(
+    thoughtsSearchInfiniteOptions({
+      search: searchBarValue,
+      sort: sortOrder,
+      seed: sortOrder === 'random' ? randomSeed : undefined,
+    }),
+  );
 
   const focusSearchBar = () => {
     searchRef.current?.focus();
@@ -121,8 +131,27 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
           className={classes['actions-bar__search-bar']}
         />
 
+        <SegmentedControl
+          data={[
+            { label: 'Newest', value: 'newest' },
+            { label: 'Oldest', value: 'oldest' },
+            { label: 'Random', value: 'random' },
+          ]}
+          value={sortOrder}
+          onChange={(value) => {
+            if (value === 'random') {
+              setRandomSeed(crypto.randomUUID());
+            }
+            setSortOrder(value as ThoughtsSort);
+          }}
+        />
+
         <Tooltip label="Press (s) to stick">
-          <Button rightSection={<IconMessage size="1em" />} onClick={open}>
+          <Button
+            rightSection={<IconMessage size="1em" />}
+            onClick={open}
+            className={classes['send-thought-button']}
+          >
             Stick a thought
           </Button>
         </Tooltip>

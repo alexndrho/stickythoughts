@@ -8,22 +8,33 @@ import type {
   SubmitThoughtBody,
   SubmitThoughtResponse,
   SubmitThoughtResponseDTO,
+  ThoughtsSort,
 } from '@/types/thought';
 
 const getThoughts = async ({
-  lastId,
   searchTerm,
+  sort,
+  lastId,
+  seed,
 }: {
-  lastId?: string;
   searchTerm?: string;
+  sort: ThoughtsSort;
+  lastId?: string;
+  seed?: string;
 }): Promise<PublicThought[]> => {
   const params = new URLSearchParams();
 
   if (lastId) {
     params.append('lastId', lastId);
   }
+  if (sort) {
+    params.append('sort', sort);
+  }
   if (searchTerm) {
     params.append('searchTerm', searchTerm);
+  }
+  if (seed) {
+    params.append('seed', seed);
   }
 
   const data = await fetchJson<PublicThoughtDTO[]>(

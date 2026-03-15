@@ -3,6 +3,9 @@ import type { input } from 'zod';
 import type { createThoughtInput } from '@/lib/validations/thought';
 import type { SerializeDates } from './serialization';
 import type { UserSummary } from './user';
+import { THOUGHTS_SORTS } from '@/config/thought';
+
+export type ThoughtsSort = (typeof THOUGHTS_SORTS)[number];
 
 export type BasePrivateThought = Prisma.ThoughtGetPayload<{
   select: {
@@ -74,3 +77,16 @@ export type SubmitThoughtResponse = Prisma.ThoughtGetPayload<{
 }>;
 
 export type SubmitThoughtResponseDTO = SerializeDates<SubmitThoughtResponse>;
+
+export function parseThoughtsSort(value: string | null): ThoughtsSort {
+  if (!value) {
+    return 'newest';
+  }
+
+  return THOUGHTS_SORTS.some((sort) => sort === value) ? (value as ThoughtsSort) : 'newest';
+}
+
+export function parseRandomSeed(value: string | null): string | null {
+  if (!value) return null;
+  return /^[a-zA-Z0-9-]{1,36}$/.test(value) ? value : null;
+}

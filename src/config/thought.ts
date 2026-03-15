@@ -17,3 +17,5 @@ export const THOUGHT_HIGHLIGHT_LOCK_DURATION_MS = THOUGHT_HIGHLIGHT_LOCK_HOURS *
 
 export const THOUGHT_HIGHLIGHT_MAX_AGE_DAYS = 3;
 export const THOUGHT_HIGHLIGHT_MAX_AGE_MS = THOUGHT_HIGHLIGHT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+export const THOUGHTS_SORTS = ['newest', 'oldest', 'random'] as const;
