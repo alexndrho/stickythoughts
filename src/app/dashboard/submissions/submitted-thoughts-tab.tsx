@@ -39,7 +39,7 @@ export default function SubmittedThoughtsTab({ isActive }: SubmittedThoughtsTabP
   const canSetStatus = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           thought: ['review'],
         },
       })

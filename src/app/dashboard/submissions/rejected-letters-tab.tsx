@@ -33,7 +33,7 @@ export default function RejectedLettersTab({ isActive }: RejectedLettersTabProps
   const canSetStatus = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letter: ['review'],
         },
       })

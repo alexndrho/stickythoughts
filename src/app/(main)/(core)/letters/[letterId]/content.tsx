@@ -62,7 +62,7 @@ export default function Content({ id, initialData }: ContentProps) {
     session?.user?.role === 'admin' || session?.user?.role === 'moderator'
       ? authClient.admin.checkRolePermission({
           role: session.user.role,
-          permission: {
+          permissions: {
             letter: ['delete'],
           },
         })

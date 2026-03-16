@@ -11,7 +11,7 @@ type UserHasPermissionArgs = NonNullable<Parameters<typeof auth.api.userHasPermi
 
 type SessionHeaders = GetSessionArgs extends { headers?: infer H } ? H : Headers;
 type Permission = UserHasPermissionArgs extends { body?: infer Body }
-  ? Body extends { permission: infer Perm }
+  ? Body extends { permissions: infer Perm }
     ? Perm
     : never
   : never;
@@ -28,7 +28,7 @@ export const notFoundResponse = () => jsonError([{ code: 'not-found', message: '
 
 export async function guardSession(options: {
   headers: SessionHeaders;
-  permission?: Permission;
+  permissions?: Permission;
   onUnauthenticated?: 'unauthorized' | 'not-found';
   onForbidden?: 'forbidden' | 'not-found';
 }): Promise<NonNullable<Session> | NextResponse<IError>> {
@@ -40,11 +40,11 @@ export async function guardSession(options: {
     return options.onUnauthenticated === 'not-found' ? notFoundResponse() : unauthorizedResponse();
   }
 
-  if (options.permission) {
+  if (options.permissions) {
     const hasPermission = await auth.api.userHasPermission({
       body: {
         userId: session.user.id,
-        permission: options.permission,
+        permissions: options.permissions,
       },
     });
 

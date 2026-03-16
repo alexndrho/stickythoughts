@@ -2,7 +2,7 @@ import { Body, Container, Head, Html, Text, Hr } from '@react-email/components';
 
 interface EmailOTPTemplateProps {
   otp: string;
-  type: 'sign-in' | 'email-verification' | 'forget-password';
+  type: 'sign-in' | 'email-verification' | 'forget-password' | 'change-email';
 }
 
 export default function EmailOTPTemplate({ otp, type }: EmailOTPTemplateProps) {
@@ -14,6 +14,8 @@ export default function EmailOTPTemplate({ otp, type }: EmailOTPTemplateProps) {
         return 'Verify Your Email - StickyThoughts';
       case 'forget-password':
         return 'Reset Your Password - StickyThoughts';
+      case 'change-email':
+        return 'Change Your Email - StickyThoughts';
       default:
         return 'Your OTP Code - StickyThoughts';
     }
@@ -27,6 +29,8 @@ export default function EmailOTPTemplate({ otp, type }: EmailOTPTemplateProps) {
         return 'Verify Your Email Address';
       case 'forget-password':
         return 'Reset Your Password';
+      case 'change-email':
+        return 'Change Your Email Address';
       default:
         return 'Your Verification Code';
     }
@@ -40,6 +44,8 @@ export default function EmailOTPTemplate({ otp, type }: EmailOTPTemplateProps) {
         return 'Thank you for signing up for StickyThoughts! Please use the verification code below to verify your email address:';
       case 'forget-password':
         return 'You requested to reset your password for your StickyThoughts account. Use the verification code below to continue:';
+      case 'change-email':
+        return 'You requested to change the email address on your StickyThoughts account. Use the verification code below to confirm:';
       default:
         return 'Your verification code:';
     }
@@ -53,6 +59,8 @@ export default function EmailOTPTemplate({ otp, type }: EmailOTPTemplateProps) {
         return "If you didn't create an account with StickyThoughts, please ignore this email.";
       case 'forget-password':
         return "If you didn't request a password reset, please ignore this email. Your password will remain unchanged.";
+      case 'change-email':
+        return "If you didn't request this email change, please ignore this email. Your email will remain unchanged.";
       default:
         return "If you didn't request this code, please ignore this email.";
     }

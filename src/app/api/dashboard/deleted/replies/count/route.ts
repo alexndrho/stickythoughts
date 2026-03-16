@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   try {
     const session = await guardSession({
       headers: request.headers,
-      permission: {
+      permissions: {
         letterReply: ['list-deleted'],
       },
     });

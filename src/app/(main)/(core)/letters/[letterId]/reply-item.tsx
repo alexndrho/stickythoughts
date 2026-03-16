@@ -44,7 +44,7 @@ export default function ReplyItem({
     session?.user?.role === 'admin' || session?.user?.role === 'moderator'
       ? authClient.admin.checkRolePermission({
           role: session.user.role,
-          permission: {
+          permissions: {
             letterReply: ['delete'],
           },
         })

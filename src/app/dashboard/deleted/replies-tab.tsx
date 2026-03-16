@@ -39,7 +39,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
   const canRestoreReply = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letterReply: ['restore'],
         },
       })
@@ -47,7 +47,7 @@ export default function RepliesTab({ isActive }: RepliesTabProps) {
   const canPermanentlyDeleteReply = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letterReply: ['purge'],
         },
       })

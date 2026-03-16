@@ -40,7 +40,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
   const canRestoreLetter = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letter: ['restore'],
         },
       })
@@ -48,7 +48,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
   const canPermanentlyDeleteLetter = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letter: ['purge'],
         },
       })

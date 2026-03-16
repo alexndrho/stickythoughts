@@ -20,7 +20,7 @@ export default async function DeletedContentPage() {
   const hasPermission = await auth.api.userHasPermission({
     body: {
       userId: session?.user.id,
-      permission: {
+      permissions: {
         thought: ['list-deleted'],
         letter: ['list-deleted'],
         letterReply: ['list-deleted'],

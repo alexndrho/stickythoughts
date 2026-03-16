@@ -40,7 +40,7 @@ export default function SubmittedLettersTab({ isActive }: SubmittedLettersTabPro
   const canSetStatus = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           letter: ['review'],
         },
       })

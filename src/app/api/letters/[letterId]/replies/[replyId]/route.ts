@@ -65,7 +65,7 @@ export async function DELETE(
     const hasPermission = await auth.api.userHasPermission({
       body: {
         userId: session.user.id,
-        permission: {
+        permissions: {
           letterReply: ['delete'],
         },
       },

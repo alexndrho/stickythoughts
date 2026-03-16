@@ -20,7 +20,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
           await auth.api.userHasPermission({
             body: {
               userId: session.user.id,
-              permission: {
+              permissions: {
                 user: ['ban'],
               },
             },

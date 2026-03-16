@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await guardSession({
       headers: request.headers,
-      permission: {
+      permissions: {
         thought: ['list-submissions'],
       },
     });

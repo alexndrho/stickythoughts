@@ -54,7 +54,7 @@ export async function DELETE(request: NextRequest) {
 
     const session = await guardSession({
       headers: request.headers,
-      permission: { user: ['update'] },
+      permissions: { user: ['update'] },
     });
 
     if (session instanceof NextResponse) {

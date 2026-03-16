@@ -37,7 +37,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const canRestoreThought = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           thought: ['restore'],
         },
       })
@@ -45,7 +45,7 @@ export default function ThoughtsTab({ isActive }: ThoughtsTabProps) {
   const canPermanentlyDeleteThought = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           thought: ['purge'],
         },
       })

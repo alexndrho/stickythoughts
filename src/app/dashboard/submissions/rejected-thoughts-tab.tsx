@@ -33,7 +33,7 @@ export default function RejectedThoughtsTab({ isActive }: RejectedThoughtsTabPro
   const canSetStatus = isStaff
     ? authClient.admin.checkRolePermission({
         role,
-        permission: {
+        permissions: {
           thought: ['review'],
         },
       })

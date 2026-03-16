@@ -26,7 +26,7 @@ async function getUserServerUncached(username: string): Promise<UserPublicAccoun
         await auth.api.userHasPermission({
           body: {
             userId: session.user.id,
-            permission: {
+            permissions: {
               user: ['ban'],
             },
           },

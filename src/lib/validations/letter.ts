@@ -9,39 +9,40 @@ import {
   LETTER_REPLY_MAX_LENGTH,
 } from '@/config/letter';
 
-export const createLetterServerInput = z
-  .object({
-    body: z
-      .string('Body is required')
-      .transform(sanitizeMultilineString)
-      .pipe(
-        z
-          .string()
-          .min(LETTER_BODY_MIN_LENGTH, 'Body is required')
-          .max(
-            LETTER_BODY_MAX_LENGTH,
-            `Body must be at most ${LETTER_BODY_MAX_LENGTH.toLocaleString()} characters long`,
-          ),
-      ),
-    shareMode: z.enum(['you', 'anonymous']).default('anonymous'),
-    anonymousFrom: z.string().transform(sanitizeString).optional(),
-    recipient: z
-      .string('Recipient is required')
-      .transform(sanitizeString)
-      .pipe(
-        z
-          .string()
-          .min(
-            LETTER_NAME_MIN_LENGTH,
-            `Recipient must be at least ${LETTER_NAME_MIN_LENGTH} characters long`,
-          )
-          .max(
-            LETTER_NAME_MAX_LENGTH,
-            `Recipient must be at most ${LETTER_NAME_MAX_LENGTH} characters long`,
-          ),
-      ),
-  })
-  .superRefine(({ shareMode, anonymousFrom }, ctx) => {
+const createLetterBaseSchema = z.object({
+  body: z
+    .string('Body is required')
+    .transform(sanitizeMultilineString)
+    .pipe(
+      z
+        .string()
+        .min(LETTER_BODY_MIN_LENGTH, 'Body is required')
+        .max(
+          LETTER_BODY_MAX_LENGTH,
+          `Body must be at most ${LETTER_BODY_MAX_LENGTH.toLocaleString()} characters long`,
+        ),
+    ),
+  shareMode: z.enum(['you', 'anonymous']).default('anonymous'),
+  anonymousFrom: z.string().transform(sanitizeString).optional(),
+  recipient: z
+    .string('Recipient is required')
+    .transform(sanitizeString)
+    .pipe(
+      z
+        .string()
+        .min(
+          LETTER_NAME_MIN_LENGTH,
+          `Recipient must be at least ${LETTER_NAME_MIN_LENGTH} characters long`,
+        )
+        .max(
+          LETTER_NAME_MAX_LENGTH,
+          `Recipient must be at most ${LETTER_NAME_MAX_LENGTH} characters long`,
+        ),
+    ),
+});
+
+export const createLetterServerInput = createLetterBaseSchema.superRefine(
+  ({ shareMode, anonymousFrom }, ctx) => {
     if (shareMode !== 'anonymous') return;
 
     if (!anonymousFrom) {
@@ -74,9 +75,10 @@ export const createLetterServerInput = z
         message: `Sender alias must be at most ${LETTER_NAME_MAX_LENGTH} characters long`,
       });
     }
-  });
+  },
+);
 
-export const updateLetterServerInput = createLetterServerInput.pick({
+export const updateLetterServerInput = createLetterBaseSchema.pick({
   body: true,
 });
 

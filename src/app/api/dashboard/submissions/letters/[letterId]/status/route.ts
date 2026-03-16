@@ -13,7 +13,7 @@ export async function PATCH(
   try {
     const session = await guardSession({
       headers: request.headers,
-      permission: {
+      permissions: {
         letter: ['review'],
       },
     });

@@ -20,7 +20,7 @@ export default async function SubmissionsPage() {
   const hasPermission = await auth.api.userHasPermission({
     body: {
       userId: session?.user.id,
-      permission: {
+      permissions: {
         letter: ['list-submissions'],
       },
     },

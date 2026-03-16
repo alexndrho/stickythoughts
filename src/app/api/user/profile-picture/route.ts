@@ -174,7 +174,7 @@ export async function DELETE(request: NextRequest) {
       const hasPermission = await auth.api.userHasPermission({
         body: {
           userId: session.user.id,
-          permission: { user: ['update'] },
+          permissions: { user: ['update'] },
         },
       });
 
