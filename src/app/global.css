@@ -5,6 +5,11 @@ body {
 }
 
 :root {
+  --container-size-lg: 1140px;
+  /* (container - 5 gaps of spacing) / 4 columns, where 5 = 3 between + 2 outer */
+  --thought-size: calc((var(--container-size-lg) - (5 * var(--mantine-spacing-md))) / 4);
+  --thought-aspect-ratio: 9 / 10;
+
   --surface-hover-translate: calc(-1 * var(--mantine-spacing-xs));
   --surface-hover-shadow: var(--mantine-shadow-sm);
   --surface-hover-transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;

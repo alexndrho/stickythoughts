@@ -177,7 +177,7 @@
 
 .thoughts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 16.5rem);
+  grid-template-columns: repeat(auto-fit, var(--thought-size));
   justify-content: center;
-  grid-gap: 1rem;
+  grid-gap: var(--mantine-spacing-md);
 }
