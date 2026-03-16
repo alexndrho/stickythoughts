@@ -52,6 +52,12 @@ export const createThoughtInput = z.object({
   color: thoughtColorZod,
 }) satisfies z.Schema<Prisma.ThoughtCreateInput>;
 
+export const randomSeedSchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9-]{1,36}$/)
+  .nullable()
+  .catch(null);
+
 export const highlightThoughtInput = z.object({
   highlighted: z.boolean(),
 });

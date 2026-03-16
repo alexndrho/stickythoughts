@@ -3,12 +3,11 @@ import { checkBotId } from 'botid/server';
 import { ZodError } from 'zod';
 
 import { revalidateThoughts } from '@/lib/cache/thought-revalidation';
-import { createThoughtInput } from '@/lib/validations/thought';
+import { createThoughtInput, randomSeedSchema } from '@/lib/validations/thought';
 import { jsonError, unknownErrorResponse, zodInvalidInput } from '@/lib/http/api-responses';
 import { createThought, listPublicThoughts } from '@/server/thought/thoughts';
 import { toDTO } from '@/lib/http/to-dto';
 import {
-  parseRandomSeed,
   parseThoughtsSort,
   type PublicThoughtDTO,
   type SubmitThoughtResponseDTO,
@@ -19,7 +18,7 @@ export async function GET(request: NextRequest) {
   const sort = parseThoughtsSort(searchParams.get('sort'));
   const searchTerm = searchParams.get('searchTerm');
   const lastId = searchParams.get('lastId');
-  const seed = parseRandomSeed(searchParams.get('seed'));
+  const seed = randomSeedSchema.parse(searchParams.get('seed'));
 
   try {
     const thoughts = await listPublicThoughts({ sort, searchTerm, lastId, seed });

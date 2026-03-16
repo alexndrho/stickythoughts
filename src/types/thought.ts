@@ -85,8 +85,3 @@ export function parseThoughtsSort(value: string | null): ThoughtsSort {
 
   return THOUGHTS_SORTS.some((sort) => sort === value) ? (value as ThoughtsSort) : 'newest';
 }
-
-export function parseRandomSeed(value: string | null): string | null {
-  if (!value) return null;
-  return /^[a-zA-Z0-9-]{1,36}$/.test(value) ? value : null;
-}
