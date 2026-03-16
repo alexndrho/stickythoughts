@@ -1,9 +1,9 @@
-import { Group, Loader } from '@mantine/core';
+import { Center, Loader } from '@mantine/core';
 
 export default function ThoughtsLoader() {
   return (
-    <Group mt="xl" justify="center">
+    <Center py="xl" mih="8rem">
       <Loader />
-    </Group>
+    </Center>
   );
 }
