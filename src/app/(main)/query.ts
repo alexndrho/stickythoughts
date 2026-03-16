@@ -10,6 +10,7 @@ import {
   listPublicThoughts as listPublicThoughtsService,
 } from '@/server/thought/thoughts';
 import { parsePublicThoughtFromServer } from '@/utils/thought';
+import { getQotd } from '@/utils/text';
 import type { PublicThought } from '@/types/thought';
 
 const listPublicThoughtsCached = unstable_cache(
@@ -49,6 +50,14 @@ const getHighlightedThoughtCached = unstable_cache(
     revalidate: THOUGHT_HIGHLIGHT_MAX_AGE_MS / 1000,
   },
 );
+
+const getQotdCached = unstable_cache(async () => getQotd(), ['qotd'], {
+  tags: [CACHE_TAGS.QOTD],
+});
+
+export async function getQuestionOfTheDay(): Promise<string> {
+  return getQotdCached();
+}
 
 export async function listPublicThoughts(): Promise<PublicThought[]> {
   return listPublicThoughtsCached();

@@ -3,13 +3,13 @@ import { type Metadata } from 'next';
 import { Alert, Paper, Text, Title } from '@mantine/core';
 import { IconBubbleTextFilled } from '@tabler/icons-react';
 
-import { getQotd } from '@/utils/text';
 import ThoughtCount from './thought-count';
 import HeaderCarousel from './header-carousel';
 import ThoughtCountServer from './thought-count.server';
 import HeaderCarouselServer from './header-carousel.server';
 import ThoughtsServer from './thoughts.server';
 import ThoughtsLoader from './thoughts-loader';
+import { getQuestionOfTheDay } from './query';
 import classes from './home.module.css';
 
 export const metadata: Metadata = {
@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  const qotd = await getQuestionOfTheDay();
+
   return (
     <div className={classes.container}>
       <Paper component="header" withBorder className={classes.header}>
@@ -47,7 +49,7 @@ export default async function HomePage() {
       </Paper>
 
       <Alert icon={<IconBubbleTextFilled />} title="Question of the day" className={classes.qotd}>
-        {getQotd()}
+        {qotd}
       </Alert>
 
       <Suspense fallback={<ThoughtsLoader />}>
