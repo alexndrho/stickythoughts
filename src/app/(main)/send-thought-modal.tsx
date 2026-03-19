@@ -46,7 +46,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
     initialValues: {
       message: '',
       author: storedAuthor,
-      color: THOUGHT_COLORS[0] as (typeof THOUGHT_COLORS)[number],
+      color: THOUGHT_COLORS[0],
     },
     validate: zod4Resolver(createThoughtInput),
   });

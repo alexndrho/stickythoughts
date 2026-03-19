@@ -1,16 +1,16 @@
 import { z } from 'zod';
 
-import { Prisma } from '@/generated/prisma/client';
+import type { Prisma } from '@/generated/prisma/client';
+import { ThoughtColor } from '@/generated/prisma/enums';
 import { containsUrl, sanitizeString } from '@/utils/text';
 import {
-  THOUGHT_COLORS,
   THOUGHT_MAX_AUTHOR_LENGTH,
   THOUGHT_MAX_MESSAGE_LENGTH,
   THOUGHT_MIN_AUTHOR_LENGTH,
   THOUGHT_MIN_MESSAGE_LENGTH,
 } from '@/config/thought';
 
-export const thoughtColorZod = z.enum(THOUGHT_COLORS);
+export const thoughtColorZod = z.enum(Object.values(ThoughtColor));
 
 export const createThoughtInput = z.object({
   author: z

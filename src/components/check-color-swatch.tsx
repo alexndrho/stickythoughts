@@ -1,8 +1,8 @@
-import { THOUGHT_COLORS } from '@/config/thought';
+import { ThoughtColor } from '@/generated/prisma/enums';
 import { CheckIcon, ColorSwatch, useMantineTheme } from '@mantine/core';
 
 export interface CheckColorSwatchProps {
-  color: (typeof THOUGHT_COLORS)[number];
+  color: ThoughtColor;
   onClick?: () => void;
   checked?: boolean;
   disabled?: boolean;

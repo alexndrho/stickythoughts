@@ -2,7 +2,7 @@ import 'server-only';
 
 import { subDays } from 'date-fns';
 
-import { Prisma } from '@/generated/prisma/client';
+import { Prisma, ThoughtColor } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
 import { moderateContent } from '@/server/moderation';
@@ -30,7 +30,7 @@ async function listPublicThoughtsRandom(args: {
       id: string;
       author: string;
       message: string;
-      color: string;
+      color: ThoughtColor;
       createdAt: Date;
     }>
   >`
@@ -92,7 +92,11 @@ export async function listPublicThoughts(args: {
   });
 }
 
-export async function createThought(args: { author: string; message: string; color: string }) {
+export async function createThought(args: {
+  author: string;
+  message: string;
+  color: ThoughtColor;
+}) {
   let moderationStatus: ModerationStatus = 'PENDING';
   try {
     const { flagged } = await moderateContent({

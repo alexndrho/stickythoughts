@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaClient, ThoughtColor } from '../src/generated/prisma/client';
 import { hashPassword } from 'better-auth/crypto';
 
 const databaseUrl = process.env.DATABASE_URL!;
@@ -90,7 +90,7 @@ async function main() {
       {
         author: 'Juan Dela Cruz',
         message: 'The best way to predict the future is to create it.',
-        color: 'yellow',
+        color: ThoughtColor.yellow,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -98,7 +98,7 @@ async function main() {
       {
         author: 'Maria Santos',
         message: 'Be kind whenever possible. It is always possible.',
-        color: 'red',
+        color: ThoughtColor.red,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -106,7 +106,7 @@ async function main() {
       {
         author: 'Pedro Reyes',
         message: 'Every accomplishment starts with the decision to try.',
-        color: 'green',
+        color: ThoughtColor.green,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -114,14 +114,14 @@ async function main() {
       {
         author: 'Anonymous',
         message: 'This thought is still waiting for review.',
-        color: 'violet',
+        color: ThoughtColor.violet,
         status: 'PENDING' as const,
       },
       {
         author: 'Juan Dela Cruz',
         message:
           'Sometimes the smallest step in the right direction ends up being the biggest step of your life.',
-        color: 'blue',
+        color: ThoughtColor.blue,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -129,7 +129,7 @@ async function main() {
       {
         author: 'Maria Santos',
         message: "You don't have to be perfect to be amazing.",
-        color: 'pink',
+        color: ThoughtColor.pink,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -137,7 +137,7 @@ async function main() {
       {
         author: 'Pedro Reyes',
         message: 'Difficult roads often lead to beautiful destinations.',
-        color: 'yellow',
+        color: ThoughtColor.yellow,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -145,7 +145,7 @@ async function main() {
       {
         author: 'Anonymous',
         message: 'Be the reason someone smiles today.',
-        color: 'green',
+        color: ThoughtColor.green,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -153,7 +153,7 @@ async function main() {
       {
         author: 'Juan Dela Cruz',
         message: 'Your only limit is your mind.',
-        color: 'red',
+        color: ThoughtColor.red,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -161,7 +161,7 @@ async function main() {
       {
         author: 'Maria Santos',
         message: "Stars can't shine without darkness.",
-        color: 'violet',
+        color: ThoughtColor.violet,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -169,7 +169,7 @@ async function main() {
       {
         author: 'Pedro Reyes',
         message: 'Stay patient and trust the journey.',
-        color: 'blue',
+        color: ThoughtColor.blue,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -177,7 +177,7 @@ async function main() {
       {
         author: 'Anonymous',
         message: 'One day or day one. You decide.',
-        color: 'pink',
+        color: ThoughtColor.pink,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -185,7 +185,7 @@ async function main() {
       {
         author: 'Juan Dela Cruz',
         message: "Don't wait for opportunity. Create it.",
-        color: 'green',
+        color: ThoughtColor.green,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -193,7 +193,7 @@ async function main() {
       {
         author: 'Maria Santos',
         message: 'Happiness is not by chance, but by choice.',
-        color: 'yellow',
+        color: ThoughtColor.yellow,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -201,7 +201,7 @@ async function main() {
       {
         author: 'Pedro Reyes',
         message: 'What consumes your mind controls your life.',
-        color: 'red',
+        color: ThoughtColor.red,
         status: 'APPROVED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),
@@ -209,13 +209,13 @@ async function main() {
       {
         author: 'Anonymous',
         message: 'I wonder if anyone else feels this way too.',
-        color: 'blue',
+        color: ThoughtColor.blue,
         status: 'PENDING' as const,
       },
       {
         author: 'Someone',
         message: 'This is flagged content for testing moderation.',
-        color: 'red',
+        color: ThoughtColor.red,
         status: 'FLAGGED' as const,
         statusSetById: admin.id,
         statusSetAt: new Date(),

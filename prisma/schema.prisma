@@ -7,12 +7,22 @@ datasource db {
   provider = "postgresql"
 }
 
+// Values are lowercase to match Mantine color
+enum ThoughtColor {
+  yellow
+  blue
+  red
+  violet
+  green
+  pink
+}
+
 model Thought {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   author    String
   message   String
-  color     String
-  createdAt DateTime @default(now())
+  color     ThoughtColor
+  createdAt DateTime     @default(now())
 
   highlightedAt   DateTime?
   highlightedById String?
