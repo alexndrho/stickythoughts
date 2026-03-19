@@ -1,6 +1,8 @@
 import { Card, type CardProps, Group, Skeleton, Text, Tooltip } from '@mantine/core';
 
+import type { ThoughtPattern } from '@/generated/prisma/enums';
 import { getFormattedDate } from '@/utils/date';
+import { getThoughtPatternStyle } from '@/utils/thought';
 import { filterText } from '@/utils/text';
 import classes from '@/styles/components/thought.module.css';
 
@@ -8,6 +10,7 @@ export interface ThoughtProps extends CardProps {
   message?: string;
   author?: string;
   color?: string;
+  pattern?: ThoughtPattern;
   createdAt?: Date;
   fluid?: boolean;
   loading?: boolean;
@@ -17,10 +20,12 @@ export default function Thought({
   message,
   author,
   color,
+  pattern,
   createdAt,
   fluid = false,
   loading = false,
   className,
+  style,
   ...rest
 }: ThoughtProps) {
   const resolvedColor = loading ? undefined : color;
@@ -34,12 +39,17 @@ export default function Thought({
     .filter(Boolean)
     .join(' ');
 
+  const patternStyle = getThoughtPatternStyle(pattern);
+  const backgroundStyle: React.CSSProperties = resolvedColor
+    ? { backgroundColor: `var(--mantine-color-${resolvedColor}-5)`, ...patternStyle }
+    : {};
+
   const content = (
     <Card
       component="article"
-      bg={resolvedColor ? `${resolvedColor}.6` : undefined}
       className={resolvedClassName}
       withBorder={!resolvedColor}
+      style={{ ...backgroundStyle, ...style }}
       {...rest}
     >
       {!loading ? (

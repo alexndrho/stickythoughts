@@ -4,32 +4,9 @@ import {
   formatDistanceToNowStrict,
   isAfter,
 } from 'date-fns';
-import { getColorFallback } from './color';
+
+import type { ThoughtPattern } from '@/generated/prisma/enums';
 import { THOUGHT_HIGHLIGHT_LOCK_DURATION_MS } from '@/config/thought';
-import type { PrivateHighlightedThought, PrivateThought, PublicThought } from '@/types/thought';
-
-export const parsePublicThoughtFromServer = (thought: PublicThought): PublicThought => {
-  return {
-    ...thought,
-    color: getColorFallback(thought.color),
-  } satisfies PublicThought;
-};
-
-export const parsePrivateThoughtFromServer = (thought: PrivateThought): PrivateThought => {
-  return {
-    ...thought,
-    color: getColorFallback(thought.color),
-  } satisfies PrivateThought;
-};
-
-export const parsePrivateHighlightedThoughtFromServer = (
-  thought: PrivateHighlightedThought,
-): PrivateHighlightedThought => {
-  return {
-    ...thought,
-    color: getColorFallback(thought.color),
-  } satisfies PrivateHighlightedThought;
-};
 
 export const getHighlightedThoughtLockRemainingMs = (highlightedAt: Date, now = new Date()) => {
   const unlockAt = addMilliseconds(highlightedAt, THOUGHT_HIGHLIGHT_LOCK_DURATION_MS);
@@ -59,3 +36,43 @@ export const formatHighlightedThoughtLockRemaining = (
 
   return formatted || 'less than a minute';
 };
+
+const PATTERN_STYLES: Record<
+  Exclude<ThoughtPattern, 'PLAIN'>,
+  { backgroundImage: string; backgroundSize?: string }
+> = {
+  LINED: {
+    backgroundImage: `repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 23px,
+      rgba(59, 130, 246, 0.25) 23px,
+      rgba(59, 130, 246, 0.25) 24px,
+      transparent 24px,
+      transparent 47px,
+      rgba(220, 38, 38, 0.2) 47px,
+      rgba(220, 38, 38, 0.2) 48px
+    )`,
+  },
+  GRID: {
+    backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 1px, transparent 1px)`,
+    backgroundSize: '24px 24px',
+  },
+  DOTS: {
+    backgroundImage: `radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.25) 1px,
+      transparent 1px
+    )`,
+    backgroundSize: '20px 20px',
+  },
+};
+
+export function getThoughtPatternStyle(pattern: ThoughtPattern | undefined): React.CSSProperties {
+  if (!pattern || pattern === 'PLAIN') {
+    return {};
+  }
+
+  return PATTERN_STYLES[pattern];
+}

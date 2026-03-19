@@ -46,6 +46,7 @@ export default function HeaderCarousel({
                 message={highlightedThought.message}
                 author={highlightedThought.author}
                 color={highlightedThought.color}
+                pattern={highlightedThought.pattern}
                 createdAt={highlightedThought.createdAt}
                 loading={isLoading}
               />

@@ -1,4 +1,4 @@
-import { ThoughtColor } from '@/generated/prisma/enums';
+import { ThoughtPattern, ThoughtColor } from '@/generated/prisma/enums';
 
 const THOUGHTS_PER_ROW = 4;
 const ROWS_PER_PAGE = 10;
@@ -13,6 +13,7 @@ export const THOUGHT_MESSAGE_WARNING_THRESHOLD = 20;
 export const THOUGHT_AUTHOR_WARNING_THRESHOLD = 5;
 
 export const THOUGHT_COLORS = Object.values(ThoughtColor);
+export const THOUGHT_PATTERNS = Object.values(ThoughtPattern);
 
 export const THOUGHT_HIGHLIGHT_LOCK_HOURS = 12;
 export const THOUGHT_HIGHLIGHT_LOCK_DURATION_MS = THOUGHT_HIGHLIGHT_LOCK_HOURS * 60 * 60 * 1000;

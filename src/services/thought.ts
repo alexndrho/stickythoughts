@@ -1,6 +1,5 @@
 import 'client-only';
 
-import { parsePublicThoughtFromServer } from '@/utils/thought';
 import { fetchJson } from '@/services/http';
 import type {
   PublicThought,
@@ -43,11 +42,11 @@ const getThoughts = async ({
     { errorMessage: 'Failed to get thoughts' },
   );
 
-  return data.map(parsePublicThoughtFromServer);
+  return data;
 };
 
 const submitThought = async (data: SubmitThoughtBody): Promise<SubmitThoughtResponse> => {
-  const dto = await fetchJson<SubmitThoughtResponseDTO>(
+  return fetchJson<SubmitThoughtResponseDTO>(
     '/api/thoughts',
     {
       method: 'POST',
@@ -58,7 +57,6 @@ const submitThought = async (data: SubmitThoughtBody): Promise<SubmitThoughtResp
     },
     { errorMessage: 'Failed to submit thought' },
   );
-  return { ...parsePublicThoughtFromServer(dto), status: dto.status };
 };
 
 const getThoughtsCount = async (): Promise<number> => {
@@ -70,13 +68,9 @@ const getThoughtsCount = async (): Promise<number> => {
 };
 
 const getHighlightedThought = async (): Promise<PublicThought | null> => {
-  const data = await fetchJson<PublicThoughtDTO | null>('/api/thoughts/highlight', undefined, {
+  return fetchJson<PublicThoughtDTO | null>('/api/thoughts/highlight', undefined, {
     errorMessage: 'Failed to get highlighted thought',
   });
-
-  if (!data) return null;
-
-  return parsePublicThoughtFromServer(data);
 };
 
 export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought };

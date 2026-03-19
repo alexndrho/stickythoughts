@@ -7,17 +7,16 @@ import { THOUGHTS_SORTS } from '@/config/thought';
 
 export type ThoughtsSort = (typeof THOUGHTS_SORTS)[number];
 
-export type BasePrivateThought = Prisma.ThoughtGetPayload<{
+export type PrivateThought = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
     author: true;
     message: true;
     color: true;
+    pattern: true;
     createdAt: true;
   };
 }>;
-
-export type PrivateThought = BasePrivateThought;
 
 export type PrivateThoughtDTO = SerializeDates<PrivateThought>;
 
@@ -27,6 +26,7 @@ export type BasePrivateHighlightedThought = Prisma.ThoughtGetPayload<{
     author: true;
     message: true;
     color: true;
+    pattern: true;
     createdAt: true;
     highlightedAt: true;
     highlightedBy: {
@@ -49,17 +49,16 @@ export type PrivateHighlightedThought = Omit<
 
 export type PrivateHighlightedThoughtDTO = SerializeDates<PrivateHighlightedThought>;
 
-export type BasePublicThought = Prisma.ThoughtGetPayload<{
+export type PublicThought = Prisma.ThoughtGetPayload<{
   select: {
     id: true;
     author: true;
     message: true;
     color: true;
+    pattern: true;
     createdAt: true;
   };
 }>;
-
-export type PublicThought = BasePublicThought;
 
 export type PublicThoughtDTO = SerializeDates<PublicThought>;
 
@@ -71,6 +70,7 @@ export type SubmitThoughtResponse = Prisma.ThoughtGetPayload<{
     author: true;
     message: true;
     color: true;
+    pattern: true;
     status: true;
     createdAt: true;
   };

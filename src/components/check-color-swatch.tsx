@@ -22,6 +22,7 @@ export default function CheckColorSwatch({
       type="button"
       component="button"
       color={theme.colors[color][5]}
+      c="var(--mantine-color-black)"
       disabled={disabled}
       onClick={onClick}
       styles={(theme) => ({

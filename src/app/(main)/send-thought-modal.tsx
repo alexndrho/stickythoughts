@@ -1,7 +1,17 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { Button, Flex, Group, Modal, Text, TextInput, Textarea, Tooltip } from '@mantine/core';
+import {
+  Button,
+  Flex,
+  Group,
+  Modal,
+  SegmentedControl,
+  Text,
+  TextInput,
+  Textarea,
+  Tooltip,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useLocalStorage } from '@mantine/hooks';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
@@ -11,6 +21,7 @@ import { IconAlertCircle, IconMessage } from '@tabler/icons-react';
 import { authClient } from '@/lib/auth-client';
 import RandomButton from '@/components/random-button';
 import CheckColorSwatch from '@/components/check-color-swatch';
+import type { ThoughtPattern } from '@/generated/prisma/enums';
 import { LegalNoticeInline } from '@/components/legal-notice-inline';
 import { useLegalNoticeAcknowledgement } from '@/hooks/use-legal-notice-acknowledgement';
 import { submitThought } from '@/services/thought';
@@ -21,6 +32,7 @@ import {
   THOUGHT_COLORS,
   THOUGHT_MESSAGE_WARNING_THRESHOLD,
   THOUGHT_AUTHOR_WARNING_THRESHOLD,
+  THOUGHT_PATTERNS,
 } from '@/config/thought';
 import { setSubmitThoughtQueryData } from './set-query-data';
 import ServerError from '@/utils/error/ServerError';
@@ -47,6 +59,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
       message: '',
       author: storedAuthor,
       color: THOUGHT_COLORS[0],
+      pattern: THOUGHT_PATTERNS[0],
     },
     validate: zod4Resolver(createThoughtInput),
   });
@@ -87,6 +100,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         message: '',
         author: formValues.author,
         color: THOUGHT_COLORS[0],
+        pattern: THOUGHT_PATTERNS[0],
       });
 
       if (thought.status === 'APPROVED') {
@@ -161,6 +175,18 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
             {form.errors.root}
           </Text>
         )}
+
+        <SegmentedControl
+          mt="md"
+          fullWidth
+          data={THOUGHT_PATTERNS.map((p) => ({
+            label: p.charAt(0) + p.slice(1).toLowerCase(),
+            value: p,
+          }))}
+          value={form.values.pattern}
+          onChange={(value) => form.setFieldValue('pattern', value as ThoughtPattern)}
+          disabled={mutation.isPending}
+        />
 
         <Group mt="md" justify="center">
           <Tooltip label="Randomize color" position="left">

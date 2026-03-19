@@ -17,12 +17,20 @@ enum ThoughtColor {
   pink
 }
 
+enum ThoughtPattern {
+  PLAIN
+  LINED
+  GRID
+  DOTS
+}
+
 model Thought {
-  id        String       @id @default(uuid())
+  id        String         @id @default(uuid())
   author    String
   message   String
   color     ThoughtColor
-  createdAt DateTime     @default(now())
+  pattern   ThoughtPattern @default(PLAIN)
+  createdAt DateTime       @default(now())
 
   highlightedAt   DateTime?
   highlightedById String?

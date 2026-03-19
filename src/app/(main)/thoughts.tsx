@@ -176,6 +176,7 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
               message={thought.message}
               author={thought.author}
               color={thought.color}
+              pattern={thought.pattern}
               createdAt={thought.createdAt}
             />
           ))}

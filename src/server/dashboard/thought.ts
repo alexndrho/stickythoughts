@@ -37,6 +37,7 @@ export async function listAdminThoughts(args: { page: number }) {
       author: true,
       message: true,
       color: true,
+      pattern: true,
       highlightedAt: true,
       createdAt: true,
     },
@@ -143,6 +144,7 @@ export async function getHighlightedThought(): Promise<PrivateHighlightedThought
       author: true,
       message: true,
       color: true,
+      pattern: true,
       createdAt: true,
       highlightedAt: true,
       highlightedBy: {
@@ -203,6 +205,7 @@ export async function updateHighlight(args: {
         author: true,
         message: true,
         color: true,
+        pattern: true,
         highlightedAt: true,
         createdAt: true,
         highlightedBy: {

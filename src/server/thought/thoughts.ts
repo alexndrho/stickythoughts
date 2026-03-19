@@ -2,7 +2,7 @@ import 'server-only';
 
 import { subDays } from 'date-fns';
 
-import { Prisma, ThoughtColor } from '@/generated/prisma/client';
+import { type ThoughtPattern, Prisma, ThoughtColor } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { THOUGHT_HIGHLIGHT_MAX_AGE_DAYS, THOUGHTS_PER_PAGE } from '@/config/thought';
 import { moderateContent } from '@/server/moderation';
@@ -31,10 +31,11 @@ async function listPublicThoughtsRandom(args: {
       author: string;
       message: string;
       color: ThoughtColor;
+      pattern: ThoughtPattern;
       createdAt: Date;
     }>
   >`
-    SELECT id, author, message, color, "createdAt"
+    SELECT id, author, message, color, pattern, "createdAt"
     FROM "Thought"
     WHERE status = 'APPROVED'
       AND "deletedAt" IS NULL
@@ -86,6 +87,7 @@ export async function listPublicThoughts(args: {
       author: true,
       message: true,
       color: true,
+      pattern: true,
       createdAt: true,
     },
     orderBy: [{ createdAt: orderDirection }, { id: orderDirection }],
@@ -96,6 +98,7 @@ export async function createThought(args: {
   author: string;
   message: string;
   color: ThoughtColor;
+  pattern: ThoughtPattern;
 }) {
   let moderationStatus: ModerationStatus = 'PENDING';
   try {
@@ -118,6 +121,7 @@ export async function createThought(args: {
       author: args.author,
       message: args.message,
       color: args.color,
+      pattern: args.pattern,
       status: moderationStatus,
     },
     select: {
@@ -125,6 +129,7 @@ export async function createThought(args: {
       author: true,
       message: true,
       color: true,
+      pattern: true,
       status: true,
       createdAt: true,
     },
@@ -160,6 +165,7 @@ export async function getHighlightedThought() {
       author: true,
       message: true,
       color: true,
+      pattern: true,
       createdAt: true,
     },
   });

@@ -9,14 +9,12 @@ import {
   getHighlightedThought as getHighlightedThoughtService,
   listPublicThoughts as listPublicThoughtsService,
 } from '@/server/thought/thoughts';
-import { parsePublicThoughtFromServer } from '@/utils/thought';
 import { getQotd } from '@/utils/text';
 import type { PublicThought } from '@/types/thought';
 
 const listPublicThoughtsCached = unstable_cache(
   async () => {
-    const thoughts = await listPublicThoughtsService({});
-    return thoughts.map((thought) => parsePublicThoughtFromServer(thought));
+    return listPublicThoughtsService({});
   },
   ['public-thought-list'],
   {
@@ -33,17 +31,7 @@ const countPublicThoughtsCached = unstable_cache(
 );
 
 const getHighlightedThoughtCached = unstable_cache(
-  async () => {
-    let highlightedThought = await getHighlightedThoughtService();
-
-    if (!highlightedThought) {
-      return null;
-    }
-
-    highlightedThought = parsePublicThoughtFromServer(highlightedThought);
-
-    return highlightedThought;
-  },
+  async () => getHighlightedThoughtService(),
   ['public-thought-highlight'],
   {
     tags: [CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT],

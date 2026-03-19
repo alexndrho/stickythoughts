@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import type { Prisma } from '@/generated/prisma/client';
-import { ThoughtColor } from '@/generated/prisma/enums';
+import { ThoughtPattern, ThoughtColor } from '@/generated/prisma/enums';
 import { containsUrl, sanitizeString } from '@/utils/text';
 import {
   THOUGHT_MAX_AUTHOR_LENGTH,
@@ -11,6 +11,7 @@ import {
 } from '@/config/thought';
 
 export const thoughtColorZod = z.enum(Object.values(ThoughtColor));
+export const thoughtPatternZod = z.enum(Object.values(ThoughtPattern));
 
 export const createThoughtInput = z.object({
   author: z
@@ -50,6 +51,7 @@ export const createThoughtInput = z.object({
         }),
     ),
   color: thoughtColorZod,
+  pattern: thoughtPatternZod.default('PLAIN'),
 }) satisfies z.Schema<Prisma.ThoughtCreateInput>;
 
 export const randomSeedSchema = z

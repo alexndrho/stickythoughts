@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
       return jsonError([{ code: 'botid/validation-failed', message: 'Bot detected' }], 403);
     }
 
-    const { author, message, color } = createThoughtInput.parse(await request.json());
+    const { author, message, color, pattern } = createThoughtInput.parse(await request.json());
 
-    const thought = await createThought({ author, message, color });
+    const thought = await createThought({ author, message, color, pattern });
 
     if (thought.status === 'APPROVED') {
       revalidateThoughts();

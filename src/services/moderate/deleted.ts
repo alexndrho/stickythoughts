@@ -1,7 +1,6 @@
 import 'client-only';
 
 import { fetchJson } from '@/services/http';
-import { getColorFallback } from '@/utils/color';
 import type {
   DeletedThought,
   DeletedThoughtDTO,
@@ -12,16 +11,9 @@ import type {
 } from '@/types/deleted';
 
 export const getDeletedThoughts = async ({ page }: { page: number }): Promise<DeletedThought[]> => {
-  const data = await fetchJson<DeletedThoughtDTO[]>(
-    `/api/dashboard/deleted/thoughts?page=${page}`,
-    undefined,
-    { errorMessage: 'Failed to get deleted thoughts' },
-  );
-
-  return data.map((thought) => ({
-    ...thought,
-    color: getColorFallback(thought.color),
-  }));
+  return fetchJson<DeletedThoughtDTO[]>(`/api/dashboard/deleted/thoughts?page=${page}`, undefined, {
+    errorMessage: 'Failed to get deleted thoughts',
+  });
 };
 
 export const getDeletedLetters = async ({ page }: { page: number }): Promise<DeletedLetter[]> => {
