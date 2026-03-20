@@ -37,35 +37,49 @@ export const formatHighlightedThoughtLockRemaining = (
   return formatted || 'less than a minute';
 };
 
-const PATTERN_STYLES: Record<
-  Exclude<ThoughtPattern, 'PLAIN'>,
-  { backgroundImage: string; backgroundSize?: string }
-> = {
+// All em-based so patterns adapt to actual rendered font size on any device.
+// Mantine default line-height: 1.55, card padding: 0.75em (thought.module.css)
+const LH = 1.55;
+const PAD = 0.75;
+const HALF_LEAD = (LH - 1) / 2;
+const OFFSET_Y = PAD - HALF_LEAD; // base Y offset adjusted for half-leading
+const BASE_STYLE: React.CSSProperties = { lineHeight: LH };
+
+// Use the CSS `lh` unit for repeating background sizes so the pattern interval is
+// always identical to the computed line-height.  `em`-based sizes can drift on
+// Safari mobile due to sub-pixel rounding differences between background-size and
+// line-height, causing lines to gradually fall out of sync with the text.
+const PATTERN_STYLES: Record<Exclude<ThoughtPattern, 'PLAIN'>, React.CSSProperties> = {
   LINED: {
-    backgroundImage: `repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 23px,
-      rgba(59, 130, 246, 0.25) 23px,
-      rgba(59, 130, 246, 0.25) 24px,
-      transparent 24px,
-      transparent 47px,
-      rgba(220, 38, 38, 0.2) 47px,
-      rgba(220, 38, 38, 0.2) 48px
-    )`,
+    ...BASE_STYLE,
+    // Two layers: blue first, red second
+    backgroundImage: [
+      `linear-gradient(to bottom, rgba(30, 70, 180, 0.3) 1px, transparent 1px)`,
+      `linear-gradient(to bottom, rgba(180, 30, 30, 0.25) 1px, transparent 1px)`,
+    ].join(','),
+    backgroundSize: `100% 2lh`,
+    backgroundPosition: [
+      `0 calc(${OFFSET_Y}em + 1lh - 1px)`,
+      `0 calc(${OFFSET_Y}em + 2lh - 1px)`,
+    ].join(','),
   },
   GRID: {
-    backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 1px, transparent 1px)`,
-    backgroundSize: '24px 24px',
+    ...BASE_STYLE,
+    // Vertical lines centered horizontally, horizontal lines aligned to text
+    backgroundImage: [
+      `linear-gradient(to right, rgba(0, 0, 0, 0.2) 1px, transparent 1px)`,
+      `linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 1px, transparent 1px)`,
+    ].join(','),
+    backgroundSize: `1lh 1lh`,
+    backgroundPosition: [`center ${OFFSET_Y}em`, `center calc(${OFFSET_Y}em + 1lh - 1px)`].join(
+      ',',
+    ),
   },
   DOTS: {
-    backgroundImage: `radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0.25) 1px,
-      transparent 1px
-    )`,
-    backgroundSize: '20px 20px',
+    ...BASE_STYLE,
+    backgroundImage: `radial-gradient(circle, rgba(0, 0, 0, 0.3) 1px, transparent 1px)`,
+    backgroundSize: `1lh 1lh`,
+    backgroundPosition: `center calc(${OFFSET_Y}em + 0.5lh - 1px)`,
   },
 };
 
