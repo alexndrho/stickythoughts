@@ -235,14 +235,7 @@ export default function LettersTab({ isActive }: LettersTabProps) {
 
       <LetterPreview
         title="Preview Letter"
-        letter={{
-          author: previewLetter?.author,
-          anonymousFrom: previewLetter?.anonymousFrom,
-          recipient: previewLetter?.recipient,
-          createdAt: previewLetter?.createdAt,
-          deletedAt: previewLetter?.deletedAt,
-          body: previewLetter?.body,
-        }}
+        letter={previewLetter}
         opened={!!previewLetter}
         onClose={() => setPreviewLetter(null)}
       />

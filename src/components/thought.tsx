@@ -7,29 +7,27 @@ import { filterText } from '@/utils/text';
 import classes from '@/styles/components/thought.module.css';
 
 export interface ThoughtProps extends CardProps {
-  message?: string;
-  author?: string;
-  color?: string;
-  pattern?: ThoughtPattern;
-  createdAt?: Date;
+  thought?: {
+    message: string;
+    author: string;
+    color?: string;
+    pattern?: ThoughtPattern;
+    createdAt?: Date;
+  };
   fluid?: boolean;
   loading?: boolean;
 }
 
 export default function Thought({
-  message,
-  author,
-  color,
-  pattern,
-  createdAt,
+  thought,
   fluid = false,
   loading = false,
   className,
   style,
   ...rest
 }: ThoughtProps) {
-  const resolvedColor = loading ? undefined : color;
-  const resolvedLabel = createdAt ? getFormattedDate(createdAt) : null;
+  const resolvedColor = loading ? undefined : thought?.color;
+  const resolvedLabel = thought?.createdAt ? getFormattedDate(thought.createdAt) : null;
   const resolvedClassName = [
     classes.thought,
     !resolvedColor ? classes['thought--empty'] : null,
@@ -39,7 +37,7 @@ export default function Thought({
     .filter(Boolean)
     .join(' ');
 
-  const patternStyle = getThoughtPatternStyle(pattern);
+  const patternStyle = getThoughtPatternStyle(thought?.pattern);
   const backgroundStyle: React.CSSProperties = resolvedColor
     ? { backgroundColor: `var(--mantine-color-${resolvedColor}-5)`, ...patternStyle }
     : {};
@@ -54,13 +52,13 @@ export default function Thought({
     >
       {!loading ? (
         <>
-          {message != null && <Text lineClamp={9}>{filterText(message)}</Text>}
+          {thought?.message != null && <Text lineClamp={9}>{filterText(thought.message)}</Text>}
 
-          {author != null && (
+          {thought?.author != null && (
             <Text
               lineClamp={1}
               className={classes['thought__author']}
-            >{`\u2013 ${filterText(author)}`}</Text>
+            >{`\u2013 ${filterText(thought.author)}`}</Text>
           )}
         </>
       ) : (

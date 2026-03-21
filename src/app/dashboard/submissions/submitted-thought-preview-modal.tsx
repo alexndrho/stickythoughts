@@ -33,15 +33,7 @@ export default function SubmittedThoughtPreviewModal({
 
   return (
     <Modal title="Thought Preview" opened={opened} onClose={onClose} centered size="xl">
-      {thought && (
-        <Thought
-          message={thought.message}
-          author={thought.author}
-          color={thought.color}
-          createdAt={thought.createdAt}
-          fluid
-        />
-      )}
+      {thought && <Thought thought={thought} fluid />}
 
       <Group mt="md" justify="right">
         <Button

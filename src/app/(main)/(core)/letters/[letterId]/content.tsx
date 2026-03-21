@@ -193,7 +193,7 @@ export default function Content({ id, initialData }: ContentProps) {
       <Divider className={classes.divider} />
 
       {isEditable ? (
-        <LetterEditor id={id} body={letter.body} onClose={() => setIsEditable(false)} />
+        <LetterEditor letter={letter} onClose={() => setIsEditable(false)} />
       ) : (
         <MultilineText text={letter.body} />
       )}
@@ -244,9 +244,7 @@ export default function Content({ id, initialData }: ContentProps) {
 
       {(isAuthor || hasPermissionToDelete) && (
         <DeleteLetterModal
-          id={letter.id}
-          recipient={letter.recipient}
-          authorUsername={letter.author?.username}
+          letter={letter}
           opened={deleteModalOpened}
           onClose={deleteModalHandlers.close}
           onDelete={() => router.push('/letters')}

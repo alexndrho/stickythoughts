@@ -185,13 +185,13 @@ export default function Content() {
         </div>
 
         <Thought
-          message={
-            hasHighlightedThought
+          thought={{
+            message: hasHighlightedThought
               ? highlightedThought?.message
-              : 'No highlighted thought yet. Share something meaningful and it could land here.'
-          }
-          author={hasHighlightedThought ? highlightedThought?.author : 'The community'}
-          color={highlightedThought?.color}
+              : 'No highlighted thought yet. Share something meaningful and it could land here.',
+            author: hasHighlightedThought ? highlightedThought?.author : 'The community',
+            color: highlightedThought?.color,
+          }}
           fluid
           loading={!isHighlightedThoughtFetched}
         />

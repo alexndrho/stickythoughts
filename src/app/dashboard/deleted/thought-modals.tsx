@@ -23,9 +23,11 @@ export const PermanentlyDeleteThoughtModal = ({
   return (
     <Modal title="Permanently delete this thought?" opened={opened} onClose={onClose} centered>
       <Thought
-        message={thought?.message ?? 'No thought selected yet.'}
-        author={thought?.author ?? 'Unknown'}
-        color={thought?.color}
+        thought={{
+          message: thought?.message ?? 'No thought selected yet.',
+          author: thought?.author ?? 'Unknown',
+          color: thought?.color,
+        }}
         fluid
       />
 
@@ -70,9 +72,11 @@ export const RecoverThoughtModal = ({
   return (
     <Modal title="Recover this thought?" opened={opened} onClose={onClose} centered>
       <Thought
-        message={thought?.message ?? 'No thought selected yet.'}
-        author={thought?.author ?? 'Unknown'}
-        color={thought?.color}
+        thought={{
+          message: thought?.message ?? 'No thought selected yet.',
+          author: thought?.author ?? 'Unknown',
+          color: thought?.color,
+        }}
         fluid
       />
 

@@ -293,30 +293,20 @@ export default function Content({ username, initialData }: ContentProps) {
       {canEditOtherUser && (
         <>
           <EditUserModal
-            user={{
-              id: user.id,
-              name: user.name,
-              username: user.username,
-            }}
+            user={user}
             onUsernameChange={(newUsername) => router.replace(`/user/${newUsername.toLowerCase()}`)}
             opened={editUserModalOpened}
             onClose={editUserModalHandler.close}
           />
 
           <DeleteUserProfilePictureModal
-            user={{
-              id: user.id,
-              username: user.username,
-            }}
+            user={user}
             opened={deleteUserProfilePictureModalOpened}
             onClose={deleteUserProfilePictureModalHandler.close}
           />
 
           <DeleteUserBioModal
-            user={{
-              id: user.id,
-              username: user.username,
-            }}
+            user={user}
             opened={deleteUserBioModalOpened}
             onClose={deleteUserBioModalHandler.close}
           />
@@ -325,10 +315,7 @@ export default function Content({ username, initialData }: ContentProps) {
 
       {canRevokeOtherUserSessions && (
         <RevokeUserSessionsModal
-          user={{
-            id: user.id,
-            username: user.username,
-          }}
+          user={user}
           opened={revokeUserSessionsModalOpened}
           onClose={revokeUserSessionsModalHandler.close}
         />
@@ -337,19 +324,13 @@ export default function Content({ username, initialData }: ContentProps) {
       {canBanOtherUser && (
         <>
           <BanUserModal
-            user={{
-              id: user.id,
-              username: user.username,
-            }}
+            user={user}
             opened={banUserModalOpened}
             onClose={banUserModalHandler.close}
           />
 
           <UnbanUserModal
-            user={{
-              id: user.id,
-              username: user.username,
-            }}
+            user={user}
             opened={unbanUserModalOpened}
             onClose={unbanUserModalHandler.close}
           />

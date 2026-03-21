@@ -30,9 +30,11 @@ export default function HighlightThoughtModal({
 
       <Thought
         mt="sm"
-        message={thought?.message ?? 'No thought selected yet.'}
-        author={thought?.author ?? 'Unknown'}
-        color={thought?.color}
+        thought={{
+          message: thought?.message ?? 'No thought selected yet.',
+          author: thought?.author ?? 'Unknown',
+          color: thought?.color,
+        }}
         fluid
       />
 

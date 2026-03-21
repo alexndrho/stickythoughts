@@ -150,7 +150,6 @@ export default function Replies({
       </section>
 
       <DeleteReplyModal
-        letterId={letterId}
         reply={deletingReply}
         opened={!!deletingReply}
         onClose={handleDeleteReplyModalClose}

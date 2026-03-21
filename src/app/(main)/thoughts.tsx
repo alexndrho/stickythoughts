@@ -171,14 +171,7 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
       >
         <section className={classes.thoughts}>
           {visibleThoughts?.map((thought) => (
-            <Thought
-              key={thought.id}
-              message={thought.message}
-              author={thought.author}
-              color={thought.color}
-              pattern={thought.pattern}
-              createdAt={thought.createdAt}
-            />
+            <Thought key={thought.id} thought={thought} />
           ))}
         </section>
       </InfiniteScroll>

@@ -10,18 +10,12 @@ import { setDeleteLetterReplyQueryData } from '../set-query-data';
 import { type LetterReply } from '@/types/letter';
 
 export interface DeleteReplyModalProps {
-  letterId: string;
   reply: LetterReply | null;
   opened: boolean;
   onClose: () => void;
 }
 
-export default function DeleteReplyModal({
-  letterId,
-  reply,
-  opened,
-  onClose,
-}: DeleteReplyModalProps) {
+export default function DeleteReplyModal({ reply, opened, onClose }: DeleteReplyModalProps) {
   const deleteMutation = useMutation({
     mutationFn: async ({
       letterId,
@@ -79,7 +73,7 @@ export default function DeleteReplyModal({
             if (!reply) return;
 
             deleteMutation.mutate({
-              letterId,
+              letterId: reply.letterId,
               replyId: reply.id,
               authorUsername: reply.author?.username,
             });

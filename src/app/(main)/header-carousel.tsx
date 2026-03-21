@@ -42,18 +42,14 @@ export default function HeaderCarousel({
           <Text className={classes['header__highlight-title']}>A thought worth keeping</Text>
           <div className={classes['header__highlight']}>
             {highlightedThought ? (
-              <Thought
-                message={highlightedThought.message}
-                author={highlightedThought.author}
-                color={highlightedThought.color}
-                pattern={highlightedThought.pattern}
-                createdAt={highlightedThought.createdAt}
-                loading={isLoading}
-              />
+              <Thought thought={highlightedThought} loading={isLoading} />
             ) : (
               <Thought
-                message="No highlighted thought yet. Share something meaningful and it could land here."
-                author="The community"
+                thought={{
+                  message:
+                    'No highlighted thought yet. Share something meaningful and it could land here.',
+                  author: 'The community',
+                }}
                 loading={isLoading}
               />
             )}

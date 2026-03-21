@@ -15,15 +15,17 @@ import { LETTER_BODY_MAX_LENGTH, LETTER_BODY_WARNING_THRESHOLD } from '@/config/
 import classes from './letter.module.css';
 
 export interface ForumEditorProps {
-  id: string;
-  body: string;
+  letter: {
+    id: string;
+    body: string;
+  };
   onClose: () => void;
 }
 
-export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
+export default function ForumEditor({ letter, onClose }: ForumEditorProps) {
   const updateForm = useForm({
     initialValues: {
-      body,
+      body: letter.body,
     },
     validate: zod4Resolver(updateLetterServerInput),
   });
@@ -31,7 +33,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
   const updateMutation = useMutation({
     mutationFn: async ({ body }: { body: string }) =>
       updateLetter({
-        id,
+        id: letter.id,
         body: { body },
       }),
     onSuccess: (data) => {
@@ -42,7 +44,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       });
       updateForm.reset();
 
-      getQueryClient().setQueryData(letterKeys.byId(id), (oldData: Letter | undefined) =>
+      getQueryClient().setQueryData(letterKeys.byId(letter.id), (oldData: Letter | undefined) =>
         oldData
           ? {
               ...oldData,
@@ -52,7 +54,7 @@ export default function ForumEditor({ id, body, onClose }: ForumEditorProps) {
       );
 
       getQueryClient().invalidateQueries({
-        queryKey: letterKeys.byId(id),
+        queryKey: letterKeys.byId(letter.id),
         refetchType: 'none',
       });
 

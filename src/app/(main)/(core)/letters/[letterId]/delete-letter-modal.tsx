@@ -11,24 +11,24 @@ import { adminKeys } from '@/lib/query-keys/admin';
 import { deleteLetter } from '@/services/letter';
 
 export interface DeleteLetterModalProps {
-  id: string;
-  recipient: string;
-  authorUsername?: string;
+  letter: {
+    id: string;
+    recipient: string;
+    author?: { username: string } | null;
+  };
   opened: boolean;
   onClose: () => void;
   onDelete?: () => void;
 }
 
 export default function DeleteLetterModal({
-  id,
-  recipient,
-  authorUsername,
+  letter,
   opened,
   onClose,
   onDelete,
 }: DeleteLetterModalProps) {
   const deleteMutation = useMutation({
-    mutationFn: () => deleteLetter(id),
+    mutationFn: () => deleteLetter(letter.id),
     onSuccess: () => {
       if (onDelete) onDelete();
 
@@ -45,9 +45,9 @@ export default function DeleteLetterModal({
         queryKey: searchKeys.all(),
       });
 
-      if (authorUsername) {
+      if (letter.author?.username) {
         queryClient.invalidateQueries({
-          queryKey: userKeys.infiniteLetters(authorUsername),
+          queryKey: userKeys.infiniteLetters(letter.author.username),
         });
       }
 
@@ -59,7 +59,7 @@ export default function DeleteLetterModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={`Are you sure you want to delete the letter for "${recipient}"?`}
+      title={`Are you sure you want to delete the letter for "${letter.recipient}"?`}
       centered
     >
       <Text mb="md">
