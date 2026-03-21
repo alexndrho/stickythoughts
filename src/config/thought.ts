@@ -13,6 +13,7 @@ export const THOUGHT_MESSAGE_WARNING_THRESHOLD = 20;
 export const THOUGHT_AUTHOR_WARNING_THRESHOLD = 5;
 
 export const THOUGHT_COLORS = Object.values(ThoughtColor);
+export const THOUGHT_COLOR_SHADE = 5;
 export const THOUGHT_PATTERNS = Object.values(ThoughtPattern);
 
 export const THOUGHT_HIGHLIGHT_LOCK_HOURS = 12;

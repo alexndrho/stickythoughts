@@ -7,6 +7,7 @@ import { notifications } from '@mantine/notifications';
 import { getQueryClient } from '@/lib/get-query-client';
 import { thoughtKeys } from '@/lib/query-keys/thought';
 import { resonateThought } from '@/services/thought';
+import { THOUGHT_COLOR_SHADE } from '@/config/thought';
 import type { PublicThought } from '@/types/thought';
 import ServerError from '@/utils/error/ServerError';
 
@@ -59,7 +60,7 @@ export function useResonatedThoughts() {
         addResonatedId(id);
 
         notifications.show({
-          color: color ? `${color}.5` : undefined,
+          color: color ? `${color}.${THOUGHT_COLOR_SHADE}` : undefined,
           title: 'Already resonated',
           message: 'You have already resonated with this thought today.',
         });
