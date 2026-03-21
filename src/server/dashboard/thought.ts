@@ -38,7 +38,6 @@ export async function listAdminThoughts(args: { page: number }) {
       message: true,
       color: true,
       pattern: true,
-      highlightedAt: true,
       createdAt: true,
     },
   });

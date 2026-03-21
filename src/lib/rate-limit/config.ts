@@ -5,6 +5,7 @@ export type RateLimitTier =
   | 'mutate:thought'
   | 'mutate:letter'
   | 'mutate:content'
+  | 'interaction:resonance'
   | 'interaction:like'
   | 'interaction:notificationUpdate';
 
@@ -15,6 +16,7 @@ export const RATE_LIMIT_TIERS = [
   'mutate:thought',
   'mutate:letter',
   'mutate:content',
+  'interaction:resonance',
   'interaction:like',
   'interaction:notificationUpdate',
 ] as const satisfies readonly RateLimitTier[];
@@ -65,6 +67,11 @@ export const RATE_LIMITS: Record<RateLimitTier, RateLimitConfig> = {
     keyPrefix: 'ratelimit:mutate:content',
   },
 
+  'interaction:resonance': {
+    points: 1,
+    duration: 86400,
+    keyPrefix: 'ratelimit:interaction:resonance',
+  },
   'interaction:like': {
     points: 120,
     duration: 60,

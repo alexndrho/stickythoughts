@@ -73,4 +73,12 @@ const getHighlightedThought = async (): Promise<PublicThought | null> => {
   });
 };
 
-export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought };
+const resonateThought = async (thoughtId: string): Promise<{ resonanceCount: number }> => {
+  return fetchJson<{ resonanceCount: number }>(
+    `/api/thoughts/${thoughtId}/resonance`,
+    { method: 'POST' },
+    { errorMessage: 'Failed to resonate thought' },
+  );
+};
+
+export { getThoughts, getThoughtsCount, submitThought, getHighlightedThought, resonateThought };

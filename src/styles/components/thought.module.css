@@ -11,8 +11,28 @@
   justify-content: space-between;
 }
 
+.thought__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.thought__resonance {
+  flex-shrink: 0;
+}
+
+.thought__resonance--resonated {
+  cursor: default;
+}
+
 .thought__author {
+  margin-left: auto;
   text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .thought--fluid {

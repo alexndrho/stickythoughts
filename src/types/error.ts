@@ -1,5 +1,6 @@
 export type systemCode =
   | 'ratelimit/exceeded'
+  | 'ratelimit/resonance-exceeded'
   | 'unknown-error'
   | 'not-found'
   | 'config/missing-cron-secret';

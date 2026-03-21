@@ -1,7 +1,8 @@
-import { Card, type CardProps, Group, Skeleton, Text, Tooltip } from '@mantine/core';
+import { Button, Card, type CardProps, Group, Skeleton, Text, Tooltip } from '@mantine/core';
 
 import type { ThoughtPattern } from '@/generated/prisma/enums';
 import { getFormattedDate } from '@/utils/date';
+import { formatCompactNumber } from '@/utils/number';
 import { getThoughtPatternStyle } from '@/utils/thought';
 import { filterText } from '@/utils/text';
 import classes from '@/styles/components/thought.module.css';
@@ -12,6 +13,7 @@ export interface ThoughtProps extends CardProps {
     author: string;
     color?: string;
     pattern?: ThoughtPattern;
+    resonance?: { count: number; resonated: boolean; loading?: boolean; onResonate: () => void };
     createdAt?: Date;
   };
   fluid?: boolean;
@@ -55,10 +57,20 @@ export default function Thought({
           {thought?.message != null && <Text lineClamp={9}>{filterText(thought.message)}</Text>}
 
           {thought?.author != null && (
-            <Text
-              lineClamp={1}
-              className={classes['thought__author']}
-            >{`\u2013 ${filterText(thought.author)}`}</Text>
+            <div className={classes['thought__meta']}>
+              {thought.resonance && (
+                <ResonanceButton
+                  count={thought.resonance.count}
+                  resonated={thought.resonance.resonated}
+                  loading={thought.resonance.loading}
+                  onResonate={thought.resonance.onResonate}
+                />
+              )}
+
+              <Text
+                className={classes['thought__author']}
+              >{`\u2013 ${filterText(thought.author)}`}</Text>
+            </div>
           )}
         </>
       ) : (
@@ -86,5 +98,37 @@ export default function Thought({
     <Tooltip label={resolvedLabel} events={{ hover: true, focus: true, touch: true }}>
       {content}
     </Tooltip>
+  );
+}
+
+function ResonanceButton({
+  count,
+  resonated,
+  loading,
+  onResonate,
+}: {
+  count: number;
+  resonated: boolean;
+  loading?: boolean;
+  onResonate?: () => void;
+}) {
+  const className = [
+    classes['thought__resonance'],
+    resonated ? classes['thought__resonance--resonated'] : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <Button
+      color={resonated ? 'yellow' : 'gray'}
+      leftSection="💡"
+      onClick={resonated ? undefined : onResonate}
+      loading={loading}
+      size="compact-xs"
+      className={className}
+    >
+      {formatCompactNumber(count)}
+    </Button>
   );
 }

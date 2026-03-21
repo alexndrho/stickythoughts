@@ -25,12 +25,13 @@ enum ThoughtPattern {
 }
 
 model Thought {
-  id        String         @id @default(uuid())
-  author    String
-  message   String
-  color     ThoughtColor
-  pattern   ThoughtPattern @default(PLAIN)
-  createdAt DateTime       @default(now())
+  id             String         @id @default(uuid())
+  author         String
+  message        String
+  color          ThoughtColor
+  pattern        ThoughtPattern @default(PLAIN)
+  resonanceCount Int            @default(0)
+  createdAt      DateTime       @default(now())
 
   highlightedAt   DateTime?
   highlightedById String?
