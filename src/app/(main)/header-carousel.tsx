@@ -6,6 +6,7 @@ import { Card, Text } from '@mantine/core';
 
 import Thought from '@/components/thought';
 import { highlightedThoughtOptions } from './options';
+import { useResonatedThoughts } from '@/hooks/use-resonated-thoughts';
 import type { PublicThought } from '@/types/thought';
 import classes from './home.module.css';
 
@@ -23,6 +24,7 @@ export default function HeaderCarousel({
     initialData: initialHighlightedThought,
     enabled: !loading,
   });
+  const { hasResonated, mutation: resonanceMutation } = useResonatedThoughts();
 
   const isLoading = loading || isHighlightedThoughPending;
 
@@ -42,7 +44,22 @@ export default function HeaderCarousel({
           <Text className={classes['header__highlight-title']}>A thought worth keeping</Text>
           <div className={classes['header__highlight']}>
             {highlightedThought ? (
-              <Thought thought={highlightedThought} loading={isLoading} />
+              <Thought
+                thought={{
+                  ...highlightedThought,
+                  resonance: {
+                    count: highlightedThought.resonanceCount,
+                    resonated: hasResonated(highlightedThought.id),
+                    loading: resonanceMutation.isPending,
+                    onResonate: () =>
+                      resonanceMutation.mutate({
+                        id: highlightedThought.id,
+                        color: highlightedThought.color,
+                      }),
+                  },
+                }}
+                loading={isLoading}
+              />
             ) : (
               <Thought
                 thought={{

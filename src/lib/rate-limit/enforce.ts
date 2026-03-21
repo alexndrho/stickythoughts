@@ -12,6 +12,7 @@ import { RATE_LIMITS, type RateLimitTier } from './config';
 import { consumeWithFallback } from './core';
 
 const ROUTE_PATTERNS = {
+  thoughtResonance: /\/api\/thoughts\/[^/]+\/resonance/,
   letterLike: /\/api\/letters\/[^/]+\/like/,
   replyLike: /\/api\/letters\/[^/]+\/replies\/[^/]+\/like/,
 } as const;
@@ -39,8 +40,12 @@ function pickTier(request: NextRequest): RateLimitTier {
     return 'mutate:letter';
   }
 
-  // Like/unlike endpoints (letters and replies)
-  if (pathname.match(ROUTE_PATTERNS.letterLike) || pathname.match(ROUTE_PATTERNS.replyLike)) {
+  // Like/unlike endpoints (letters and replies) and thought resonance
+  if (
+    pathname.match(ROUTE_PATTERNS.letterLike) ||
+    pathname.match(ROUTE_PATTERNS.replyLike) ||
+    pathname.match(ROUTE_PATTERNS.thoughtResonance)
+  ) {
     return 'interaction:like';
   }
 

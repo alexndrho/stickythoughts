@@ -32,10 +32,11 @@ async function listPublicThoughtsRandom(args: {
       message: string;
       color: ThoughtColor;
       pattern: ThoughtPattern;
+      resonanceCount: number;
       createdAt: Date;
     }>
   >`
-    SELECT id, author, message, color, pattern, "createdAt"
+    SELECT id, author, message, color, pattern, "createdAt", resonanceCount
     FROM "Thought"
     WHERE status = 'APPROVED'
       AND "deletedAt" IS NULL
@@ -88,6 +89,7 @@ export async function listPublicThoughts(args: {
       message: true,
       color: true,
       pattern: true,
+      resonanceCount: true,
       createdAt: true,
     },
     orderBy: [{ createdAt: orderDirection }, { id: orderDirection }],
@@ -130,6 +132,7 @@ export async function createThought(args: {
       message: true,
       color: true,
       pattern: true,
+      resonanceCount: true,
       status: true,
       createdAt: true,
     },
@@ -140,6 +143,22 @@ export async function createThought(args: {
   }
 
   return createdThought;
+}
+
+export async function resonateThought(args: { thoughtId: string }) {
+  return prisma.thought.update({
+    where: {
+      id: args.thoughtId,
+      status: 'APPROVED',
+      deletedAt: null,
+    },
+    data: {
+      resonanceCount: { increment: 1 },
+    },
+    select: {
+      resonanceCount: true,
+    },
+  });
 }
 
 export async function countPublicThoughts() {
@@ -166,6 +185,7 @@ export async function getHighlightedThought() {
       message: true,
       color: true,
       pattern: true,
+      resonanceCount: true,
       createdAt: true,
     },
   });

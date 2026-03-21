@@ -56,6 +56,7 @@ export type PublicThought = Prisma.ThoughtGetPayload<{
     message: true;
     color: true;
     pattern: true;
+    resonanceCount: true;
     createdAt: true;
   };
 }>;
@@ -71,6 +72,7 @@ export type SubmitThoughtResponse = Prisma.ThoughtGetPayload<{
     message: true;
     color: true;
     pattern: true;
+    resonanceCount: true;
     status: true;
     createdAt: true;
   };

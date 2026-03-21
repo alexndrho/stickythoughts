@@ -11,6 +11,7 @@ import { thoughtsInfiniteOptions, thoughtsSearchInfiniteOptions } from '@/app/(m
 import Thought from '@/components/thought';
 import SendThoughtModal from './send-thought-modal';
 import InfiniteScroll from '@/components/infinite-scroll';
+import { useResonatedThoughts } from '@/hooks/use-resonated-thoughts';
 import classes from './home.module.css';
 import ThoughtsLoader from './thoughts-loader';
 import type { PublicThought, ThoughtsSort } from '@/types/thought';
@@ -21,6 +22,7 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
   const [messageOpen, { open, close, toggle }] = useDisclosure(false);
   const [sortOrder, setSortOrder] = useState<ThoughtsSort>('newest');
   const [randomSeed, setRandomSeed] = useState(() => crypto.randomUUID());
+  const { hasResonated, mutation: resonanceMutation } = useResonatedThoughts();
 
   const {
     data: thoughtsData,
@@ -171,7 +173,20 @@ export default function HomeThoughts({ initialData }: { initialData?: PublicThou
       >
         <section className={classes.thoughts}>
           {visibleThoughts?.map((thought) => (
-            <Thought key={thought.id} thought={thought} />
+            <Thought
+              key={thought.id}
+              thought={{
+                ...thought,
+                resonance: {
+                  count: thought.resonanceCount,
+                  resonated: hasResonated(thought.id),
+                  loading:
+                    resonanceMutation.isPending && resonanceMutation.variables?.id === thought.id,
+                  onResonate: () =>
+                    resonanceMutation.mutate({ id: thought.id, color: thought.color }),
+                },
+              }}
+            />
           ))}
         </section>
       </InfiniteScroll>
