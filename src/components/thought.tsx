@@ -5,6 +5,7 @@ import { getFormattedDate } from '@/utils/date';
 import { formatCompactNumber } from '@/utils/number';
 import { getThoughtPatternStyle } from '@/utils/thought';
 import { filterText } from '@/utils/text';
+import { THOUGHT_COLOR_SHADE } from '@/config/thought';
 import classes from '@/styles/components/thought.module.css';
 
 export interface ThoughtProps extends CardProps {
@@ -41,7 +42,10 @@ export default function Thought({
 
   const patternStyle = getThoughtPatternStyle(thought?.pattern);
   const backgroundStyle: React.CSSProperties = resolvedColor
-    ? { backgroundColor: `var(--mantine-color-${resolvedColor}-5)`, ...patternStyle }
+    ? {
+        backgroundColor: `var(--mantine-color-${resolvedColor}-${THOUGHT_COLOR_SHADE})`,
+        ...patternStyle,
+      }
     : {};
 
   const content = (

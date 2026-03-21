@@ -30,6 +30,7 @@ import {
   THOUGHT_MAX_AUTHOR_LENGTH,
   THOUGHT_MAX_MESSAGE_LENGTH,
   THOUGHT_COLORS,
+  THOUGHT_COLOR_SHADE,
   THOUGHT_MESSAGE_WARNING_THRESHOLD,
   THOUGHT_AUTHOR_WARNING_THRESHOLD,
   THOUGHT_PATTERNS,
@@ -109,7 +110,7 @@ export default function SendThoughtModal({ open, onClose }: SendThoughtModalProp
         notifications.show({
           title: 'Thought submitted!',
           message: 'Your thought has been successfully submitted.',
-          color: `${formValues.color}.6`,
+          color: `${formValues.color}.${THOUGHT_COLOR_SHADE}`,
           icon: <IconMessage size="1em" />,
         });
       } else {
