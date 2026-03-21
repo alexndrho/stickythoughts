@@ -73,9 +73,9 @@ export const RATE_LIMITS: Record<RateLimitTier, RateLimitConfig> = {
     keyPrefix: 'ratelimit:interaction:resonance',
   },
   'interaction:like': {
-    points: 120,
+    points: 30,
     duration: 60,
-    blockDuration: 15,
+    blockDuration: 30,
     keyPrefix: 'ratelimit:interaction:like',
   },
   'interaction:notificationUpdate': {
