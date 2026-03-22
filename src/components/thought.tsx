@@ -1,4 +1,5 @@
 import { Button, Card, type CardProps, Group, Skeleton, Text, Tooltip } from '@mantine/core';
+import { IconBulb, IconBulbFilled } from '@tabler/icons-react';
 
 import type { ThoughtPattern } from '@/generated/prisma/enums';
 import { getFormattedDate } from '@/utils/date';
@@ -126,9 +127,9 @@ function ResonanceButton({
 
   return (
     <Button
-      color={resonated ? 'yellow' : undefined}
-      variant={resonated ? 'filled' : 'default'}
-      leftSection="💡"
+      variant="default"
+      c={resonated ? 'yellow' : undefined}
+      leftSection={resonated ? <IconBulbFilled size="1rem" /> : <IconBulb size="1rem" />}
       onClick={resonated ? undefined : onResonate}
       loading={loading}
       size="compact-xs"
