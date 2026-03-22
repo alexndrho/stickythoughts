@@ -6,7 +6,7 @@ import { getClientIp } from '@/lib/http/get-client-ip';
 import { buildRateLimitKey } from '@/lib/rate-limit/keys';
 import { getTierLimiters } from '@/lib/rate-limit/limiters';
 import { consumeWithFallback } from '@/lib/rate-limit/core';
-import { revalidateAllThoughts } from '@/lib/cache/thought-revalidation';
+import { revalidateThoughtData } from '@/lib/cache/thought-revalidation';
 import { resonateThought } from '@/server/thought/thoughts';
 
 export async function POST(
@@ -59,7 +59,7 @@ export async function POST(
   try {
     const result = await resonateThought({ thoughtId });
 
-    revalidateAllThoughts();
+    revalidateThoughtData();
 
     return NextResponse.json({ resonanceCount: result.resonanceCount }, { status: 200 });
   } catch (error) {

@@ -14,6 +14,10 @@ export function revalidateThoughts() {
   revalidateTags([CACHE_TAGS.PUBLIC_THOUGHT, CACHE_TAGS.PUBLIC_THOUGHT_COUNT]);
 }
 
+export function revalidateThoughtData() {
+  revalidateTags([CACHE_TAGS.PUBLIC_THOUGHT, CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT]);
+}
+
 export function revalidateThoughtHighlight() {
   revalidateTags([CACHE_TAGS.PUBLIC_THOUGHT_HIGHLIGHT]);
 }
