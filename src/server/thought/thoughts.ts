@@ -36,7 +36,7 @@ async function listPublicThoughtsRandom(args: {
       createdAt: Date;
     }>
   >`
-    SELECT id, author, message, color, pattern, "createdAt", resonanceCount
+    SELECT id, author, message, color, pattern, "createdAt", "resonanceCount"
     FROM "Thought"
     WHERE status = 'APPROVED'
       AND "deletedAt" IS NULL
