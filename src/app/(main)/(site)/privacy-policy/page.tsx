@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Anchor, List, ListItem, Text, Title } from '@mantine/core';
 
-const LAST_UPDATED = '2026-03-09 (Asia/Manila)';
+const LAST_UPDATED = '2026-03-22 (Asia/Manila)';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -29,7 +29,9 @@ export default function PrivacyPage() {
         Anonymous posting data
       </Text>
       <List spacing="xs" my="sm">
-        <ListItem>Thought posts: author, message, color, created timestamp</ListItem>
+        <ListItem>
+          Thought posts: author, message, color, resonance count, created timestamp
+        </ListItem>
         <ListItem>
           Guest letter submissions: recipient, body, anonymous sender alias, status/timestamps
         </ListItem>
@@ -60,7 +62,8 @@ export default function PrivacyPage() {
       <List spacing="xs" my="sm">
         <ListItem>Authentication cookies are used to keep users signed in.</ListItem>
         <ListItem>
-          Browser localStorage stores anonymous thought author text for convenient re-use.
+          Browser localStorage stores small pieces of data such as author text and interaction
+          history for a smoother experience.
         </ListItem>
       </List>
 
