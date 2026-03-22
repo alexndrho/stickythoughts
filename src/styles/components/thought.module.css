@@ -24,6 +24,9 @@
 
 .thought__resonance--resonated {
   cursor: default;
+
+  --button-bg: var(--mantine-color-yellow-8) !important;
+  --button-hover: var(--mantine-color-yellow-8) !important;
 }
 
 .thought__author {

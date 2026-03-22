@@ -126,7 +126,8 @@ function ResonanceButton({
 
   return (
     <Button
-      color={resonated ? 'yellow' : 'gray'}
+      color={resonated ? 'yellow' : undefined}
+      variant={resonated ? 'filled' : 'default'}
       leftSection="💡"
       onClick={resonated ? undefined : onResonate}
       loading={loading}
