@@ -51,6 +51,11 @@ export function useResonatedThoughts() {
           };
         },
       );
+
+      queryClient.setQueryData<PublicThought | null>(thoughtKeys.highlighted(), (oldData) => {
+        if (!oldData || oldData.id !== id) return oldData;
+        return { ...oldData, resonanceCount };
+      });
     },
     onError: (error, { id, color }) => {
       if (
