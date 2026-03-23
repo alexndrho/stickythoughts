@@ -57,15 +57,6 @@ export default function Footer() {
           <Anchor href="mailto:support@stickythoughts.app" className={classes.link}>
             support@stickythoughts.app
           </Anchor>
-
-          <Anchor
-            href="https://alexanderho.dev"
-            target="_blank"
-            rel="noopener"
-            className={classes.link}
-          >
-            alexanderho.dev
-          </Anchor>
         </section>
       </Container>
     </Box>

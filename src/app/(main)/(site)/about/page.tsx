@@ -45,11 +45,7 @@ export default function AboutPage() {
           <Anchor href="https://github.com/alexndrho/stickythoughts" target="_blank" inherit>
             GitHub
           </Anchor>
-          , created by{' '}
-          <Anchor href="https://www.alexanderho.dev" target="_blank" inherit>
-            Alexander Gabriel Ho
-          </Anchor>
-          . Built as an emotional outlet and community platform for authentic connection.
+          , built as an emotional outlet and community platform for authentic connection.
         </Text>
       </Box>
 

@@ -63,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     {
       url: new URL('/about', base).toString(),
-      lastModified: new Date('2026-01-21'),
+      lastModified: new Date('2026-03-23'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
